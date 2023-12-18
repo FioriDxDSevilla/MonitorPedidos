@@ -25,5 +25,17 @@
                 />
             </ScrollContainer>
         </content>
+        <footer>
+			<OverflowToolbar id="otbFooter" class="sapUiMediumMarginTop">
+                <OverflowToolbarToggleButton tooltip="{i18n>exceldown}"  text="{i18n>exceldown}"  icon="sap-icon://download" press="onDownExcel"/>
+				<ToolbarSpacer/>
+				<Button type="Emphasized" text="Todos">
+					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow" /></layoutData>
+				</Button>
+				<Button type="Emphasized" text="Mis pedidos">
+					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow" /></layoutData>
+				</Button>
+			</OverflowToolbar>
+		</footer>
     </Page>
 </mvc:View>

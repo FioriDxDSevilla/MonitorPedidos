@@ -63,7 +63,7 @@
                 
             </layoutData>
         </Button>
-        <Button
+        <!--<Button
             id="ExcelDownload"
             icon="sap-icon://excel-attachment"
             type="Emphasized"
@@ -77,7 +77,7 @@
                     shrinkable="false"  
                 />
             </layoutData>
-        </Button>
+        </Button>-->
         
     </tnt:ToolHeader>
 </core:FragmentDefinition>
