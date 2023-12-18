@@ -1,0 +1,41 @@
+<core:FragmentDefinition 
+    controllerName="monitorpedidos.controller.View1" 
+    xmlns="sap.m" 
+    xmlns:core="sap.ui.core" 
+    xmlns:f="sap.ui.layout.form" 
+    xmlns:l="sap.ui.layout"
+    xmlns:u="sap.ui.unified">
+
+    <Panel expandable="false" width="100%">
+       <VBox>
+        	<f:Form editable="true" visible="{ModoApp>/modAdj}">
+                <f:layout>
+                    <f:ResponsiveGridLayout />
+                </f:layout>
+                <f:FormContainer>
+                    <f:FormElement label="{i18n>desc}">
+                        <f:fields>
+                            <Input value="{datosAdj>/Desc}" id="descPresAdjunto" maxLength="80" enabled="true" />
+                        </f:fields>
+                    </f:FormElement>
+                    <f:FormElement label="{i18n>archAdj}">
+                        <f:fields>
+                            <u:FileUploader 
+                            id="fileUploader"
+                            name="myFileUpload" 
+                            uploadUrl="upload/" 
+                            tooltip="{i18n>tltipadjuntar}" 
+                            placeholder="{i18n>selArch}" 
+                            change=".handleUploadPress"/>
+                        </f:fields>
+                        <Button text="{i18n>attFile}" press=".onAttFile" type="Emphasized" >
+                            <layoutData>
+                                <l:GridData span="XL3 L2 M2 S12" />
+                            </layoutData>
+                        </Button>
+                    </f:FormElement>
+                </f:FormContainer>
+            </f:Form>
+        </VBox>
+    </Panel>
+</core:FragmentDefinition>

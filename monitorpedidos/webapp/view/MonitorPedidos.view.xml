@@ -1,7 +1,29 @@
 <mvc:View controllerName="monitorpedidos.controller.MonitorPedidos"
-    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
-    xmlns="sap.m">
+    xmlns:mvc="sap.ui.core.mvc"  displayBlock="true"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
     <Page id="page" title="{i18n>title}">
-        <content />
+        <content>
+            <ScrollContainer
+                height="100%"
+                width="100%"
+                vertical="true"
+                horizontal="true"
+                focusable="true"
+            >
+                <core:Fragment
+                    fragmentName="monitorpedidos.fragments.Header"
+                    type="XML"
+                />
+                <core:Fragment
+                    fragmentName="monitorpedidos.fragments.headerBar"
+                    type="XML"
+                />
+                <core:Fragment
+                    fragmentName="monitorpedidos.fragments.TableFilters"
+                    type="XML"
+                />
+            </ScrollContainer>
+        </content>
     </Page>
 </mvc:View>

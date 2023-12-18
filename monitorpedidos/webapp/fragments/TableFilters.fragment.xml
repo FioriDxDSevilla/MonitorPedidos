@@ -1,0 +1,318 @@
+<core:FragmentDefinition
+    controllerName="monitorpedidos.controller.View1"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:l="sap.ui.layout"
+    xmlns:ui="sap.ui.table"
+    xmlns:tnt="sap.tnt"
+>
+    <IconTabBar
+        id="idIconTabBar"
+        select=".onFilterSelect"
+        class="sapUiResponsiveContentPadding"
+        expanded="{device>/isNoPhone}">
+        <items>
+            <IconTabFilter
+                id="Filtro1"
+                icon="sap-icon://clear-filter"
+                iconColor="Default"
+                design="Horizontal"
+                text="Todas"
+                key="Free"/>
+            <!-- <IconTabSeparator
+                id="Separador1"
+                icon="sap-icon://begin"
+            />-->
+            <IconTabFilter
+                id="Filtro2"
+                icon="sap-icon://edit"
+                iconColor="Default"
+                design="Horizontal"
+                text="En Redacción"
+                key="Ok"
+            />
+            <!--<IconTabSeparator
+                id="Separador2"
+                icon="sap-icon://begin"
+            />-->
+            <IconTabFilter
+                id="Filtro3"
+                icon="sap-icon://approvals"
+                iconColor="Negative"
+                design="Horizontal"
+                text="Pdte. Aprobar"
+                key="Heavy"
+            />
+            <!--<IconTabSeparator
+                id="Separador3"
+                icon="sap-icon://begin"
+            />-->
+            <!--<IconTabFilter
+                id="Filtro4"
+                icon="sap-icon://customer-financial-fact-sheet"
+                iconColor="Negative"
+                design="Horizontal"
+                text="Pdte. Financiero"
+                key="Overweight"
+            />-->
+            <!--<IconTabSeparator
+                id="Separador4"
+                icon="sap-icon://begin"
+            />-->
+            <IconTabFilter
+                id="Filtro5"
+                icon="sap-icon://money-bills"
+                iconColor="Negative"
+                design="Horizontal"
+                text="Pdte. Facturar"
+                key="Money"
+            />
+            <!--<IconTabSeparator
+                id="Separador5"
+                icon="sap-icon://begin"
+            />-->
+            <IconTabFilter
+                id="Filtro6"
+                icon="sap-icon://unpaid-leave"
+                iconColor="Negative"
+                design="Horizontal"
+                text="Pdte. Cobrar"
+                key="Payment"
+            />
+            <!--<IconTabSeparator
+                id="Separador6"
+                icon="sap-icon://begin"
+            />-->
+            <IconTabFilter
+                id="Filtro7"
+                icon="sap-icon://paid-leave"
+                iconColor="Positive"
+                design="Horizontal"
+                text="Cobradas"
+                key="Sales"
+            />
+            <!--<IconTabSeparator
+                id="Separador7"
+                icon="sap-icon://begin"
+            />-->
+            <IconTabFilter
+                id="Filtro8"
+                icon="sap-icon://decline"
+                iconColor="Negative"
+                design="Horizontal"
+                text="Denegadas"
+                key="Cancel"
+            />
+        </items>
+        <content>
+            <ui:Table
+                id="idTablePEPs"
+                selectionMode="Single"
+                rows="{
+                            path: 'listadoSolicitudes>/'}"
+                visibleRowCountMode="Interactive"
+                width="100%"
+                enableCellFilter="{ui>/cellFilterOn}"
+                filter="filterOption"
+                sort="sortOption"
+            >
+                <ui:columns>
+                    <ui:Column
+                        width="auto"
+                        filterProperty="IdSolicitud"
+                        sortProperty="IdSolicitud"
+                        tooltip="{i18n>numped}"
+                    >
+                        <Label text="{i18n>numped}" />
+                        <ui:template>
+                            <Text
+                                id="idPEP"
+                                text="{listadoSolicitudes>Idsolicitud}"
+                            />
+                        </ui:template>
+                    </ui:Column>
+
+                    <ui:Column
+                        width="auto"
+                        filterProperty="Fechadoc"
+                        sortProperty="Fechadoc"
+                        tooltip="{i18n>fechadocu}"
+                    >
+                        <Label text="{i18n>fechadocu}" />
+                        <ui:template>
+                            <Text
+                                text="{path: 'listadoSolicitudes>Fechadoc',  type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd/MM/yyyy'}}"
+                            />
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="auto"
+                        filterProperty="Creador"
+                        sortProperty="Creador"
+                        tooltip="{i18n>creador}"
+                    >
+                        <Label text="{i18n>creador}" />
+                        <ui:template>
+                            <Text text="{listadoSolicitudes>Creador}" />
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="auto"
+                        filterProperty="Nombrecliente"
+                        sortProperty="Nombrecliente"
+                        tooltip="{i18n>nomcli}"
+                    >
+                        <Label text="{i18n>nomcli}" />
+                        <ui:template>
+                            <Text text="{listadoSolicitudes>Nombrecliente}" />
+                        </ui:template>
+                    </ui:Column>
+                    
+                    <ui:Column
+                        width="auto"
+                        filterProperty="ImpPedido"
+                        sortProperty="ImpPedido"
+                        tooltip="{i18n>imptotal}"
+                    >
+                        <Label text="{i18n>imptotal}" />
+                        <ui:template>
+                            <Text text="{listadoSolicitudes>ImpPedido}" />
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="auto"
+                        filterProperty="Estado"
+                        sortProperty="Estado"
+                        tooltip="{i18n>status}"
+                    >
+                        <Label text="{i18n>status}" />
+                        <ui:template>
+                            <Text text="{listadoSolicitudes>Estado}" />
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="auto"
+                        filterProperty="Nombreapr"
+                        sortProperty="Nombreapr"
+                        tooltip="{i18n>nomapprov}"
+                    >
+                        <Label text="{i18n>nomapprov}" />
+                        <ui:template>
+                            <Text text="{listadoSolicitudes>Nombreapr}" />
+                        </ui:template>
+                    </ui:Column>
+                    <!--<ui:Column
+                        width="auto"
+                        filterProperty="Claseped"
+                        sortProperty="Claseped"
+                        tooltip="{i18n>claseped}"
+                    >
+                        <Label text="{i18n>claseped}" />
+                        <ui:template>
+                            <Text text="{listadoSolicitudes>Claseped}" />
+                        </ui:template>
+                    </ui:Column>-->
+                    <ui:Column
+                        width="auto"
+                        filterProperty="Orgventas"
+                        sortProperty="Orgventas"
+                        tooltip="{i18n>orgventas}"
+                    >
+                        <Label text="{i18n>orgventas}" />
+                        <ui:template>
+                            <Text text="{listadoSolicitudes>Orgventas}" />
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="auto"
+                        filterProperty="Numfactura"
+                        sortProperty="Numfactura"
+                        tooltip="{i18n>Numfactura}"
+                    >
+                        <Label text="{i18n>Numfactura}" />
+                        <ui:template>
+                            <!--<Text text="{listadoSolicitudes>Numfactura}" />-->
+                            <!--<Link text="{listadoSolicitudes>Numfactura}" press="handleLinkFact" />-->
+                            	<ObjectIdentifier
+                                    title="{listadoSolicitudes>Numfactura}"
+                                    titleActive = "true"
+                                    titlePress="handleLinkFact" />
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="auto"
+                        filterProperty="Referenciped"
+                        sortProperty="Referenciped"
+                        tooltip="{i18n>Referenciped}"
+                    >
+                        <Label text="{i18n>Referenciped}" />
+                        <ui:template>
+                            <Text text="{listadoSolicitudes>Referenciped}" />
+                        </ui:template>
+                    </ui:Column>
+
+                    <ui:Column
+                        width="auto"
+                        filterProperty="Indcontrato"
+                        sortProperty="Indcontrato"
+                        tooltip="{i18n>Indcontrato}"
+                    >
+                        <Label text="{i18n>Indcontrato}" />
+                        <ui:template>
+                            <!--<Text text="{listadoSolicitudes>Indcontrato}" />-->
+                            <!--<Switch
+                                state="{listadoSolicitudes>Indcontrato}"
+                                customTextOn="Yes" customTextOff="No"
+                                enabled="false"
+                                tooltip="{i18n>Indcontrato}">
+                                <layoutData>
+                                    <FlexItemData growFactor="1" />
+                                </layoutData>
+                            </Switch>-->
+                            <!--<Link text="{listadoSolicitudes>Indcontrato}" press="handleLinkCont" />-->
+                            <ObjectIdentifier
+                                    title="{listadoSolicitudes>Indcontrato}"
+                                    titleActive = "true"
+                                    titlePress="handleLinkCont" />
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column width="2%">
+                        <Label text="" />
+                        <ui:template>
+                            <Button
+                                id="TableButton1"
+                                icon="sap-icon://display"
+                                tooltip="{i18n>visual}"
+                                type="Ghost"
+                            />
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column width="2%">
+                        <Label text="" />
+                        <ui:template>
+                            <Button
+                                id="TableButton2"
+                                icon="sap-icon://pdf-attachment"
+                                tooltip="{i18n>down}"
+                                type="Ghost"
+                            />
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column width="2%">
+                        <Label text="" />
+                        <ui:template>
+                            <Button
+                                id="TableButton3"
+                                icon="sap-icon://documents"
+                                tooltip="{i18n>copy}"
+                                type="Ghost"
+                            />
+                        </ui:template>
+                    </ui:Column>
+                </ui:columns>
+            </ui:Table>
+        </content>
+    </IconTabBar>
+</core:FragmentDefinition>

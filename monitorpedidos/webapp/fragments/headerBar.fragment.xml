@@ -1,0 +1,83 @@
+<core:FragmentDefinition
+    controllerName="monitorpedidos.controller.View1"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:l="sap.ui.layout"
+    xmlns:tnt="sap.tnt"
+>
+    <tnt:ToolHeader id="ToolHeader">
+
+        <!---BOTONES A LA IZQUIERDA DE LA BARRA-->
+
+        <Button
+            id="Nueva"
+            icon="sap-icon://add"
+            type="Emphasized"
+            press="onNavToAltaPedidos"
+            text="{i18n>new}"
+        >
+            <layoutData>
+                <OverflowToolbarLayoutData
+                    id="Over1"
+                    priority="NeverOverflow"
+                />
+            </layoutData>
+        </Button>
+        <IconTabHeader
+            id="iconTabHeader"
+            selectedKey="invalidKey"
+            select=".onSelectTab"
+            backgroundDesign="Transparent"
+            mode="Inline"
+        >
+            <layoutData>
+                <OverflowToolbarLayoutData
+                    id="Over2"
+                    priority="NeverOverflow"
+                    shrinkable="true"
+                />
+            </layoutData>
+        </IconTabHeader>
+
+        
+
+        <!---BOTONES A LA DERECHA DE LA BARRA-->
+
+        <Label width="60%"/> <!--SEPARADOR-->
+
+        <Button
+            id="ExcelImport"
+            icon="sap-icon://back-to-top"
+            type="Emphasized"
+            press="onCSV"
+            text="{i18n>impcsv}"
+            
+        >
+            <layoutData>
+                <OverflowToolbarLayoutData
+                    id="Over3"
+                    priority="NeverOverflow"
+                />
+                
+            </layoutData>
+        </Button>
+        <Button
+            id="ExcelDownload"
+            icon="sap-icon://excel-attachment"
+            type="Emphasized"
+            press="onDownExcel"
+            text="{i18n>exceldown}"            
+        >
+            <layoutData>
+                <OverflowToolbarLayoutData
+                    id="Over4"
+                    priority="NeverOverflow"
+                    shrinkable="false"  
+                />
+            </layoutData>
+        </Button>
+        
+    </tnt:ToolHeader>
+</core:FragmentDefinition>
