@@ -286,6 +286,7 @@
                                 icon="sap-icon://display"
                                 tooltip="{i18n>visual}"
                                 type="Ghost"
+                                press="onOpenOrder"
                             />
                         </ui:template>
                     </ui:Column>

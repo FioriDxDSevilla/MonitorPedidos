@@ -727,6 +727,22 @@ sap.ui.define([
                 this.getPedido(pedido);
             },
 
+
+            //PRUEBA
+
+            onOpenOrder: function(oEvent){
+                var numero = oEvent.getSource().getBindingContext("listadoSolicitudes").getPath().split("/").slice(-1).pop()
+                var posicionArray = this.oComponent.getModel("listadoSolicitudes").getData()[numero];
+                var Idsolicitud = posicionArray.Idsolicitud
+
+                const oRouter = this.getOwnerComponent().getRouter();
+                oRouter.navTo("RouteAltaPedidos",{
+                    path: Idsolicitud
+                });
+                     
+            },
+
+
             getSelectedPed: function (oEvent) {
 
                 var oModSum = this.oComponent.getModel("listadoSolicitudes").getData();

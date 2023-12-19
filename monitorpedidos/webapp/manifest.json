@@ -90,6 +90,7 @@
         "viewPath": "monitorpedidos.view",
         "controlAggregation": "pages",
         "controlId": "app",
+        "transition": "slide",
         "clearControlAggregation": false
       },
       "routes": [
@@ -99,6 +100,13 @@
           "target": [
             "TargetMonitorPedidos"
           ]
+        },
+        {
+          "name": "RouteAltaPedidos",
+          "pattern": "OrderNum={path}",
+          "target": [
+            "TargetAltaPedidos"
+          ]
         }
       ],
       "targets": {
@@ -107,7 +115,16 @@
           "transition": "slide",
           "clearControlAggregation": false,
           "viewId": "MonitorPedidos",
-          "viewName": "MonitorPedidos"
+          "viewName": "MonitorPedidos",
+          "level": 1
+        },
+        "TargetAltaPedidos": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "AltaPedidos",
+          "viewName": "AltaPedidos",
+          "level": 2
         }
       }
     },
