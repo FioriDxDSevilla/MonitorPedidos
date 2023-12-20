@@ -304,6 +304,24 @@ sap.ui.define([
                     var oModelSolicitudes = new JSONModel(values[0].results);
                     this.oComponent.setModel(oModelSolicitudes, "listadoSolicitudes");
                     this.oComponent.getModel("listadoSolicitudes").refresh(true);
+
+                    if (values[0].results[0].Ztotal > 0) {
+                        this.oComponent.getModel("Filtros").setProperty("/Total", values[0].results[0].Ztotal);
+                    }  else if (values[0].results[0].Ztotred > 0) {
+                        this.oComponent.getModel("Filtros").setProperty("/totalred", values[0].results[0].Ztotred);
+                    } else if (values[0].results[0].Ztotapr > 0) {
+                        this.oComponent.getModel("Filtros").setProperty("/totalapr", values[0].results[0].Ztotapr);
+                    } else if (values[0].results[0].Ztotfin > 0) {
+                        this.oComponent.getModel("Filtros").setProperty("/totalfin", values[0].results[0].Ztotfin);
+                    } else if (values[0].results[0].Ztotfac > 0) {
+                        this.oComponent.getModel("Filtros").setProperty("/totalfac", values[0].results[0].Ztotfac);
+                    } else if (values[0].results[0].Ztotpdte > 0) {
+                        this.oComponent.getModel("Filtros").setProperty("/totalpdte", values[0].results[0].Ztotpdte);
+                    } else if (values[0].results[0].Ztotcob > 0) {
+                        this.oComponent.getModel("Filtros").setProperty("/totalcob", values[0].results[0].Ztotpdte);
+                    } else {
+                        this.oComponent.getModel("Filtros").setProperty("/Total", "");
+                    }
                 }
             },
 

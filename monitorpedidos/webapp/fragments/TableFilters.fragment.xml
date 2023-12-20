@@ -20,6 +20,7 @@
                 iconColor="Default"
                 design="Horizontal"
                 text="Todas"
+                count="{Filtros>/Total}"
                 key="Free"/>
             <!-- <IconTabSeparator
                 id="Separador1"
@@ -31,6 +32,7 @@
                 iconColor="Default"
                 design="Horizontal"
                 text="En Redacción"
+                count="{Filtros>/totalred}"
                 key="Ok"
             />
             <!--<IconTabSeparator
@@ -43,6 +45,7 @@
                 iconColor="Negative"
                 design="Horizontal"
                 text="Pdte. Aprobar"
+                count="{Filtros>/totalpdte}"
                 key="Heavy"
             />
             <!--<IconTabSeparator
@@ -67,6 +70,7 @@
                 iconColor="Negative"
                 design="Horizontal"
                 text="Pdte. Facturar"
+                count="{Filtros>/totalfac}"
                 key="Money"
             />
             <!--<IconTabSeparator
@@ -79,6 +83,7 @@
                 iconColor="Negative"
                 design="Horizontal"
                 text="Pdte. Cobrar"
+                count="{Filtros>/totalpdte}"
                 key="Payment"
             />
             <!--<IconTabSeparator
@@ -91,6 +96,7 @@
                 iconColor="Positive"
                 design="Horizontal"
                 text="Cobradas"
+                 count="{Filtros>/totalcob}"
                 key="Sales"
             />
             <!--<IconTabSeparator
@@ -103,6 +109,7 @@
                 iconColor="Negative"
                 design="Horizontal"
                 text="Denegadas"
+                count="{Filtros>/Total}"
                 key="Cancel"
             />
         </items>
@@ -160,6 +167,17 @@
                     </ui:Column>
                     <ui:Column
                         width="auto"
+                        filterProperty="Cliente"
+                        sortProperty="Cliente"
+                        tooltip="{i18n>codcli}"
+                    >
+                        <Label text="{i18n>codcli}" />
+                        <ui:template>
+                            <Text text="{listadoSolicitudes>Cliente}" />
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="auto"
                         filterProperty="Nombrecliente"
                         sortProperty="Nombrecliente"
                         tooltip="{i18n>nomcli}"
@@ -190,6 +208,28 @@
                         <Label text="{i18n>status}" />
                         <ui:template>
                             <Text text="{listadoSolicitudes>Estado}" />
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="auto"
+                        filterProperty="Zorden"
+                        sortProperty="Zorden"
+                        tooltip="{i18n>zord}"
+                    >
+                        <Label text="{i18n>zord}" />
+                        <ui:template>
+                            <Text text="{listadoSolicitudes>Zorden}" />
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="auto"
+                        filterProperty="Zcoste"
+                        sortProperty="Zcoste"
+                        tooltip="{i18n>zcost}"
+                    >
+                        <Label text="{i18n>zcost}" />
+                        <ui:template>
+                            <Text text="{listadoSolicitudes>Zcoste}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column

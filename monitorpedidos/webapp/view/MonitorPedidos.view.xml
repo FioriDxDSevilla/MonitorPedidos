@@ -1,16 +1,16 @@
 <mvc:View controllerName="monitorpedidos.controller.MonitorPedidos"
     xmlns:mvc="sap.ui.core.mvc"  displayBlock="true"
     xmlns="sap.m"
-    xmlns:core="sap.ui.core">
+    xmlns:core="sap.ui.core"  height="100%">
     <Page id="page" title="{i18n>title}">
         <content>
-            <ScrollContainer
+            <!--<ScrollContainer
                 height="100%"
                 width="100%"
                 vertical="true"
                 horizontal="true"
                 focusable="true"
-            >
+            >-->
                 <core:Fragment
                     fragmentName="monitorpedidos.fragments.Header"
                     type="XML"
@@ -23,7 +23,7 @@
                     fragmentName="monitorpedidos.fragments.TableFilters"
                     type="XML"
                 />
-            </ScrollContainer>
+            <!--</ScrollContainer>-->
         </content>
         <footer>
 			<OverflowToolbar id="otbFooter" class="sapUiMediumMarginTop">
