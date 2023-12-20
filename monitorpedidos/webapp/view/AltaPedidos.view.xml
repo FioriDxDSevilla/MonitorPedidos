@@ -6,8 +6,6 @@
     xmlns:core="sap.ui.core"
     xmlns:layout="sap.ui.layout"
     xmlns:l="sap.ui.layout" height="100%">
-    <!-- <m:App>-->
-
 
     <m:Page id="page" title="{i18n>createOrderTitle}">
         <m:content>
@@ -16,19 +14,58 @@
                     <ObjectPageHeader id="pageHeader" objectTitle="Pedido: 100000002 - 25/10/2023 - Pdte Aprobar"/>
                 </headerTitle>
                 <headerContent>
-                    <m:VBox >
+                    <m:VBox>
+                        <f:SimpleForm editable="false" id="SimpleFormDisplay" maxContainerCols="2" layout="GridLayout" class="form1" singleContainerFullSize="false" adjustLabelSpan="true">
+                            <f:content >
+                                 <!-- -->
+                                   <core:Title text="" /> 
+                                
+                                <m:Label text="Denominación" />
+                                <m:Input enabled="false" editable="false" width="300px">
+                                    <m:layoutData>
+                                        <l:GridData span="XL1 L2 M2 S4" />
+                                    </m:layoutData>
+                                </m:Input>
+                                <m:Label text="Sociedad"/>
+                                <m:Input enabled="false" editable="false" width="225px">
+                                    <m:layoutData>
+                                        <l:GridData span="XL1 L2 M2 S4" />
+                                    </m:layoutData>
+                                </m:Input>
+                                <m:Label text="Zona de Ventas" />
+                                <m:Input enabled="false" editable="false" width="225px">
+                                    <m:layoutData>
+                                        <l:GridData span="XL1 L2 M2 S4" />
+                                    </m:layoutData>
+                                </m:Input>
+                                  <m:Label text="Cliente" />
+                                <m:Input enabled="false" editable="false" width="225px">
+                                    <m:layoutData>
+                                        <l:GridData span="XL1 L2 M2 S4" />
+                                    </m:layoutData>
+                                </m:Input>
+                                <m:Label text="Contrato" />
+                                <m:Input enabled="false" editable="false" width="225px">
+                                    <m:layoutData>
+                                        <l:GridData span="XL1 L2 M2 S4" />
+                                    </m:layoutData>
+                                </m:Input>
+                                <!--  -->
+                        
+                                <core:Title text="" /> 
+                                <m:Text text="800,00 EUR" textAlign="End"/>
+                                <m:Label/>
+                                <m:Text text="Creado por: (NOMBRE)" textAlign="End"/>
 
-                        <f:SimpleForm editable="false" layout="ResponsiveGridLayout" title="Address" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="1" singleContainerFullSize="false">
-                            <f:content>
-                                <m:Text text="Denominación:"/>
-                                <m:Input />
-                                <m:Text text="Sociedad:"/>
                             </f:content>
                         </f:SimpleForm>
-
                     </m:VBox>
                     <m:OverflowToolbar/>
                     <!--
+
+                        <m:Text text="Denominación:"/><m:Input />
+                        <m:Text text="Sociedad:"/>
+
                         <m:FlexBox>
                         <m:ObjectAttribute title="Denominación" text=""/>
                         <m:ObjectAttribute title="Sociedad" text=""/>
@@ -37,9 +74,6 @@
                         <m:ObjectAttribute title="Contrato" text=""/>
                          </m:FlexBox>
                   -->
-
-
-
 
 
                 </headerContent>
@@ -52,13 +86,6 @@
 
 
             </ObjectPageLayout>
-
-            <!---->
-
-
-
-
         </m:content>
     </m:Page>
-    <!-- /m:App> -->
 </mvc:View>
