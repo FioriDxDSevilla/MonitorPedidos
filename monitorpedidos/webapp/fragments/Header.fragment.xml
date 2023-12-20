@@ -124,6 +124,21 @@
             <fb:FilterGroupItem
                 id="id5"
                 groupName="FiltrosCli"
+                name="M"
+                label="{i18n>mat}"
+                visibleInFilterBar="true"
+            >
+                <fb:control>
+                    <Input
+                        id="f_material"
+                        showValueHelp="true"
+                        valueHelpRequest=".onValueHelpRequestMat"
+                    />
+                </fb:control>
+            </fb:FilterGroupItem>
+            <fb:FilterGroupItem
+                id="id6"
+                groupName="FiltrosCli"
                 name="F"
                 label="{i18n>approv}"
                 visibleInFilterBar="false"
@@ -137,9 +152,38 @@
             </fb:FilterGroupItem>
 
             <fb:FilterGroupItem
-                id="id6"
+                id="id7"
                 groupName="FiltrosCli"
                 name="H"
+                label="{i18n>lineas}"
+                visibleInFilterBar="true"
+            >
+                <fb:control>
+                    <!--<ComboBox
+                        id="f_type"
+                        items="{path: 'Tipospedido>/', sorter: {path: 'Bezei'}}"
+                        change=".onChangefType"
+                        filterSecondaryValues="true">
+                            <core:Item
+                                key="{Tipospedido>Auart}"
+                                text="{Tipospedido>Bezei}"
+                            />
+                    </ComboBox>-->
+                        <ComboBox
+                            change=".onChangefLineas"
+                            items="{path: 'LineasServicio/', sorter: {path: 'Bztxt'}}" filterSecondaryValues="true">
+                            <core:Item
+                                key="{LineasServicio>Bzirk}"
+                                text="{LineasServicio>Bztxt}"
+                            />
+                        </ComboBox>
+                </fb:control>
+            </fb:FilterGroupItem>
+
+                <fb:FilterGroupItem
+                id="id8"
+                groupName="FiltrosCli"
+                name="T"
                 label="{i18n>type}"
                 visibleInFilterBar="true"
             >
@@ -164,6 +208,7 @@
                         </MultiComboBox>
                 </fb:control>
             </fb:FilterGroupItem>
+
 
             <!--<fb:FilterGroupItem
                 id="id7"

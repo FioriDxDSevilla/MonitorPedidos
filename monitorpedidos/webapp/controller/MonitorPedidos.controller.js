@@ -20,7 +20,7 @@ sap.ui.define([
 
         var EdmType = exportLibrary.EdmType;
 
-        var codcli, sumTotal, nomcli, Numped, Fechad, Fechah, Imported, Importeh, Cliente, ClasePed;
+        var codcli, sumTotal, nomcli, Numped, Fechad, Fechah, Imported, Importeh, Cliente, ClasePed, codmat, nommat;
         var arrayKeys = [];
 
         return Controller.extend("monitorpedidos.controller.MonitorPedidos", {
@@ -52,6 +52,15 @@ sap.ui.define([
 
                 var date = new Date();
 
+                this.ListadoSolicitudes(
+                    //Usuario,
+                    //Numped,
+                    fechai,
+                    fechaf,
+                    Imported,
+                    Importeh,
+                    Cliente);
+
                 //Mapear los campos por defecto de los filtros:
 
                 var filtros = {
@@ -64,12 +73,19 @@ sap.ui.define([
                 oModFiltr.setData(filtros);
                 this.oComponent.setModel(oModFiltr, "Filtros");
                 this.dameTiposped();
+                this.dameLineas();
             },
 
             dameTiposped: function () {
                 Promise.all([
                     this.readDataEntity(this.mainService, "/ClasePedSet", ""),
                 ]).then(this.buildClasePed.bind(this), this.errorFatal.bind(this));
+            },
+
+            dameLineas: function () {
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/LineasServicioSet", ""),
+                ]).then(this.buildLineas.bind(this), this.errorFatal.bind(this));
             },
 
             buildClasePed: function (values) {
@@ -82,6 +98,19 @@ sap.ui.define([
                 }
 
             },
+
+            buildLineas: function (values) {
+
+                if (values[0].results) {
+                    var oModelLineas= new JSONModel();
+                    oModelLineas.setData(values[0].results);
+                    this.oComponent.setModel(oModelLineas, "LineasServicio");
+                }
+
+            },
+
+
+            //Cambio 
 
             handleSelectionChange: function (oEvent) {
                 var changedItem = oEvent.getParameter("changedItem");
@@ -256,7 +285,7 @@ sap.ui.define([
                         aFilterValues.splice(i, 1);
                     }
                 }
-                if (Imported == "" && Importeh == "") {
+                if (Imported == "" && Importeh == "" || Imported == undefined && Importeh == undefined) {
                     var i = aFilterIds.indexOf("Imported");
 
                     if (i !== -1) {
@@ -403,6 +432,71 @@ sap.ui.define([
 
             },
 
+            onBusqMateriales: function() {
+                var Matnr = this.getView().byId("f_codMat").getValue();
+                var Maktx= this.getView().byId("f_nomMat").getValue();
+                var Matkl = this.getView().byId("f_grArt").getValue();
+                //var Bukrs = this.getView().byId("f_nifcAcr").getValue();
+
+                var aFilterIds, aFilterValues, aFilters;
+
+                //FILTRADO DE CLIENTES////////////////////////////////////////////////////////////////////////////////////////////
+
+                aFilterIds = [
+                    "Matnr",
+                    "Maktx",
+                    "Matkl"
+                ];
+                aFilterValues = [
+                    Matnr,
+                    Maktx,
+                    Matkl
+                ];
+
+                if (Matnr == "") {
+                    var i = aFilterIds.indexOf("Matnr");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                if (Maktx == "") {
+                    var i = aFilterIds.indexOf("Maktx");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                /*if (Bukrs == "") {
+                    var i = aFilterIds.indexOf("Bukrs");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }*/
+                if (Matkl == "") {
+                    var i = aFilterIds.indexOf("MatklKunnr");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                sap.ui.core.BusyIndicator.show();
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/DameMaterialSet", aFilters),
+                ]).then(this.buildMaterialesModel.bind(this), this.errorFatal.bind(this));
+            },
+
             buildClientesModel: function (values) {
                 if (values[0].results) {
                     sap.ui.core.BusyIndicator.hide();
@@ -410,6 +504,16 @@ sap.ui.define([
                     oModelClientes.setData(values[0].results);
                     this.oComponent.setModel(oModelClientes, "listadoClientes");
                     this.oComponent.getModel("listadoClientes").refresh(true);
+                }
+            },
+
+            buildMaterialesModel: function (values) {
+                if (values[0].results) {
+                    sap.ui.core.BusyIndicator.hide();
+                    var oModelMateriales = new JSONModel();
+                    oModelMateriales.setData(values[0].results);
+                    this.oComponent.setModel(oModelMateriales, "listadoMateriales");
+                    this.oComponent.getModel("listadoMateriales").refresh(true);
                 }
             },
 
@@ -422,6 +526,15 @@ sap.ui.define([
 
             },
 
+            onPressMaterial: function (oEvent) {
+                var mat = this.getSelectMat(oEvent, "listadoMateriales");
+                codmat = mat.Matnr;
+                nommat = mat.Maktx;
+                this.getView().byId("f_material").setValue(codmat);
+                this.byId("matDial").close();
+
+            },
+
             getSelect: function (oEvent, oModel) {
                 var oModClie = this.oComponent.getModel(oModel).getData();
                 const sOperationPath = oEvent.getSource().getBindingContext(oModel).getPath();
@@ -430,8 +543,20 @@ sap.ui.define([
                 return idcliente;
             },
 
+            getSelectMat: function (oEvent, oModel) {
+                var oModMat = this.oComponent.getModel(oModel).getData();
+                const sOperationPath = oEvent.getSource().getBindingContext(oModel).getPath();
+                const sOperation = sOperationPath.split("/").slice(-1).pop();
+                var idMaterial = oModMat[sOperation];
+                return idMaterial;
+            },
+
             CloseCliDiag: function () {
                 this.byId("cliDial").close();
+            },
+
+            CloseMatDiag: function () {
+                this.byId("matDial").close();
             },
 
             onValueHelpRequest: function (oEvent) {
@@ -440,13 +565,38 @@ sap.ui.define([
                 this._getDialogCliente();
             },
 
+            onValueHelpRequestMat: function (oEvent) {
+                //this.Dialog = sap.ui.xmlfragment("aguasdevalencia.fragment.ClienteMonitorPedidos", this);
+                //this.Dialog.open();
+                this._getDialogMaterial();
+            },
+
             _getDialogCliente: function (sInputValue) {
                 var oView = this.getView();
 
                 if (!this.pDialog) {
                     this.pDialog = Fragment.load({
                         id: oView.getId(),
-                        name: "project1.fragments.BusqClientes",
+                        name: "monitopedidos.fragments.BusqClientes",
+                        controller: this,
+                    }).then(function (oDialog) {
+                        // connect dialog to the root view of this component (models, lifecycle)
+                        oView.addDependent(oDialog);
+                        return oDialog;
+                    });
+                }
+                this.pDialog.then(function (oDialog) {
+                    oDialog.open(sInputValue);
+                });
+            },
+
+            _getDialogMaterial: function (sInputValue) {
+                var oView = this.getView();
+
+                if (!this.pDialog) {
+                    this.pDialog = Fragment.load({
+                        id: oView.getId(),
+                        name: "monitorpedidos.fragments.BusqMateriales",
                         controller: this,
                     }).then(function (oDialog) {
                         // connect dialog to the root view of this component (models, lifecycle)
