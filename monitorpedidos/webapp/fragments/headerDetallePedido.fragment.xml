@@ -1,0 +1,20 @@
+<core:FragmentDefinition controllerName="monitorpedidos.controller.AltaPedidos"
+    xmlns:m="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:l="sap.ui.layout"
+    >
+
+        <m:IconTabBar id="idIconTabBar" class="sapUiResponsiveContentPadding">
+            <m:items>
+                <m:IconTabFilter showAll="true" text="Cabecera" key="Cabecera" />
+                <m:IconTabFilter showAll="true" text="Posiciones" key="Posiciones"/>
+                <m:IconTabFilter showAll="true" text="Datos Cliente" key="Datos Cliente"/>
+                <m:IconTabFilter showAll="true" text="Adjuntos" key="Adjuntos"/>
+                <m:IconTabFilter showAll="true" text="Historial" key="Historial"/>
+            </m:items>
+        </m:IconTabBar>
+ 
+</core:FragmentDefinition>
+    
