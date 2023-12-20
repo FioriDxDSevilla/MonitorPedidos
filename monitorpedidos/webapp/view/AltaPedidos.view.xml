@@ -29,8 +29,9 @@
                     </headerContent>
                 
                 </ObjectPageLayout>
+<!--
 
-                    <m:IconTabBar id="idIconTabBar" class="sapUiResponsiveContentPadding">
+      <m:IconTabBar id="idIconTabBar" class="sapUiResponsiveContentPadding">
                         <m:items>
                             <m:IconTabFilter showAll="true" text="Cabecera" key="Cabecera"/>
                             <m:IconTabFilter showAll="true" text="Posiciones" key="Posiciones"/>
@@ -39,6 +40,8 @@
                             <m:IconTabFilter showAll="true" text="Historial" key="Historial"/>
                         </m:items>
                     </m:IconTabBar>
+-->
+                  
 
 
             </m:content>
