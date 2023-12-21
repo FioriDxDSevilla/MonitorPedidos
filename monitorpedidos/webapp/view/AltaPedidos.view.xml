@@ -16,11 +16,12 @@
                 <headerContent>
                     <m:VBox>
                         <f:SimpleForm editable="false" id="SimpleFormDisplay" maxContainerCols="2" layout="GridLayout" class="form1" singleContainerFullSize="false" adjustLabelSpan="true">
-                            <f:content >
+                            <f:content >                           
+                
                                  <!-- -->
-                                   <core:Title text="" /> 
+                                <core:Title text="" /> 
                                 
-                                <m:Label text="Denominación" />
+                                <m:Label text="{i18n>Denominacion}" />
                                 <m:Input enabled="false" editable="false" width="300px">
                                     <m:layoutData>
                                         <l:GridData span="XL1 L2 M2 S4" />
@@ -56,11 +57,10 @@
                                 <m:Text text="800,00 EUR" textAlign="End"/>
                                 <m:Label/>
                                 <m:Text text="Creado por: (NOMBRE)" textAlign="End"/>
-
+                    
                             </f:content>
                         </f:SimpleForm>
                     </m:VBox>
-                    <m:OverflowToolbar/>
                     <!--
 
                         <m:Text text="Denominación:"/><m:Input />
@@ -83,7 +83,6 @@
                         <core:Fragment fragmentName="monitorpedidos.fragments.headerDetallePedido" type="XML" />
                     </ObjectPageSubSection>
                 </ObjectPageSection>
-
 
             </ObjectPageLayout>
         </m:content>

@@ -1,0 +1,103 @@
+<core:FragmentDefinition controllerName="monitorpedidos.controller.AltaPedidos"
+    xmlns:m="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:l="sap.ui.layout">
+    <!--  -->
+
+    <m:VBox>
+        <f:SimpleForm editable="false" maxContainerCols="2" layout="GridLayout" class="form1" singleContainerFullSize="false" adjustLabelSpan="true">
+            <f:content >
+                <!-- -->
+                <core:Title text="{i18n>TituloDatosCabeceraPedido}" />
+                <m:Label text="{i18n>ClasePedido}" />
+                <m:Input enabled="false" editable="false" width="200px">
+                    <m:layoutData>
+                        <l:GridData span="XL1 L2 M2 S4" />
+                    </m:layoutData>
+                </m:Input>
+                <m:Label text="{i18n>AreaVentas}"/>
+                <m:Input enabled="false" editable="false" width="200px">
+                    <m:layoutData>
+                        <l:GridData span="XL1 L2 M2 S4" />
+                    </m:layoutData>
+                </m:Input>
+                <m:Label text="{i18n>OficinaVentas}"/>
+                <m:Input enabled="false" editable="false" width="200px">
+                    <m:layoutData>
+                        <l:GridData span="XL1 L2 M2 S4" />
+                    </m:layoutData>
+                </m:Input>
+                <m:Label text="{i18n>NumPedidoCliente}"/>
+                <m:Input enabled="false" editable="false" width="350px">
+                    <m:layoutData>
+                        <l:GridData span="XL1 L2 M2 S4" />
+                    </m:layoutData>
+                </m:Input>
+
+                <core:Title text="" />
+                <m:Label text="{i18n>MotivoPedido}"/>
+                <m:Input enabled="false" editable="false" width="400px">
+                    <m:layoutData>
+                        <l:GridData span="XL1 L2 M2 S4" />
+                    </m:layoutData>
+                </m:Input>
+                <m:Label text="{i18n>BloqueoFactura}"/>
+                <m:Input enabled="false" editable="false" width="400px">
+                    <m:layoutData>
+                        <l:GridData span="XL1 L2 M2 S4" />
+                    </m:layoutData>
+                </m:Input>
+                <m:Label text="{i18n>CondicionPago}"/>
+                <m:Input enabled="false" editable="false" width="200px">
+                    <m:layoutData>
+                        <l:GridData span="XL1 L2 M2 S4" />
+                    </m:layoutData>
+                </m:Input>
+                <m:Label text="{i18n>NIA}"/>
+                <m:Input enabled="false" editable="false" width="200px">
+                    <m:layoutData>
+                        <l:GridData span="XL1 L2 M2 S4" />
+                    </m:layoutData>
+                </m:Input>
+                <m:Label text="{i18n>Plataforma}"/>
+                <m:Input enabled="false" editable="false" width="200px">
+                    <m:layoutData>
+                        <l:GridData span="XL1 L2 M2 S4" />
+                    </m:layoutData>
+                </m:Input>
+                <m:Label text="{i18n>DirOrganoGestor}"/>
+                <m:Input enabled="false" editable="false" width="200px">
+                    <m:layoutData>
+                        <l:GridData span="XL1 L2 M2 S4" />
+                    </m:layoutData>
+                </m:Input>
+                <m:Label text="{i18n>DirUnidadTramitadora}"/>
+                <m:Text />
+                <m:Label text="{i18n>DirOrganoGestorNuevo}"/>
+                <m:Input enabled="false" editable="false" width="200px">
+                    <m:layoutData>
+                        <l:GridData span="XL1 L2 M2 S4" />
+                    </m:layoutData>
+                </m:Input>
+                <m:Label text="{i18n>DirUnidadTramitadoraNuevo}"/>
+                <m:Input enabled="false" editable="false" width="200px">
+                    <m:layoutData>
+                        <l:GridData span="XL1 L2 M2 S4" />
+                    </m:layoutData>
+                </m:Input>
+
+                <core:Title text="" />
+                <m:Label text="{i18n>TextoCabeceraFactura}"/>
+                <m:TextArea/>
+                <m:Label text="{i18n>InformacionRechazo}"/>
+                <m:TextArea/>
+                <m:Label text="{i18n>TextoAclaraciones}"/>
+                <m:TextArea/>
+            </f:content>
+        </f:SimpleForm>
+    </m:VBox>
+    <!--  -->
+</core:FragmentDefinition>
+    

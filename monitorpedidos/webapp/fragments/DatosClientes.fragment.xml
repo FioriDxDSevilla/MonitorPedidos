@@ -1,0 +1,17 @@
+<core:FragmentDefinition controllerName="monitorpedidos.controller.AltaPedidos"
+    xmlns:m="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:l="sap.ui.layout">
+    <!--    -->
+    <m:VBox>
+        <f:SimpleForm editable="false" maxContainerCols="2" layout="GridLayout" class="form1" singleContainerFullSize="false" adjustLabelSpan="true">
+            <f:content >
+                <!-- -->
+                <core:Title text="{i18n>TituloDatosdeCliente}" />
+            </f:content >
+        </f:SimpleForm>
+    </m:VBox>
+
+</core:FragmentDefinition>
