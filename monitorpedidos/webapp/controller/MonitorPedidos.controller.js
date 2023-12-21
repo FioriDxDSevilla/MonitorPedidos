@@ -20,7 +20,7 @@ sap.ui.define([
 
         var EdmType = exportLibrary.EdmType;
 
-        var codcli, sumTotal, nomcli, Numped, Fechad, Fechah, Imported, Importeh, Cliente, ClasePed, codmat, nommat;
+        var codcli, sumTotal, nomcli, Numped, Fechad, Fechah, Imported, Importeh, Cliente, ClasePed, codmat, nommat, LineaServicio;
         var arrayKeys = [];
 
         return Controller.extend("monitorpedidos.controller.MonitorPedidos", {
@@ -110,7 +110,10 @@ sap.ui.define([
             },
 
 
-            //Cambio 
+            onChangefLineas: function() {
+                LineaServicio = this.getView().byId("f_line").getSelectedKey();
+                console.log(LineaServicio);
+            }, 
 
             handleSelectionChange: function (oEvent) {
                 var changedItem = oEvent.getParameter("changedItem");
@@ -198,7 +201,9 @@ sap.ui.define([
                     Fechah,
                     Imported,
                     Importeh,
-                    Cliente
+                    Cliente,
+                    LineaServicio,
+                    codmat
                     /*, 
                     ClasePed*/
                     )
@@ -213,7 +218,9 @@ sap.ui.define([
                 Fechah,
                 Imported,
                 Importeh,
-                Cliente
+                Cliente,
+                LineaServicio,
+                codmat
                 /*,
                 ClasePed*/
             ) {
@@ -235,7 +242,9 @@ sap.ui.define([
                     "Fechah",
                     "Imported",
                     "Importeh",
-                    "Cliente"
+                    "Cliente",
+                    "Linea",
+                    "Material"
                     /*,
                     "Tipo"*/
                 ];
@@ -246,7 +255,9 @@ sap.ui.define([
                     fec_fin,
                     Imported,
                     Importeh,
-                    Cliente
+                    Cliente,
+                    LineaServicio,
+                    codmat
                     /*,
                     ClasePed*/
                 ];
@@ -302,6 +313,32 @@ sap.ui.define([
                 }
                 if (Cliente == "" || Cliente == undefined) {
                     var i = aFilterIds.indexOf("Cliente");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+                if (LineaServicio == "" || LineaServicio == undefined) {
+                    var i = aFilterIds.indexOf("Linea");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                if (LineaServicio == "" || LineaServicio == undefined) {
+                    var i = aFilterIds.indexOf("Linea");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                if (codmat == "" || codmat == undefined) {
+                    var i = aFilterIds.indexOf("Material");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);

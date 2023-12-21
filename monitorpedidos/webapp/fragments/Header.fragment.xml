@@ -15,19 +15,6 @@
         filterBarExpanded="false"
     >
         <fb:filterGroupItems>
-            <!--
-            <fb:FilterGroupItem
-                id="id1"
-                groupName="FiltrosCli"
-                name="A"
-                label="{i18n>numped}"
-                visibleInFilterBar="true"
-            >
-                <fb:control>
-                    <Input id="f_numsolic" />
-                </fb:control>s
-            </fb:FilterGroupItem>
-            -->
             <fb:FilterGroupItem
                 id="id3"
                 groupName="FiltrosCli"
@@ -159,28 +146,21 @@
                 visibleInFilterBar="true"
             >
                 <fb:control>
-                    <!--<ComboBox
-                        id="f_type"
-                        items="{path: 'Tipospedido>/', sorter: {path: 'Bezei'}}"
-                        change=".onChangefType"
-                        filterSecondaryValues="true">
-                            <core:Item
-                                key="{Tipospedido>Auart}"
-                                text="{Tipospedido>Bezei}"
-                            />
-                    </ComboBox>-->
-                        <ComboBox
-                            change=".onChangefLineas"
-                            items="{path: 'LineasServicio/', sorter: {path: 'Bztxt'}}" filterSecondaryValues="true">
-                            <core:Item
-                                key="{LineasServicio>Bzirk}"
-                                text="{LineasServicio>Bztxt}"
-                            />
-                        </ComboBox>
+                    <ComboBox
+                        id="f_line"
+                        change=".onChangefLineas"
+                        items="{path: 'LineasServicio>/', sorter: {path: 'Bztxt'}}"
+                        filterSecondaryValues="true"
+                    >
+                        <core:Item
+                            key="{LineasServicio>Bzirk}"
+                            text="{LineasServicio>Bztxt}"
+                        />
+                    </ComboBox>
                 </fb:control>
             </fb:FilterGroupItem>
 
-                <fb:FilterGroupItem
+            <fb:FilterGroupItem
                 id="id8"
                 groupName="FiltrosCli"
                 name="T"
@@ -198,73 +178,17 @@
                                 text="{Tipospedido>Bezei}"
                             />
                     </ComboBox>-->
-                        <MultiComboBox
-                            selectionChange="handleSelectionChange"
-                            items="{path: 'Tipospedido>/', sorter: {path: 'Descripcion'}}">
-                            <core:Item
-                                key="{Tipospedido>Tipo}"
-                                text="{Tipospedido>Descripcion}"
-                            />
-                        </MultiComboBox>
+                    <MultiComboBox
+                        selectionChange="handleSelectionChange"
+                        items="{path: 'Tipospedido>/', sorter: {path: 'Descripcion'}}"
+                    >
+                        <core:Item
+                            key="{Tipospedido>Tipo}"
+                            text="{Tipospedido>Descripcion}"
+                        />
+                    </MultiComboBox>
                 </fb:control>
             </fb:FilterGroupItem>
-
-
-            <!--<fb:FilterGroupItem
-                id="id7"
-                groupName="FiltrosCli"
-                name="H"
-                label="{i18n>type}"
-                visibleInFilterBar="true"
-            >
-                <fb:control>
-                    <ComboBox
-                        id="f_type"
-                        items="{path: 'Tipospedido>/', sorter: {path: 'Descripcion'}}"
-                        change=".onChangefType"
-                    >
-                            <core:Item
-                                key="{Tipospedido>Tipo}"
-                                text="{Tipospedido>Descripcion}"
-                            />
-                    </ComboBox>
-                </fb:control>
-            </fb:FilterGroupItem>-->
-            <!--<fb:FilterGroupItem
-                id="id8"
-                groupName="FiltrosCli"
-                name="I"
-                label="{i18n>status}"
-                visibleInFilterBar="true"
-            >
-                <fb:control>
-                    <ComboBox
-                        id="f_status"
-                        editable="true"
-                    >
-                        <items>
-                            <core:Item
-                                xmlns:core="sap.ui.core"
-                                key="L"
-                                text="{i18n>liber}"
-                                id="item0"
-                            />
-                            <core:Item
-                                xmlns:core="sap.ui.core"
-                                key="P"
-                                text="{i18n>pending}"
-                                id="item1"
-                            />
-                            <core:Item
-                                xmlns:core="sap.ui.core"
-                                key="F"
-                                text="{i18n>fact}"
-                                id="item2"
-                            />
-                        </items>
-                    </ComboBox>
-                </fb:control>
-            </fb:FilterGroupItem>-->
         </fb:filterGroupItems>
     </fb:FilterBar>
 </core:FragmentDefinition>
