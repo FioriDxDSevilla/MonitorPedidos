@@ -11,13 +11,16 @@
         <m:content>
             <ObjectPageLayout id="ObjectPageLayout">
                 <headerTitle>
-                    <ObjectPageHeader id="pageHeader" objectTitle="Pedido: 100000002 - 25/10/2023 - Pdte Aprobar"/>
+                    <ObjectPageHeader id="pageHeader" objectTitle="Pedido: 100000002 - 25/10/2023 - Pdte Aprobar" />
                 </headerTitle>
                 <headerContent>
-                    <m:VBox>
-                        <f:SimpleForm editable="false" id="SimpleFormDisplay" maxContainerCols="2" layout="GridLayout" class="form1" singleContainerFullSize="false" adjustLabelSpan="true">
+                    <m:VBox renderType="Bare">
+                        <f:SimpleForm editable="true" 
+                        id="SimpleFormDisplay" maxContainerCols="2" 
+                        layout="GridLayout" singleContainerFullSize="false" adjustLabelSpan="true"
+                        
+                        >
                             <f:content >                           
-                
                                  <!-- -->
                                 <core:Title text="" /> 
                                 
@@ -54,32 +57,22 @@
                                 <!--  -->
                         
                                 <core:Title text="" /> 
+                             
                                 <m:Text text="800,00 EUR" textAlign="End"/>
                                 <m:Label/>
                                 <m:Text text="Creado por: (NOMBRE)" textAlign="End"/>
+                                <core:Title text="" /> 
+                                <m:Label/>
+                                <core:Title text="" /> 
+                                <m:Button text="Visualizar pedido" type="Transparent" id="btnVisualizarPedido" width="130px"/>
                     
                             </f:content>
                         </f:SimpleForm>
                     </m:VBox>
-                    <!--
-
-                        <m:Text text="Denominación:"/><m:Input />
-                        <m:Text text="Sociedad:"/>
-
-                        <m:FlexBox>
-                        <m:ObjectAttribute title="Denominación" text=""/>
-                        <m:ObjectAttribute title="Sociedad" text=""/>
-                        <m:ObjectAttribute title="Zona de Ventas" text=""/>
-                        <m:ObjectAttribute title="Cliente" text=""/>
-                        <m:ObjectAttribute title="Contrato" text=""/>
-                         </m:FlexBox>
-                  -->
-
-
                 </headerContent>
 
-                <ObjectPageSection>
-                    <ObjectPageSubSection >
+                <ObjectPageSection showTitle="false" id="ObjectPageSection">
+                    <ObjectPageSubSection  id="ObjectPageSubSection">
                         <core:Fragment fragmentName="monitorpedidos.fragments.headerDetallePedido" type="XML" />
                     </ObjectPageSubSection>
                 </ObjectPageSection>
