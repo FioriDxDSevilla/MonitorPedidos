@@ -1,0 +1,46 @@
+<core:FragmentDefinition controllerName="monitorpedidos.controller.AltaPedidos"
+    xmlns:m="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:l="sap.ui.layout"
+    xmlns:table="sap.ui.table">
+    <!--    -->
+
+    <m:VBox renderType="Bare">
+
+        <table:Table selectionMode="None" id="TablaHistorial">
+            <table:Column hAlign="Center">
+                <m:Label text=""/>
+                <table:template>
+                    <m:Text text=""/>
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>ValorActual}" />
+                <table:template>
+                    <m:Text text=""/>
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>ValorAnterior}" />
+                <table:template>
+                    <m:Text text=""/>
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>FechaModificacion}" />
+                <table:template>
+                    <m:Text text=""/>
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>UsuarioModificacion}" />
+                <table:template>
+                    <m:Text text=""/>
+                </table:template>
+            </table:Column>
+        </table:Table>
+    </m:VBox>
+
+</core:FragmentDefinition>

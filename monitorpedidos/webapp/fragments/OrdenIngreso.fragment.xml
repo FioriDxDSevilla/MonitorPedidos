@@ -4,58 +4,58 @@
     xmlns:f="sap.ui.layout.form"
     xmlns:fb="sap.ui.comp.filterbar"
     xmlns:l="sap.ui.layout"
->   
+>  
 <Dialog
-      id='matDial'
-      title="{i18n>TableMateriales}"  
+      id="ordDial"
+      title="{i18n>TableOrdenes}"  
       resizable="true"
       >
-
+ 
     <fb:FilterBar
-        search=".onBusqMateriales"
+        search=".onBusqOrdenes"
         showClearOnFB="false"
         showFilterConfiguration="false"
         filterBarExpanded="false"
     >
         <fb:filterGroupItems>
             <fb:FilterGroupItem
-                groupName="FiltrosMat"
+                groupName="FiltrosOrd"
                 name="A"
-                label="{i18n>codMat}"
+                label="{i18n>codOrd}"
                 partOfCurrentVariant="true"
                 visibleInFilterBar="true"
             >
                 <fb:control>
                     <Input
-                        id="f_codMat"
-                        value='{FiltrosMat>/Stcd1}'
+                        id="f_codOrd"
+                        value='{FiltrosOrd>/Aufnr}'
                     />
                 </fb:control>
             </fb:FilterGroupItem>
             <fb:FilterGroupItem
-                groupName="FiltrosMat"
+                groupName="FiltrosOrd"
                 name="C"
-                label="{i18n>nomMat}"
+                label="{i18n>nomOrd}"
                 partOfCurrentVariant="true"
                 visibleInFilterBar="true"
             >
                 <fb:control>
                     <Input
-                        id="f_nomMat"
-                        value='{FiltrosMat>/Name1}'
+                        id="f_nomOrd"
+                        value='{FiltrosOrd>/Ktext}'
                     />
                 </fb:control>
             </fb:FilterGroupItem>
             <fb:FilterGroupItem
-                groupName="FiltrosMat"
+                groupName="FiltrosOrd"
                 name="D"
-                label="{i18n>grArt}"
+                label="{i18n>orgventas}"
                 partOfCurrentVariant="true"
                 visibleInFilterBar="true">
                 <fb:control>
                     <Input
-                        id="f_grArt"
-                        value='{FiltrosMat>/Bukrs}'
+                        id="f_ordbukrs"
+                        value='{FiltrosOrd>/Bukrs}'
                         editable="true"
                     />
                 </fb:control>
@@ -67,45 +67,41 @@
                 </fb:FilterGroupItem> -->
         </fb:filterGroupItems>
     </fb:FilterBar>
-    <Table id="idTableMateriales" items="{
-            path: 'listadoMateriales>/'}" growing="true" growingThreshold="20">
+    <Table id="idTableOrdenes" items="{
+            path: 'listadoOrdenes>/'}" growing="true" growingThreshold="20">
         <columns>
             <Column width="10%">
-                <Text text="{i18n>codMat}" />
+                <Text text="{i18n>codOrd}" />
             </Column>
             <Column width="20%">
-                <Text text="{i18n>creador}" />
+                <Text text="{i18n>ktext}" />
             </Column>
             <Column width="20%">
-                <Text text="{i18n>nomMat}" />
-            </Column>
-            <Column width="10%">
-                <Text text="{i18n>grArt}"/>
+                <Text text="{i18n>orgventas}" />
             </Column>
             <Column width="25%">
-                <Text text="{i18n>descArt}"/>
+                <Text text="{i18n>descSoc}"/>
             </Column>
         </columns>
         <items>
-            <ColumnListItem type="Active" press=".onPressMaterial">
+            <ColumnListItem type="Active" press=".onPressOrdenes">
                 <cells>
-                    <Text text="{listadoMateriales>Matnr}" />
-                    <Text text="{listadoMateriales>Ernam}" />
-                    <Text text="{listadoMateriales>Maktx}" />
-                    <Text text="{listadoMateriales>Matkl}" />
-                    <Text text="{listadoMateriales>Wgbez}" />
+                    <Text text="{listadoOrdenes>Aufnr}" />
+                    <Text text="{listadoOrdenes>Ktext}" />
+                    <Text text="{listadoOrdenes>Bukrs}" />
+                    <Text text="{listadoOrdenes>Butxt}" />
                 </cells>
             </ColumnListItem>
         </items>
     </Table>
             <OverflowToolbar >
                 <ToolbarSpacer/>
-                <Button text="Cancelar" type="Emphasized" press="CloseMatDiag">
+                <Button text="Cancelar" type="Emphasized" press="CloseOrdDiag">
                 <layoutData>
                 <OverflowToolbarLayoutData
                     priority="NeverOverflow"/>
             </layoutData>
                 </Button>
             </OverflowToolbar>
-    </Dialog> 
+    </Dialog>
 </core:FragmentDefinition>

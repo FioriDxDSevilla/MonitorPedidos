@@ -20,7 +20,7 @@ sap.ui.define([
 
         var EdmType = exportLibrary.EdmType;
 
-        var codcli, sumTotal, nomcli, Numped, Fechad, Fechah, Imported, Importeh, Cliente, ClasePed, codmat, nommat, LineaServicio;
+        var codcli, sumTotal, nomcli, Numped, Fechad, Fechah, Imported, Importeh, Cliente, ClasePed, codmat, nommat, LineaServicio, codord, nomord, codceco, nomceco;
         var arrayKeys = [];
 
         return Controller.extend("monitorpedidos.controller.MonitorPedidos", {
@@ -37,7 +37,7 @@ sap.ui.define([
                 //today1.toLocaleDateString("es-ES");
                 today1.setDate(today1.getDate() - 30);
 
-                var fechai =
+                /*var fechai =
                     today1.getFullYear() +
                     "-" +
                     ("0" + (today1.getMonth() + 1)).slice(-2) +
@@ -48,9 +48,10 @@ sap.ui.define([
                     "-" +
                     ("0" + (today.getMonth() + 1)).slice(-2) +
                     "-" +
-                    ("0" + today.getDate()).slice(-2);
+                    ("0" + today.getDate()).slice(-2);*/
 
                 var date = new Date();
+                var fechai, fechaf;
 
                 this.ListadoSolicitudes(
                     //Usuario,
@@ -279,7 +280,7 @@ sap.ui.define([
                     }
                 }*/
 
-                if (fec_ini == "") {
+                if (fec_ini == "" || fec_ini == null) {
                     var i = aFilterIds.indexOf("Fechad");
 
                     if (i !== -1) {
@@ -288,7 +289,7 @@ sap.ui.define([
                     }
                 }
 
-                if (fec_fin == "") {
+                if (fec_fin == "" || fec_fin == null) {
                     var i = aFilterIds.indexOf("Fechah");
 
                     if (i !== -1) {
@@ -517,7 +518,7 @@ sap.ui.define([
                     }
                 }*/
                 if (Matkl == "") {
-                    var i = aFilterIds.indexOf("MatklKunnr");
+                    var i = aFilterIds.indexOf("Matkl");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
@@ -532,6 +533,136 @@ sap.ui.define([
                 Promise.all([
                     this.readDataEntity(this.mainService, "/DameMaterialSet", aFilters),
                 ]).then(this.buildMaterialesModel.bind(this), this.errorFatal.bind(this));
+            },
+
+            onBusqOrdenes: function() {
+                var Aufnr= this.getView().byId("f_codOrd").getValue();
+                var Ktext= this.getView().byId("f_nomOrd").getValue();
+                var Bukrs= this.getView().byId("f_ordbukrs").getValue();
+                //var Bukrs = this.getView().byId("f_nifcAcr").getValue();
+
+                var aFilterIds, aFilterValues, aFilters;
+
+                //FILTRADO DE CLIENTES////////////////////////////////////////////////////////////////////////////////////////////
+
+                aFilterIds = [
+                    "Aufnr",
+                    "Ktext",
+                    "Bukrs"
+                ];
+                aFilterValues = [
+                    Aufnr,
+                    Ktext,
+                    Bukrs
+                ];
+
+                if (Aufnr == "") {
+                    var i = aFilterIds.indexOf("Aufnr");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                if (Ktext == "") {
+                    var i = aFilterIds.indexOf("Ktext");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                /*if (Bukrs == "") {
+                    var i = aFilterIds.indexOf("Bukrs");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }*/
+                if (Bukrs == "") {
+                    var i = aFilterIds.indexOf("Bukrs");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                sap.ui.core.BusyIndicator.show();
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/OrdenIngresoSet", aFilters),
+                ]).then(this.buildOrdenesModel.bind(this), this.errorFatal.bind(this));
+            },
+
+            onBusqCecos: function() {
+                var Kostl = this.getView().byId("f_codCeco").getValue();
+                var Ltext = this.getView().byId("f_nomCeco").getValue();
+                var Bukrs = this.getView().byId("f_cecoSoc").getValue();
+                //var Bukrs = this.getView().byId("f_nifcAcr").getValue();
+
+                var aFilterIds, aFilterValues, aFilters;
+
+                //FILTRADO DE CLIENTES////////////////////////////////////////////////////////////////////////////////////////////
+
+                aFilterIds = [
+                    "Kostl",
+                    "Ltext",
+                    "Kokrs"
+                ];
+                aFilterValues = [
+                    Kostl,
+                    Ltext,
+                    Bukrs
+                ];
+
+                if (Kostl == "") {
+                    var i = aFilterIds.indexOf("Kostl");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                if (Ltext == "") {
+                    var i = aFilterIds.indexOf("Ltext");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                /*if (Bukrs == "") {
+                    var i = aFilterIds.indexOf("Bukrs");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }*/
+                if (Bukrs == "") {
+                    var i = aFilterIds.indexOf("Kokrs");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                sap.ui.core.BusyIndicator.show();
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/CecoIngresoSet", aFilters),
+                ]).then(this.buildCecosModel.bind(this), this.errorFatal.bind(this));
             },
 
             buildClientesModel: function (values) {
@@ -554,6 +685,26 @@ sap.ui.define([
                 }
             },
 
+            buildOrdenesModel: function (values) {
+                if (values[0].results) {
+                    sap.ui.core.BusyIndicator.hide();
+                    var oModelOrdenes = new JSONModel();
+                    oModelOrdenes.setData(values[0].results);
+                    this.oComponent.setModel(oModelOrdenes, "listadoOrdenes");
+                    this.oComponent.getModel("listadoOrdenes").refresh(true);
+                }
+            },
+
+            buildCecosModel: function (values) {
+                if (values[0].results) {
+                    sap.ui.core.BusyIndicator.hide();
+                    var oModelCecos = new JSONModel();
+                    oModelCecos.setData(values[0].results);
+                    this.oComponent.setModel(oModelCecos, "listadoCecos");
+                    this.oComponent.getModel("listadoCecos").refresh(true);
+                }
+            },
+
             onPressCliente: function (oEvent) {
                 var acr = this.getSelect(oEvent, "listadoClientes");
                 codcli = acr.Kunnr;
@@ -569,6 +720,24 @@ sap.ui.define([
                 nommat = mat.Maktx;
                 this.getView().byId("f_material").setValue(codmat);
                 this.byId("matDial").close();
+
+            },
+
+            onPressOrdenes: function (oEvent) {
+                var ord = this.getSelectOrd(oEvent, "listadoOrdenes");
+                codord = ord.Aufnr;
+                nomord = ord.Ktext;
+                this.getView().byId("f_ording").setValue(codord );
+                this.byId("ordDial").close();
+
+            },
+
+            onPressCecos: function (oEvent) {
+                var ceco = this.getSelectCeco(oEvent, "listadoCecos");
+                codceco = ceco.Kostl;
+                nomceco = ceco.Ltext;
+                this.getView().byId("f_cecos").setValue(codceco);
+                this.byId("cecoDial").close();
 
             },
 
@@ -588,12 +757,36 @@ sap.ui.define([
                 return idMaterial;
             },
 
+            getSelectOrd: function (oEvent, oModel) {
+                var oModOrd = this.oComponent.getModel(oModel).getData();
+                const sOperationPath = oEvent.getSource().getBindingContext(oModel).getPath();
+                const sOperation = sOperationPath.split("/").slice(-1).pop();
+                var idOrden = oModOrd[sOperation];
+                return idOrden;
+            },
+
+            getSelectCeco: function (oEvent, oModel) {
+                var oModCeco = this.oComponent.getModel(oModel).getData();
+                const sOperationPath = oEvent.getSource().getBindingContext(oModel).getPath();
+                const sOperation = sOperationPath.split("/").slice(-1).pop();
+                var idCeco = oModCeco[sOperation];
+                return idCeco;
+            },
+
             CloseCliDiag: function () {
                 this.byId("cliDial").close();
             },
 
             CloseMatDiag: function () {
                 this.byId("matDial").close();
+            },
+
+            CloseOrdDiag: function () {
+                this.byId("ordDial").close();
+            },
+
+            CloseCecoDiag: function () {
+                this.byId("cecoDial").close(); 
             },
 
             onValueHelpRequest: function (oEvent) {
@@ -608,41 +801,92 @@ sap.ui.define([
                 this._getDialogMaterial();
             },
 
+            onValueHelpRequestOrd: function (oEvent) {
+                //this.Dialog = sap.ui.xmlfragment("aguasdevalencia.fragment.ClienteMonitorPedidos", this);
+                //this.Dialog.open();
+                this._getDialogOrdenes();
+            },
+
+            onValueHelpRequestCecos: function (oEvent) {
+                //this.Dialog = sap.ui.xmlfragment("aguasdevalencia.fragment.ClienteMonitorPedidos", this);
+                //this.Dialog.open();
+                this._getDialogCecos();
+            },
+
             _getDialogCliente: function (sInputValue) {
                 var oView = this.getView();
 
-                if (!this.pDialog) {
-                    this.pDialog = Fragment.load({
+                if (!this.pDialogCliente) {
+                    this.pDialogCliente = Fragment.load({
                         id: oView.getId(),
-                        name: "monitopedidos.fragments.BusqClientes",
+                        name: "monitorpedidos.fragments.BusqClientes",
                         controller: this,
-                    }).then(function (oDialog) {
+                    }).then(function (oDialogCliente) {
                         // connect dialog to the root view of this component (models, lifecycle)
-                        oView.addDependent(oDialog);
-                        return oDialog;
+                        oView.addDependent(oDialogCliente);
+                        return oDialogCliente;
                     });
                 }
-                this.pDialog.then(function (oDialog) {
-                    oDialog.open(sInputValue);
+                this.pDialogCliente.then(function (oDialogCliente) {
+                    oDialogCliente.open(sInputValue);
+                    //this._configDialogCliente(oDialog)
                 });
             },
 
             _getDialogMaterial: function (sInputValue) {
                 var oView = this.getView();
 
-                if (!this.pDialog) {
-                    this.pDialog = Fragment.load({
+                if (!this.pDialogMaterial) {
+                    this.pDialogMaterial = Fragment.load({
                         id: oView.getId(),
                         name: "monitorpedidos.fragments.BusqMateriales",
                         controller: this,
-                    }).then(function (oDialog) {
+                    }).then(function (oDialogMaterial) {
                         // connect dialog to the root view of this component (models, lifecycle)
-                        oView.addDependent(oDialog);
-                        return oDialog;
+                        oView.addDependent(oDialogMaterial);
+                        return oDialogMaterial;
                     });
                 }
-                this.pDialog.then(function (oDialog) {
-                    oDialog.open(sInputValue);
+                this.pDialogMaterial.then(function (oDialogMaterial) {
+                    oDialogMaterial.open(sInputValue);
+                });
+            },
+
+            _getDialogOrdenes: function (sInputValue) {
+                var oView = this.getView();
+
+                if (!this.pDialogOrdenes) {
+                    this.pDialogOrdenes = Fragment.load({
+                        id: oView.getId(),
+                        name: "monitorpedidos.fragments.OrdenIngreso",
+                        controller: this,
+                    }).then(function (oDialogOrdenes) {
+                        // connect dialog to the root view of this component (models, lifecycle)
+                        oView.addDependent(oDialogOrdenes);
+                        return oDialogOrdenes;
+                    });
+                }
+                this.pDialogOrdenes.then(function (oDialogOrdenes) {
+                    oDialogOrdenes.open(sInputValue);
+                });
+            },
+
+            _getDialogCecos: function (sInputValue) {
+                var oView = this.getView();
+
+                if (!this.pDialogCecos) {
+                    this.pDialogCecos = Fragment.load({
+                        id: oView.getId(),
+                        name: "monitorpedidos.fragments.CecoIngreso",
+                        controller: this,
+                    }).then(function (oDialogCecos) {
+                        // connect dialog to the root view of this component (models, lifecycle)
+                        oView.addDependent(oDialogCecos);
+                        return oDialogCecos;
+                    });
+                }
+                this.pDialogCecos.then(function (oDialogCecos) {
+                    oDialogCecos.open(sInputValue);
                 });
             },
 
@@ -696,7 +940,25 @@ sap.ui.define([
                 // toggle compact style
                 syncStyleClass("sapUiSizeCompact", this.getView(), oDialog);
             },
+
+            _configDialogCliente: function (oDialog) {
+                var sResponsivePadding = oButton.data("responsivePadding");
+                var sResponsiveStyleClasses =
+                    "sapUiResponsivePadding--header sapUiResponsivePadding--subHeader sapUiResponsivePadding--content sapUiResponsivePadding--footer";
     
+                if (sResponsivePadding) {
+                    oDialog.addStyleClass(sResponsiveStyleClasses);
+                } /*else {
+                    oDialog.removeStyleClass(sResponsiveStyleClasses);
+                }*/
+    
+                // Set custom text for the confirmation button
+                var sCustomConfirmButtonText = oButton.data("confirmButtonText");
+                oDialog.setConfirmButtonText(sCustomConfirmButtonText);
+    
+                // toggle compact style
+                syncStyleClass("sapUiSizeCompact", this.getView(), oDialog);
+            },    
 
             _getDialogUpload: function (sInputValue) {
                 var oView = this.getView();
