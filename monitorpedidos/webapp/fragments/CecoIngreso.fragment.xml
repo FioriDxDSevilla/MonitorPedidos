@@ -60,11 +60,6 @@
                     />
                 </fb:control>
             </fb:FilterGroupItem>
-            <!-- <fb:FilterGroupItem groupName="FiltroAcr" name="E" label="{i18n>sociedad}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                    <fb:control>
-                        <Input id="f_socAcr" value='{FiltrosAcr>/Bukrs}' editable="false"/>
-                    </fb:control>
-                </fb:FilterGroupItem> -->
         </fb:filterGroupItems>
     </fb:FilterBar>
     <Table id="idTableCecos" items="{

@@ -1067,22 +1067,30 @@ sap.ui.define([
 
                 this.ListadoSolStatus(
                     //Usuario,
-                    //Numped,
-                    Fechad,
-                    Fechah,
-                    sStatus,
-                    Imported,
-                    Importeh);
-            },
-
-            ListadoSolStatus: function (
                 //Numped,
                 Fechad,
                 Fechah,
-                sStatus,
                 Imported,
                 Importeh,
                 Cliente,
+                LineaServicio,
+                codmat
+                /*,
+                ClasePed*/);
+            },
+
+            ListadoSolStatus: function (
+                //Usuario,
+                //Numped,
+                Fechad,
+                Fechah,
+                Imported,
+                Importeh,
+                Cliente,
+                LineaServicio,
+                codmat
+                /*,
+                ClasePed*/
             ) {
                 var aFilterIds, aFilterValues, aFilters;
 
@@ -1097,21 +1105,29 @@ sap.ui.define([
 
                 aFilterIds = [
                     "Usuario",
-                    //"Idsolicitud",
+//                    "Idsolicitud",
                     "Fechad",
                     "Fechah",
-                    "Estado",
                     "Imported",
                     "Importeh",
+                    "Cliente",
+                    "Linea",
+                    "Material"
+                    /*,
+                    "Tipo"*/
                 ];
                 aFilterValues = [
                     "",
-                    //Numped,
+    //                    Numped,
                     fec_ini,
                     fec_fin,
-                    sStatus,
                     Imported,
                     Importeh,
+                    Cliente,
+                    LineaServicio,
+                    codmat
+                    /*,
+                    ClasePed*/
                 ];
 
                 /*if (Numped == "") {
@@ -1122,7 +1138,7 @@ sap.ui.define([
                         aFilterValues.splice(i, 1);
                     }
                 }*/
-                if (fec_ini == "") {
+                if (fec_ini == "" || fec_ini == null) {
                     var i = aFilterIds.indexOf("Fechad");
 
                     if (i !== -1) {
@@ -1131,7 +1147,7 @@ sap.ui.define([
                     }
                 }
 
-                if (fec_fin == "") {
+                if (fec_fin == "" || fec_fin == null) {
                     var i = aFilterIds.indexOf("Fechah");
 
                     if (i !== -1) {
@@ -1139,17 +1155,7 @@ sap.ui.define([
                         aFilterValues.splice(i, 1);
                     }
                 }
-
-                if (sStatus == "") {
-                    var i = aFilterIds.indexOf("Estado");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-
-                if (Imported == "" && Importeh == "") {
+                if (Imported == "" && Importeh == "" || Imported == undefined && Importeh == undefined) {
                     var i = aFilterIds.indexOf("Imported");
 
                     if (i !== -1) {
@@ -1164,8 +1170,34 @@ sap.ui.define([
                         aFilterValues.splice(j, 1);
                     }
                 }
-                if (Cliente == "") {
-                    var i = aFilterIds.indexOf("Kunnr");
+                if (Cliente == "" || Cliente == undefined) {
+                    var i = aFilterIds.indexOf("Cliente");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+                if (LineaServicio == "" || LineaServicio == undefined) {
+                    var i = aFilterIds.indexOf("Linea");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                if (LineaServicio == "" || LineaServicio == undefined) {
+                    var i = aFilterIds.indexOf("Linea");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                if (codmat == "" || codmat == undefined) {
+                    var i = aFilterIds.indexOf("Material");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
