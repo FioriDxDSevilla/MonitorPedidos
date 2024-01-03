@@ -20,7 +20,7 @@ sap.ui.define([
 
         var EdmType = exportLibrary.EdmType;
 
-        var codcli, sumTotal, nomcli, Numped, Fechad, Fechah, Imported, Importeh, Cliente, ClasePed, codmat, nommat, LineaServicio, codord, nomord, codceco, nomceco;
+        var codcli, sumTotal, nomcli, Numped, Fechad, Fechah, Imported, Importeh, Cliente, ClasePed, codmat, nommat, LineaServicio, codord, nomord, codceco, nomceco, Vkbur;
         var arrayKeys = [];
 
         return Controller.extend("monitorpedidos.controller.MonitorPedidos", {
@@ -237,51 +237,51 @@ sap.ui.define([
                 }
 
                 aFilterIds = [
-                    "Usuario",
-//                    "Idsolicitud",
-                    "Fechad",
-                    "Fechah",
-                    "Imported",
-                    "Importeh",
-                    "Cliente",
-                    "Linea",
-                    "Material"
+                    //"USUARIO",
+                    "IDSOLICITUD",
+                    "FECHAD",
+                    "FECHAH",
+                    "IMPORTED",
+                    "IMPORTEH",
+                    "CLIENTE",
+                    "LINEA",
+                    "MATERIAL"
                     /*,
-                    "Tipo"*/
+                    "TIPO"*/
                 ];
                 aFilterValues = [
-                    "",
-//                    Numped,
+                   // "",
+                    Numped,
                     fec_ini,
                     fec_fin,
                     Imported,
                     Importeh,
                     Cliente,
                     LineaServicio,
-                    codmat
+                    codmat,
                     /*,
                     ClasePed*/
                 ];
 
                 /*if (Usuario == "") {
-                    var i = aFilterIds.indexOf("Usuario");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-                if (Numped == "") {
-                    var i = aFilterIds.indexOf("Idsolicitud");
+                    var i = aFilterIds.indexOf("USUARIO");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
                         aFilterValues.splice(i, 1);
                     }
                 }*/
+                if (Numped == "" || Numped == undefined) {
+                    var i = aFilterIds.indexOf("IDSOLICITUD");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
 
                 if (fec_ini == "" || fec_ini == null) {
-                    var i = aFilterIds.indexOf("Fechad");
+                    var i = aFilterIds.indexOf("FECHAD");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
@@ -290,7 +290,7 @@ sap.ui.define([
                 }
 
                 if (fec_fin == "" || fec_fin == null) {
-                    var i = aFilterIds.indexOf("Fechah");
+                    var i = aFilterIds.indexOf("FECHAH");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
@@ -298,14 +298,14 @@ sap.ui.define([
                     }
                 }
                 if (Imported == "" && Importeh == "" || Imported == undefined && Importeh == undefined) {
-                    var i = aFilterIds.indexOf("Imported");
+                    var i = aFilterIds.indexOf("IMPORTED");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
                         aFilterValues.splice(i, 1);
                     }
 
-                    var j = aFilterIds.indexOf("Importeh");
+                    var j = aFilterIds.indexOf("IMPORTEH");
 
                     if (j !== -1) {
                         aFilterIds.splice(j, 1);
@@ -313,7 +313,7 @@ sap.ui.define([
                     }
                 }
                 if (Cliente == "" || Cliente == undefined) {
-                    var i = aFilterIds.indexOf("Cliente");
+                    var i = aFilterIds.indexOf("CLIENTE");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
@@ -321,16 +321,7 @@ sap.ui.define([
                     }
                 }
                 if (LineaServicio == "" || LineaServicio == undefined) {
-                    var i = aFilterIds.indexOf("Linea");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-
-                if (LineaServicio == "" || LineaServicio == undefined) {
-                    var i = aFilterIds.indexOf("Linea");
+                    var i = aFilterIds.indexOf("LINEA");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
@@ -339,13 +330,22 @@ sap.ui.define([
                 }
 
                 if (codmat == "" || codmat == undefined) {
-                    var i = aFilterIds.indexOf("Material");
+                    var i = aFilterIds.indexOf("MATERIAL");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
                         aFilterValues.splice(i, 1);
                     }
                 }
+
+               /* if (ceco == "" || ceco == undefined) {
+                    var i = aFilterIds.indexOf("Ceco");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }*/
 
                 /*if (!ClasePed) {
                     var i = aFilterIds.indexOf("Tipo");
@@ -665,6 +665,62 @@ sap.ui.define([
                 ]).then(this.buildCecosModel.bind(this), this.errorFatal.bind(this));
             },
 
+            onBusqOficina: function() {
+                var Vkorg = this.getView().byId("f_VkorgOfi").getValue();
+                var Vtweg = this.getView().byId("f_VtwegOfi").getValue();
+                var Spart = this.getView().byId("f_SpartOfi").getValue();
+
+                var aFilterIds, aFilterValues, aFilters;
+
+                //FILTRADO DE OFICINAS////////////////////////////////////////////////////////////////////////////////////////////
+
+                aFilterIds = [
+                    "VKORG",
+                    "VTWEG",
+                    "SPART"
+                ];
+                aFilterValues = [
+                    Vkorg,
+                    Vtweg,
+                    Spart
+                ];
+
+                if (Vkorg == "") {
+                    var i = aFilterIds.indexOf("VKORG");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                if (Vtweg == "") {
+                    var i = aFilterIds.indexOf("VTWEG");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                if (Spart == "") {
+                    var i = aFilterIds.indexOf("SPART");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                sap.ui.core.BusyIndicator.show();
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/DameOficinasSet", aFilters),
+                ]).then(this.buildOficinasModel.bind(this), this.errorFatal.bind(this));
+            },
+
             buildClientesModel: function (values) {
                 if (values[0].results) {
                     sap.ui.core.BusyIndicator.hide();
@@ -705,6 +761,16 @@ sap.ui.define([
                 }
             },
 
+            buildOficinasModel: function (values) {
+                if (values[0].results) {
+                    sap.ui.core.BusyIndicator.hide();
+                    var oModelOficinas = new JSONModel();
+                    oModelOficinas.setData(values[0].results);
+                    this.oComponent.setModel(oModelOficinas, "listadoOficinas");
+                    this.oComponent.getModel("listadoOficinas").refresh(true);
+                }
+            },
+
             onPressCliente: function (oEvent) {
                 var acr = this.getSelect(oEvent, "listadoClientes");
                 codcli = acr.Kunnr;
@@ -741,6 +807,14 @@ sap.ui.define([
 
             },
 
+            onPressOficinas: function (oEvent) {
+                var ofi = this.getSelectOficinas(oEvent, "listadoOficinas");
+                Vkbur = ofi.Vkbur;
+                this.getView().byId("f_oficinas").setValue(Vkbur);
+                this.byId("ofiDial").close();
+
+            },
+
             getSelect: function (oEvent, oModel) {
                 var oModClie = this.oComponent.getModel(oModel).getData();
                 const sOperationPath = oEvent.getSource().getBindingContext(oModel).getPath();
@@ -771,6 +845,14 @@ sap.ui.define([
                 const sOperation = sOperationPath.split("/").slice(-1).pop();
                 var idCeco = oModCeco[sOperation];
                 return idCeco;
+            },
+
+            getSelectOficinas: function (oEvent, oModel) {
+                var oModOficinas = this.oComponent.getModel(oModel).getData();
+                const sOperationPath = oEvent.getSource().getBindingContext(oModel).getPath();
+                const sOperation = sOperationPath.split("/").slice(-1).pop();
+                var idOficinas = oModOficinas[sOperation];
+                return idOficinas;
             },
 
             CloseCliDiag: function () {
@@ -811,6 +893,12 @@ sap.ui.define([
                 //this.Dialog = sap.ui.xmlfragment("aguasdevalencia.fragment.ClienteMonitorPedidos", this);
                 //this.Dialog.open();
                 this._getDialogCecos();
+            },
+
+            onValueHelpRequestOficinas: function (oEvent) {
+                //this.Dialog = sap.ui.xmlfragment("aguasdevalencia.fragment.ClienteMonitorPedidos", this);
+                //this.Dialog.open();
+                this._getDialogOficinas();
             },
 
             _getDialogCliente: function (sInputValue) {
@@ -887,6 +975,25 @@ sap.ui.define([
                 }
                 this.pDialogCecos.then(function (oDialogCecos) {
                     oDialogCecos.open(sInputValue);
+                });
+            },
+
+            _getDialogOficinas: function (sInputValue) {
+                var oView = this.getView();
+
+                if (!this.pDialogOficinas) {
+                    this.pDialogOficinas = Fragment.load({
+                        id: oView.getId(),
+                        name: "monitorpedidos.fragments.OficinaVentas",
+                        controller: this,
+                    }).then(function (oDialogOficinas) {
+                        // connect dialog to the root view of this component (models, lifecycle)
+                        oView.addDependent(oDialogOficinas);
+                        return oDialogOficinas;
+                    });
+                }
+                this.pDialogOficinas.then(function (oDialogOficinas) {
+                    oDialogOficinas.open(sInputValue);
                 });
             },
 
@@ -1104,21 +1211,21 @@ sap.ui.define([
                 }
 
                 aFilterIds = [
-                    "Usuario",
-//                    "Idsolicitud",
-                    "Fechad",
-                    "Fechah",
-                    "Imported",
-                    "Importeh",
-                    "Cliente",
-                    "Linea",
-                    "Material"
+                    //"USUARIO",
+                    "IDSOLICITUD",
+                    "FECHAD",
+                    "FECHAH",
+                    "IMPORTED",
+                    "IMPORTEH",
+                    "CLIENTE",
+                    "LINEA",
+                    "MATERIAL"
                     /*,
                     "Tipo"*/
                 ];
                 aFilterValues = [
-                    "",
-    //                    Numped,
+                    //"",
+                    Numped,
                     fec_ini,
                     fec_fin,
                     Imported,
@@ -1130,16 +1237,16 @@ sap.ui.define([
                     ClasePed*/
                 ];
 
-                /*if (Numped == "") {
-                    var i = aFilterIds.indexOf("Idsolicitud");
+                if (Numped == "" || Numped == undefined) {
+                    var i = aFilterIds.indexOf("IDSOLICITUD");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
                         aFilterValues.splice(i, 1);
                     }
-                }*/
+                }
                 if (fec_ini == "" || fec_ini == null) {
-                    var i = aFilterIds.indexOf("Fechad");
+                    var i = aFilterIds.indexOf("FECHAD");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
@@ -1148,7 +1255,7 @@ sap.ui.define([
                 }
 
                 if (fec_fin == "" || fec_fin == null) {
-                    var i = aFilterIds.indexOf("Fechah");
+                    var i = aFilterIds.indexOf("FECHAH");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
@@ -1156,14 +1263,14 @@ sap.ui.define([
                     }
                 }
                 if (Imported == "" && Importeh == "" || Imported == undefined && Importeh == undefined) {
-                    var i = aFilterIds.indexOf("Imported");
+                    var i = aFilterIds.indexOf("IMPORTED");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
                         aFilterValues.splice(i, 1);
                     }
 
-                    var j = aFilterIds.indexOf("Importeh");
+                    var j = aFilterIds.indexOf("IMPORTEH");
 
                     if (j !== -1) {
                         aFilterIds.splice(j, 1);
@@ -1171,7 +1278,7 @@ sap.ui.define([
                     }
                 }
                 if (Cliente == "" || Cliente == undefined) {
-                    var i = aFilterIds.indexOf("Cliente");
+                    var i = aFilterIds.indexOf("CLIENTE");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
@@ -1179,7 +1286,7 @@ sap.ui.define([
                     }
                 }
                 if (LineaServicio == "" || LineaServicio == undefined) {
-                    var i = aFilterIds.indexOf("Linea");
+                    var i = aFilterIds.indexOf("LINEA");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
@@ -1187,17 +1294,9 @@ sap.ui.define([
                     }
                 }
 
-                if (LineaServicio == "" || LineaServicio == undefined) {
-                    var i = aFilterIds.indexOf("Linea");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
 
                 if (codmat == "" || codmat == undefined) {
-                    var i = aFilterIds.indexOf("Material");
+                    var i = aFilterIds.indexOf("MATERIAL");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);

@@ -35,7 +35,7 @@
    </EntityType>
    <EntityType Name="DamePedidos" sap:content-version="1">
     <Key>
-     <PropertyRef Name="Idsolicitud"/>
+     <PropertyRef Name="IDSOLICITUD"/>
     </Key>
     <Property Name="CLIENTE" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Deudor" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
     <Property Name="Creador" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Creado por" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
@@ -50,7 +50,7 @@
     <Property Name="Ztotapr" Type="Edm.Int32" Nullable="false" sap:unicode="false" sap:label="Valor Totalizado para estado Pdte. Aprobar" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="TIPO" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Cl.doc.ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
     <Property Name="Ztotfin" Type="Edm.Int32" Nullable="false" sap:unicode="false" sap:label="Valor Totalizado para estado Pdte. Financiero" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="Idsolicitud" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Doc.ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="IDSOLICITUD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Doc.ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Ztotfac" Type="Edm.Int32" Nullable="false" sap:unicode="false" sap:label="Valor Totalizado para estado Pdte. Facturar" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="IMPORTED" Type="Edm.Decimal" Precision="16" Scale="3" sap:unicode="false" sap:label="Importe Desde" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Ztotpdte" Type="Edm.Int32" Nullable="false" sap:unicode="false" sap:label="Valor Totalizado para estado Pdte. Cobrar" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>

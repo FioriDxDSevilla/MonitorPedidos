@@ -49,6 +49,11 @@
                     <Input id="f_cecos" showValueHelp="true" valueHelpRequest=".onValueHelpRequestCecos" />
                 </fb:control>
             </fb:FilterGroupItem>
+            <fb:FilterGroupItem id="id11" groupName="FiltrosCli" name="Of" label="{i18n>ofi}" visibleInFilterBar="true">
+                <fb:control>
+                    <Input id="f_oficinas" showValueHelp="true" valueHelpRequest=".onValueHelpRequestOficinas" />
+                </fb:control>
+            </fb:FilterGroupItem>
 
             <fb:FilterGroupItem id="id8" groupName="FiltrosCli" name="M" label="{i18n>mat}" visibleInFilterBar="true">
                 <fb:control>

@@ -136,7 +136,7 @@
                         <ui:template>
                             <Text
                                 id="idPEP"
-                                text="{listadoSolicitudes>Idsolicitud}"
+                                text="{listadoSolicitudes>IDSOLICITUD}"
                             />
                         </ui:template>
                     </ui:Column>
@@ -173,7 +173,7 @@
                     >
                         <Label text="{i18n>codcli}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Cliente}" />
+                            <Text text="{listadoSolicitudes>CLIENTE}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -207,7 +207,7 @@
                     >
                         <Label text="{i18n>status}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Estado}" />
+                            <Text text="{listadoSolicitudes>ESTADO}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
