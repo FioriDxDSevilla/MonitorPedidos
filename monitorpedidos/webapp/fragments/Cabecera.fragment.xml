@@ -9,35 +9,40 @@
     <m:VBox renderType="Bare">
         <f:SimpleForm editable="true" maxContainerCols="2" layout="GridLayout" singleContainerFullSize="false" adjustLabelSpan="true">
             <f:content >
-                <!-- -->   
+                <!-- -->
                 <core:Title text="{i18n>TituloDatosCabeceraPedido}" level="H5" />
-      
+
                 <m:Label text="{i18n>ClasePedido}" />
                 <m:Input enabled="false" editable="false" width="150px">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S2" />
                     </m:layoutData>
                 </m:Input>
-             
-                <m:Label text="{i18n>AreaVentas}"/>
-                <l:VerticalLayout>
-                <m:Input enabled="false" editable="false" width="150px">
-                    <m:layoutData>
-                        <l:GridData span="XL1 L2 M2 S4" />
-                    </m:layoutData>
-                </m:Input>
-                <m:Input enabled="false" editable="false" width="150px">
-                    <m:layoutData>
-                        <l:GridData span="XL1 L2 M2 S4" />
-                    </m:layoutData>
-                </m:Input>
-                <m:Input enabled="false" editable="false" width="150px">
-                    <m:layoutData>
-                        <l:GridData span="XL1 L2 M2 S4" />
-                    </m:layoutData>
-                </m:Input>
 
-                </l:VerticalLayout>
+                <m:Label text="{i18n>AreaVentas}"/>
+
+                 <!-- <m:VBox>-->  
+                    <m:Input enabled="false" editable="false" width="125px">
+                        <m:layoutData>
+                            <l:GridData span="XL1 L2 M2 S4" />
+                        </m:layoutData>
+                    </m:Input>
+                    <m:Input enabled="false" editable="false" width="125px">
+                        <m:layoutData>
+                            <l:GridData span="XL1 L2 M2 S4" />
+                        </m:layoutData>
+                    </m:Input>
+                    <!-- 
+                    <m:Input enabled="false" editable="false" width="80px">
+                        <m:layoutData>
+                            <l:GridData span="XL1 L2 M2 S4" />
+                        </m:layoutData>
+                    </m:Input>
+                -->
+              <!-- </m:VBox>-->  
+
+
+
                 <m:Label text="{i18n>OficinaVentas}"/>
                 <m:Input enabled="false" editable="false" width="150px">
                     <m:layoutData>
@@ -50,7 +55,7 @@
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
-             
+
                 <core:Title text="" />
                 <m:Label text="{i18n>MotivoPedido}"/>
                 <m:Input enabled="false" editable="false" width="300px">
@@ -108,7 +113,7 @@
                 </m:Input>
 
                 <core:Title text="" />
-                <m:Label text="{i18n>TextoCabeceraFactura}"  wrapping="false"/>
+                <m:Label text="{i18n>TextoCabeceraFactura}" wrapping="false"/>
                 <m:TextArea width="570px"/>
                 <m:Label text="{i18n>InformacionRechazo}"/>
                 <m:TextArea width="570px"/>

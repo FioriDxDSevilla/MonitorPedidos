@@ -22,9 +22,7 @@
             <m:IconTabFilter text="{i18n>Posiciones}" key="Posiciones">
                 <core:Fragment fragmentName="monitorpedidos.fragments.Posiciones" type="XML" />
             </m:IconTabFilter>
-            
         </m:items>
     </m:IconTabBar>
-
 </core:FragmentDefinition>
     
