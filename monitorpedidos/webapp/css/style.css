@@ -1,6 +1,22 @@
 /* Enter your custom styles here */
 
+/*
+#application-monitorpedidos-display-component---AltaPedidos--ObjectPageLayout-OPHeaderContent{
+    background-color: #ddebf7;
+}
+*/
+#__vbox2{
+    margin-top: -65px !important;
+}
 
+#application-monitorpedidos-display-component---AltaPedidos--ObjectPageLayout-OPHeaderContent{
+margin-left: -105px !important;
 
+}
 
+#application-monitorpedidos-display-component---AltaPedidos--btnVisualizarPedido{
+position: relative !important;
+left: 75% !important;
+
+}
 

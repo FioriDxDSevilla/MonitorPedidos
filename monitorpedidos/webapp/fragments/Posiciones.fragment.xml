@@ -3,15 +3,48 @@
     xmlns:core="sap.ui.core"
     xmlns:f="sap.ui.layout.form"
     xmlns:fb="sap.ui.comp.filterbar"
-    xmlns:l="sap.ui.layout">
+    xmlns:l="sap.ui.layout"
+    xmlns:table="sap.ui.table">
     <!--    -->
-    <m:VBox>
-        <f:SimpleForm editable="false" maxContainerCols="2" layout="GridLayout" class="form1" singleContainerFullSize="false" adjustLabelSpan="true">
-            <f:content >
-                <!-- -->
-                <core:Title text="" />
-            </f:content >
-        </f:SimpleForm>
+    <m:VBox renderType="Bare">
+        <table:Table selectionMode="None" id="TablaPosiciones">
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>Material}"/>
+                <table:template>
+                    <m:Text text=""/>
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>Descripcion}" />
+                <table:template>
+                    <m:Text text=""/>
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>Cantidad}" />
+                <table:template>
+                    <m:Text text=""/>
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>Unidades}" />
+                <table:template>
+                    <m:Text text=""/>
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>Importe}" />
+                <table:template>
+                    <m:Text text=""/>
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>Moneda}" />
+                <table:template>
+                    <m:Text text=""/>
+                </table:template>
+            </table:Column>
+        </table:Table>
     </m:VBox>
 
 </core:FragmentDefinition>

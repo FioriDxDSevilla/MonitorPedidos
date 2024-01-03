@@ -5,11 +5,11 @@
     xmlns:fb="sap.ui.comp.filterbar"
     xmlns:l="sap.ui.layout">
     <!--    -->
-    <m:VBox>
-        <f:SimpleForm editable="false" maxContainerCols="2" layout="GridLayout" class="form1" singleContainerFullSize="false" adjustLabelSpan="true">
+    <m:VBox renderType="Bare">
+        <f:SimpleForm editable="false" maxContainerCols="2" layout="GridLayout" singleContainerFullSize="false" adjustLabelSpan="true">
             <f:content >
                 <!-- -->
-                <core:Title text="{i18n>TituloAdjuntos}" />
+                <core:Title text="{i18n>TituloAdjuntos}" level="H5" />
             </f:content >
         </f:SimpleForm>
     </m:VBox>
