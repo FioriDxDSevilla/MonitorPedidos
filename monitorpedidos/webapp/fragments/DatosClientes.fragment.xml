@@ -65,7 +65,7 @@
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
-                <m:Label text="{i18n>CondPago}" />
+                <m:Label text="{i18n>CondicionPago}" />
                 <m:Input enabled="false" editable="false" width="120px">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
