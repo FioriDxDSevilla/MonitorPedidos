@@ -9,9 +9,9 @@
 
     <m:VBox renderType="Bare">
 
-        <table:Table selectionMode="None" id="TablaHistorial">
+        <table:Table selectionMode="None" id="TablaHistorial" rows="{path: 'listadoSolicitudes>/'}">
             <table:Column hAlign="Center">
-                <m:Label text=""/>
+                <m:Label text="{i18n>CampoModificado}"/>
                 <table:template>
                     <m:Text text=""/>
                 </table:template>

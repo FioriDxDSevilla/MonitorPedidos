@@ -11,7 +11,7 @@
    </EntityType>
    <EntityType Name="CanalVentas" sap:content-version="1">
     <Key>
-     <PropertyRef Name="Vtweg"/>
+     <PropertyRef Name="Vkorg"/>
     </Key>
     <Property Name="Vkorg" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Organiz.ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Vtweg" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Canal distrib." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
@@ -32,6 +32,13 @@
     </Key>
     <Property Name="Bzirk" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Zona de ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Bztxt" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="DenominZonaVtas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+   </EntityType>
+   <EntityType Name="OrgVentas" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="Vkorg"/>
+    </Key>
+    <Property Name="Vkorg" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Organiz.ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Vtext" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Denominación" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
    </EntityType>
    <EntityType Name="DamePedidos" sap:content-version="1">
     <Key>
@@ -306,6 +313,30 @@
     <Property Name="Vtweg" Type="Edm.String" MaxLength="2" sap:unicode="false" sap:label="Canal distrib." sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
     <Property Name="Spart" Type="Edm.String" MaxLength="2" sap:unicode="false" sap:label="Sector" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
    </EntityType>
+   <EntityType Name="DameContratos" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="Vbeln"/>
+    </Key>
+    <Property Name="Kunnr" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Deudor" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+    <Property Name="Vkorg" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Organiz.ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Vbeln" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Doc.comercial" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Ktext" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Denominación" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Auart" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Cl.doc.ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+   </EntityType>
+   <EntityType Name="AreaVentas" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="Vkorg"/>
+    </Key>
+    <Property Name="Vkorg" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Organiz.ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Vtext" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Denominación" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+   </EntityType>
+   <EntityType Name="ZonaVentas" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="Bzirk"/>
+    </Key>
+    <Property Name="Bzirk" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Zona de ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Bztxt" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="DenominZonaVtas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+   </EntityType>
    <Association Name="Pedido_Respuesta" sap:content-version="1">
     <End Type="ZUI5_MONITOR_PEDIDOS_SRV.PedidoCab" Multiplicity="1" Role="FromRole_Pedido_Respuesta"/>
     <End Type="ZUI5_MONITOR_PEDIDOS_SRV.RespuestaPedido" Multiplicity="1" Role="ToRole_Pedido_Respuesta"/>
@@ -383,6 +414,7 @@
     <EntitySet Name="CanalVentasSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.CanalVentas" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="DameMaterialSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.DameMaterial" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="LineasServicioSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.LineasServicio" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+    <EntitySet Name="OrgVentasSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.OrgVentas" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="DamePedidosSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.DamePedidos" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="DameClientesSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.DameClientes" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="PedidoCabSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.PedidoCab" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
@@ -397,6 +429,9 @@
     <EntitySet Name="OrdenIngresoSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.OrdenIngreso" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="CecoIngresoSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.CecoIngreso" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="DameOficinasSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.DameOficinas" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+    <EntitySet Name="DameContratosSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.DameContratos" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+    <EntitySet Name="AreaVentasSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.AreaVentas" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+    <EntitySet Name="ZonaVentasSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.ZonaVentas" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <AssociationSet Name="Pedido_PosicionSet" Association="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Posicion" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
      <End EntitySet="PedidoCabSet" Role="FromRole_Pedido_Posicion"/>
      <End EntitySet="PedidoPosSet" Role="ToRole_Pedido_Posicion"/>

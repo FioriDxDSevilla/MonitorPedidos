@@ -3,15 +3,37 @@
     xmlns:core="sap.ui.core"
     xmlns:f="sap.ui.layout.form"
     xmlns:fb="sap.ui.comp.filterbar"
-    xmlns:l="sap.ui.layout">
-    <!--    -->
-    <m:VBox renderType="Bare">
-        <f:SimpleForm editable="false" maxContainerCols="2" layout="GridLayout" singleContainerFullSize="false" adjustLabelSpan="true">
-            <f:content >
-                <!-- -->
-                <core:Title text="{i18n>TituloAdjuntos}" level="H5" />
-            </f:content >
-        </f:SimpleForm>
-    </m:VBox>
+    xmlns:l="sap.ui.layout"
+    xmlns="sap.ui.table"
+    xmlns:upload="sap.m.upload"
+    xmlns:u="sap.ui.unified"
 
+    >
+    <m:Panel expandable="false" width="100%">
+        <m:VBox renderType="Bare">
+            <f:Form editable="true" visible="true">
+                <f:layout>
+                    <f:ResponsiveGridLayout/>
+                </f:layout>
+                <f:FormContainer>
+                    <f:FormElement label="Descripción">
+                        <f:fields>
+                            <m:Input value="" id="descAdjunto" maxLength="80" enabled="true"/>
+                        </f:fields>
+                    </f:FormElement>
+                    <f:FormElement label="Adjuntar fichero">
+                        <f:fields>
+                            <u:FileUploader id="fileUploader" name="myFileUpload" uploadUrl="upload/" tooltip="Adjuntar" placeholder="Adjuntar" change=".handleUploadPress"/>
+                        </f:fields>
+                        <m:Button text="Adjuntar" press=".onAttFile" type="Emphasized">
+                            <m:layoutData>
+                                <l:GridData span="XL3 L2 M2 S12" />
+                            </m:layoutData>
+                        </m:Button>
+                    </f:FormElement>
+                </f:FormContainer>
+            </f:Form>
+        </m:VBox>
+    </m:Panel>
+     <core:Fragment fragmentName="monitorpedidos.fragments.TablaAdjuntosPres" type="XML"/>    
 </core:FragmentDefinition>

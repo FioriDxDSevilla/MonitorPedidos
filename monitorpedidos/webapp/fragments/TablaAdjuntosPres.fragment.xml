@@ -1,0 +1,51 @@
+<core:FragmentDefinition 
+    controllerName="monitorpedidos.controller.AltaPedidos"
+    xmlns="sap.m" 
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:l="sap.ui.layout" >
+
+    <Table 
+        id="idTableAdjuntos"
+        mode="SingleSelectMaster"
+        items="{path: ''}"
+        growing="true"
+        growingThreshold="10">
+
+        <headerToolbar>
+            <OverflowToolbar>
+                <Title text="{i18n>TablaAdjuntos}" level="H2"/>
+            </OverflowToolbar>
+        </headerToolbar>
+        <columns>
+            <Column >
+                <Text text="{i18n>NombreArchivo}" />
+            </Column>
+            <Column >
+                <Text text="{i18n>Descripcion}" />
+            </Column>
+            <!--<Column >
+                <Text text="" visible="{= ${ModoApp>/mode}  === 'D' ?  false : true }"/>
+            </Column>  -->
+            <Column >
+                <Text text=""  visible="{ModoApp>/modAdj}"/>
+            </Column> 
+            <Column >
+                <Text text=""  visible="{ModoApp>/modAdj}"/>
+            </Column>              
+        </columns>
+        <items>
+            <ColumnListItem>
+               <cells>
+                    <!--<Text id="nArchProv" text="{Adjuntos>Filename}" />-->
+                    <Link text="{AdjuntoSHPSet>Filename}" target="_blank" href="{Adjuntos>URL}" />
+                    <Text id="dArchProv" text="{AdjuntoSHPSet>Descripcion}" />
+                    <Button icon="sap-icon://delete" press=".onDeleteAdj" tooltip="{i18n>Eliminar}" visible="true"/>
+                    <Button icon="sap-icon://edit" press=".onChangeAdj" tooltip="{i18n>ModificarAdjunto}" visible="false"/>
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+
+</core:FragmentDefinition>

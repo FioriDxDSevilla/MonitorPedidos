@@ -20,7 +20,7 @@ sap.ui.define([
 
         var EdmType = exportLibrary.EdmType;
 
-        var codcli, sumTotal, nomcli, Numped, Fechad, Fechah, Imported, Importeh, Cliente, ClasePed, codmat, nommat, LineaServicio, codord, nomord, codceco, nomceco, Vkbur;
+        var codcli, sumTotal, nomcli, Numped, Fechad, Fechah, Imported, Importeh, Cliente, ClasePed, codmat, nommat, LineaServicio, codord, nomord, codceco, nomceco, vkbur, socPed, TipoPed, numCont;
         var arrayKeys = [];
 
         return Controller.extend("monitorpedidos.controller.MonitorPedidos", {
@@ -71,10 +71,19 @@ sap.ui.define([
                 };
 
                 var oModFiltr = new JSONModel();
+                var oModFiltrosAcr = new JSONModel();
+                var oModCab = new JSONModel();
+                
                 oModFiltr.setData(filtros);
+
                 this.oComponent.setModel(oModFiltr, "Filtros");
+                this.oComponent.setModel(oModFiltrosAcr, "FiltrosCli");
+                this.oComponent.setModel(oModCab, "PedidoCab");
+
                 this.dameTiposped();
                 this.dameLineas();
+                this.DameOrganizaciones();
+                this.TiposPedidoAlta();
             },
 
             dameTiposped: function () {
@@ -408,7 +417,7 @@ sap.ui.define([
                 var Kunnr = this.getView().byId("f_lifnrAcr").getValue();
                 var Stcd1 = this.getView().byId("f_nameAcr").getValue();
                 var Name1 = this.getView().byId("f_nifAcr").getValue();
-                //var Bukrs = this.getView().byId("f_nifcAcr").getValue();
+                var Bukrs = this.getView().byId("f_nifcAcr").getValue();
 
                 var aFilterIds, aFilterValues, aFilters;
 
@@ -417,12 +426,14 @@ sap.ui.define([
                 aFilterIds = [
                     "Stcd1",
                     "Name1",
-                    "Kunnr"
+                    "Kunnr",
+                    "Bukrs"
                 ];
                 aFilterValues = [
                     Stcd1,
                     Name1,
-                    Kunnr
+                    Kunnr,
+                    Bukrs
                 ];
 
                 if (Stcd1 == "") {
@@ -443,14 +454,14 @@ sap.ui.define([
                     }
                 }
 
-                /*if (Bukrs == "") {
+                if (Bukrs == "" || Bukrs == undefined) {
                     var i = aFilterIds.indexOf("Bukrs");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
                         aFilterValues.splice(i, 1);
                     }
-                }*/
+                }
                 if (Kunnr == "") {
                     var i = aFilterIds.indexOf("Kunnr");
 
@@ -809,8 +820,8 @@ sap.ui.define([
 
             onPressOficinas: function (oEvent) {
                 var ofi = this.getSelectOficinas(oEvent, "listadoOficinas");
-                Vkbur = ofi.Vkbur;
-                this.getView().byId("f_oficinas").setValue(Vkbur);
+                vkbur = ofi.Vkbur;
+                this.getView().byId("f_oficinas").setValue(vkbur);
                 this.byId("ofiDial").close();
 
             },
@@ -898,7 +909,7 @@ sap.ui.define([
             onValueHelpRequestOficinas: function (oEvent) {
                 //this.Dialog = sap.ui.xmlfragment("aguasdevalencia.fragment.ClienteMonitorPedidos", this);
                 //this.Dialog.open();
-                this._getDialogOficinas();
+                this._getDialogOficinas(oEvent);
             },
 
             _getDialogCliente: function (sInputValue) {
@@ -1333,10 +1344,14 @@ sap.ui.define([
                 var posicionArray = this.oComponent.getModel("listadoSolicitudes").getData()[numero];
                 var Idsolicitud = posicionArray.Idsolicitud
 
-                const oRouter = this.getOwnerComponent().getRouter();
+                /*const oRouter = this.getOwnerComponent().getRouter();
                 oRouter.navTo("RouteAltaPedidos",{
                     path: Idsolicitud
-                });
+                });*/
+
+                var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                oRouter.navTo("RouteAltaPedidos");
+                //sap.ui.core.BusyIndicator.hide();*/
                      
             },
 
@@ -1355,7 +1370,11 @@ sap.ui.define([
 
             getPedido: function (pedido) {
 
-                var aFilterIds,
+                var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                oRouter.navTo("RouteAltaPedidos");
+                sap.ui.core.BusyIndicator.hide();
+
+               /* var aFilterIds,
                     aFilterValues,
                     aFilters,
                     aFilters2;
@@ -1389,9 +1408,408 @@ sap.ui.define([
                     this.readDataEntity(this.mainService, "/GrupoArticuloSet"),
                     this.readDataEntity(this.mainService, "/ChatSet", aFilters2),
                     this.readDataEntity(this.mainService, "/ExtensionAdjuntoSet"),
-                ]).then(this.buildPedModel.bind(this), this.errorFatal.bind(this));
+                ]).then(this.buildPedModel.bind(this), this.errorFatal.bind(this));*/
 
             },
+
+            /*buildPedModel: function(values) {
+                if (values[0].results[0]) { // Mapeo cabecera
+                    var cabecera = Object.assign({}, values[0].results[0]);
+                    delete cabecera.EstrategiaSet;
+                    delete cabecera.HistorialModificacionSet;
+                    delete cabecera.PedidoPosSet;
+                    delete cabecera.AdjuntoSHPSet;
+                    delete cabecera.AdjuntoSet;
+                    delete cabecera.AdjuntoPSet;
+                    delete cabecera.RespuestaPedido
+    
+                    // Formato Fechas
+                    if (cabecera.Bedat) {
+                        if (this.modoapp == "CO") {
+                            var today1 = new Date();
+                        } else {
+                            var today1 = cabecera.Bedat;
+                        }
+                        var fechai = today1.getFullYear() + '-' + (
+                            "0" + (
+                                today1.getMonth() + 1
+                            )
+                        ).slice(-2) + '-' + (
+                            "0" + today1.getDate()
+                        ).slice(-2);
+                        cabecera.Bedat = fechai;
+                    }
+                    if (cabecera.ZzfechaAprob) {
+                        var today1 = cabecera.ZzfechaAprob;
+                        var fechai = today1.getFullYear() + '-' + (
+                            "0" + (
+                                today1.getMonth() + 1
+                            )
+                        ).slice(-2) + '-' + (
+                            "0" + today1.getDate()
+                        ).slice(-2);
+                        cabecera.ZzfechaAprob = fechai;
+                    }
+                    if (cabecera.FRechazo) {
+                        var today1 = cabecera.FRechazo;
+                        var fechai = today1.getFullYear() + '-' + (
+                            "0" + (
+                                today1.getMonth() + 1
+                            )
+                        ).slice(-2) + '-' + (
+                            "0" + today1.getDate()
+                        ).slice(-2);
+                        cabecera.FRechazo = fechai;
+                    }
+                    if (cabecera.Aedat) {
+                        var today1 = cabecera.Aedat;
+                        var fechai = today1.getFullYear() + '-' + (
+                            "0" + (
+                                today1.getMonth() + 1
+                            )
+                        ).slice(-2) + '-' + (
+                            "0" + today1.getDate()
+                        ).slice(-2);
+                        cabecera.Aedat = fechai;
+                    }
+    
+                    
+                    
+                    if (this.modoapp == "CO" || this.modoapp == "M") {
+    
+                        if (this.modoapp == "CO") {
+                            cabecera.Unsez = cabecera.Ebeln;
+                            delete cabecera.Ebeln;
+                            delete cabecera.Text;
+    
+                        }
+                        delete cabecera.Frggr;
+                        delete cabecera.Frgke;
+                        delete cabecera.Frgsx;
+                        delete cabecera.Aedat;
+                        delete cabecera.Posid;
+                        delete cabecera.PsPspPnr;
+                        delete cabecera.Verna;
+                        delete cabecera.Verna1;
+                        delete cabecera.Verna2
+                        delete cabecera.Verna3;
+                        delete cabecera.Verna4;
+                        delete cabecera.Verna5;
+                        delete cabecera.Verna6;
+                        delete cabecera.Vernr;
+                        delete cabecera.Vernr1;
+                        delete cabecera.Vernr2;
+                        delete cabecera.Vernr3;
+                        delete cabecera.Vernr4;
+                        delete cabecera.Vernr5;
+                        delete cabecera.Resp2;
+                        delete cabecera.Obart;
+                        delete cabecera.Ernam;
+                        delete cabecera.ErnamName;
+                    }
+    
+                    var oModCab = new JSONModel();
+                    oModCab.setData(cabecera);
+                    this.oComponent.setModel(oModCab, "PedidoCab");
+    
+                    // Mapeo Adjuntos
+                    var adjuntos = values[0].results[0].AdjuntoSet.results;
+                    var adjSHP = values[0].results[0].AdjuntoSHPSet.results;
+    
+                    if (adjuntos.length > 0) {
+    
+                        var oModAdj = new JSONModel();
+                        var adjs = [],
+                            adj;
+    
+                        adjuntos.forEach(function (el) {
+    
+                            var url;
+                            url = "";
+                            adjSHP.forEach(function (elshp) {
+    
+                                if (el.Descripcion == elshp.Descriptivo && el.Filename == elshp.Adjunto) {
+                                    url = elshp.Url;
+                                }
+                            });
+    
+                            adj = {
+                                Filename: el.Filename,
+                                Descripcion: el.Descripcion,
+                                URL: url
+    
+                            };
+                            adjs.push(adj);
+                        });
+    
+                        oModAdj.setData(adjs);
+                        this.oComponent.setModel(oModAdj, "Adjuntos");
+                        this.oComponent.setModel(new JSONModel(), "datosAdj");
+                    } else {
+                        this.oComponent.setModel(new JSONModel([]), "Adjuntos");
+                        this.oComponent.setModel(new JSONModel(), "datosAdj");
+                    }
+                    // Mapeo posiciones
+                    var posiciones = values[0].results[0].PedidoPosSet.results;
+    
+                    if (posiciones.length > 0) { // Formato posiciones y calculo siguiente pos
+                        var posAnt;
+                        var posNext = 0;
+                        var posicionesN = [];
+                        var modeAPP = this.modoapp;
+    
+                        posiciones.forEach(function (pos) {
+    
+                            pos.Ebelp = parseInt(pos.Ebelp);
+                            pos.Secu = parseInt(pos.Secu);
+    
+                            if (! posAnt || posAnt != pos.Ebelp) {
+                                pos.EbelpT = pos.Ebelp;
+                            } else {
+                                pos.EbelpT = "";
+                            } posNext = pos.Ebelp;
+                            posAnt = pos.Ebelp;
+    
+                            if (pos.Mwskz == "") {
+                                pos.Mwskz = "00";
+                            }
+    
+                            var posicionN = {
+                                Ebelp: pos.Ebelp,
+                                EbelpT: pos.EbelpT,
+                                Accion: pos.Accion,
+                                Pstyp: pos.Pstyp,
+                                Loekz: pos.Loekz,
+                                NameTyp: "Servicio",
+                                Knttp: pos.Knttp,
+                                Txz01: pos.Txz01,
+                                Posid: pos.Posid,
+                                MatServ: pos.MatServ,
+                                Maktx: pos.Maktx,
+                                Matkl: pos.Matkl,
+                                Werks: pos.Werks,
+                                Name1: pos.Name1,
+                                Brtwr: pos.Brtwr,
+                                Mwskz: pos.Mwskz,
+                                Secu: pos.Secu,
+                                SerialNo: pos.SerialNo,
+                                Packno: pos.Packno,
+                                Saknr: pos.Saknr,
+                                LineNo: pos.LineNo,
+                                PendienteFact: pos.PendienteFact,
+                                WrbtrRf2: pos.WrbtrRf2
+                            }
+    
+                            if (pos.Loekz == "L") {
+                                posicionN.iconoB = "sap-icon://delete";
+                                posicionN.iconoM = true;
+                            } else if (pos.Loekz == "S") {
+                                posicionN.iconoB = "sap-icon://locked";
+                                posicionN.iconoM = true;
+                            } else {
+                                posicionN.iconoM = false;
+                            }
+    
+                            if (modeAPP == "M") {
+                               //posicionN.modificabe = false;
+                               posicionN.modificabe = true;
+                            } else {
+                                posicionN.modificabe = false;
+                                //posicionN.modificabe = true;
+                            }
+    
+                            if (modeAPP !== "CO") {
+                                posicionN.Erekz = pos.Erekz;
+                            }
+    
+                            posicionesN.push(posicionN);
+    
+                        });
+    
+                        this.posNext = posNext + 10;
+                        this.secuModi = posicionesN.length;
+    
+                        posiciones = posicionesN;
+    
+                        posiciones.sort(function (a, b) { // return a.Secu.toString().localeCompare(b.Secu.toString());
+                            return a.Secu > b.Secu;
+                        });
+    
+                        // Tratamiento posiciones en Copiar (Se eliminan posiciones marcadas para borrado)
+                        var posidNew;
+                        if (this.modoapp == "CO") {
+    
+                            for (var i = posiciones.length - 1; i >= 0; i--) {
+    
+                                if (posiciones[i].Loekz == "L") {
+                                    posiciones.splice(i, 1);
+                                }
+                                
+                                //Eliminar cantidad facturada en las posiciones en caso de copia
+                                if (posiciones[i].WrbtrRf2 != "0.00") {
+                                    posiciones[i].PendienteFact = posiciones[i].Brtwr
+                                    posiciones[i].WrbtrRf2 = "0.00"
+                                }
+                            }
+                            var pepCopia = posiciones[0].Posid;
+    
+                        }
+    
+                        var oModPos = new JSONModel();
+                        oModPos.setData(posiciones);
+                        this.oComponent.setModel(oModPos, "PedidoPos");
+                    } else {
+                        this.oComponent.setModel(new JSONModel(), "PedidoPos");
+                    }
+    
+                    var accept = this.oI18nModel.getProperty("acept"),
+                        decline = this.oI18nModel.getProperty("rech"),
+                        pend = this.oI18nModel.getProperty("pend");
+    
+                    // Mapeo Estrategia
+                    var estrategia = values[0].results[0].EstrategiaSet.results;
+    
+                    if (estrategia.length > 0) {
+    
+                        estrategia.forEach(function (el) {
+    
+                            if (el.Zlib == "X") {
+                                el.icono = "sap-icon://accept";
+                                el.dicono = accept;
+                                el.color = "Positive";
+                            } else {
+                                if (el.Zico == "'@02@'") { // "@ED@"){
+                                    el.icono = "sap-icon://decline";
+                                    el.dicono = decline;
+                                    el.color = "Negative";
+                                } else {
+                                    el.icono = "sap-icon://message-warning";
+                                    el.dicono = pend;
+                                    el.color = "Critical";
+                                }
+                                // estrategia.icono
+                            }
+    
+                        });
+    
+                        var oModEst = new JSONModel();
+                        oModEst.setData(estrategia);
+                        this.oComponent.setModel(oModEst, "EstrategiaSol");
+                    } else {
+                        this.oComponent.setModel(new JSONModel(), "EstrategiaSol");
+                    }
+    
+                    // Mapeo Historial Modificaciones
+    
+                    var modific = values[0].results[0].HistorialModificacionSet.results;
+    
+                    if (modific.length > 0) {
+    
+                        modific.forEach(function (el) { // el.Utime = el.Utime.ms.match(/(\d{2})H(\d{2})M(\d{2})S$/).slice(-3).join(":");
+    
+                            var seconds = Math.floor((el.Utime.ms / 1000) % 60),
+                                minutes = Math.floor((el.Utime.ms / (1000 * 60)) % 60),
+                                hours = Math.floor((el.Utime.ms / (1000 * 60 * 60)) % 24);
+    
+                            hours = (hours < 10) ? "0" + hours : hours;
+                            minutes = (minutes < 10) ? "0" + minutes : minutes;
+                            seconds = (seconds < 10) ? "0" + seconds : seconds;
+    
+                            el.Utime = hours + ":" + minutes + ":" + seconds;
+                        });
+    
+                        var oModMod = new JSONModel();
+                        oModMod.setData(modific);
+                        this.oComponent.setModel(oModMod, "HistorialMod");
+                    } else {
+                        this.oComponent.setModel(new JSONModel(), "HistorialMod");
+                    }
+                }
+                // Mapeo de Impuestos
+                if (values[1].results.length > 0) { // Se cambia la clave al impuesto sin Iva a 00
+                    values[1].results.forEach(function (el) {
+    
+                        if (el.Value == "") {
+                            el.Value = "00";
+                        }
+    
+                    });
+    
+                    var oModImp = new JSONModel();
+                    oModImp.setData(values[1].results);
+                    this.oComponent.setModel(oModImp, "Impuestos");
+                }
+    
+                // Mapeo Tipo de compras
+                if (values[2].results.length > 0) {
+    
+                    var oModComp = new JSONModel();
+                    oModComp.setData(values[2].results);
+                    this.oComponent.setModel(oModComp, "TipoCompras");
+                }
+                // Mapeo Tipo de grupo de Artículos
+                if (values[3].results.length > 0) {
+    
+                    var oModGrA = new JSONModel();
+                    oModGrA.setData(values[3].results);
+                    this.oComponent.setModel(oModGrA, "GrupoArticulos");
+                }
+    
+                // Mapeo CHAT pedido
+                if (values[4].results.length > 0) {
+    
+                    var oModChat = new JSONModel();
+                    oModChat.setData(values[4].results);
+                    this.oComponent.setModel(oModChat, "ChatPedido");
+                } else {
+                    this.oComponent.setModel(new JSONModel(), "ChatPedido");
+                }
+    
+                // Modelo crear chat.
+                this.oComponent.setModel(new JSONModel(), "chatCreate");
+    
+                var bsart = cabecera.Bsart;
+                var bukrs = cabecera.Bukrs;
+                // Mapeamos la condicion de pago
+    
+                this.oComponent.getModel("PedidoCab").setProperty("/Zterm", cabecera.Zterm);
+    
+                // Mapeo extensión ficheros
+                if (values[5].results) {
+                    var oModExtA = new JSONModel();
+                    oModExtA.setData(values[5].results);
+                    this.oComponent.setModel(oModExtA, "ExtArchivos");
+                }
+    
+                var aFilterIds,
+                    aFilterValues,
+                    aFilters,
+                    aFilters2,
+                    posidNew,
+                    oJson;
+    
+                aFilterIds = ["Bsart"];
+                aFilterValues = [bsart];
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+    
+                aFilterIds = ["Ekorg"];
+                aFilterValues = [bukrs];
+                aFilters2 = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+    
+                
+    
+                    if (posidNew) {
+                        oJson = {
+                            POSID : posidNew
+                        }
+                    }
+                }
+
+                var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                oRouter.navTo("RouteAltaPedidos");
+                sap.ui.core.BusyIndicator.hide();
+    
+            },*/
 
 
             //EXCEPCIONES (ERROR FATAL)/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1581,6 +1999,341 @@ sap.ui.define([
                     oColumn.setFiltered(true);
                     this.byId("idTablePEPs").getBinding().filter(this._oFilter, "Application");
                 }
+            },
+
+            // METODOS Y FUNCIONES PARA EL ALTA DE PEDIDOS
+            onNavToAltaPedidos: function(oEvent) {
+               this._getDialogOptions();
+            },
+
+            _getDialogOptions: function (sInputValue) {
+                var oView = this.getView();
+
+                if (!this.pDialogOptions) {
+                    this.pDialogOptions = Fragment.load({
+                        id: oView.getId(),
+                        name: "monitorpedidos.fragments.AltaPedidoOption",
+                        controller: this,
+                    }).then(function (oDialogOptions) {
+                        // connect dialog to the root view of this component (models, lifecycle)
+                        oView.addDependent(oDialogOptions);
+                        return oDialogOptions;
+                    });
+                }
+                this.pDialogOptions.then(function (oDialogOptions) {
+                    oDialogOptions.open(sInputValue);
+                    //this._configDialogCliente(oDialog)
+                });
+
+                var vcped,
+                    vcvent,
+                    vzona,
+                    vclient,
+                    vcont,
+                    vcreation,
+                    vtitle,
+                    modApp,
+                    boton,
+                    secuModi;
+
+                this.modoapp = 'C';
+
+                if (this.modoapp == "C") {
+                    vcped = false;
+                    vcvent = false;
+                    vzona = false;
+                    vclient = false;
+                    vcont = false;
+                    vcreation = false;
+                    vtitle = this.oI18nModel.getProperty("visPed");
+                    boton,
+                    modApp = this.modoapp;
+                }
+
+                var config = {
+                    creation: vcreation,
+                    mode: modApp,
+                    cped: vcped,
+                    cvent: vcvent,
+                    czona: vzona,
+                    ccont: vcont,
+                    cclient:vclient,
+                    buttCRUD: boton,
+                    Title: vtitle,
+                    secuModi: secuModi
+                }
+
+                var oModConfig = new JSONModel();
+                oModConfig.setData(config);
+                this.oComponent.setModel(oModConfig, "ModoApp");
+            },
+
+            
+            DameOrganizaciones: function() {
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/OrganizacionesSet", ""),
+                ]).then(this.buildSociedades.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildSociedades: function(values) {
+                if (values[0].results) {
+                    var oModelOgranizacion= new JSONModel();
+                    oModelOgranizacion.setData(values[0].results);
+                    oModelOgranizacion.setSizeLimit(300);
+                    this.oComponent.setModel(oModelOgranizacion, "Organizaciones");
+                }
+
+            },
+
+            TiposPedidoAlta: function() {
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/TipoPedidoSet",""),
+                ]).then(this.buildTiposPed.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildTiposPed: function(values) {
+                if (values[0].results) {
+                    var oModelTiposPed = new JSONModel();
+                    oModelTiposPed.setData(values[0].results);
+                    this.oComponent.setModel(oModelTiposPed, "TipospedidoAlta");
+                }
+              
+            },
+
+            onChangeTipoPed: function() {
+                //var mode = this.oComponent.getModel("ModoApp").getData();
+                TipoPed = this.getView().byId("idCTipoPed").getSelectedKey();
+
+				//mode.cped = true;
+				//this.oComponent.getModel("ModoApp").refresh(true);
+                this.oComponent.getModel("ModoApp").setProperty("/cped", true);
+                this.oComponent.getModel("ModoApp").refresh(true);
+            },
+
+            onChangeSoc: function () {
+
+				/*var mode = this.oComponent.getModel("ModoApp").getData();
+
+				mode.cvent = true;
+				this.oComponent.getModel("ModoApp").refresh(true);*/
+                this.oComponent.getModel("ModoApp").setProperty("/cvent", true);
+                this.oComponent.getModel("ModoApp").refresh(true);
+
+				//Calculamos los centos asociados a la sociedad
+				//var bukrs = this.oComponent.getModel("PedidoCab").getData().Bukrs;
+                socPed = this.getView().byId("idCSociedad").getSelectedKey();
+                //var user = ''  
+
+				var aFilterIds,
+					aFilterValues,
+					aFilters;
+
+				aFilterIds = ["Vkorg"];
+				aFilterValues = [socPed];
+				aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+				Promise.all([this.readDataEntity(this.mainService, "/AreaVentasSet", "")]).then(
+					this.buildListAreaVentas.bind(this), this.errorFatal.bind(this));
+
+			},
+
+            onChangeArea: function() {
+                /*var mode = this.oComponent.getModel("ModoApp").getData();
+                mode.czona = true;
+                this.oComponent.getModel("ModoApp").refresh(true);*/
+                this.oComponent.getModel("ModoApp").setProperty("/czona", true);
+                this.oComponent.getModel("ModoApp").refresh(true);
+
+                vkbur = this.getView().byId("idArea").getSelectedKey();
+
+                var aFilterIds,
+					aFilterValues,
+					aFilters;
+
+				aFilterIds = ["Vkorg"];
+				aFilterValues = [socPed];
+				aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+				Promise.all([this.readDataEntity(this.mainService, "/ZonaVentasSet", "")]).then(
+					this.buildListZonaVentas.bind(this), this.errorFatal.bind(this));
+
+
+            },
+
+
+            onChangeZona: function() {
+                /*var mode = this.oComponent.getModel("ModoApp").getValue();
+                mode.cclient = true;
+                this.oComponent.getModel("ModoApp").refresh(true);*/
+                this.oComponent.getModel("ModoApp").setProperty("/cclient", true);
+                this.oComponent.getModel("ModoApp").refresh(true);
+                
+            },
+
+            onReqProv: function() {
+                /*var mode = this.oComponent.getModel("ModoApp").getValue();
+                mode.ccontr = true;
+                this.oComponent.getModel("ModoApp").refresh(true);*/
+                this.oComponent.getModel("ModoApp").setProperty("/ccontr", true);
+                this.oComponent.getModel("ModoApp").refresh(true);
+            },
+
+            onValHelpReqCliente: function (oEvent) {
+                var sInputValue = oEvent.getSource().getValue(),
+                oView = this.getView();
+
+                if (socPed) {
+                    this.oComponent.setModel(new JSONModel(), "acrList");
+                    this.oComponent.getModel("FiltrosCli").setProperty("/Bukrs", socPed);
+                    this.oComponent.getModel("FiltrosCli").setProperty("/Kunnr", sInputValue);
+
+                    if (!this._pValueHelpDialog) {
+                        this._pValueHelpDialog = Fragment.load({
+                            id: oView.getId(),
+                            name: "monitorpedidos.fragments.BusqClientes",
+                            controller: this
+                        }).then(function (oDialog) {
+                            oView.addDependent(oDialog);
+                            return oDialog;
+                        });
+                    }
+                    this._pValueHelpDialog.then(function (oDialog) {
+                        oDialog.open(sInputValue);
+                    });
+                } else {
+                    MessageBox.error(this.oI18nModel.getProperty("noCli"));
+                }
+            },
+
+            onReqCli: function (oEvent) {
+                var cli = oEvent.getParameter("value");
+
+                sap.ui.core.BusyIndicator.show();
+
+                if (socPed) {
+                    var aFilters = [],
+                        aFilterIds = [],
+                        aFilterValues = [];
+
+                    aFilterIds.push("Kunnr");
+                    aFilterValues.push(cli);
+
+                    aFilterIds.push("Bukrs");
+                    aFilterValues.push(socPed);
+
+                    aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                    Promise.all([
+                        this.readDataEntity(this.mainService, "/DameClientesSet", aFilters),
+                    ]).then(this.buildCliente.bind(this), this.errorFatal.bind(this));
+
+
+                } else {
+                    MessageBox.error(this.oI18nModel.getProperty("noCli"));
+                }
+            },
+
+            buildCliente: function (values) {
+                
+                var error = false;
+
+                if (values[0].results) {
+                    //nomcli
+                    if (values[0].results.length == 0) {
+                        MessageBox.error(this.oI18nModel.getProperty("noCli"));
+                        error = true;
+                    } else if (values[0].results.length > 1) {
+                        //univCli
+                        MessageBox.warning(this.oI18nModel.getProperty("univCli"));
+                        this.oComponent.getModel("PedidoCab").setProperty("/Name1", "");
+						this.oComponent.getModel("PedidoCab").refresh(true);
+                    } else if (values[0].results.length == 1) {
+                        this.oComponent.getModel("PedidoCab").setProperty("/Name1", values[0].results[0].Name1);
+						this.oComponent.getModel("PedidoCab").setProperty("/Kunnr", values[0].results[0].Kunnr);
+                        codcli = values[0].results[0].Kunnr;
+						this.oComponent.getModel("PedidoCab").refresh(true);
+
+                        this.oComponent.getModel("ModoApp").setProperty("/ccont", true);
+                        this.oComponent.getModel("ModoApp").refresh(true);
+                    }
+                }
+
+                sap.ui.core.BusyIndicator.hide();
+                this.DameContratosCliente();
+            },
+
+            DameContratosCliente: function () {
+                var aFilters = [],
+                aFilterIds = [],
+                aFilterValues = [];
+
+                aFilterIds.push("Vkorg");
+                aFilterValues.push(socPed);
+
+                aFilterIds.push("Kunnr");
+                aFilterValues.push(codcli);
+
+                aFilterIds.push("Auart");
+                aFilterValues.push(TipoPed);
+
+
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/DameContratosSet", aFilters),
+                ]).then(this.buildContratos.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildContratos: function (values) {
+                if (values[0].results) {
+                    var oModelContratos = new JSONModel();
+                    oModelContratos.setData(values[0].results);
+                    this.oComponent.setModel(oModelContratos, "ContratoCliente");
+                    this.oComponent.getModel("ContratoCliente").refresh(true);
+                }
+            },
+
+            onChangeContrato: function() {
+                numCont  = this.getView().byId("idcontract").getSelectedKey();
+
+                if (!numCont || numCont == undefined) {
+                    MessageBox.warning(this.oI18nModel.getProperty("noCont"));
+                }
+            },
+
+            CloseOptionsDiag: function()  {
+                this.getView().byId("idCTipoPed").setSelectedKey(null);
+                this.getView().byId("idCSociedad").setSelectedKey(null);
+                this.getView().byId("idArea").setSelectedKey(null);
+                this.getView().byId("idzona").setSelectedKey(null);
+                this.getView().byId("idCCliente").setValue(null);
+                this.getView().byId("idcontract").setSelectedKey(null);
+                this.byId("OptionDial").close();
+                
+            },
+
+            buildListAreaVentas: function(values) {
+                if (values[0].results) {
+                    var oModelListAreaVentas = new JSONModel();
+                    oModelListAreaVentas.setData(values[0].results);
+                    this.oComponent.setModel(oModelListAreaVentas, "AreaVentas");
+                }
+                
+            },
+
+            buildListZonaVentas: function(values) {
+                if (values[0].results) {
+                    var oModelListZonaVentas = new JSONModel();
+                    oModelListZonaVentas.setData(values[0].results);
+                    this.oComponent.setModel(oModelListZonaVentas, "ZonaVentas");
+                }
+                
+            },
+
+            onNavAlta: function() {
+                var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                oRouter.navTo("RouteAltaPedidos"); 
             }
+
         });
     });

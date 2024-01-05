@@ -60,20 +60,20 @@
                     />
                 </fb:control>
             </fb:FilterGroupItem>
-            <!--<fb:FilterGroupItem
+            <fb:FilterGroupItem
                 groupName="FiltrosCli"
                 name="D"
-                label="Sociedad"
+                label=""
                 partOfCurrentVariant="true"
                 visibleInFilterBar="true">
                 <fb:control>
                     <Input
                         id="f_nifcAcr"
                         value='{FiltrosCli>/Bukrs}'
-                        editable="true"
+                        visible="false"
                     />
                 </fb:control>
-            </fb:FilterGroupItem>-->
+            </fb:FilterGroupItem>
             <!-- <fb:FilterGroupItem groupName="FiltroAcr" name="E" label="{i18n>sociedad}" partOfCurrentVariant="true" visibleInFilterBar="true">
                     <fb:control>
                         <Input id="f_socAcr" value='{FiltrosAcr>/Bukrs}' editable="false"/>

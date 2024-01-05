@@ -103,7 +103,7 @@
         },
         {
           "name": "RouteAltaPedidos",
-          "pattern": "OrderNum={path}",
+          "pattern": "RouteAltaPedidos/:Idsolicitud:",
           "target": [
             "TargetAltaPedidos"
           ]

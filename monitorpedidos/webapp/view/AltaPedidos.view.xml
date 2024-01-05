@@ -8,11 +8,15 @@
     xmlns:l="sap.ui.layout" height="100%">
 
     <m:Page id="page" title="{i18n>createOrderTitle}">
+    <m:headerContent>
+    <m:Button text="Grabar" icon="sap-icon://save"/>
+    </m:headerContent>
         <m:content>
             <ObjectPageLayout id="ObjectPageLayout">
                 <headerTitle>
-                    <ObjectPageHeader id="pageHeader" objectTitle="Pedido: 100000002 - 25/10/2023 - Pdte Aprobar" />
+                    <ObjectPageHeader id="pageHeader" objectTitle="Pedido: (Referenciped) - (FECHAD) - (ESTADO)" />
                 </headerTitle>
+             
                 <headerContent>
                     <m:VBox renderType="Bare">
                         <f:SimpleForm editable="true" 
@@ -30,25 +34,25 @@
                                         <l:GridData span="XL1 L2 M2 S4" />
                                     </m:layoutData>
                                 </m:Input>
-                                <m:Label text="Sociedad"/>
+                                <m:Label text="{i18n>Sociedad}"/>
                                 <m:Input enabled="false" editable="false" width="225px">
                                     <m:layoutData>
                                         <l:GridData span="XL1 L2 M2 S4" />
                                     </m:layoutData>
                                 </m:Input>
-                                <m:Label text="Zona de Ventas" />
+                                <m:Label text="{i18n>ZonaVentas}" />
                                 <m:Input enabled="false" editable="false" width="225px">
                                     <m:layoutData>
                                         <l:GridData span="XL1 L2 M2 S4" />
                                     </m:layoutData>
                                 </m:Input>
-                                  <m:Label text="Cliente" />
+                                  <m:Label text="{i18n>Cliente}" />
                                 <m:Input enabled="false" editable="false" width="225px">
                                     <m:layoutData>
                                         <l:GridData span="XL1 L2 M2 S4" />
                                     </m:layoutData>
                                 </m:Input>
-                                <m:Label text="Contrato" />
+                                <m:Label text="{i18n>Contrato}" />
                                 <m:Input enabled="false" editable="false" width="225px">
                                     <m:layoutData>
                                         <l:GridData span="XL1 L2 M2 S4" />
@@ -56,19 +60,19 @@
                                 </m:Input>
                                 <!--  -->
                         
-                                <core:Title text="" /> 
-                             
-                                <m:Text text="800,00 EUR" textAlign="End"/>
+                                <core:Title text="" />
+                                <m:Text text="(ImpPedido)" textAlign="End" id="txtPrice"/>
                                 <m:Label/>
-                                <m:Text text="Creado por: (NOMBRE)" textAlign="End"/>
+                                <m:Text text="Creado por: (Nombreapr)" textAlign="End"/>
                                 <core:Title text="" /> 
                                 <m:Label/>
                                 <core:Title text="" /> 
-                                <m:Button text="Visualizar pedido" type="Transparent" id="btnVisualizarPedido" width="130px"/>
+                                <m:Button text="Visualizar pedido" type="Transparent" id="btnVisualizarPedido" width="130px" press=""/>
                     
                             </f:content>
                         </f:SimpleForm>
                     </m:VBox>
+                    
                 </headerContent>
 
                 <ObjectPageSection showTitle="false" id="ObjectPageSection">
