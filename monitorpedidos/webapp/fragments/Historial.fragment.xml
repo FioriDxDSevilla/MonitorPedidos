@@ -11,9 +11,9 @@
 
         <table:Table selectionMode="None" id="TablaHistorial" rows="{path: 'listadoSolicitudes>/'}">
             <table:Column hAlign="Center">
-                <m:Label text=""/>
+                <m:Label text="{i18n>CampoModificado}"/>
                 <table:template>
-                    <m:Text text="{i18n>CondicionPago}"/>
+                    <m:Text text=""/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">

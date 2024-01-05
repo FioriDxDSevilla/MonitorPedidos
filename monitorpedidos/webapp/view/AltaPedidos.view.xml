@@ -8,11 +8,15 @@
     xmlns:l="sap.ui.layout" height="100%">
 
     <m:Page id="page" title="{i18n>createOrderTitle}">
+    <m:headerContent>
+    <m:Button text="Grabar" icon="sap-icon://save"/>
+    </m:headerContent>
         <m:content>
             <ObjectPageLayout id="ObjectPageLayout">
                 <headerTitle>
                     <ObjectPageHeader id="pageHeader" objectTitle="Pedido: (Referenciped) - (FECHAD) - (ESTADO)" />
                 </headerTitle>
+             
                 <headerContent>
                     <m:VBox renderType="Bare">
                         <f:SimpleForm editable="true" 
@@ -56,8 +60,7 @@
                                 </m:Input>
                                 <!--  -->
                         
-                                <core:Title text="" /> 
-                             
+                                <core:Title text="" />
                                 <m:Text text="(ImpPedido)" textAlign="End" id="txtPrice"/>
                                 <m:Label/>
                                 <m:Text text="Creado por: (Nombreapr)" textAlign="End"/>
@@ -69,6 +72,7 @@
                             </f:content>
                         </f:SimpleForm>
                     </m:VBox>
+                    
                 </headerContent>
 
                 <ObjectPageSection showTitle="false" id="ObjectPageSection">

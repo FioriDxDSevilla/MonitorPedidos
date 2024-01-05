@@ -6,34 +6,34 @@
     xmlns:l="sap.ui.layout"
     xmlns="sap.ui.table"
     xmlns:upload="sap.m.upload"
-    xmlns:unified="sap.ui.unified"
+    xmlns:u="sap.ui.unified"
+
     >
-
-
- 
-    <m:VBox renderType="Bare"> </m:VBox>
-   <!--
-        <Table selectionMode="None" id="TablaAdjuntos" rows="{path: ''}" width="70%">
-            <columns>
-                <Column hAlign="Center" width="auto">
-                    <m:Label/>
-                    <template>
-                        <m:Text text=""/>
-                    </template>
-                </Column>
-            </columns>
-        </Table>
--->
-
-<!--  
-		<upload:UploadSet
-			id="UploadSet"
-			instantUpload="false"
-			noDataDescription="Arrastre para subir un fichero o pulse en el botón de Adjuntar Documento"
-            
-            />
-		<m:Button id="Button" text="Adjuntar Documento" press="" icon="sap-icon://add" />
--->
-       <unified:FileUploader id="fileUploader" buttonText="Adjuntar Documento" uploadUrl="upload/"/>
-       		<m:Button  text="Subir fichero" press=""/>
+    <m:Panel expandable="false" width="100%">
+        <m:VBox renderType="Bare">
+            <f:Form editable="true" visible="true">
+                <f:layout>
+                    <f:ResponsiveGridLayout/>
+                </f:layout>
+                <f:FormContainer>
+                    <f:FormElement label="Descripción">
+                        <f:fields>
+                            <m:Input value="" id="descAdjunto" maxLength="80" enabled="true"/>
+                        </f:fields>
+                    </f:FormElement>
+                    <f:FormElement label="Adjuntar fichero">
+                        <f:fields>
+                            <u:FileUploader id="fileUploader" name="myFileUpload" uploadUrl="upload/" tooltip="Adjuntar" placeholder="Adjuntar" change=".handleUploadPress"/>
+                        </f:fields>
+                        <m:Button text="Adjuntar" press=".onAttFile" type="Emphasized">
+                            <m:layoutData>
+                                <l:GridData span="XL3 L2 M2 S12" />
+                            </m:layoutData>
+                        </m:Button>
+                    </f:FormElement>
+                </f:FormContainer>
+            </f:Form>
+        </m:VBox>
+    </m:Panel>
+     <core:Fragment fragmentName="monitorpedidos.fragments.TablaAdjuntosPres" type="XML"/>    
 </core:FragmentDefinition>
