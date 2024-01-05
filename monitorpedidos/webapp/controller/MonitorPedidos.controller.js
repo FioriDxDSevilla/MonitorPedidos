@@ -2157,7 +2157,6 @@ sap.ui.define([
 				Promise.all([this.readDataEntity(this.mainService, "/ZonaVentasSet", "")]).then(
 					this.buildListZonaVentas.bind(this), this.errorFatal.bind(this));
 
-
             },
 
 

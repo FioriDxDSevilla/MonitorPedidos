@@ -42,5 +42,4 @@
             </table:Column>
         </table:Table>
     </m:VBox>
-
 </core:FragmentDefinition>

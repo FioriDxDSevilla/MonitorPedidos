@@ -74,5 +74,4 @@
             </f:content >
         </f:SimpleForm>
     </m:VBox>
-
 </core:FragmentDefinition>

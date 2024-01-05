@@ -35,5 +35,5 @@
             </f:Form>
         </m:VBox>
     </m:Panel>
-     <core:Fragment fragmentName="monitorpedidos.fragments.TablaAdjuntosPres" type="XML"/>    
+     <core:Fragment fragmentName="monitorpedidos.fragments.TablaAdjuntosPres" type="XML"/>
 </core:FragmentDefinition>
