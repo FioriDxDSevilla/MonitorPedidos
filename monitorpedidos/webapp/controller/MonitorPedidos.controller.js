@@ -1340,11 +1340,14 @@ sap.ui.define([
             //PRUEBA
 
             onOpenOrder: function(oEvent){
+              
                 var numero = oEvent.getSource().getBindingContext("listadoSolicitudes").getPath().split("/").slice(-1).pop()
                 var posicionArray = this.oComponent.getModel("listadoSolicitudes").getData()[numero];
-                var Idsolicitud = posicionArray.Idsolicitud
+                var Idsolicitud = posicionArray.IDSOLICITUD;
 
                 /*const oRouter = this.getOwnerComponent().getRouter();
+                console.log(posicionArray)
+                const oRouter = this.getOwnerComponent().getRouter();
                 oRouter.navTo("RouteAltaPedidos",{
                     path: Idsolicitud
                 });*/
@@ -1352,6 +1355,8 @@ sap.ui.define([
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
                 oRouter.navTo("RouteAltaPedidos");
                 //sap.ui.core.BusyIndicator.hide();*/
+                //});
+          
                      
             },
 

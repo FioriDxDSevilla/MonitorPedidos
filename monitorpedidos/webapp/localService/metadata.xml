@@ -323,6 +323,7 @@
     <Property Name="Ktext" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Denominación" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Auart" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Cl.doc.ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
    </EntityType>
+<<<<<<< HEAD
    <EntityType Name="AreaVentas" sap:content-version="1">
     <Key>
      <PropertyRef Name="Vkorg"/>
@@ -337,6 +338,8 @@
     <Property Name="Bzirk" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Zona de ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Bztxt" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="DenominZonaVtas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
    </EntityType>
+=======
+>>>>>>> c982aec42c12e8bf75c66fca7299ed05501d30c8
    <Association Name="Pedido_Respuesta" sap:content-version="1">
     <End Type="ZUI5_MONITOR_PEDIDOS_SRV.PedidoCab" Multiplicity="1" Role="FromRole_Pedido_Respuesta"/>
     <End Type="ZUI5_MONITOR_PEDIDOS_SRV.RespuestaPedido" Multiplicity="1" Role="ToRole_Pedido_Respuesta"/>
@@ -430,8 +433,11 @@
     <EntitySet Name="CecoIngresoSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.CecoIngreso" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="DameOficinasSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.DameOficinas" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="DameContratosSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.DameContratos" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+<<<<<<< HEAD
     <EntitySet Name="AreaVentasSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.AreaVentas" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="ZonaVentasSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.ZonaVentas" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+=======
+>>>>>>> c982aec42c12e8bf75c66fca7299ed05501d30c8
     <AssociationSet Name="Pedido_PosicionSet" Association="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Posicion" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
      <End EntitySet="PedidoCabSet" Role="FromRole_Pedido_Posicion"/>
      <End EntitySet="PedidoPosSet" Role="ToRole_Pedido_Posicion"/>
