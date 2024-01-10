@@ -2490,7 +2490,7 @@ sap.ui.define([
             },
 
             onNavAlta: function () {
-                Posped = "";
+                Posped = 10;
                 this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
                 this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", ClasePed);
                 this.oComponent.getModel("ModoApp").setProperty("/SocPed", socPed);

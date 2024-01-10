@@ -28,7 +28,42 @@ sap.ui.define([
 
         this.oComponent.setModel(oModAdj, "datosAdj");
         this.oComponent.setModel(oModAdjSHP, "AdjuntoSHPSet");
+        this.condicionpago();
 
+      },
+
+      condicionpago : function () {
+        var kunnr = this.getOwnerComponent().getModel("ModoApp").getProperty("/Codcli");
+        var Vkorg = this.getOwnerComponent().getModel("ModoApp").getProperty("/Vkbur");
+        var aFilters = [],
+                aFilterIds = [],
+                aFilterValues = [];
+ 
+                //aFilterIds.push("Vkorg");
+                //aFilterValues.push(Vkorg);
+                //aFilterIds.push("kunnr");
+                //aFilterValues.push(kunnr);
+                aFilterIds = ["Vkorg"];
+                aFilterValues = [Vkorg];
+                aFilterIds = ["Kunnr"];
+                aFilterValues = [kunnr];
+
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+ 
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/CondicionPagoSet", aFilters),
+                ]).then(this.buildCondicion.bind(this), this.errorFatal.bind(this));
+
+      },
+
+      buildCondicion : function (){
+        if (values[0].results) {
+          var oModelCondicion = new JSONModel();
+          oModelCondicion.setData(values[0].results);
+          this.oComponent.setModel(oModelCondicion, "listadoCondicion");
+          this.oComponent.getModel("listadoCondicion").refresh(true);
+        }
       },
 
       /*ABRIR GESTOR DE ARCHIVOS*/
@@ -248,9 +283,15 @@ sap.ui.define([
         var posBACK = [];
         this.posicionesBackup = [];
         //posicion.mode = 'A';
-        posiciones.forEach(function (Linea) {
+       /* posiciones.forEach(function (Linea) {
           posBACK.push(Linea);
-        });
+        });*/
+
+        for (var i = 0; i < posiciones.length; i++) {
+          posBACK.push(posiciones);
+          
+        }
+        
         this.posicionesBackup = posBACK;
         this.posPedBackup = this.oComponent.getModel("ModoApp").getData().posPed;
         this.totalPedido = this.oComponent.getModel("posPedFrag").getData().ImpPedido;
@@ -271,7 +312,7 @@ sap.ui.define([
 
         if (posicion.mode === 'A') {
 
-          posiciones.push(posicionN);
+         // posiciones.push(posicionN);
 
 
           if (posicion.type === "P") {
@@ -281,15 +322,116 @@ sap.ui.define([
             this.oComponent.getModel("ModoApp").refresh(true);
           }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-          this.oComponent.getModel("ModoApp").getProperty("/Yaufnr").setData(codord);
-          this.oComponent.getModel("ModoApp").getProperty("/Ykostl").setData(codceco);
-          this.oComponent.getModel("ModoApp").refresh(true);
-          
-
+          /*this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
+          this.oComponent.getModel("ModoApp").setProperty("/Yaufnr", codord);
+          this.oComponent.getModel("ModoApp").setProperty("/Yaufnr", codord);
+          this.oComponent.getModel("ModoApp").setProperty("/Ykostl", codceco);
+          this.oComponent.getModel("ModoApp").refresh(true);*/
+        
         }
 
         this.ordenaPedPos(true);
       },
+
+      ordenaPedPos: function (actualiza) {
+
+        var posiciones = this.oComponent.getModel("PedidoPos").getData();
+        //var secuModi = this.oComponent.getModel("ModoApp").getData().secuModi;
+        //var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
+
+        var posicionesN = [],
+            posicionN;
+
+        if (posiciones.length > 0) {
+
+            var posInicial = 10;
+            var secu = 1;
+            var sumTotal = 0;
+
+            for (var i = 0; i <= posiciones.length - 1; i++) {
+
+                posicionN = Object.assign({}, posiciones[i]);
+
+                if (i == 0) {
+
+                    posicionN.Posnr = posInicial;
+                    //posicionN.PosnrT = posInicial;
+                    //posicionN.Secu      = secu;
+                } else {
+
+                    if (posiciones[i].Posnr == posAnt) {
+
+                        posicionN.Posnr = posicionesN[i - 1].Posnr;
+                        //posicionN.PosnrT = "";
+                        //posicionN.Secu      = secu;//posicionesN[i-1].Secu + 1;
+                    } else {
+
+                        posicionN.Posnr = posicionesN[i - 1].Posnr + 10;
+                        //posicionN.PosnrT = posicionesN[i - 1].Posnr + 10
+                        //posicionN.Secu      = secu;//1;
+                    }
+
+                }
+                //NUEVA Lógica de Secu para Modificar pedido
+                /*if (modeApp == "M") {
+                    //Estamos modificando una pos creada
+                    if (!posicionN.modificabe) {
+                        posicionN.Secu = posiciones[i].Secu;
+                    } else {
+                        /**
+                         * fmunozmorales - 19.04.23 - prueba secuencia
+                         
+                        //posicionN.Secu = secuModi;
+                        secuModi = secuModi + 1;
+                    }
+
+                } else {
+                    posicionN.Secu = secu;
+                }*/
+                posicionN.Secu = posiciones[i].Secu;
+                //secuModi = secuModi + 1;
+                posicionesN.push(posicionN);
+
+                secu = secu + 1;
+                sumTotal = (Number(sumTotal) + Number(posicionN.Netwr)).toFixed(2);
+                //this.getView().byId("inputimport").setValue(sumTotal);
+                var posAnt = posiciones[i].Posnr;
+            }
+
+            if (sumTotal == 0) {
+                sumTotal = "0.00";
+            }
+
+            this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", sumTotal);
+            this.oComponent.getModel("PedidoCab").refresh(true);
+
+            var PosSigCre = posicionesN[posiciones.length - 1].Posnr;
+            var posSig = this.oComponent.getModel("posPedFrag").getData().Posnr;
+            posSig = PosSigCre + 10;
+            //this.oComponent.getModel("ModoApp").setProperty("/posPed", posSig);
+            //this.oComponent.getModel("ModoApp").setProperty("/secuModi", secuModi);
+            //this.oComponent.getModel("ModoApp").refresh(true);
+
+            var oModPos = new JSONModel();
+            oModPos.setData(posicionesN);
+            this.oComponent.getModel("PedidoPos").setProperty("/posSig", posSig);
+            this.oComponent.setModel(oModPos, "PedidoPos");
+
+        } else {
+
+            this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", 0);
+            this.oComponent.getModel("PedidoCab").refresh(true);
+
+            var posSig = this.oComponent.getModel("posPedFrag").getData().posPed;
+            posSig = 10;
+            this.oComponent.getModel("posPedFrag").setProperty("/posPed", posSig);
+            //this.oComponent.getModel("posPedFrag").refresh(true);
+
+            //this.oComponent.getModel("PedidoPos").refresh(true);
+        }
+        this.byId("pedPosDial").close();
+    },
+
       onaddPosPed: function () {
         this._getDialogServicios();
       },
@@ -468,6 +610,7 @@ sap.ui.define([
         codmat = mat.Matnr;
         nommat = mat.Maktx;
         this.getView().byId("f_material").setValue(codmat);
+        this.getView().byId("f_nommat").setValue(nommat);
         this.oComponent.getModel("posPedFrag").setProperty("/Matnr", codmat);
         this.oComponent.getModel("posPedFrag").refresh(true);
         this.byId("matDial").close();

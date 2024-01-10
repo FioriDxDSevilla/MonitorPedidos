@@ -477,6 +477,14 @@
     <Property Name="Spart" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Sector" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Vtweg" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Canal distrib." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
    </EntityType>
+   <EntityType Name="CondicionPago" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="Zterm"/>
+    </Key>
+    <Property Name="Kunnr" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Deudor" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Vkorg" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Organiz.ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Zterm" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Cond.pago" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+   </EntityType>
    <Association Name="Pedido_Respuesta" sap:content-version="1">
     <End Type="ZUI5_MONITOR_PEDIDOS_SRV.PedidoCab" Multiplicity="1" Role="FromRole_Pedido_Respuesta"/>
     <End Type="ZUI5_MONITOR_PEDIDOS_SRV.RespuestaPedido" Multiplicity="1" Role="ToRole_Pedido_Respuesta"/>
@@ -576,6 +584,7 @@
     <EntitySet Name="DameOficinasSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.DameOficinas" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="DameContratosSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.DameContratos" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="SectorVentasSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.SectorVentas" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+    <EntitySet Name="CondicionPagoSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.CondicionPago" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <AssociationSet Name="Pedido_PosicionSet" Association="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Posicion" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
      <End EntitySet="PedidoCabSet" Role="FromRole_Pedido_Posicion"/>
      <End EntitySet="PedidoPosSet" Role="ToRole_Pedido_Posicion"/>
@@ -601,8 +610,8 @@
      <End EntitySet="AdjuntoPSet" Role="ToRole_Pedido_AdjuntoP"/>
     </AssociationSet>
    </EntityContainer>
-   <atom:link rel="self" href="http://vhegdrd2ci.sap.aguasdevalencia.es:8000/sap/opu/odata/sap/ZUI5_MONITOR_PEDIDOS_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
-   <atom:link rel="latest-version" href="http://vhegdrd2ci.sap.aguasdevalencia.es:8000/sap/opu/odata/sap/ZUI5_MONITOR_PEDIDOS_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+   <atom:link rel="self" href="http://vhegdrd2ci.sap.aguasdevalencia.es:8000/sap/opu/odata/sap/ZUI5_MONITOR_PEDIDOS_SRV/$metadata xmlns:atom=http://www.w3.org/2005/Atom"/>
+   <atom:link rel="latest-version" href="http://vhegdrd2ci.sap.aguasdevalencia.es:8000/sap/opu/odata/sap/ZUI5_MONITOR_PEDIDOS_SRV/$metadata xmlns:atom=http://www.w3.org/2005/Atom"/>
   </Schema>
  </edmx:DataServices>
 </edmx:Edmx>

@@ -30,13 +30,16 @@
         >
             <Label text="{i18n>posicion}" />
             <Input
+                id="f_tipopedpos"
                 value="{posPedFrag>/Vbeln}"
                 editable="false"
             />
-            <Label text="{i18n>text}" />
+            <Label text="{i18n>nomMat}" />
             <Input
-                value="{posPedFrag>/Arktx}"
+                id="f_nommat"
+                value="{posPedFrag>/Maktx}"
                 maxLength="40"
+                editable="false"
             />
             <Label text="{i18n>mat}" />
             <Input
@@ -45,7 +48,7 @@
                 valueHelpRequest=".onValueHelpRequestServ"
                 value="{posPedFrag>/Matnr}"
             />
-            <Label text="{i18n>mat}" />
+            <Label text="{i18n>fecha}" />
             <DatePicker
                 id="DTPdesde"
                 placeholder="{i18n>datesel}"
@@ -53,7 +56,6 @@
                 valueFormat="yyyy-MM-dd"
                 value="{posPedFrag>/FecPrecio}"
                 displayFormat="medium"
-                width="20%"
             />
             <Label text="{i18n>import}" />
             <Input
@@ -71,7 +73,7 @@
                 placeholder="0,00"
             />
 
-           <!-- <Label text="{i18n>centrocoste}" />
+            <!-- <Label text="{i18n>centrocoste}" />
             <ComboBox
                 value="{posPedFrag>/Netwr}"
                 placeholder="0,00"
@@ -86,9 +88,18 @@
                 value="{posPedFrag>/Netwr}"
                 placeholder="0,00"
             />-->
-            <Input id="f_ordenes" showValueHelp="true" valueHelpRequest=".onValueHelpOrd" value="{posPedFrag>/Yaufnr}" />
-            <Input id="f_cecos" showValueHelp="true" valueHelpRequest=".onValueHelpCecos" value="{posPedFrag>/Ykostl}"/>
-
+            <Input
+                id="f_ordenes"
+                showValueHelp="true"
+                valueHelpRequest=".onValueHelpOrd"
+                value="{posPedFrag>/Yaufnr}"
+            />
+            <Input
+                id="f_cecos"
+                showValueHelp="true"
+                valueHelpRequest=".onValueHelpCecos"
+                value="{posPedFrag>/Ykostl}"
+            />
         </f:SimpleForm>
     </Dialog>
 </core:FragmentDefinition>
