@@ -17,6 +17,7 @@
             type="Emphasized"
             press="onNavToAltaPedidos"
             text="{i18n>new}"
+           
         >
             <layoutData>
                 <OverflowToolbarLayoutData

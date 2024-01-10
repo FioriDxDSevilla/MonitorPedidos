@@ -11,25 +11,25 @@
                 <!-- -->
                 <core:Title text="{i18n>TituloDatosdeCliente}" level="H5" />
                 <m:Label text="{i18n>CodigoCliente}" />
-                <m:Input enabled="false" editable="false" width="180px">
+                <m:Input enabled="false" editable="false" width="180px" value="{ModoApp>/tipopedido}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>NombreCliente}" />
-                <m:Input enabled="false" editable="false" width="280px">
+                <m:Input enabled="false" editable="false" width="280px" value="{ModoApp>/nombrecliente}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>CIF}" />
-                <m:Input enabled="false" editable="false" width="180px">
+                <m:Input enabled="false" editable="false" width="180px" value="{ModoApp>/CIF}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>MailDestinatarioFactura}" />
-                <m:Input enabled="false" editable="false" width="280px">
+                <m:Input enabled="false" editable="false" width="280px" value="{ModoApp>/destinatariofactura}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
@@ -37,36 +37,36 @@
 
                 <core:Title text="" />
                 <m:Label text="{i18n>Direccion}" />
-                <m:Input enabled="false" editable="false" width="255px">
+                <m:Input enabled="false" editable="false" width="255px" value="{ModoApp>/direccion}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>CodPostPob}" />
-                <m:Input enabled="false" editable="false" width="120px">
+                <m:Input enabled="false" editable="false" width="120px" value="{ModoApp>/codpostpob}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
-                <m:Input enabled="false" editable="false" width="120px">
+                <m:Input enabled="false" editable="false" width="120px" value="{ModoApp>/codpostpob}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>Pais}" />
-                <m:Input enabled="false" editable="false" width="120px">
+                <m:Input enabled="false" editable="false" width="120px" value="{ModoApp>/pais}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>ViaPago}" />
-                <m:Input enabled="false" editable="false" width="120px">
+                <m:Input enabled="false" editable="false" width="120px" value="{ModoApp>/viapago}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>CondPago}" />
-                <m:Input enabled="false" editable="false" width="120px">
+                <m:Input enabled="false" editable="false" width="120px" value="{ModoApp>/condpago}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>

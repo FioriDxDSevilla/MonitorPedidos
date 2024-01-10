@@ -15,16 +15,23 @@
                 </ComboBox>
                 <Label text="{i18n>sociedad}" />
                 <!-- visible="{= ${ModoApp>/mode}  === 'C' ? false : true }"-->
-                <ComboBox id="idCSociedad" items="{ path: 'Organizaciones>/', sorter: { path: 'CompName' } }" editable="{ModoApp>/cped}" selectedKey="{PedidoCab>/Bsart}" showSecondaryValues="true" change=".onChangeSoc">
+                <ComboBox id="idCSociedad" items="{ path: 'Organizaciones>/', sorter: { path: 'CompName' } }" editable="{ModoApp>/cped}"  showSecondaryValues="true" change=".onChangeSoc">
                     <core:ListItem key="{Organizaciones>CompCode}"  text="{Organizaciones>CompName}"  additionalText = "{Organizaciones>CompCode}" />
                 </ComboBox>
                 <Label text="{i18n>AreaVentas}" />
-                <ComboBox id="idArea" items="{ path: 'AreaVentas>/', sorter: { path: 'Vtext' } }" editable="{ModoApp>/cvent}" selectedKey="{PedidoCab>/Bsart}" change=".onChangeArea" showSecondaryValues="true">
+                <ComboBox id="idArea" items="{ path: 'AreaVentas>/', sorter: { path: 'Vtext' } }" editable="{ModoApp>/cvent}"  change=".onChangeArea" showSecondaryValues="true">
                     <core:ListItem key="{AreaVentas>Vkorg}" text="{AreaVentas>Vtext}" additionalText ="{AreaVentas>Vkorg}"/>
                 </ComboBox>
-
+                <Label text="{i18n>CanalVentas}" />
+                <ComboBox id="idCanal" items="{ path: 'CanalVentas>/', sorter: { path: 'Vtweg' } }" editable="{ModoApp>/cvcan}"  change=".onChangeCanal" >
+                    <core:Item key="{CanalVentas>Vtweg}" text="{CanalVentas>Vtweg}" />
+                </ComboBox>
+                <Label text="{i18n>SectorVentas}" />
+                <ComboBox id="idSector" items="{ path: 'SectorVentas>/', sorter: { path: 'Vtweg' } }" editable="{ModoApp>/cvsector}"  change=".onChangeSector" >
+                    <core:Item key="{SectorVentas>Spart}" text="{SectorVentas>Spart}" />
+                </ComboBox>
                 <Label text="{i18n>zona}" />
-                <ComboBox id="idzona" items="{ path: 'ZonaVentas>/', sorter: { path: 'Bztxt' } }" editable="{ModoApp>/czona}" selectedKey="{PedidoCab>/Bsart}" change=".onChangeZona" showSecondaryValues="true">
+                <ComboBox id="idzona" items="{ path: 'ZonaVentas>/', sorter: { path: 'Bztxt' } }" editable="{ModoApp>/czona}"  change=".onChangeZona" showSecondaryValues="true">
                     <core:ListItem key="{ZonaVentas>Bzirk}" text="{ZonaVentas>Bztxt}" additionalText ="{ZonaVentas>Bzirk}"/>
                 </ComboBox>
                 <Label text="{i18n>client}" />
@@ -41,10 +48,10 @@
 
                 <Label text="{i18n>contrato}" />
                 <!--<Input value="{PedidoCab>/contrato}" editable="{ModoApp>/ccontr}" />-->
-                 <ComboBox id="idcontract" items="{ path: 'ContratoCliente>/', sorter: { path: 'Ktext' } }" editable="{ModoApp>/ccont}" selectedKey="{PedidoCab>/Bsart}" change=".onChangeContrato" showSecondaryValues="true">
+                 <ComboBox id="idcontract" items="{ path: 'ContratoCliente>/', sorter: { path: 'Ktext' } }" editable="{ModoApp>/ccont}"  change=".onChangeContrato" showSecondaryValues="true">
                     <core:ListItem key="{ContratoCliente>Vbeln}" text="{ContratoCliente>Ktext}" additionalText ="{ContratoCliente>Vbeln}"/>
                 </ComboBox>
-
+                
             </f:content>
         </f:SimpleForm>
 

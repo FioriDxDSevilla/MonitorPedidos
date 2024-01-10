@@ -1,0 +1,94 @@
+<core:FragmentDefinition
+    controllerName="monitorpedidos.controller.AltaPedidos"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+>
+    <Dialog
+        id='pedPosDial'
+        title="{i18n>detPos}"
+        resizable="true"
+    >
+        <buttons>
+            <Button
+                icon="sap-icon://sys-add"
+                text="{i18n>add}"
+                type="Emphasized"
+                press=".addPedPos"
+            />
+            <Button
+                icon="sap-icon://cancel"
+                text="{i18n>cancel}"
+                type="Emphasized"
+                press=".cancelPedPos"
+            />
+        </buttons>
+        <f:SimpleForm
+            id="sf_PedPos"
+            editable="true"
+        >
+            <Label text="{i18n>posicion}" />
+            <Input
+                value="{posPedFrag>/Vbeln}"
+                editable="false"
+            />
+            <Label text="{i18n>text}" />
+            <Input
+                value="{posPedFrag>/Arktx}"
+                maxLength="40"
+            />
+            <Label text="{i18n>mat}" />
+            <Input
+                id="f_material"
+                showValueHelp="true"
+                valueHelpRequest=".onValueHelpRequestServ"
+                value="{posPedFrag>/Matnr}"
+            />
+            <Label text="{i18n>mat}" />
+            <DatePicker
+                id="DTPdesde"
+                placeholder="{i18n>datesel}"
+                change="handleChange"
+                valueFormat="yyyy-MM-dd"
+                value="{posPedFrag>/FecPrecio}"
+                displayFormat="medium"
+                width="20%"
+            />
+            <Label text="{i18n>import}" />
+            <Input
+                value="{posPedFrag>/Netwr}"
+                placeholder="0,00"
+            />
+            <Label text="{i18n>cant}" />
+            <Input
+                value="{posPedFrag>/Qty}"
+                placeholder="0,00"
+            />
+            <Label text="{i18n>currency}" />
+            <Input
+                value="{posPedFrag>/Waers}"
+                placeholder="0,00"
+            />
+
+           <!-- <Label text="{i18n>centrocoste}" />
+            <ComboBox
+                value="{posPedFrag>/Netwr}"
+                placeholder="0,00"
+            />
+            <Label text="{i18n>orden}" />
+            <ComboBox
+                value="{posPedFrag>/Netwr}"
+                placeholder="0,00"
+            />
+            <Label text="{i18n>libromayor}" />
+            <ComboBox
+                value="{posPedFrag>/Netwr}"
+                placeholder="0,00"
+            />-->
+            <Input id="f_ordenes" showValueHelp="true" valueHelpRequest=".onValueHelpOrd" value="{posPedFrag>/Yaufnr}" />
+            <Input id="f_cecos" showValueHelp="true" valueHelpRequest=".onValueHelpCecos" value="{posPedFrag>/Ykostl}"/>
+
+        </f:SimpleForm>
+    </Dialog>
+</core:FragmentDefinition>

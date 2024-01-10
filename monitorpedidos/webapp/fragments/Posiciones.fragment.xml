@@ -6,6 +6,28 @@
     xmlns:l="sap.ui.layout"
     xmlns:table="sap.ui.table">
     <!--    -->
+    <m:OverflowToolbar>
+                <m:Title text="" />
+                <m:ToolbarSpacer />
+                <m:Button
+                    id="botondel"
+                    icon="sap-icon://delete"
+                    text="{i18n>delPos}"
+                    type="Emphasized"
+                    press="onDeletePosPed"
+                    visible="true"
+                    enabled="true"
+                />
+                <m:Button
+                    id="botonadd"
+                    icon="sap-icon://sys-add"
+                    text="{i18n>addPos}"
+                    type="Emphasized"
+                    press="onaddPosPed"
+                    visible="true"
+                    enabled="true"
+                />
+            </m:OverflowToolbar>
     <m:VBox renderType="Bare">
         <table:Table selectionMode="None" id="TablaPosiciones" rows="{path: ''}">
             <table:Column hAlign="Center">

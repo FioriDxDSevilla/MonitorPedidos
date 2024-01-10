@@ -11,13 +11,13 @@
                 <!-- -->
                 <core:Title text="{i18n>TituloDatosdeCliente}" level="H5" />
                 <m:Label text="{i18n>CodigoCliente}" />
-                <m:Input enabled="false" editable="false" width="180px">
+                <m:Input enabled="false" editable="false" width="180px" value="{ModoApp>/tipopedido}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>NombreCliente}" />
-                <m:Input enabled="false" editable="false" width="280px">
+                <m:Input enabled="false" editable="false" width="280px" value="{ModoApp>/nombrecliente}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
