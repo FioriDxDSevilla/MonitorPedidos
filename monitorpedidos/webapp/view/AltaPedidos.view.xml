@@ -61,7 +61,7 @@
                                 <!--  -->
                         
                                 <core:Title text="" />
-                                <m:Text text="(ImpPedido)" textAlign="End" id="txtPrice"/>
+                                <m:Text text="{PedidoCab>/ImpPedido}" textAlign="End" id="txtPrice"/>
                                 <m:Label/>
                                 <m:Text text="Creado por: (Nombreapr)" textAlign="End"/>
                                 <core:Title text="" /> 

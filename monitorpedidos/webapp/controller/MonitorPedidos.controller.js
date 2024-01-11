@@ -793,6 +793,45 @@ sap.ui.define([
 
             },
 
+            DatosCliente: function(codcli, vkbur) {
+                //var kunnr = codcli;
+                //var Bukrs = vkbur
+
+                var aFilters = [],
+                aFilterIds = [],
+                aFilterValues = [];
+ 
+                aFilterIds.push("Kunnr");
+                aFilterValues.push(codcli);
+
+                aFilterIds.push("Bukrs");
+                aFilterValues.push(vkbur);
+
+
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+ 
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/DatosClienteSet", aFilters),
+                ]).then(this.buildDatosClientes.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildDatosClientes: function(values) {
+                if (values[0].results) {
+                    var oModelDatosCliente = new JSONModel();
+                    oModelDatosCliente.setData(values[0].results);                   
+                    this.oComponent.getModel("ModoApp").setProperty("/Nombre",values[0].results[0].Nombre);
+                    this.oComponent.getModel("ModoApp").setProperty("/Stcd1}",values[0].results[0].Sctd1);
+                    this.oComponent.getModel("ModoApp").setProperty("/SmtpAddr",values[0].results[0].SmtpAddr);
+                    this.oComponent.getModel("ModoApp").setProperty("/Ort01",values[0].results[0].Ort01);
+                    this.oComponent.getModel("ModoApp").setProperty("/Pstlz",values[0].results[0].Pstlz);
+                    this.oComponent.getModel("ModoApp").setProperty("/Land1",values[0].results[0].Land1);
+                    this.oComponent.getModel("ModoApp").setProperty("/Zwels",values[0].results[0].Zwels);
+                    this.oComponent.getModel("ModoApp").setProperty("/Zterm",values[0].results[0].Zterm);
+                    this.oComponent.getModel("ModoApp").refresh(true);
+                }
+            },
+
             onPressMaterial: function (oEvent) {
                 var mat = this.getSelectMat(oEvent, "listadoMateriales");
                 codmat = mat.Matnr;
@@ -2237,7 +2276,7 @@ sap.ui.define([
 
                 sap.ui.core.BusyIndicator.show();
 
-                if (socPed) {
+                if (vkbur) {
                     var aFilters = [],
                         aFilterIds = [],
                         aFilterValues = [];
@@ -2246,7 +2285,7 @@ sap.ui.define([
                     aFilterValues.push(cli);
 
                     aFilterIds.push("Bukrs");
-                    aFilterValues.push(socPed);
+                    aFilterValues.push(vkbur);
 
                     aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
 
@@ -2258,6 +2297,10 @@ sap.ui.define([
                 } else {
                     MessageBox.error(this.oI18nModel.getProperty("noCli"));
                 }
+
+                this.oComponent.getModel("ModoApp").setProperty("/ccontr", true);
+                this.oComponent.getModel("ModoApp").refresh(true);
+                
             },
 
             buildCliente: function (values) {
@@ -2287,7 +2330,9 @@ sap.ui.define([
                 }
 
                 sap.ui.core.BusyIndicator.hide();
+                
                 this.DameContratosCliente();
+                
             },
 
             DameContratosCliente: function () {
@@ -2319,6 +2364,8 @@ sap.ui.define([
                     this.oComponent.setModel(oModelContratos, "ContratoCliente");
                     this.oComponent.getModel("ContratoCliente").refresh(true);
                 }
+
+                this.DatosCliente(codcli, vkbur);
             },
 
             onChangeContrato: function () {
@@ -2506,6 +2553,7 @@ sap.ui.define([
                 this.oComponent.getModel("ModoApp").setProperty("/Numcont",numCont);
                 this.oComponent.getModel("ModoApp").setProperty("/Nomcont",nomCont);
                 this.oComponent.getModel("ModoApp").setProperty("/Posped",Posped);
+                
 
                 this.oComponent.getModel("ModoApp").refresh(true);
 

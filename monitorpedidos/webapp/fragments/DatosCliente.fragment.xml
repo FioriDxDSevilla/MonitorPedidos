@@ -4,7 +4,7 @@
     xmlns:f="sap.ui.layout.form"
     xmlns:fb="sap.ui.comp.filterbar"
     xmlns:l="sap.ui.layout">
-    <!--    -->
+    <!-- Datos Cliente para la busqueda de filtros   -->
     <m:VBox renderType="Bare">
         <f:SimpleForm editable="true" maxContainerCols="2" layout="GridLayout" singleContainerFullSize="false" adjustLabelSpan="true">
             <f:content >
@@ -17,19 +17,19 @@
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>NombreCliente}" />
-                <m:Input enabled="false" editable="false" width="280px" value="{ModoApp>/nombrecliente}">
+                <m:Input enabled="false" editable="false" width="280px" value="{ModoApp>/Nombre}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>CIF}" />
-                <m:Input enabled="false" editable="false" width="180px" value="{ModoApp>/CIF}">
+                <m:Input enabled="false" editable="false" width="180px" value="{ModoApp>/Stcd1}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>MailDestinatarioFactura}" />
-                <m:Input enabled="false" editable="false" width="280px" value="{ModoApp>/destinatariofactura}">
+                <m:Input enabled="false" editable="false" width="280px" value="{ModoApp>/SmtpAddr}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
@@ -37,36 +37,31 @@
 
                 <core:Title text="" />
                 <m:Label text="{i18n>Direccion}" />
-                <m:Input enabled="false" editable="false" width="255px" value="{ModoApp>/direccion}">
+                <m:Input enabled="false" editable="false" width="255px" value="{ModoApp>/Ort01}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>CodPostPob}" />
-                <m:Input enabled="false" editable="false" width="120px" value="{ModoApp>/codpostpob}">
-                    <m:layoutData>
-                        <l:GridData span="XL1 L2 M2 S4" />
-                    </m:layoutData>
-                </m:Input>
-                <m:Input enabled="false" editable="false" width="120px" value="{ModoApp>/codpostpob}">
+                <m:Input enabled="false" editable="false" width="120px" value="{ModoApp>/Pstlz}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>Pais}" />
-                <m:Input enabled="false" editable="false" width="120px" value="{ModoApp>/pais}">
+                <m:Input enabled="false" editable="false" width="120px" value="{ModoApp>/Land1}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>ViaPago}" />
-                <m:Input enabled="false" editable="false" width="120px" value="{ModoApp>/viapago}">
+                <m:Input enabled="false" editable="false" width="120px" value="{ModoApp>/Zwels}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>CondPago}" />
-                <m:Input enabled="false" editable="false" width="120px" value="{ModoApp>/condpago}">
+                <m:Input enabled="false" editable="false" width="120px" value="{ModoApp>/Zterm}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>

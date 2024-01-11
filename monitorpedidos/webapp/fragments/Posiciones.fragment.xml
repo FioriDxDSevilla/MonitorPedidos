@@ -29,41 +29,50 @@
                 />
             </m:OverflowToolbar>
     <m:VBox renderType="Bare">
-        <table:Table selectionMode="None" id="TablaPosiciones" rows="{path: ''}">
+        <table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'PedidoPos>/'}"  visibleRowCountMode="Interactive"
+                visibleRowCount="3"
+                width= "100%">
+
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>posicion}"/>
+                <table:template>
+                    <m:Text text="{PedidoPos>Vbelp}"/>
+                </table:template>
+            </table:Column>    
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Material}"/>
                 <table:template>
-                    <m:Text text=""/>
+                    <m:Text text="{PedidoPos>Matnr}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Descripcion}" />
                 <table:template>
-                    <m:Text text=""/>
+                    <m:Text text="{PedidoPos>Maktx}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Cantidad}" />
                 <table:template>
-                    <m:Text text=""/>
+                    <m:Text text="{PedidoPos>Reqty}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Unidades}" />
                 <table:template>
-                    <m:Text text=""/>
+                    <m:Text text="{PedidoPos>SalesUniT}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Importe}" />
                 <table:template>
-                    <m:Text text=""/>
+                    <m:Text text="{posPedFrag>/Netwr}" />
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Moneda}" />
                 <table:template>
-                    <m:Text text=""/>
+                    <m:Text text="{posPedFrag>/Waers}" />
                 </table:template>
             </table:Column>
         </table:Table>
