@@ -111,14 +111,17 @@
 
                 <core:Title text="" />
                 <m:Label text="{i18n>MotivoPedido}" />
-                <m:Input
+                <m:ComboBox
                     editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }"
                     width="300px"
+                    items="{ path: 'listadoMotivo>/', sorter: { path: 'Augru' } }"
                 >
-                    <m:layoutData>
-                        <l:GridData span="XL1 L2 M2 S4" />
-                    </m:layoutData>
-                </m:Input>
+                   <core:ListItem
+                        key="{listadoMotivo>Augru}"
+                        text="{listadoMotivo>Bezei}"
+                        additionalText="{listadoMotivo>Bezei}"
+                    />
+                </m:ComboBox>
                 <m:Label text="{i18n>BloqueoFactura}" />
                 <m:Input
                     editable="{= ${ModoApp>/mode}  === 'C' ?  false : true }"

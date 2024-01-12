@@ -62,6 +62,15 @@ sap.ui.define([
         }
       },
 
+      buildMotivo: function (values) {
+        if (values[0].results) {
+          var oModelMotivo = new JSONModel();
+          oModelMotivo.setData(values[0].results);
+          this.oComponent.setModel(oModelMotivo, "listadoMotivo");
+          this.oComponent.getModel("listadoMotivo").refresh(true);
+        }
+      },
+
       /*ABRIR GESTOR DE ARCHIVOS*/
 
       handleUploadPress: function (oEvent) {
