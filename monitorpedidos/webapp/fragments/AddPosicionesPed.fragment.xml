@@ -72,6 +72,12 @@
                 value="{posPedFrag>/Waers}"
                 placeholder="EUR"
             />
+            <!--<ComboBox
+                value="{posPedFrag>/Waers}"
+                placeholder="EUR"
+            />
+            <core:ListItem key="{posPedFrag>Waers}"  text="{posPedFrag>Ktext}"/>-->
+            <!--//////////////////////////////////////////////////////////////////////////////////////////////////////////7-->
 
             <!-- <Label text="{i18n>centrocoste}" />
             <ComboBox
@@ -88,12 +94,14 @@
                 value="{posPedFrag>/Netwr}"
                 placeholder="0,00"
             />-->
+            <Label text="{i18n>TableOrdenes}" />
             <Input
                 id="f_ordenes"
                 showValueHelp="true"
                 valueHelpRequest=".onValueHelpOrd"
                 value="{posPedFrag>/Yaufnr}"
             />
+            <Label text="{i18n>ceco}" />
             <Input
                 id="f_cecos"
                 showValueHelp="true"
