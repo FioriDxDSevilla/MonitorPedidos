@@ -25,6 +25,7 @@
 
                 <m:Label text="{i18n>ClasePedido}" />
                 <m:Input
+                   id="f_claseped"
                     editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }"
                     width="150px"
                     value="{ModoApp>/Clasepedido}"
@@ -38,6 +39,7 @@
 
                 <!-- <m:VBox>-->
                 <m:Input
+                   id="f_orgventas"
                     editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }"
                     width="125px"
                     value="{ModoApp>/Vtext}"

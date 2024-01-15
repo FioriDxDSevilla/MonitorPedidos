@@ -36,7 +36,7 @@
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>posicion}"/>
                 <table:template>
-                    <m:Text text="{PedidoPos>Vbelp}"/>
+                    <m:Text text="{PedidoPos>Posnr}"/>
                 </table:template>
             </table:Column>    
             <table:Column hAlign="Center">
@@ -66,13 +66,13 @@
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Importe}" />
                 <table:template>
-                    <m:Text text="{posPedFrag>/Netwr}" />
+                    <m:Text text="{PedidoPos>Netwr}" />
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Moneda}" />
                 <table:template>
-                    <m:Text text="{posPedFrag>/Waers}" />
+                    <m:Text text="{PedidoPos>Waers}" />
                 </table:template>
             </table:Column>
         </table:Table>

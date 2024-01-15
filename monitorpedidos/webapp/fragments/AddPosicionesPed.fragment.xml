@@ -94,7 +94,7 @@
                 value="{posPedFrag>/Netwr}"
                 placeholder="0,00"
             />-->
-            <Label text="{i18n>TableOrdenes}" />
+            <Label text="{i18n>ord}" />
             <Input
                 id="f_ordenes"
                 showValueHelp="true"

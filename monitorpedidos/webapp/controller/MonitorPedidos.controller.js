@@ -2111,8 +2111,10 @@ sap.ui.define([
                 }
 
                 var config = {
+                    posPed: 10,
                     creation: vcreation,
                     mode: modApp,
+                    modeAlta: "A",
                     cped: vcped,
                     cvent: vcvent,
                     czona: vzona,
@@ -2128,6 +2130,9 @@ sap.ui.define([
                 var oModConfig = new JSONModel();
                 oModConfig.setData(config);
                 this.oComponent.setModel(oModConfig, "ModoApp");
+                this.oComponent.setModel(new JSONModel([]), "posPedFrag");
+                this.oComponent.setModel(new JSONModel([]), "PedidoCab");
+                this.oComponent.setModel(new JSONModel([]), "PedidoPos");
             },
 
 
@@ -2537,7 +2542,7 @@ sap.ui.define([
             },
 
             onNavAlta: function () {
-                Posped = 10;
+                
                 this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
                 this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", ClasePed);
                 this.oComponent.getModel("ModoApp").setProperty("/SocPed", socPed);
@@ -2552,7 +2557,6 @@ sap.ui.define([
                 this.oComponent.getModel("ModoApp").setProperty("/Nomcli",nomcli);
                 this.oComponent.getModel("ModoApp").setProperty("/Numcont",numCont);
                 this.oComponent.getModel("ModoApp").setProperty("/Nomcont",nomCont);
-                this.oComponent.getModel("ModoApp").setProperty("/Posped",Posped);
                 
 
                 this.oComponent.getModel("ModoApp").refresh(true);

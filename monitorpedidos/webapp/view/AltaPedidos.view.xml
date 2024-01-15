@@ -62,6 +62,7 @@
                         
                                 <core:Title text="" />
                                 <m:Text text="{PedidoCab>/ImpPedido}" textAlign="End" id="txtPrice"/>
+                                <m:Label id="idMoneda" text="{i18n>currency}" />
                                 <m:Label/>
                                 <m:Text text="Creado por: (Nombreapr)" textAlign="End"/>
                                 <core:Title text="" /> 
