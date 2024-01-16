@@ -36,43 +36,43 @@
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>posicion}"/>
                 <table:template>
-                    <m:Text text="{PedidoPos>Posnr}"/>
+                    <m:Text text="{PedidoPos>ItmNumber}"/>
                 </table:template>
             </table:Column>    
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Material}"/>
                 <table:template>
-                    <m:Text text="{PedidoPos>Matnr}"/>
+                    <m:Text text="{PedidoPos>Material}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Descripcion}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>Maktx}"/>
+                    <m:Text text="{PedidoPos>ShortText}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Cantidad}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>Reqty}"/>
+                    <m:Text text="{PedidoPos>ReqQty}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Unidades}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>SalesUniT}"/>
+                    <m:Text text="{PedidoPos>SalesUnit}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Importe}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>Netwr}" />
+                    <m:Text text="{PedidoPos>CondValue}" />
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Moneda}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>Waers}" />
+                    <m:Text text="{PedidoPos>Currency}" />
                 </table:template>
             </table:Column>
         </table:Table>

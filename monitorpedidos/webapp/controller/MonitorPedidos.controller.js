@@ -821,7 +821,7 @@ sap.ui.define([
                     var oModelDatosCliente = new JSONModel();
                     oModelDatosCliente.setData(values[0].results);                   
                     this.oComponent.getModel("ModoApp").setProperty("/Nombre",values[0].results[0].Nombre);
-                    this.oComponent.getModel("ModoApp").setProperty("/Stcd1}",values[0].results[0].Sctd1);
+                    this.oComponent.getModel("ModoApp").setProperty("/Stcd1",values[0].results[0].Sctd1);
                     this.oComponent.getModel("ModoApp").setProperty("/SmtpAddr",values[0].results[0].SmtpAddr);
                     this.oComponent.getModel("ModoApp").setProperty("/Ort01",values[0].results[0].Ort01);
                     this.oComponent.getModel("ModoApp").setProperty("/Pstlz",values[0].results[0].Pstlz);
@@ -831,6 +831,7 @@ sap.ui.define([
                     this.oComponent.getModel("ModoApp").refresh(true);
                 }
             },
+
 
             onPressMaterial: function (oEvent) {
                 var mat = this.getSelectMat(oEvent, "listadoMateriales");
@@ -2111,7 +2112,7 @@ sap.ui.define([
                 }
 
                 var config = {
-                    posPed: 10,
+                    ItmNumber: 10,
                     creation: vcreation,
                     mode: modApp,
                     modeAlta: "A",
@@ -2134,6 +2135,7 @@ sap.ui.define([
                 this.oComponent.setModel(new JSONModel([]), "PedidoCab");
                 this.oComponent.setModel(new JSONModel([]), "PedidoPos");
             },
+
 
 
             DameOrganizaciones: function () {

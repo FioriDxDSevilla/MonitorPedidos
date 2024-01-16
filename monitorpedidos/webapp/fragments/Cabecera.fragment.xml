@@ -145,16 +145,20 @@
                     />
                 </m:ComboBox>
                 <m:Label text="{i18n>NIA}" />
-                <m:Input
+                <m:ComboBox
                     editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }"
                     width="200px"
+                    items="{ path: 'listadoNIA>/', sorter: { path: 'Kunnr' } }"
                 >
-                    <m:layoutData>
-                        <l:GridData span="XL1 L2 M2 S4" />
-                    </m:layoutData>
-                </m:Input>
+                    <core:ListItem
+                        key="{listadoNIA>Nia}"
+                        text="{listadoNIA>Nia}"
+                        additionalText="{listadoNIA>Nia}"
+                    />
+                </m:ComboBox>
                 <m:Label text="{i18n>Plataforma}" />
                 <m:Input
+                    id="f_Plataforma"
                     editable="{= ${ModoApp>/mode}  === 'C' ?  false : true }"
                     width="200px"
                 >
@@ -164,6 +168,7 @@
                 </m:Input>
                 <m:Label text="{i18n>DirOrganoGestor}" />
                 <m:Input
+                    id="f_DIRorgest"
                     editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }"
                     width="200px"
                 >
@@ -173,6 +178,7 @@
                 </m:Input>
                 <m:Label text="{i18n>DirUnidadTramitadora}" />
                 <m:Input
+                    id="f_DIRuni"
                     editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }"
                     width="200px"
                 >
@@ -180,10 +186,12 @@
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
+                
                 <m:Label text="{i18n>DirOrganoGestorNuevo}" />
                 <m:Input
                     editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }"
                     width="200px"
+                    
                 >
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
@@ -191,6 +199,7 @@
                 </m:Input>
                 <m:Label text="{i18n>DirOficinaContable}" />
                 <m:Input
+                    id="f_DIRofcont"
                     editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }"
                     width="200px"
                 >
@@ -201,8 +210,10 @@
 
                 <m:Label text="{i18n>DirAdministracion}" />
                 <m:Input
+                    id="f_DIRadm"
                     editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }"
                     width="200px"
+                    
                 >
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
