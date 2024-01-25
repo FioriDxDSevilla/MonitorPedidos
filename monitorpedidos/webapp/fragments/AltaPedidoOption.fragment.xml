@@ -23,12 +23,12 @@
                     <core:ListItem key="{AreaVentas>Vkorg}" text="{AreaVentas>Vtext}" additionalText ="{AreaVentas>Vkorg}"/>
                 </ComboBox>
                 <Label text="{i18n>CanalVentas}" />
-                <ComboBox id="idCanal" items="{ path: 'CanalVentas>/', sorter: { path: 'Vtweg' } }" editable="{ModoApp>/cvcan}"  change=".onChangeCanal" >
-                    <core:Item key="{CanalVentas>Vtweg}" text="{CanalVentas>Vtweg}" />
+                <ComboBox id="idCanal" items="{ path: 'CanalVentas>/', sorter: { path: 'Vtweg' } }" editable="{ModoApp>/cvcan}"  change=".onChangeCanal" showSecondaryValues="true" >
+                    <core:ListItem key="{CanalVentas>Vtweg}" text="{CanalVentas>Vtweg}" additionalText ="{CanalVentas>Vtext}"/>
                 </ComboBox>
                 <Label text="{i18n>SectorVentas}" />
-                <ComboBox id="idSector" items="{ path: 'SectorVentas>/', sorter: { path: 'Vtweg' } }" editable="{ModoApp>/cvsector}"  change=".onChangeSector" >
-                    <core:Item key="{SectorVentas>Spart}" text="{SectorVentas>Spart}" />
+                <ComboBox id="idSector" items="{ path: 'SectorVentas>/', sorter: { path: 'Vtweg' } }" editable="{ModoApp>/cvsector}"  change=".onChangeSector"  showSecondaryValues="true" >
+                    <core:ListItem key="{SectorVentas>Spart}" text="{SectorVentas>Spart}" additionalText ="{SectorVentas>Vtext}"/>
                 </ComboBox>
                 <Label text="{i18n>zona}" />
                 <ComboBox id="idzona" items="{ path: 'ZonaVentas>/', sorter: { path: 'Bztxt' } }" editable="{ModoApp>/czona}"  change=".onChangeZona" showSecondaryValues="true">

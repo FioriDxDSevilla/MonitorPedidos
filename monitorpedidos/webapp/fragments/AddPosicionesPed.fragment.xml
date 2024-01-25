@@ -61,22 +61,56 @@
             <Input
                 value="{posPedFrag>/CondValue}"
                 placeholder="0,00"
+                type="Number"
             />
             <Label text="{i18n>cant}" />
             <Input
                 value="{posPedFrag>/ReqQty}"
-                placeholder="0,00"
+                placeholder="0"
+                type="Number"
             />
-            <Label text="{i18n>currency}" />
+             <Label text="{i18n>cantBase}" />
             <Input
-                value="{posPedFrag>/Currency}"
-                placeholder="EUR"
+                value="{posPedFrag>/Kpein}"
+                placeholder="0"
+                type="Number"
             />
+            <Label text="{i18n>Moneda}" />
+            <ComboBox
+                editable="true"
+                width="200px"
+                items="{ path: 'listadoMoneda>/', sorter: { path: 'Waers' } }"
+                selectedKey="{posPedFrag>/Currency}"
+                placeholder="EUR"
+                
+            >
+                <core:ListItem
+                    key="{listadoMoneda>Waers}"
+                    text="{listadoMoneda>Waers}"
+                />
+            </ComboBox>
             <Label text="{i18n>Unit}" />
             <Input
                 value="{posPedFrag>/SalesUnit}"
                 placeholder="UN"
+                type="Text"
             />
+            <Label text="{i18n>ceco}" />
+            <Input
+                id="f_cecos"
+                showValueHelp="true"
+                valueHelpRequest=".onValueHelpCecos"
+                value="{posPedFrag>/Ykostl}"
+            />
+            <Label text="{i18n>ord}" />
+            <Input
+                id="f_ordenes"
+                showValueHelp="true"
+                editable="{ModoApp>/cordenes}"
+                valueHelpRequest=".onValueHelpOrd"
+                value="{posPedFrag>/Yaufnr}"
+            />
+           
             <!--<ComboBox
                 value="{posPedFrag>/Waers}"
                 placeholder="EUR"
@@ -99,21 +133,7 @@
                 value="{posPedFrag>/Netwr}"
                 placeholder="0,00"
             />-->
-            <Label text="{i18n>ord}" />
-            <Input
-                id="f_ordenes"
-                showValueHelp="true"
-                valueHelpRequest=".onValueHelpOrd"
-                value="{posPedFrag>/Yaufnr}"
-            />
-            <Label text="{i18n>ceco}" />
-            <Input
-                id="f_cecos"
-                showValueHelp="true"
-                valueHelpRequest=".onValueHelpCecos"
-                value="{posPedFrag>/Ykostl}"
-            />
+           
         </f:SimpleForm>
     </Dialog>
 </core:FragmentDefinition>
-

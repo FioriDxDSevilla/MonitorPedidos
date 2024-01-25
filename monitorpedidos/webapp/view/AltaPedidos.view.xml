@@ -14,7 +14,7 @@
         <m:content>
             <ObjectPageLayout id="ObjectPageLayout">
                 <headerTitle>
-                    <ObjectPageHeader id="pageHeader" objectTitle="Pedido: (Referenciped) - (FECHAD) - (ESTADO)" />
+                    <ObjectPageHeader id="pageHeader" objectTitle="{ModoApp}" />
                 </headerTitle>
              
                 <headerContent>
@@ -29,7 +29,7 @@
                                 <core:Title text="" /> 
                                 
                                 <m:Label text="{i18n>Denominacion}" />
-                                <m:Input width="300px" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }" >
+                                <m:Input id="f_denoped" width="300px" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }" >
                                     <m:layoutData>
                                         <l:GridData span="XL1 L2 M2 S4" />
                                     </m:layoutData>
@@ -40,8 +40,8 @@
                                         <l:GridData span="XL1 L2 M2 S4" />
                                     </m:layoutData>
                                 </m:Input>
-                                <m:Label text="{i18n>ZonaVentas}" />
-                                <m:Input editable="{= ${ModoApp>/mode}  === 'C' ?  false : true }" value="{ModoApp>/Vtext}" width="225px">
+                                <m:Label text="{i18n>zona}" />
+                                <m:Input editable="{= ${ModoApp>/mode}  === 'C' ?  false : true }" value="{ModoApp>/Bztxt}" width="225px">
                                     <m:layoutData>
                                         <l:GridData span="XL1 L2 M2 S4" />
                                     </m:layoutData>
@@ -61,14 +61,14 @@
                                 <!--  -->
                         
                                 <core:Title text="" />
-                                <m:Text text="{PedidoCab>/ImpPedido}" textAlign="End" id="txtPrice"/>
-                                <m:Label id="idMoneda" text="{i18n>currency}" />
+                                <m:Text text="{PedidoCab>/ImpPedido}" width="8em" textAlign="Begin" id="txtPrice"/>
+                                <m:Text id="idMoneda" text="{PedidoCab>/Moneda}" />
                                 <m:Label/>
-                                <m:Text text="Creado por: (Nombreapr)" textAlign="End"/>
+                                <m:Text text="{ModoApp>/Nomcont}" textAlign="End"/>
                                 <core:Title text="" /> 
                                 <m:Label/>
                                 <core:Title text="" /> 
-                                <m:Button text="Visualizar pedido" type="Transparent" id="btnVisualizarPedido" width="130px" press=""/>
+                                <!--<m:Button text="Visualizar pedido" type="Transparent" id="btnVisualizarPedido" width="130px" press=""/>-->
                     
                             </f:content>
                         </f:SimpleForm>

@@ -14,7 +14,7 @@ sap.ui.define([
     "sap/m/Dialog",
     "sap/m/DialogType",
     "sap/m/Button",
-		"sap/m/ButtonType",
+    "sap/m/ButtonType",
     "sap/m/Text"
   ],
 
@@ -37,24 +37,19 @@ sap.ui.define([
 
         this.oComponent.setModel(new JSONModel([]), "datosAdj");
         this.oComponent.setModel(new JSONModel([]), "AdjuntoSHPSet");
-        //this.condicionpago();
-        this.motivopedido();
-        this.NIApedido();
-        this.DIRpedido();
-        this.Plataformapedido();
 
       },
 
-      fechahoy : function (){
+      fechahoy: function () {
         var today = new Date();
-                var dd = today.getDate();
-                var mm = today.getMonth() + 1; //January is 0!
-                var yyyy = today.getFullYear();
-                var today1 = (dd + ' ' + mm + ', ' + yyyy);
-                //var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "YYYY/MM/DD" });   
-                //var todayFormatted = dateFormat.format(today1);
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
+        var today1 = (dd + ' ' + mm + ', ' + yyyy);
+        //var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "YYYY/MM/DD" });   
+        //var todayFormatted = dateFormat.format(today1);
 
-                this.getView().byId("DTPfecha").setValue(today1);
+        this.getView().byId("DTPdesde").setValue(today1);
       },
       /*ABRIR GESTOR DE ARCHIVOS*/
 
@@ -192,26 +187,28 @@ sap.ui.define([
       onCrear: function () {
 
         var oJson;
-        /*var cabecera = {},
-            posiciones = [],
-            pedidosClientes = [],
-            pedidosCondicion = [],
-            pedidosCantidad = [];*/
         var SolicitudPepCrSet = [];
+
         var SolicitudPedCondSet = [];
         var SolicitudPedQtySet = [];
+        var ordTextSet = [];
+        var BapeVbaK = [];
+        var BapeVbakx = [];
         var obj = {};
         var objCond = {};
         var objQty = {};
+        var objTxt = {};
+
         var Posiciones = this.getView().getModel("PedidoPos").getData();
         var results_array = Posiciones;
         var message;
-        var crear = "Se ha creado la solicitud de Presupuesto: ";
-        
+        var that = this;
+        var crear = "Se ha creado la solicitud de Venta: ";
+
         //var cabecera = Object.assign({}, this.oComponent.getModel("ModoApp").getData());
         //var posiciones = this.oComponent.getModel("PedidoPos").getData(); 
         //Object.assign({}, this.oComponent.getModel("PedidoCab").getData()),
-       
+
 
         /*cabecera.DocType = this.oComponent.getModel("ModoApp").getData().Tipopedido;
         cabecera.SalesOrg = this.oComponent.getModel("ModoApp").getData().Vkbur;
@@ -225,8 +222,19 @@ sap.ui.define([
         var DistrChan = this.oComponent.getModel("ModoApp").getData().CvCanal;
         var Division = this.oComponent.getModel("ModoApp").getData().CvSector;
         var SalesOff = this.getView().byId("idOficinaV").getSelectedKey();
+        var PpSearch = this.getView().byId("f_denoped").getValue();
+        var PurchNoC = this.getView().byId("f_refped").getValue();
+        var SalesDist = this.oComponent.getModel("ModoApp").getData().Bzirk;
         var BillBlock = "ZR";
         var Currency = this.getView().byId("idMoneda").getText();
+        var TxtCabecera = this.getView().byId("textAreaCabFact").getValue();
+        var TxtInfRechazo = this.getView().byId("textAreaCabInfRech").getValue();
+        var TxtAclaraciones = this.getView().byId("textAreaCabAcl").getValue();
+        var Zznia = this.getView().byId("f_camponia").getSelectedKey();
+        var Zzresponsable = "";
+        var Yykostkl = codceco;
+        var Yyaufnr = codord;
+        
 
         /*cabecera.Erdat = this.getView().byId("fechaAltaPed").getValue();
         var fechihd = Date.parse(cabecera.Erdat);
@@ -248,108 +256,260 @@ sap.ui.define([
         //pedidosClientes.PartnNumb = this.oComponent.getModel("ModoApp").getData().Codcli;
         var PartnRole = "AG";
         var PartnNumb = this.oComponent.getModel("ModoApp").getData().Codcli;
-        
+
+
         //pedidosCondicion = this.oComponent.getModel("PedidoCond").getData(); 
 
-        /*for (var i = 0; i < posiciones.length; i++) {
-          pedidosCondicion.ItmNumber = posiciones[i].ItmNumber;
-          pedidosCondicion.CondType = "PR00";
-          pedidosCondicion.CondValue = posiciones[i].CondValue;
-          pedidosCondicion.CondUnit = posiciones[i].SalesUnit;
-          pedidosCondicion.Currency = posiciones[i].Currency;
-        }*/
-        
-        /*pedidosCondicion.CondType = "PR00";
-        pedidosCondicion.CondValue = "11,5";
-        pedidosCondicion.CondUnit = "UN";
-        pedidosCondicion.Currency = this.getView().byId("idMoneda").getText();*/
+        //Fechas de Cabecera
+        var ReqDate = Date.parse(new Date());
+        var DocDate = Date.parse(new Date());
+        var BillDate = Date.parse(new Date());
+        var PurchDate = Date.parse(new Date());
+        var PriceDate = Date.parse(new Date());
+        var QtValidF = Date.parse(new Date());
+        var QtValidT = Date.parse(new Date());
+        var CtValidF = Date.parse(new Date());
+        var CtValidT = Date.parse(new Date());
+        var WarDate = Date.parse(new Date());
+        var FixValDy = Date.parse(new Date());
+        var ServDate = Date.parse(new Date());
+        var CmlqtyDat = Date.parse(new Date());
+        var PsmPstngDate = Date.parse(new Date());
+        var PoDatS = Date.parse(new Date());
+        var DunDate = Date.parse(new Date());
+        var ReqDate = Date.parse(new Date());
+        var TpDate = Date.parse(new Date());
+        var MsDate = Date.parse(new Date());
+        var LoadDate = Date.parse(new Date());
+        var GiDate = Date.parse(new Date());
+        var DlvDate = Date.parse(new Date());
+        var Conpricdat = Date.parse(new Date());
 
-        //pedidosCantidad.ReqQty = "6";
-        /*for (var i = 0; i < posiciones.length; i++) {
-          pedidosCantidad.ItmNumber = posiciones[i].ItmNumber;
-          pedidosCantidad.ReqQty = posiciones[i].ReqQty;
-        }*/
-
-        /*cabecera.posiciones = posiciones;
-        cabecera.pedidosClientes = pedidosClientes;
-        cabecera.pedidosCondicion = pedidosCondicion;
-        cabecera.pedidosCantidad = pedidosCantidad;
-        cabecera.RespuestaPedido = {};*/
+        //Fechas de Posiciones
 
         for (var i = 0; i < Posiciones.length; i++) {
           obj = {
-              Secu: (i + 1).toString(),
-              ItmNumber: results_array[i].ItmNumber,
-              Material: results_array[i].Material,
-              //Importe: results_array[i].Importe.toString(),
-              SalesUnit: results_array[i].SalesUnit,
-              Plant: '1001',
+            //Secu: (i + 1).toString(),
+            ItmNumber: results_array[i].ItmNumber.toString(),
+            Material: results_array[i].Material,
+            BillDate: "\/Date(" + BillDate + ")\/",
+            PurchDate: "\/Date(" + PurchDate + ")\/",
+            PoDatS: "\/Date(" + PoDatS + ")\/",
+            FixValDy: "\/Date(" + FixValDy + ")\/",
+            PriceDate: "\/Date(" + PriceDate + ")\/",
+            ServDate: "\/Date(" + ServDate + ")\/",
+            //Importe: results_array[i].Importe.toString(),
+            SalesUnit: results_array[i].SalesUnit,
+            Plant: this.oComponent.getModel("ModoApp").getData().Vkbur,
           };
           SolicitudPepCrSet.push(obj);
-          obj = {};                
-         }
-         
-         for (var i = 0; i < Posiciones.length; i++) {
+          obj = {};
+        }
+
+        //Fechas de Condiciones
+        for (var i = 0; i < Posiciones.length; i++) {
           objCond = {
-              Secu: (i + 1).toString(),
-              ItmNumber: results_array[i].ItmNumber,
-              CondValue: results_array[i].CondValue.toString(),
-              CondType: 'PR00',
-              CondUnit: results_array[i].SalesUnit,
-              Currency: results_array[i].Currency,
+            //Secu: (i + 1).toString(),
+            ItmNumber: results_array[i].ItmNumber.toString(),
+            CondValue: results_array[i].CondValue,
+            CondType: 'PR00',
+            CondPUnt: results_array[i].Kpein,
+            CondUnit: results_array[i].SalesUnit,
+            Currency: 'EUR',
+            Conpricdat: "\/Date(" + Conpricdat + ")\/",
           };
           SolicitudPedCondSet.push(objCond);
-          objCond = {};                
-         } 
+          objCond = {};
+        }
 
-         for (var i = 0; i < Posiciones.length; i++) {
+        //Fechas de Cantidades
+        for (var i = 0; i < Posiciones.length; i++) {
           objQty = {
-              Secu: (i + 1).toString(),
-              ItmNumber: results_array[i].ItmNumber,
-              ReqQty: results_array[i].ReqQty,
+            //Secu: (i + 1).toString(),
+            ItmNumber: results_array[i].ItmNumber.toString(),
+            ReqQty: results_array[i].ReqQty,
+            ReqDate: "\/Date(" + ReqDate + ")\/",
+            TpDate: "\/Date(" + TpDate + ")\/",
+            GiDate: "\/Date(" + GiDate + ")\/",
+            MsDate: "\/Date(" + MsDate + ")\/",
+            LoadDate: "\/Date(" + LoadDate + ")\/",
+            DlvDate: "\/Date(" + DlvDate + ")\/",
           };
           SolicitudPedQtySet.push(objQty);
-          objQty = {};                
-         } 
-         
+          objQty = {};
+        }
+
+        /*for (var i = 0; i < Posiciones.length; i++) {
+          objCli = {
+              Secu: (i + 1).toString(),
+              PartnNumb: PartnNumb,
+              PartnRole: PartnRole
+          };
+          SolicitudClienteSet.push(objCli);
+          objCli = {};                
+         } */
         
+        if (TxtCabecera) {
+          objTxt = {
+            Textid: 'Z001',
+              Langu: 'ES',
+              Textline: TxtCabecera
+          };
+          ordTextSet.push(objTxt);
+          objTxt = {};
+        } else if (TxtCabecera && TxtInfRechazo) {
+          for (var i = 0; i < ordTextSet.length; i++) {
+            objTxt = {
+              Textid: 'Z002',
+                Langu: 'ES',
+                Textline: TxtInfRechazo
+            };
+            ordTextSet.push(objTxt);
+            objTxt = {};
+          }
+        } else if (TxtCabecera && TxtAclaraciones && TxtAclaraciones) {
+          for (var i = 0; i < ordTextSet.length; i++) {
+            objTxt = {
+              Textid: 'Z003',
+                Langu: 'ES',
+                Textline: TxtAclaraciones
+            };
+            ordTextSet.push(objTxt);
+            objTxt = {};
+          }
+        }
+        
+        /*if (TxtCabecera !== undefined && TxtInfRechazo == undefined && TxtAclaraciones == undefined) {
+          for (var i = 0; i < Posiciones.length; i++) {
+            //const element = array[index];
+            objTxt  = {
+              Textid: 'Z001',
+              Langu: 'ES',
+              Textline: TxtCabecera
+            };
+            ordTextSet.push(objTxt);
+            objTxt = {};
+           }  
+        } else if (TxtCabecera !== undefined && TxtInfRechazo != undefined && TxtAclaraciones == undefined) {
+          for (var i = 0; i < Posiciones.length; i++) {
+            //const element = array[index];
+            objTxt  = {
+              Textid: 'Z002',
+              Langu: 'ES',
+              Textline: TxtInfRechazo
+            };
+            ordTextSet.push(objTxt);
+            objTxt = {};
+           }  
+        } else if (TxtCabecera !== undefined && TxtInfRechazo != undefined && TxtAclaraciones != undefined) {
+          for (var i = 0; i < Posiciones.length; i++) {
+            //const element = array[index];
+            objTxt  = {
+              Textid: 'Z003',
+              Langu: 'ES',
+              Textline: TxtAclaraciones
+            };
+            ordTextSet.push(objTxt);
+            objTxt = {};
+           }  
+        }*/
+
         oJson = {
           DocType: DocType,
-          SalesOrg:  SalesOrg,
+          SalesOrg: SalesOrg,
+          SalesDist: SalesDist,
           DistrChan: DistrChan,
-          Division:Division,
+          Division: Division,
           SalesOff: SalesOff,
+          PpSearch: PpSearch,
+          PurchNoC:PurchNoC,
           BillBlock: BillBlock,
           Currency: Currency,
-          PedidosClientesSet: {
-            PartnRole: PartnRole,
+          ReqDateH: "\/Date(" + ReqDate + ")\/",
+          PurchDate: "\/Date(" + PurchDate + ")\/",
+          BillDate: "\/Date(" + BillDate + ")\/",
+          DocDate: "\/Date(" + DocDate + ")\/",
+          PriceDate: "\/Date(" + PriceDate + ")\/",
+          QtValidF: "\/Date(" + QtValidF + ")\/",
+          QtValidT: "\/Date(" + QtValidT + ")\/",
+          CtValidF: "\/Date(" + CtValidF + ")\/",
+          CtValidT: "\/Date(" + CtValidT + ")\/",
+          WarDate: "\/Date(" + WarDate + ")\/",
+          FixValDy: "\/Date(" + FixValDy + ")\/",
+          ServDate: "\/Date(" + ServDate + ")\/",
+          CmlqtyDat: "\/Date(" + CmlqtyDat + ")\/",
+          PsmPstngDate: "\/Date(" + PsmPstngDate + ")\/",
+          PoDatS: "\/Date(" + PoDatS + ")\/",
+          DunDate: "\/Date(" + DunDate + ")\/",
+          PedidoClienteSet: {
             PartnNumb: PartnNumb,
-          }, 
+            PartnRole: PartnRole
+          },
+          PedidoExtensionSet: {Zznia: Zznia, Zzresponsable: Zzresponsable, Yykostkl:Yykostkl, Yyaufnr:Yyaufnr},
+          PedidoTextosSet: ordTextSet,
           PedidoPosicionSet: SolicitudPepCrSet,
           PedidoCondicionSet: SolicitudPedCondSet,
-          RespuestaPedido: {
+          PedidoCantidadSet: SolicitudPedQtySet,
+          PedidoRespuestaSet: {
             //Idsolc: Idsolc,
           }
         };
 
-        /*Promise.all([this.createDataEntity(this.mainService, "/PedidoCabSet", cabecera)]).then(
+        sap.ui.core.BusyIndicator.show();
+        /*Promise.all([this.createDataEntity(this.mainService, "/PedidoCabSet", oJson)]).then(
           this.resolveCreatePed.bind(this), this.errorFatal.bind(this));*/
         this.mainService.create("/PedidoCabSet", oJson, {
-          success: function(result) {
-            if (result.RespuestaPedido.Vbeln != "0") {
-              message = crear + result.IdSolicitud01.Vbeln;
-              if (result.RespuestaPedido.Mensaje) {
-                message = result.RespuestaPedido.Mensaje + "\n" + message;
+          success: function (result) {
+            if (result.Vbeln != "") {
+              sap.ui.core.BusyIndicator.hide();
+              message = crear + result.Vbeln;
+              if (result.Mensaje) {
+                message = result.Mensaje + "\n" + message;
               }
+
               MessageBox.show(message, {
                 icon: sap.m.MessageBox.Icon.SUCCESS,
-                onClose: function(oAction) {
+                onClose: function (oAction) {
+                  that.getView().byId("textAreaCabFact").setValue(null);
+                  that.getView().byId("textAreaCabInfRech").setValue(null);
+                  that.getView().byId("textAreaCabAcl").setValue(null);
+                  that.getView().byId("f_refped").setValue(null);
+                  that.getView().byId("f_denoped").setValue(null);
+                  that.getView().byId("f_campomotivo").setSelectedKey(null);
+                  that.getView().byId("f_campocondicion").setSelectedKey(null);
+                  that.getView().byId("f_camponia").setSelectedKey(null);
+                  that.getView().byId("f_campoplat").setSelectedKey(null);
+                  that.getView().byId("f_campogest").setSelectedKey(null);
+                  that.getView().byId("f_campoundTram").setSelectedKey(null);
+                  that.getView().byId("f_campoofcont").setSelectedKey(null);
+                  that.getView().byId("f_campoAdm").setSelectedKey(null);
+
+                  /*that.getView().byId("idCTipoPed").setSelectedKey(null);
+                  that.getView().byId("idCSociedad").setSelectedKey(null);
+                  that.getView().byId("idArea").setSelectedKey(null);
+                  that.getView().byId("idCanal").setSelectedKey(null);
+                  that.getView().byId("idSector").setSelectedKey(null);
+                  that.getView().byId("idzona").setSelectedKey(null);
+                  that.getView().byId("idCCliente").setValue(null);
+                  that.getView().byId("idcontract").setSelectedKey(null);*/
+                  //that.byId("OptionDial").close();
                   var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-                  oRouter.navTo("RouteMonitor");
+                  oRouter.navTo("RouteMonitorPedidos");
                 }
-              })
+              });
+            } else if (result.Vbeln == "" && result.PedidoRespuestaSet.Mensaje) {
+              sap.ui.core.BusyIndicator.hide();
+              MessageBox.error(result.PedidoRespuestaSet.Mensaje);
             }
-          }
+          },
+          error: function (err) {
+            sap.ui.core.BusyIndicator.hide();
+            sap.m.MessageBox.error("Solicitud no creada.", {
+              title: "Error",
+              initialFocus: null,
+            });
+          },
+          async: true
         });
       },
 
@@ -359,17 +519,28 @@ sap.ui.define([
         var crear = this.oI18nModel.getProperty("txtCrea");
         var that = this;
 
+        sap.ui.core.BusyIndicator.hide();
+        if (result[0].PedidoRespuesta.Mensaje == "" && result[0].PedidoRespuesta.Vebln != "") {
 
-        if (result[0].RespuestaPedido.Mensaje == "" && result[0].RespuestaPedido.Vbeln != "") {
-
-          message = (result[0].RespuestaPedido.Mensaje + "\n" + crear + result[0].RespuestaPedido.Vbeln);
+          message = (result[0].PedidoRespuesta.Mensaje + "\n" + crear + result[0].PedidoRespuesta.Vebln);
           MessageBox.show(message, {
             icon: sap.m.MessageBox.Icon.SUCCESS,
             onClose: function (oAction) {
+              that.oComponent.setModel(new JSONModel(), "ModoApp");
+              that.oComponent.setModel(new JSONModel(), "Adjuntos");
+              that.oComponent.setModel(new JSONModel(), "listadoCecos");
+              that.oComponent.setModel(new JSONModel(), "listadoOrdenes");
+              that.oComponent.setModel(new JSONModel(), "listadoServicios");
+              that.getView().byId("textAreaCabFact").setValue(null);
+              that.getView().byId("textAreaCabInfRech").setValue(null);
+              that.getView().byId("textAreaCabAcl").setValue(null);
               var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
               oRouter.navTo("RouteView1");
             }
           });
+        } else {
+          message = (result[0].PedidoRespuesta.Mensaje);
+          MessageBox.error(message);
         }
       },
 
@@ -406,7 +577,7 @@ sap.ui.define([
           aFilterIds.push("ShortText");
           aFilterValues.push(posicion.ShortText);
         }
-      
+
         //Fecha de Precio
         if (posicion.BillDate) {
           aFilterIds.push("BillDate");
@@ -424,6 +595,13 @@ sap.ui.define([
           aFilterIds.push("ReqQty");
           aFilterValues.push(posicion.ReqQty);
         }
+
+        //Cantidad base
+        if (posicion.Kpein) {
+          aFilterIds.push("Kpein");
+          aFilterValues.push(posicion.Kpein);
+        }
+
 
         //Moneda
         if (posicion.Currency) {
@@ -470,10 +648,10 @@ sap.ui.define([
 
         if (posicion.mode === 'A') {
           secu = posicion.Secu;
-      
+
         } else {
           secu = posiciones.length + 1;
- 
+
         }
 
         //Mapeamos las posiciones
@@ -485,6 +663,7 @@ sap.ui.define([
           ShortText: posicion.ShortText,
           BillDate: posicion.BillDate,
           ReqQty: posicion.ReqQty,
+          Kpein: posicion.Kpein,
           Currency: posicion.Currency,
           CondValue: posicion.CondValue,
           Yaufnr: posicion.Yaufnr,
@@ -546,12 +725,12 @@ sap.ui.define([
           for (var i = 0; i <= posiciones.length - 1; i++) {
 
             posicionN = Object.assign({}, posiciones[i]);
-         
+
 
             if (i == 0) {
 
               posicionN.ItmNumber = posInicial;
-             
+
               //posicionN.PosnrT = posInicial;
               //posicionN.Secu      = secu;
             } else {
@@ -559,13 +738,13 @@ sap.ui.define([
               if (posiciones[i].ItmNumber == posAnt) {
 
                 posicionN.ItmNumber = posicionesN[i - 1].ItmNumber;
-              
+
                 //posicionN.PosnrT = "";
                 //posicionN.Secu      = secu;//posicionesN[i-1].Secu + 1;
               } else {
 
                 posicionN.ItmNumber = posicionesN[i - 1].ItmNumber + 10;
-              
+
                 //posicionN.PosnrT = posicionesN[i - 1].Posnr + 10
                 //posicionN.Secu      = secu;//1;
               }
@@ -588,10 +767,10 @@ sap.ui.define([
                 posicionN.Secu = secu;
             }*/
             posicionN.Secu = posiciones[i].Secu;
-           
+
             //secuModi = secuModi + 1;
             posicionesN.push(posicionN);
-            
+
 
             secu = secu + 1;
             sumTotal = (Number(sumTotal) + Number(posicionN.CondValue)).toFixed(2);
@@ -602,21 +781,24 @@ sap.ui.define([
           if (sumTotal == 0) {
             sumTotal = "0.00";
           }
+          var moneda = this.oComponent.getModel("posPedFrag").getData().Currency;
 
           this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", sumTotal);
+          this.oComponent.getModel("PedidoCab").setProperty("/Moneda", moneda);
           this.oComponent.getModel("PedidoCab").refresh(true);
 
-          var PosSigCre = posicionesN[posiciones.length - 1].Posnr;
-          var posSig = this.oComponent.getModel("posPedFrag").getData().ItmNumber;
+          //var PosSigCre = posicionesN[posiciones.length - 1].Posnr;
+          var PosSigCre = posicionesN[posiciones.length - 1].ItmNumber
+          var posSig = this.oComponent.getModel("posPedFrag").getData().Vbelp;
           posSig = PosSigCre + 10;
           //this.oComponent.getModel("ModoApp").setProperty("/posPed", posSig);
           //this.oComponent.getModel("ModoApp").setProperty("/secuModi", secuModi);
           //this.oComponent.getModel("ModoApp").refresh(true);
 
           var oModPos = new JSONModel();
-     
+
           oModPos.setData(posicionesN);
-         
+
           this.oComponent.getModel("PedidoPos").setProperty("/posSig", posSig);
           this.oComponent.setModel(oModPos, "PedidoPos");
 
@@ -632,6 +814,10 @@ sap.ui.define([
 
           //this.oComponent.getModel("PedidoPos").refresh(true);
         }
+        this.oComponent.setModel(new JSONModel(), "listadoCecos");
+        this.oComponent.setModel(new JSONModel(), "listadoOrdenes");
+        this.oComponent.setModel(new JSONModel(), "listadoServicios");
+
         this.byId("pedPosDial").close();
       },
 
@@ -758,7 +944,7 @@ sap.ui.define([
 
           for (var i = posped.length - 1; i >= 0; i--) {
 
-            if (posped[i].Posnr == posPed) {
+            if (posped[i].ItmNumber == posPed) {
               //posped.splice(i, 1);
               //NUEVA Logica de borrado
               /**
@@ -861,18 +1047,21 @@ sap.ui.define([
         var Matnr = this.getView().byId("f_codMat").getValue();
         var Maktx = this.getView().byId("f_nomMat").getValue();
         var Matkl = this.getView().byId("f_grArt").getValue();
+        var Bzirk = this.oComponent.getModel("ModoApp").getData().Bzirk;
 
         var aFilterIds, aFilterValues, aFilters;
 
         aFilterIds = [
           "Matnr",
           "Maktx",
-          "Matkl"
+          "Matkl",
+          "Bzirk"
         ];
         aFilterValues = [
           Matnr,
           Maktx,
-          Matkl
+          Matkl,
+          Bzirk
         ];
 
         if (Matnr == "" || Matnr == undefined) {
@@ -895,6 +1084,15 @@ sap.ui.define([
 
         if (Matkl == "" || Matkl == undefined) {
           var i = aFilterIds.indexOf("Matkl");
+
+          if (i !== -1) {
+            aFilterIds.splice(i, 1);
+            aFilterValues.splice(i, 1);
+          }
+        }
+
+        if (Bzirk == "" || Bzirk == undefined) {
+          var i = aFilterIds.indexOf("Bzirk");
 
           if (i !== -1) {
             aFilterIds.splice(i, 1);
@@ -960,18 +1158,18 @@ sap.ui.define([
 
       createDataEntity: function (oModel, path, json) {
 
-				return new Promise(function (resolve, reject) {
-					oModel.create(path, json, {
-						success: function (oData, that) {
-							resolve(oData);
-						},
-						error: function (oResult) {
-							reject(oResult);
-						}
-					});
-				});
+        return new Promise(function (resolve, reject) {
+          oModel.create(path, json, {
+            success: function (oData, that) {
+              resolve(oData);
+            },
+            error: function (oResult) {
+              reject(oResult);
+            }
+          });
+        });
 
-			},
+      },
 
       onPressServicio: function (oEvent) {
         var mat = this.getSelectMat(oEvent, "listadoServicios");
@@ -1049,7 +1247,8 @@ sap.ui.define([
       onBusqCecos: function () {
         var Kostl = this.getView().byId("f_codCeco").getValue();
         var Ltext = this.getView().byId("f_nomCeco").getValue();
-        var Bukrs = this.getView().byId("f_cecoSoc").getValue();
+        //var Bukrs = this.getView().byId("f_cecoSoc").getValue();
+        var Bukrs = this.getOwnerComponent().getModel("ModoApp").getProperty("/Vkbur");
         //var Bukrs = this.getView().byId("f_nifcAcr").getValue();
 
         var aFilterIds, aFilterValues, aFilters;
@@ -1114,8 +1313,9 @@ sap.ui.define([
       onBusqOrdenes: function () {
         var Aufnr = this.getView().byId("f_codOrd").getValue();
         var Ktext = this.getView().byId("f_nomOrd").getValue();
-        //var Bukrs = this.getView().byId("f_ordbukrs").getValue();
-        var Bukrs = this.getOwnerComponent().getModel("ModoApp").getProperty("/Vkbur");
+        var Bukrs = this.getView().byId("f_ordbukrs").getValue();
+        //var Bukrs = this.getOwnerComponent().getModel("ModoApp").getProperty("/Vkbur");
+        var Ceco = codceco;
         //var Bukrs = this.getView().byId("f_nifcAcr").getValue();
 
         var aFilterIds, aFilterValues, aFilters;
@@ -1125,12 +1325,14 @@ sap.ui.define([
         aFilterIds = [
           "Aufnr",
           "Ktext",
-          "Bukrs"
+          "Bukrs",
+          "Ceco"
         ];
         aFilterValues = [
           Aufnr,
           Ktext,
-          Bukrs
+          Bukrs,
+          Ceco
         ];
 
         if (Aufnr == "") {
@@ -1168,6 +1370,15 @@ sap.ui.define([
           }
         }
 
+        if (Ceco == "") {
+          var i = aFilterIds.indexOf("Ceco");
+
+          if (i !== -1) {
+            aFilterIds.splice(i, 1);
+            aFilterValues.splice(i, 1);
+          }
+        }
+
         aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
 
         sap.ui.core.BusyIndicator.show();
@@ -1178,12 +1389,16 @@ sap.ui.define([
       },
 
       buildOrdenesModel: function (values) {
-        if (values[0].results) {
+        if (values[0].results.length > 0) {
           sap.ui.core.BusyIndicator.hide();
           var oModelOrdenes = new JSONModel();
           oModelOrdenes.setData(values[0].results);
           this.oComponent.setModel(oModelOrdenes, "listadoOrdenes");
           this.oComponent.getModel("listadoOrdenes").refresh(true);
+        } else {
+          sap.ui.core.BusyIndicator.hide();
+          MessageBox.warning(this.oI18nModel.getProperty("noOrd"));
+          this.byId("ordDial").close();
         }
       },
 
@@ -1193,127 +1408,13 @@ sap.ui.define([
           var oModelCecos = new JSONModel();
           oModelCecos.setData(values[0].results);
           this.oComponent.setModel(oModelCecos, "listadoCecos");
+          this.oComponent.getModel("ModoApp").setProperty("/cordenes", true);
+          this.oComponent.getModel("ModoApp").refresh(true);
           this.oComponent.getModel("listadoCecos").refresh(true);
         }
       },
 
-      motivopedido: function () {
-        var Auart = this.getOwnerComponent().getModel("ModoApp").getData().Tipopedido;
-        var Vkorg = this.getOwnerComponent().getModel("ModoApp").getData().Vkbur; //Vkbur es la organiz. ventas en ModoApp
-        var aFilters = [],
-          aFilterIds = [],
-          aFilterValues = [];
-
-        aFilterIds = ["Auart", "Vkorg"];
-        aFilterValues = [Auart, Vkorg];
   
-
-        aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-
-        Promise.all([
-          this.readDataEntity(this.mainService, "/MotivosPedidoSet", aFilters),
-        ]).then(this.buildMotivo.bind(this), this.errorFatal.bind(this));
-
-      },
-
-      buildMotivo: function (values) {
-        if (values[0].results) {
-          var oModelMotivo = new JSONModel();
-          oModelMotivo.setData(values[0].results);
-          this.oComponent.setModel(oModelMotivo, "listadoMotivo");
-          this.oComponent.getModel("listadoMotivo").refresh(true);
-        }
-      },
-
-      NIApedido: function () {
-        var Kunnr = this.getOwnerComponent().getModel("ModoApp").getData().Codcli;
-        var Bukrs = this.getOwnerComponent().getModel("ModoApp").getData().Vkbur; //Vkbur es la organiz. ventas en ModoApp
-        var aFilters = [],
-          aFilterIds = [],
-          aFilterValues = [];
-
-        aFilterIds = ["Kunnr", "Bukrs"];
-        aFilterValues = [Kunnr, Bukrs];
-  
-
-        aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-
-        Promise.all([
-          this.readDataEntity(this.mainService, "/DatosNIASet", aFilters),
-        ]).then(this.buildNIA.bind(this), this.errorFatal.bind(this));
-
-      },
-
-      buildNIA: function (values) {
-        if (values[0].results) {
-          var oModelNIA = new JSONModel();
-          oModelNIA.setData(values[0].results);
-          this.oComponent.setModel(oModelNIA, "listadoNIA");
-          this.oComponent.getModel("listadoNIA").refresh(true);
-        }
-      },
-
-      DIRpedido: function () {
-        var Kunnr = this.getOwnerComponent().getModel("ModoApp").getData().Codcli;
-        var Bukrs = this.getOwnerComponent().getModel("ModoApp").getData().SocPed; //SocPed es el código de sociedad en ModoApp
-        var aFilters = [],
-          aFilterIds = [],
-          aFilterValues = [];
-
-        aFilterIds = ["Kunnr", "Bukrs"];
-        aFilterValues = [Kunnr, Bukrs];
-  
-
-        aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-
-        Promise.all([
-          this.readDataEntity(this.mainService, "/CamposDIRSet", aFilters),
-        ]).then(this.buildDIR.bind(this), this.errorFatal.bind(this));
-
-      },
-
-      buildDIR: function (values) {
-        if (values[0].results) {
-          var oModelDIR = new JSONModel();
-          oModelDIR.setData(values[0].results);
-          this.getView().byId("f_DIRorgest").setValue(values[0].results[0].Centges);
-          this.getView().byId("f_DIRuni").setValue(values[0].results[0].Centuni);
-          this.getView().byId("f_DIRofcont").setValue(values[0].results[0].Centpro);
-          this.getView().byId("f_DIRadm").setValue(values[0].results[0].Codadm);
-        }
-      },
-
-      Plataformapedido: function () {
-        var Kunnr = this.getOwnerComponent().getModel("ModoApp").getData().Codcli;
-        var Bukrs = this.getOwnerComponent().getModel("ModoApp").getData().SocPed; //SocPed es el código de sociedad en ModoApp
-        var aFilters = [],
-          aFilterIds = [],
-          aFilterValues = [];
-
-        aFilterIds = ["Kunnr", "Bukrs"];
-        aFilterValues = [Kunnr, Bukrs];
-  
-
-        aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-
-        Promise.all([
-          this.readDataEntity(this.mainService, "/DamePlataformaSet", aFilters),
-        ]).then(this.buildPlataforma.bind(this), this.errorFatal.bind(this));
-
-      },
-
-      buildPlataforma: function (values) {
-        if (values[0].results) {
-          var oModelPlataforma = new JSONModel();
-          oModelPlataforma.setData(values[0].results);
-          this.getView().byId("f_Plataforma").setValue(values[0].results[0].Plataforma);
-
-        }
-      },
 
       onPressOrdenes: function (oEvent) {
         var ord = this.getSelectOrd(oEvent, "listadoOrdenes");

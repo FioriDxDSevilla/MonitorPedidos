@@ -1,0 +1,12 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:l="sap.ui.layout"
+    xmlns:ui="sap.ui.table">   
+<Dialog
+      id='MotivoRechazoDial'  
+      resizable="true">
+    </Dialog> 
+</core:FragmentDefinition>

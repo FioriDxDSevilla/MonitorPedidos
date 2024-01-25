@@ -1,159 +1,29 @@
 <core:FragmentDefinition
-    controllerName="monitorpedidos.controller.MonitorPedidos"
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
     xmlns:f="sap.ui.layout.form"
     xmlns:fb="sap.ui.comp.filterbar"
     xmlns:l="sap.ui.layout"
     xmlns:ui="sap.ui.table"
-    xmlns:tnt="sap.tnt"
->
-    <IconTabBar
-        id="idIconTabBar"
-        select=".onFilterSelect"
-        class="sapUiResponsiveContentPadding"
-        expanded="{device>/isNoPhone}">
-        <items>
-            <IconTabFilter
-                id="Filtro1"
-                icon="sap-icon://clear-filter"
-                iconColor="Default"
-                design="Horizontal"
-                text="Todas"
-                count="{Filtros>/Total}"
-                key="Free"/>
-            <!-- <IconTabSeparator
-                id="Separador1"
-                icon="sap-icon://begin"
-            />-->
-            <IconTabFilter
-                id="Filtro2"
-                icon="sap-icon://edit"
-                iconColor="Default"
-                design="Horizontal"
-                text="En Redacción"
-                count="{Filtros>/totalred}"
-                key="Ok"
-            />
-            <!--<IconTabSeparator
-                id="Separador2"
-                icon="sap-icon://begin"
-            />-->
-            <IconTabFilter
-                id="Filtro3"
-                icon="sap-icon://approvals"
-                iconColor="Negative"
-                design="Horizontal"
-                text="Pdte. Aprobar"
-                count="{Filtros>/totalpdte}"
-                key="Heavy"
-            />
-            <!--   <IconTabFilter
-                id="Filtro4"
-                icon="sap-icon://accept"
-                iconColor="Positive"
-                design="Horizontal"
-                text="Responsable Aprob."
-                key="Aprob"
-            />-->
-            <!--<IconTabSeparator
-                id="Separador3"
-                icon="sap-icon://begin"
-            />-->
-            <!--<IconTabFilter
-                id="Filtro4"
-                icon="sap-icon://customer-financial-fact-sheet"
-                iconColor="Negative"
-                design="Horizontal"
-                text="Pdte. Financiero"
-                key="Overweight"
-            />-->
-            <!--<IconTabSeparator
-                id="Separador4"
-                icon="sap-icon://begin"
-            />-->
-            <IconTabFilter
-                id="Filtro5"
-                icon="sap-icon://money-bills"
-                iconColor="Negative"
-                design="Horizontal"
-                text="Pdte. Facturar"
-                count="{Filtros>/totalfac}"
-                key="Money"
-            />
-            <!--<IconTabSeparator
-                id="Separador5"
-                icon="sap-icon://begin"
-            />-->
-            <IconTabFilter
-                id="Filtro6"
-                icon="sap-icon://unpaid-leave"
-                iconColor="Negative"
-                design="Horizontal"
-                text="Pdte. Cobrar"
-                count="{Filtros>/totalpdte}"
-                key="Payment"
-            />
-            <!--<IconTabSeparator
-                id="Separador6"
-                icon="sap-icon://begin"
-            />-->
-            <IconTabFilter
-                id="Filtro7"
-                icon="sap-icon://paid-leave"
-                iconColor="Positive"
-                design="Horizontal"
-                text="Cobradas"
-                 count="{Filtros>/totalcob}"
-                key="Sales"
-            />
-            <!--<IconTabSeparator
-                id="Separador7"
-                icon="sap-icon://begin"
-            />-->
-            <IconTabFilter
-                id="Filtro8"
-                icon="sap-icon://decline"
-                iconColor="Negative"
-                design="Horizontal"
-                text="Denegadas"
-                count="{Filtros>/Total}"
-                key="Cancel"
-            />
-             <IconTabFilter
-                id="Filtro9"
-                icon="sap-icon://thumb-up"
-                iconColor="Positive"
-                visible="false"
-                design="Horizontal"
-                text="Aprobación"
-                key="Approv"
-            />
-
-              
-        </items>
-        <content>
-            <ui:Table
-                id="idTablePEPs"
-                selectionMode="Single"
+>   
+<Dialog
+      id='LiberacionDial'
+      title="{i18n>TableLiberaciones}"  
+      resizable="true"
+      
+      >
+      
+    <ui:Table
+                id="b_idTablePEPs"
+                selectionMode="MultiToggle"
                 rows="{
                             path: 'listadoSolicitudes>/'}"
                 visibleRowCountMode="Interactive"
                 width="100%"
                 enableCellFilter="{ui>/cellFilterOn}"
                 filter="filterOption"
-                sort="sortOption">
-                <ui:extension>
-					<OverflowToolbar style="Clear">
-						<Button
-                            id="Filtr10"
-                            visible="false"
-                            type="Accept"
-                            text="Enviar a Liberacion"
-                            press="onEnviarLiberacion"
-                        />
-					</OverflowToolbar>
-				</ui:extension>
+                sort="sortOption"
+            >
                 <ui:columns>
                     <ui:Column
                         width="auto"
@@ -164,7 +34,7 @@
                         <Label text="{i18n>numped}" />
                         <ui:template>
                             <Text
-                                id="idPEP"
+                                id="b_idPEP"
                                 text="{listadoSolicitudes>IDSOLICITUD}"
                             />
                         </ui:template>
@@ -347,42 +217,14 @@
                                     titlePress="handleLinkCont" />
                         </ui:template>
                     </ui:Column>
-                    <ui:Column width="2%">
-                        <Label text="" />
-                        <ui:template>
-                            <Button
-                                id="TableButton1"
-                                icon="sap-icon://display"
-                                tooltip="{i18n>visual}"
-                                type="Ghost"
-                                press="onOpenOrder"
-                            />
-                        </ui:template>
-                    </ui:Column>
-                    <ui:Column width="2%">
-                        <Label text="" />
-                        <ui:template>
-                            <Button
-                                id="TableButton2"
-                                icon="sap-icon://pdf-attachment"
-                                tooltip="{i18n>down}"
-                                type="Ghost"
-                            />
-                        </ui:template>
-                    </ui:Column>
-                    <ui:Column width="2%">
-                        <Label text="" />
-                        <ui:template>
-                            <Button
-                                id="TableButton3"
-                                icon="sap-icon://documents"
-                                tooltip="{i18n>copy}"
-                                type="Ghost"
-                            />
-                        </ui:template>
-                    </ui:Column>
-                </ui:columns>
+                    </ui:columns>
             </ui:Table>
-        </content>
-    </IconTabBar>
+
+        <OverflowToolbar>
+				<ToolbarSpacer/>
+				<Button text="Liberar" type="Accept" press="onLiberacion" />
+                <Button text="Cancelar" type="Default" press="oncancelliberacion"/>
+			</OverflowToolbar>
+    
+    </Dialog> 
 </core:FragmentDefinition>
