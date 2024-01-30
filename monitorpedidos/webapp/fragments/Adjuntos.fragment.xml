@@ -6,11 +6,9 @@
     xmlns:l="sap.ui.layout"
     xmlns="sap.ui.table"
     xmlns:upload="sap.m.upload"
-    xmlns:u="sap.ui.unified"
-
-    >
+    xmlns:u="sap.ui.unified">
     <m:Panel expandable="false" width="100%">
-        <m:VBox renderType="Bare">
+        <m:VBox>
             <f:Form editable="true" visible="true">
                 <f:layout>
                     <f:ResponsiveGridLayout/>
@@ -18,7 +16,7 @@
                 <f:FormContainer>
                     <f:FormElement label="Descripción">
                         <f:fields>
-                            <m:Input value="" id="descAdjunto" maxLength="80" enabled="true"/>
+                            <m:Input value="{datosAdj>/Desc}" id="descAdjunto" maxLength="80" enabled="true"/>
                         </f:fields>
                     </f:FormElement>
                     <f:FormElement label="Adjuntar fichero">

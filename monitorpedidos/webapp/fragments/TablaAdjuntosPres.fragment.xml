@@ -9,7 +9,7 @@
     <Table 
         id="idTableAdjuntos"
         mode="SingleSelectMaster"
-        items="{path: ''}"
+        items="{path: 'Adjuntos>/'}"
         growing="true"
         growingThreshold="10">
 
@@ -29,18 +29,15 @@
                 <Text text="" visible="{= ${ModoApp>/mode}  === 'D' ?  false : true }"/>
             </Column>  -->
             <Column >
-                <Text text=""  visible="{ModoApp>/modAdj}"/>
-            </Column> 
-            <Column >
-                <Text text=""  visible="{ModoApp>/modAdj}"/>
+                <Text text="" visible="{= ${ModoApp>/mode}  === 'D' ?  false : true }"/>
             </Column>              
         </columns>
         <items>
             <ColumnListItem>
                <cells>
                     <!--<Text id="nArchProv" text="{Adjuntos>Filename}" />-->
-                    <Link text="{AdjuntoSHPSet>Filename}" target="_blank" href="{Adjuntos>URL}" />
-                    <Text id="dArchProv" text="{AdjuntoSHPSet>Descripcion}" />
+                    <Link text="{Adjuntos>Filename}" target="_blank" href="{Adjuntos>URL}" />
+                    <Text id="dArchProv" text="{Adjuntos>Descripcion}" />
                     <Button icon="sap-icon://delete" press=".onDeleteAdj" tooltip="{i18n>Eliminar}" visible="true"/>
                     <Button icon="sap-icon://edit" press=".onChangeAdj" tooltip="{i18n>ModificarAdjunto}" visible="false"/>
                 </cells>

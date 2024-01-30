@@ -27,52 +27,81 @@
                     visible="true"
                     enabled="true"
                 />
+                <m:Button
+                    id="botoncopy"
+                    icon="sap-icon://copy"
+                    text="{i18n>copyPos}"
+                    type="Emphasized"
+                    press="onaddPosPed"
+                    visible="true"
+                    enabled="true"
+                />
             </m:OverflowToolbar>
     <m:VBox renderType="Bare">
-        <table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'PedidoPos>/'}"  visibleRowCountMode="Interactive"
+        <!--<table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'PedidoPos>/'}"  visibleRowCountMode="Interactive"-->
+        <table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'DisplayPosPed>/results'}"  visibleRowCountMode="Interactive"
                 visibleRowCount="3"
                 width= "100%">
 
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>posicion}"/>
                 <table:template>
-                    <m:Text text="{PedidoPos>ItmNumber}"/>
+                    <!--<m:Text text="{PedidoPos>ItmNumber}"/>-->
+                    <m:Text text="{DisplayPosPed>Posnr}"/>
                 </table:template>
             </table:Column>    
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Material}"/>
                 <table:template>
-                    <m:Text text="{PedidoPos>Material}"/>
+                    <!--<m:Text text="{PedidoPos>Material}"/>-->
+                    <m:Text text="{DisplayPosPed>Matnr}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Descripcion}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>ShortText}"/>
+                    <!--<m:Text text="{PedidoPos>ShortText}"/>-->
+                    <m:Text text="{DisplayPosPed>Arktx}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Cantidad}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>ReqQty}"/>
+                    <!--<m:Text text="{PedidoPos>ReqQty}"/>-->
+                    <m:Text text="{DisplayPosPed>Kpein}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Unidades}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>SalesUnit}"/>
+                    <!--<m:Text text="{PedidoPos>SalesUnit}"/>-->
+                    <m:Text text="{DisplayPosPed>Meins}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Importe}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>CondValue}" />
+                    <!--<m:Text text="{PedidoPos>CondValue}" />-->
+                    <m:Text text="{DisplayPosPed>Netwr}" />
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Moneda}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>Currency}" />
+                    <!--<m:Text text="{PedidoPos>Currency}" />-->
+                    <m:Text text="{DisplayPosPed>Waerk}" />
+                </table:template>
+            </table:Column>
+             <table:Column hAlign="Center">
+                <m:Label text="{i18n>zcost}" />
+                <table:template>
+                    <m:Text text="{DisplayPosPed>Ykostl}" />
+                </table:template>
+            </table:Column>
+             <table:Column hAlign="Center">
+                <m:Label text="{i18n>zord}" />
+                <table:template>
+                    <m:Text text="{DisplayPosPed>Yaufnr}" />
                 </table:template>
             </table:Column>
         </table:Table>

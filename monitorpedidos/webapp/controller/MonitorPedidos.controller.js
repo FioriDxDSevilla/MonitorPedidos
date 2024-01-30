@@ -1700,33 +1700,10 @@ sap.ui.define([
 
 
             //PRUEBA
-
+            /*
             onOpenOrder: function (oEvent) {
 
-                /*var numero = oEvent.getSource().getBindingContext("listadoSolicitudes").getPath().split("/").slice(-1).pop()
-                var posicionArray = this.oComponent.getModel("listadoSolicitudes").getData()[numero];
-                var Idsolicitud = posicionArray.IDSOLICITUD;
-
-                const oRouter = this.getOwnerComponent().getRouter();
-                console.log(posicionArray)
-                const oRouter = this.getOwnerComponent().getRouter();
-                oRouter.navTo("RouteAltaPedidos",{
-                    path: Idsolicitud
-                });
-                this.modoapp = "D";
-                var oModConfig = new JSONModel();
-                var button;
-                var config = {
-                    buttCRUD: button,
-                    mode: modoapp
-                };
-                oModConfig.setData(config);
-
-                this.oComponent.setModel(oModConfig, "ModoApp");
-                var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-                oRouter.navTo("RouteAltaPedidos");*/
-                //sap.ui.core.BusyIndicator.hide();*/
-                //});
+                
                 const oI18nModel = this.oComponent.getModel("i18n");
                 var soli = this.getSelectedPed(oEvent);
 
@@ -1875,7 +1852,241 @@ sap.ui.define([
                     }),
                 ]);
             },
+            */
 
+            onOpenOrder: function (oEvent) {
+ 
+                /*var numero = oEvent.getSource().getBindingContext("listadoSolicitudes").getPath().split("/").slice(-1).pop()
+                var posicionArray = this.oComponent.getModel("listadoSolicitudes").getData()[numero];
+                var Idsolicitud = posicionArray.IDSOLICITUD;
+ 
+                const oRouter = this.getOwnerComponent().getRouter();
+                console.log(posicionArray)
+                const oRouter = this.getOwnerComponent().getRouter();
+                oRouter.navTo("RouteAltaPedidos",{
+                    path: Idsolicitud
+                });
+                this.modoapp = "D";
+                var oModConfig = new JSONModel();
+                var button;
+                var config = {
+                    buttCRUD: button,
+                    mode: modoapp
+                };
+                oModConfig.setData(config);
+ 
+                this.oComponent.setModel(oModConfig, "ModoApp");
+                var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                oRouter.navTo("RouteAltaPedidos");*/
+                //sap.ui.core.BusyIndicator.hide();*/
+                //});
+                const oI18nModel = this.oComponent.getModel("i18n");
+                var soli = this.getSelectedPed(oEvent);
+ 
+                var that = this;
+                var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                var Totalizado;
+                var aFilterIdsCli, aFilterValuesCli, aFiltersCli;
+ 
+                this.modoapp = "D";
+ 
+                /*if (modoapp === "D"){
+                   var claseped = this.getView("AltaPedidos.view.xml").byId("f_claseped");
+                   claseped.setEditable(false);
+                }*/
+ 
+                var aFilterIds, aFilterValues, aFilters;
+                var numsol = soli;
+                var modApp;
+ 
+                aFilterIds = ["Vbeln"];
+                aFilterValues = [numsol.IDSOLICITUD];
+ 
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+ 
+                Promise.all([
+                    this.mainService.read("/SolicitudSet", {
+                        filters: aFilters,
+                        urlParameters: {
+                            $expand: [
+                                //"SolicitudCli_A",
+                                "SolicitudPed_A",
+                                //"SolicitudAdjunto_A",
+                                //"SolicitudMod_A"
+                            ],
+                        },
+                        success: function (data, response) {
+                            if (data) {
+                                var oModelDisplay = new JSONModel();
+                                var oModelSolicitud_Cli = new JSONModel();
+                                var oModelSolicitud_Adj = new JSONModel();
+                                var oModelSolicitud_Ped = new JSONModel();
+                                var oModelSolicitud_Apr = new JSONModel();
+                                var oModelSolicitud_Hist = new JSONModel();
+                                var SolicitudAdjunto_A = [],
+                                    Solicitud_Cli_A = [],
+                                    SolicitudMod_A = [],
+                                    SolicitudPed_A = [],
+                                    SolicitudAprobacion_A = [],
+                                    SolicitudHistorial_A = [];
+ 
+ 
+                                if (data.results[0].Erdat) {
+                                    var today1 = data.results[0].Erdat;
+                                    var fechai = today1.getFullYear() + '-' + ("0" + (today1.getMonth() + 1)).slice(-2) + '-' + ("0" + today1.getDate()).slice(-2);
+                                    data.results[0].Erdat = fechai;
+                                }
+ 
+                                oModelDisplay.setData(data.results[0]);
+                                that.oComponent.setModel(oModelDisplay, "DisplayPEP");
+ 
+                                /*if ((that.modoapp === "D" || that.modoapp === "C") &&
+                                    data.results[0].SolicitudAdjunto_A.results.length > 0) {
+                                    var oModAdj = new JSONModel();
+                                    var adjs = [],
+                                        adj;
+                                    data.results[0].SolicitudAdjunto_A.forEach(function (el) {
+                                        var url;
+                                        url = "";
+                                        data.results[0].AdjuntoSHPSet.results.forEach(function (elshp) {
+                                            if (el.Descripcion == elshp.Descriptivo && el.Documento == elshp.Adjunto) {
+                                                url = elshp.Url;
+                                            }
+                                        });
+                                        adj = {
+                                            Filename: el.Documento,
+                                            Descripcion: el.Descripcion,
+                                            URL: url
+                                        };
+                                        adjs.push(adj);
+                                    });
+ 
+                                    oModAdj.setData(adjs);
+                                    that.oComponent.setModel(new JSONModel(), "datosAdj");
+                                    that.oComponent.setModel(oModAdj, "AdjuntoSHPSet");
+                                } else {
+                                    that.oComponent.setModel(new JSONModel(), "datosAdj");
+                                    that.oComponent.setModel(new JSONModel([]), "AdjuntoSHPSet");
+                                }*/
+ 
+                                /* SolicitudHistorial_A = data.results[0].SolicitudHistorial_A;
+ 
+                                 if (data.results[0].SolicitudHistorial_A.results.length > 0) {
+                                     var oModHist = new JSONModel();
+                                     var historial = data.results[0].SolicitudHistorial_A;
+ 
+                                     historial.results.forEach(function (el) {
+                                         if (condition) {
+ 
+                                         }
+                                     });
+                                     oModHist.setData(data.results[0].SolicitudHistorial_A);
+                                     that.oComponent.setModel(oModHist, "HistorialSol");
+ 
+                                 } else {
+                                     that.oComponent.setModel(new JSONModel(), "HistorialSol");
+                                 }*/
+ 
+                                SolicitudPed_A = data.results[0].SolicitudPed_A
+ 
+                                for (var i = 0; i < SolicitudPed_A.results.length; i++) {
+                                    var sreturn = "";
+                                    sreturn = SolicitudPed_A.results[i].Netwr;
+                                    SolicitudPed_A.results[i].Netwr = sreturn;
+                                    that.oComponent.getModel("PedidoPos").setProperty("/Ykostl", that.oComponent.getModel("DisplayPEP").getProperty("/Yykostkl"));
+                                    that.oComponent.getModel("PedidoPos").setProperty("/Yaufnr", that.oComponent.getModel("DisplayPEP").getProperty("/Yyaufnr"));
+                                }
+ 
+                                for (var i = 0; i < SolicitudPed_A.results.length; i++) {
+                                    Totalizado += parseFloat(SolicitudPed_A.results[i].Netwr);
+                                }
+ 
+                                oModelSolicitud_Ped.setData(SolicitudPed_A);
+                                that.oComponent.setModel(oModelSolicitud_Ped, "DisplayPosPed");
+ 
+ 
+                               
+                                /*aFilterIdsCli.push("Kunnr");
+                                aFilterValuesCli.push(data.results[0].Kunnr);
+ 
+                                aFilterIdsCli.push("Bukrs");
+                                aFilterValuesCli.push(data.results[0].Vkorg);
+ 
+ 
+                                aFiltersCli = Util.createSearchFilterObject(aFilterIdsCli, aFilterValuesCli);
+                                */
+                               that.DatosCliente(data.results[0].Kunnr, data.results[0].Vkorg);
+                               that.OficinaVenta(data.results[0].Vkorg, data.results[0].Vtweg, data.results[0].Spart);
+                               that.NIApedido(data.results[0].Kunnr, data.results[0].Vkorg);
+                                //this.DIRpedido(codcli, vkbur);
+                                that.OrganoGestor(data.results[0].Kunnr, data.results[0].Vkorg);
+                                that.UnidadTramitadora(data.results[0].Kunnr, data.results[0].Vkorg);
+                                that.OficinaContable(data.results[0].Kunnr, data.results[0].Vkorg);
+                                that.CodigoAdmon(data.results[0].Kunnr, data.results[0].Vkorg);
+                                that.Plataformapedido(data.results[0].Kunnr, data.results[0].Vkorg);
+                          
+                                var title = oI18nModel.getProperty("detSolP") + " " + ('0000000000' + that.oComponent.getModel("DisplayPEP").getData().Vbeln).slice(-10);
+                                that.oComponent.getModel("DisplayPEP").setProperty("/Title", title);
+                                that.oComponent.getModel("DisplayPEP").setProperty("/param", false);
+ 
+                                //Boton de CRUD
+                                var button, modAdj;
+ 
+                                if (that.modoapp === "D") {
+                                    button = oI18nModel.getProperty("grabMod");
+ 
+                                    if (data.results[0].ZdatePs !== '') {
+                                        modAdj = false;
+                                    }
+                                }
+ 
+                                var config = {
+                                    buttCRUD: button,
+                                    modAdj: modAdj,
+                                    mode: that.modoapp
+ 
+                                };
+ 
+                                var oModConfig = new JSONModel();
+                                oModConfig.setData(config);
+ 
+                                that.oComponent.setModel(oModConfig, "ModoApp");
+
+                                that.oComponent.getModel("ModoApp").setProperty("/Clasepedido", that.oComponent.getModel("DisplayPEP").getProperty("/Auart"));
+                                that.oComponent.getModel("ModoApp").setProperty("/Vtext", that.oComponent.getModel("DisplayPEP").getProperty("/Spart"));
+                                that.oComponent.getModel("ModoApp").setProperty("/CvCanal", that.oComponent.getModel("DisplayPEP").getProperty("/Vtweg"));
+                                that.oComponent.getModel("ModoApp").setProperty("/CvSector", that.oComponent.getModel("DisplayPEP").getProperty("/Spart"));
+                                that.oComponent.getModel("ModoApp").setProperty("/NomSoc", that.oComponent.getModel("DisplayPEP").getProperty("/Bukrs"));
+                                that.oComponent.getModel("ModoApp").setProperty("/Nomcli", that.oComponent.getModel("DisplayPEP").getProperty("/Kunnr"));
+                                that.oComponent.setModel(new JSONModel([]), "PedidoPos");
+                                
+                                for (var i = 0; i < SolicitudPed_A.results.length; i++) {
+                                    that.oComponent.getModel("PedidoPos").setProperty("/ItmNumber", SolicitudPed_A.results[i].Posnr);
+                                    that.oComponent.getModel("PedidoPos").setProperty("/Material", SolicitudPed_A.results[i].Matnr);
+                                    that.oComponent.getModel("PedidoPos").setProperty("/ShortText", SolicitudPed_A.results[i].Arktx);
+                                    that.oComponent.getModel("PedidoPos").setProperty("/ReqQty", SolicitudPed_A.results[i].Kpein);
+                                    that.oComponent.getModel("PedidoPos").setProperty("/SalesUnit", SolicitudPed_A.results[i].Meins);
+                                    that.oComponent.getModel("PedidoPos").setProperty("/CondValue", SolicitudPed_A.results[i].Netwr);
+                                    that.oComponent.getModel("PedidoPos").setProperty("/Currency", SolicitudPed_A.results[i].Waerk);
+                                    that.oComponent.getModel("PedidoPos").setProperty("/Ykostl", that.oComponent.getModel("DisplayPEP").getProperty("/Yykostkl"));
+                                    that.oComponent.getModel("PedidoPos").setProperty("/Yaufnr", that.oComponent.getModel("DisplayPEP").getProperty("/Yyaufnr"));
+                                    that.oComponent.getModel("PedidoPos").refresh(true);
+                                    
+                                }
+                                
+                                //that.oComponent.getModel("PedidoPos").setData(that.oComponent.getModel("DisplayPosPed").getData());
+                               
+ 
+                            }
+                            if (response) {
+                                //var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                                oRouter.navTo("RouteAltaPedidos");
+                            }
+                        },
+                    }),
+                ]);
+ 
+            },
 
             getSelectedPed: function (oEvent) {
 
@@ -3139,6 +3350,8 @@ sap.ui.define([
                 this.oComponent.getModel("ModoApp").setProperty("/Numcont", numCont);
                 this.oComponent.getModel("ModoApp").setProperty("/Nomcont", nomCont);
                 this.oComponent.getModel("ModoApp").setProperty("/CondPago", condPago);
+                this.oComponent.setModel(new JSONModel([]), "Adjuntos");
+                this.oComponent.setModel(new JSONModel(), "datosAdj");
                 this.oComponent.getModel("ModoApp").refresh(true);
 
                 this.NIApedido(codcli, vkbur);
@@ -3149,6 +3362,20 @@ sap.ui.define([
                 this.CodigoAdmon(codcli, vkbur);
                 this.Plataformapedido(codcli, vkbur);
                 this.DameMonedas();
+
+                /**
+                 * Cuando ya navegamos al alta debe de borrar todos los campos de opciones 
+                 * para que cuando se entre de nuevo aparezcan vacios para crear una nueva peticion
+                 */
+                this.getView().byId("idCTipoPed").setSelectedKey(null);
+                this.getView().byId("idCSociedad").setSelectedKey(null);
+                this.getView().byId("idArea").setSelectedKey(null);
+                this.getView().byId("idCanal").setSelectedKey(null);
+                this.getView().byId("idSector").setSelectedKey(null);
+                this.getView().byId("idzona").setSelectedKey(null);
+                this.getView().byId("idCCliente").setValue(null);
+                this.getView().byId("descrProv").setValue(null);
+                this.getView().byId("idcontract").setSelectedKey(null);
 
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
                 oRouter.navTo("RouteAltaPedidos");

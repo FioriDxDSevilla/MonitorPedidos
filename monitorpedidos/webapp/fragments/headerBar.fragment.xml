@@ -42,9 +42,9 @@
             </layoutData>
         </IconTabHeader>       
 
-        <!---BOTONES A LA DERECHA DE LA BARRA-->
+        <!---BOTONES A LA DERECHA DE LA BARRA
 
-        <Label width="60%"/> <!--SEPARADOR-->
+        <Label width="60%"/> 
 
         <Button
             id="ExcelImport"
@@ -61,7 +61,7 @@
                 />
                 
             </layoutData>
-        </Button>
+        </Button>-->
         <!--<Button
             id="ExcelDownload"
             icon="sap-icon://excel-attachment"

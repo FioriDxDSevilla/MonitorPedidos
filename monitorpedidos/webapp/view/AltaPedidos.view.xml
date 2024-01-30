@@ -7,7 +7,7 @@
     xmlns:layout="sap.ui.layout"
     xmlns:l="sap.ui.layout" height="100%">
 
-    <m:Page id="page" title="{i18n>createOrderTitle}">
+    <m:Page id="page" title="{DisplayPEP>/Title}">
     <m:headerContent>
     <m:Button id="BtnGrabar" text="Grabar" icon="sap-icon://save"  visible="{= ${ModoApp>/mode}  === 'C' ?  true : false }" press="onCrear"/>
     </m:headerContent>
@@ -26,10 +26,10 @@
                         >
                             <f:content >                           
                                  <!-- -->
-                                <core:Title text="" /> 
+                                <core:Title text="" />
                                 
                                 <m:Label text="{i18n>Denominacion}" />
-                                <m:Input id="f_denoped" width="300px" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }" >
+                                <m:Input id="f_denoped" width="300px" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }" value="{DisplayPEP>/Ktext}">
                                     <m:layoutData>
                                         <l:GridData span="XL1 L2 M2 S4" />
                                     </m:layoutData>

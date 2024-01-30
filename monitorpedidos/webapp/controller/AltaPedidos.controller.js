@@ -32,11 +32,44 @@ sap.ui.define([
         var oModAdj = new JSONModel();
         var oModAdjSHP = new JSONModel();
 
+        /*if (this.oComponent.getModel("ModoApp").getProperty("/mode") == 'D') {
+ 
+          //////DESHABILITAR LOS CAMPOS PARA EL MODO VISUALIZACIÓN DE PEDIDO ////////////////////
+          //this.getView().byId("f_refped").setEditable(false);
+          this.getView().byId("f_socalta").setEnabled(false);
+          this.getView().byId("f_zonalta").setEnabled(false);
+          this.getView().byId("f_clialta").setEnabled(false);
+          this.getView().byId("f_contralta").setEnabled(false);
+          this.getView().byId("f_campocondicion").setEnabled(false);
+          this.getView().byId("idOficinaV").setEnabled(false);
+          this.getView().byId("f_blockfact").setEnabled(false);
+          this.getView().byId("textAreaCabFact").setEnabled(false);
+          this.getView().byId("textAreaCabInfRech").setEnabled(false);
+          this.getView().byId("textAreaCabAcl").setEnabled(false);
+          this.getView().byId("f_mailcli").setEnabled(false);
+          this.getView().byId("botondel").setVisible(false);
+          this.getView().byId("botonadd").setVisible(false);
+          this.getView().byId("botonadj").setVisible(false);
+          this.getView().byId("fileUploader").setVisible(false);
+          this.getView().byId("fileuploaderlabel").setVisible(false);
+ 
+ 
+          this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", this.oComponent.getModel("DisplayPEP").getProperty("/Auart"));
+          this.oComponent.getModel("ModoApp").setProperty("/Vtext", this.oComponent.getModel("DisplayPEP").getProperty("/Spart"));
+          this.oComponent.getModel("ModoApp").setProperty("/CvCanal", this.oComponent.getModel("DisplayPEP").getProperty("/Vtweg"));
+          this.oComponent.getModel("ModoApp").setProperty("/CvSector", this.oComponent.getModel("DisplayPEP").getProperty("/Spart"));
+          this.oComponent.getModel("ModoApp").setProperty("/NomSoc", this.oComponent.getModel("DisplayPEP").getProperty("/Bukrs"));
+          this.oComponent.getModel("ModoApp").setProperty("/Nomcli", this.oComponent.getModel("DisplayPEP").getProperty("/Kunnr"));
+          this.oComponent.setModel(new JSONModel([]), "PedidoPos");
+          this.oComponent.getModel("PedidoPos").setData(this.oComponent.getModel("DisplayPosPed").getData());
+        }*/
         //this.oComponent.setModel(oModAdj, "datosAdj");
         //2º1this.oComponent.setModel(oModAdjSHP, "AdjuntoSHPSet");
 
-        this.oComponent.setModel(new JSONModel([]), "datosAdj");
-        this.oComponent.setModel(new JSONModel([]), "AdjuntoSHPSet");
+        //this.oComponent.setModel(new JSONModel([]), "datosAdj");
+        //this.oComponent.setModel(new JSONModel([]), "AdjuntoSHPSet");
+
+        
 
       },
 
@@ -55,14 +88,14 @@ sap.ui.define([
 
       handleUploadPress: function (oEvent) {
         //Inicializamos el modelo de adjunto 
-        this.act_adj = null;
+        //this.act_adj = null;
 
-        var oMdesc = this.oComponent.getModel("datosAdj").getData();
-        var desc = oMdesc.Desc;
+        //var oMdesc = this.oComponent.getModel("datosAdj").getData();
+        //var desc = oMdesc.Desc;
 
-        if (!desc || desc == undefined) {
+        /*if (!desc || desc == undefined) {
           desc = this.getView().byId("descAdjunto").getValue();
-        }
+        }*/
 
         /*if (!desc) {
             MessageBox.error(this.oI18nModel.getProperty("errDesArch"));
@@ -70,25 +103,46 @@ sap.ui.define([
             return;
         }*/
 
-        var fileDetails = oEvent.getParameters("file").files[0];
+        /*var fileDetails = oEvent.getParameters("file").files[0];
         sap.ui.getCore().fileUploaderArr = [];
 
         if (fileDetails) {
           var mimeDet = fileDetails.type,
             fileName = fileDetails.name;
           //Calling method....
-          var adjuntos = this.oComponent.getModel("AdjuntoSHPSet").getData();
+          var adjuntos = this.oComponent.getModel("Adjuntos").getData();
           var nadj = adjuntos.length;
+
           this.base64conversionMethod(
-            mimeDet,
+            C,
             fileName,
             fileDetails,
             nadj,
             adjuntos,
-            desc);
+            "");
         } else {
           sap.ui.getCore().fileUploaderArr = [];
+        }*/
+
+
+        this.act_adj = null;
+        var oMdesc = this.oComponent.getModel("datosAdj").getData();
+        var desc = oMdesc.Desc;
+        var fileDetails = oEvent.getParameters("file").files[0];
+        sap.ui.getCore().fileUploaderArr = [];
+        if (fileDetails) {
+            var mimeDet = fileDetails.type
+              , fileName = fileDetails.name;
+            var adjuntos = this.oComponent.getModel("Adjuntos").getData();
+            var nadj = adjuntos.length;
+            this.base64conversionMethod(mimeDet, fileName, fileDetails, nadj, adjuntos, "")
+        } else {
+            sap.ui.getCore().fileUploaderArr = []
         }
+
+
+
+
       },
 
       /*CONVERTIR FICHEROS A BASE64 */
@@ -112,7 +166,7 @@ sap.ui.define([
               "Numdoc": numdoc,
               "Mimetype": fileMime,
               "Filename": fileName,
-              "Descripcion": desc,
+              //"Descripcion": desc,
               "Content": that.base64conversionRes,
             };
             /*that.oComponent.getModel("Adjuntos").refresh(true);
@@ -131,7 +185,7 @@ sap.ui.define([
             "Numdoc": numdoc,
             "Mimetype": fileMime,
             "Filename": fileName,
-            "Descripcion": desc,
+            //"Descripcion": desc,
             "Content": that.base64conversionRes,
           };
 
@@ -147,11 +201,11 @@ sap.ui.define([
       onAttFile: function () {
 
 
-        var adjuntos = this.oComponent.getModel("AdjuntoSHPSet").getData();
+        /*var adjuntos = this.oComponent.getModel("Adjuntos").getData();
         var oMdesc = this.oComponent.getModel("datosAdj").getData();
         var desc = oMdesc.Desc;
 
-        if (!desc || desc == undefined) {
+        if (!desc) {
           MessageBox.error(this.oI18nModel.getProperty("errDesArch"));
           return;
         } else if (!this.act_adj) {
@@ -161,10 +215,29 @@ sap.ui.define([
 
           this.act_adj.Descripcion = desc;
           adjuntos.push(this.act_adj);
-          this.oComponent.getModel("AdjuntoSHPSet").refresh(true);
+          this.oComponent.getModel("Adjuntos").refresh(true);
           this.getView().byId("descPresAdjunto").setValue("");
           this.getView().byId("fileUploader").setValue("");
           this.act_adj = null;
+        }*/
+
+
+        var adjuntos = this.oComponent.getModel("Adjuntos").getData();
+        var oMdesc = this.oComponent.getModel("datosAdj").getData();
+        var desc = oMdesc.Desc;
+        if (!desc) {
+          MessageBox.error(this.oI18nModel.getProperty("errDesArch"));
+            return
+        } else if (!this.act_adj) {
+          MessageBox.error(this.oI18nModel.getProperty("errNoArch"));
+            return
+        } else {
+            this.act_adj.Descripcion = desc;
+            adjuntos.push(this.act_adj);
+            this.oComponent.getModel("Adjuntos").refresh(true);
+            this.getView().byId("descAdjunto").setValue("");
+            this.getView().byId("fileUploader").setValue("");
+            this.act_adj = null;
         }
 
       },
@@ -172,16 +245,16 @@ sap.ui.define([
       /* Función para eliminar un adjunto de la tabla */
 
       onDeleteAdj: function (oEvent) {
-        var oModAdj = this.oComponent.getModel("AdjuntoSHPSet");
+        var oModAdj = this.oComponent.getModel("Adjuntos");
         var adjs = oModAdj.getData();
         const sOperationPath = oEvent
           .getSource()
-          .getBindingContext("AdjuntoSHPSet")
+          .getBindingContext("Adjuntos")
           .getPath();
         const sOperation = sOperationPath.split("/").slice(-1).pop;
 
         adjs.splice(sOperation, 1);
-        this.oComponent.setModel(new JSONModel(adjs), "AdjuntoSHPSet");
+        this.oComponent.setModel(new JSONModel(adjs), "Adjuntos");
       },
 
       onCrear: function () {
@@ -349,7 +422,7 @@ sap.ui.define([
           objCli = {};                
          } */
         
-        if (TxtCabecera) {
+       /* if (TxtCabecera) {
           objTxt = {
             Textid: 'Z001',
               Langu: 'ES',
@@ -377,7 +450,7 @@ sap.ui.define([
             ordTextSet.push(objTxt);
             objTxt = {};
           }
-        }
+        }*/
         
         /*if (TxtCabecera !== undefined && TxtInfRechazo == undefined && TxtAclaraciones == undefined) {
           for (var i = 0; i < Posiciones.length; i++) {
@@ -414,6 +487,76 @@ sap.ui.define([
            }  
         }*/
 
+        for (var i = 0; i < Posiciones.length; i++) {
+          if (TxtCabecera != null && TxtAclaraciones == null) {
+            objTxt = {
+              Textid: '001',
+              Langu: 'ES',
+              Textline: TxtCabecera
+            };
+            ordTextSet.push(objTxt);
+            objTxt = {};
+          } else if (TxtCabecera == null && TxtAclaraciones != null) {
+            objTxt = {
+              Textid: 'Z003',
+              Langu: 'ES',
+              Textline: TxtAclaraciones
+            };
+            ordTextSet.push(objTxt);
+            objTxt = {};
+          } else if(TxtCabecera != null && TxtAclaraciones != null) {
+            if (TxtCabecera) {
+              objTxt = {
+                Textid: '001',
+                Langu: 'ES',
+                Textline: TxtCabecera
+              };
+              ordTextSet.push(objTxt);
+              objTxt = {};
+            } 
+            if (TxtAclaraciones) {
+              objTxt = {
+                Textid: 'Z003',
+                Langu: 'ES',
+                Textline: TxtAclaraciones
+              };
+              ordTextSet.push(objTxt);
+              objTxt = {};
+            }
+          }
+         
+        }
+
+        //Tratamiento de adjuntos
+        var oModAdj = this.oComponent.getModel("Adjuntos").getData();
+        var oModAdj2 = [],
+            numdoc   = 0;
+        oModAdj.forEach(function(el){
+
+            var adj;
+            numdoc= numdoc + 1;
+
+            if ( el.URL) {
+                adj = {
+                    Numdoc : numdoc.toString(),
+                    Filename : el.Filename,
+                    Descripcion: el.Descripcion
+                }
+            }else{
+                adj = {
+                    Numdoc : numdoc.toString(),
+                    Mimetype: el.Mimetype,
+                    Filename: el.Filename,
+                    Descripcion: el.Descripcion,
+                    Content: el.Content
+                }
+            }
+            oModAdj2.push(adj);
+        });
+
+
+
+
         oJson = {
           DocType: DocType,
           SalesOrg: SalesOrg,
@@ -446,10 +589,12 @@ sap.ui.define([
             PartnRole: PartnRole
           },
           PedidoExtensionSet: {Zznia: Zznia, Zzresponsable: Zzresponsable, Yykostkl:Yykostkl, Yyaufnr:Yyaufnr},
+//          PedidoTextosSet: [TextId:'0001' , TextLine: TxtCabecera], Z002 Rechazo, Z003 Aclaraciones
           PedidoTextosSet: ordTextSet,
           PedidoPosicionSet: SolicitudPepCrSet,
           PedidoCondicionSet: SolicitudPedCondSet,
           PedidoCantidadSet: SolicitudPedQtySet,
+          FicheroSet:  oModAdj2, //oModAdj,
           PedidoRespuestaSet: {
             //Idsolc: Idsolc,
           }
@@ -483,6 +628,7 @@ sap.ui.define([
                   that.getView().byId("f_campoundTram").setSelectedKey(null);
                   that.getView().byId("f_campoofcont").setSelectedKey(null);
                   that.getView().byId("f_campoAdm").setSelectedKey(null);
+                  that.getView().byId("idOficinaV").setSelectedKey(null);
 
                   /*that.getView().byId("idCTipoPed").setSelectedKey(null);
                   that.getView().byId("idCSociedad").setSelectedKey(null);

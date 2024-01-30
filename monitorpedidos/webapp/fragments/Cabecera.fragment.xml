@@ -49,11 +49,11 @@
                 <!-- </m:VBox>-->
 
                 <m:Label text="{i18n>OficinaVentas}" />
-                <m:ComboBox id="idOficinaV" items="{ path: 'OficinaVenta>/', sorter: { path: 'Vkbur' } }" change=".onChangeOficina" showSecondaryValues="true">
+                <m:ComboBox id="idOficinaV" items="{ path: 'OficinaVenta>/', sorter: { path: 'Vkbur' } }" change=".onChangeOficina" showSecondaryValues="true" selectedKey="{DisplayPEP>/Vkbur}">
                     <core:ListItem key="{OficinaVenta>Vkbur}" text="{OficinaVenta>Bezei}" additionalText="{OficinaVenta>Vkbur}" />
                 </m:ComboBox>
                 <m:Label text="{i18n>NumPedidoCliente}" />
-                <m:Input id="f_refped" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }" width="300px">
+                <m:Input id="f_refped" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }" value="{DisplayPEP>/Bstnk}" width="300px">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
@@ -75,7 +75,7 @@
                     <core:ListItem key="{listadoCondicion>Zterm}" text="{listadoCondicion>Zterm}" />
                 </m:ComboBox>
                 <m:Label text="{i18n>NIA}" />
-                <m:ComboBox id="f_camponia" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }" width="200px" items="{ path: 'listadoNIA>/', sorter: { path: 'Kunnr' } }">
+                <m:ComboBox id="f_camponia" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }" width="200px" items="{ path: 'listadoNIA>/', sorter: { path: 'Kunnr' } }" selectedKey="{DisplayPEP>/Zznia}">
                     <core:ListItem key="{listadoNIA>Nia}" text="{listadoNIA>Nia}" additionalText="{listadoNIA>Nia}" />
                 </m:ComboBox>
                 <m:Label text="{i18n>Plataforma}" />

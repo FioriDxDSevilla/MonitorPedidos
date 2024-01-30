@@ -247,8 +247,9 @@
      <PropertyRef Name="Secu"/>
      <PropertyRef Name="SdDoc"/>
     </Key>
-    <Property Name="Secu" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Nº de dos pos." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="BillDate" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Fecha factura" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="ItmNumber" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Posición" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Secu" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Nº de dos pos." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="SdDoc" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Doc.comercial" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="HgLvItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Posición sup." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="PoItmNo" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Posición pedido" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
@@ -260,7 +261,6 @@
     <Property Name="PartDlv" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Ent.parc./pos." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="ReasonRej" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Motivo rechazo" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="BillBlock" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Bloqueo" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="BillDate" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Fecha factura" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Centro" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="StoreLoc" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Almacén" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="TargetQty" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3" sap:unicode="false" sap:label="Ctd.prevista" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
@@ -915,26 +915,27 @@
     <Property Name="Incotermsv" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Versión incot." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Incoterms2l" Type="Edm.String" Nullable="false" MaxLength="70" sap:unicode="false" sap:label="Incot.-ubic.1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Incoterms3l" Type="Edm.String" Nullable="false" MaxLength="70" sap:unicode="false" sap:label="Incot.-ubic.2" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <NavigationProperty Name="PedidoHistorialModSet" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_HistorialMod" FromRole="FromRole_Pedido_HistorialMod" ToRole="ToRole_Pedido_HistorialMod"/>
-    <NavigationProperty Name="PedidoPosicionSet" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Posicion" FromRole="FromRole_Pedido_Posicion" ToRole="ToRole_Pedido_Posicion"/>
-    <NavigationProperty Name="PedidoClienteSet" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Cliente" FromRole="FromRole_Pedido_Cliente" ToRole="ToRole_Pedido_Cliente"/>
     <NavigationProperty Name="PedidoCondicionSet" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Condicion" FromRole="FromRole_Pedido_Condicion" ToRole="ToRole_Pedido_Condicion"/>
+    <NavigationProperty Name="PedidoClienteSet" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Cliente" FromRole="FromRole_Pedido_Cliente" ToRole="ToRole_Pedido_Cliente"/>
+    <NavigationProperty Name="PedidoPosicionSet" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Posicion" FromRole="FromRole_Pedido_Posicion" ToRole="ToRole_Pedido_Posicion"/>
+    <NavigationProperty Name="PedidoHistorialModSet" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_HistorialMod" FromRole="FromRole_Pedido_HistorialMod" ToRole="ToRole_Pedido_HistorialMod"/>
     <NavigationProperty Name="PedidoCantidadSet" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Cantidad" FromRole="FromRole_Pedido_Cantidad" ToRole="ToRole_Pedido_Cantidad"/>
     <NavigationProperty Name="PedidoAdjuntoSet" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Adjunto" FromRole="FromRole_Pedido_Adjunto" ToRole="ToRole_Pedido_Adjunto"/>
     <NavigationProperty Name="AdjuntoPSet" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_AdjuntoP" FromRole="FromRole_Pedido_AdjuntoP" ToRole="ToRole_Pedido_AdjuntoP"/>
     <NavigationProperty Name="PedidoRespuestaSet" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Respuesta" FromRole="FromRole_Pedido_Respuesta" ToRole="ToRole_Pedido_Respuesta"/>
     <NavigationProperty Name="PedidoTextosSet" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Texto" FromRole="FromRole_Pedido_Texto" ToRole="ToRole_Pedido_Texto"/>
     <NavigationProperty Name="PedidoExtensionSet" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Extension" FromRole="FromRole_Pedido_Extension" ToRole="ToRole_Pedido_Extension"/>
+    <NavigationProperty Name="FicheroSet" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.Solicitud_Fichero_A" FromRole="FromRole_Solicitud_Fichero_A" ToRole="ToRole_Solicitud_Fichero_A"/>
    </EntityType>
    <EntityType Name="Adjunto" sap:content-version="1">
     <Key>
      <PropertyRef Name="Numdoc"/>
     </Key>
+    <Property Name="Content" Type="Edm.Binary" Nullable="false" sap:unicode="false" sap:label="Contenido" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Numdoc" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Valor numérico" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Mimetype" Type="Edm.String" Nullable="false" MaxLength="256" sap:unicode="false" sap:label="Dict: Nombre de tipo MIME" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Filename" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false" sap:label="File Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Descripcion" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false" sap:label="char255" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="Content" Type="Edm.Binary" Nullable="false" sap:unicode="false" sap:label="String binario" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Url" Type="Edm.String" Nullable="false" MaxLength="1024" sap:unicode="false" sap:label="String" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
    </EntityType>
    <EntityType Name="AdjuntoP" sap:content-version="1">
@@ -1028,24 +1029,6 @@
     <Property Name="Spart" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Sector" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Vtweg" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Canal distrib." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
    </EntityType>
-   <EntityType Name="DatosCliente" sap:content-version="1">
-    <Key>
-     <PropertyRef Name="Kunnr"/>
-    </Key>
-    <Property Name="Kunnr" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Deudor" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="Bukrs" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Sociedad" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="Name1" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Nombre 1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="Name2" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Nombre 2" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="Stcd1" Type="Edm.String" Nullable="false" MaxLength="16" sap:unicode="false" sap:label="Nº ident.fis.1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="Stras" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Calle/Número" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="Pstlz" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Código postal" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="Ort01" Type="Edm.String" Nullable="false" MaxLength="25" sap:unicode="false" sap:label="Población" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="Land1" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="País" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="Zterm" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Cond.pago" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="Zwels" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Vías pago" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="SmtpAddr" Type="Edm.String" Nullable="false" MaxLength="241" sap:unicode="false" sap:label="Correo electr." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="Nombre" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="30 caracteres" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-   </EntityType>
    <EntityType Name="DatosNIA" sap:content-version="1">
     <Key>
      <PropertyRef Name="Nia"/>
@@ -1070,6 +1053,7 @@
      <PropertyRef Name="Solicitud"/>
     </Key>
     <Property Name="Solicitud" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Doc.comercial" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Accion" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Carácter 1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <NavigationProperty Name="AccionAprobarPed" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.FicheroAprobacion" FromRole="FromRole_FicheroAprobacion" ToRole="ToRole_FicheroAprobacion"/>
    </EntityType>
    <EntityType Name="LogAprobacion" sap:content-version="1">
@@ -1197,6 +1181,116 @@
     <Property Name="Abgru" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Motivo rechazo" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Bezei" Type="Edm.String" Nullable="false" MaxLength="25" sap:unicode="false" sap:label="Denominación" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
    </EntityType>
+   <EntityType Name="Aprobar" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="Accion"/>
+    </Key>
+    <Property Name="Accion" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Carácter 1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <NavigationProperty Name="AprobarSet" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.AccionFichero_B" FromRole="FromRole_AccionFichero_B" ToRole="ToRole_AccionFichero_B"/>
+   </EntityType>
+   <EntityType Name="Solicitud" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="Vbeln"/>
+    </Key>
+    <Property Name="Vbeln" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Doc.ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Bstnk" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Nº ped.cliente" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Erdat" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Creado el" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Erzet" Type="Edm.Time" Nullable="false" Precision="0" sap:unicode="false" sap:label="Hora" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Ernam" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Creado por" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Angdt" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Válido de" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Audat" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Fecha documento" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Vbtyp" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Tipo doc.com." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Trvog" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Grupo trans." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Auart" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Cl.doc.ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Gwldt" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Inicio garantía" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Faksk" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Bloqueo factura" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Netwr" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unicode="false" sap:label="Valor neto" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Waerk" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Moneda doc." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="currency-code"/>
+    <Property Name="Vkorg" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Organiz.ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Vtweg" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Canal distrib." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Spart" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Sector" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Vkbur" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Oficina ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Gueen" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Validez a" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Knumv" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Condición doc." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Vdatu" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Fe.pref.entrega" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Vprgr" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Período fecha" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Fkara" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Cl.factura ped." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Awahr" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Probabilidad" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Ktext" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Denominación" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Bstdk" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Fecha de pedido" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Mahza" Type="Edm.Decimal" Nullable="false" Precision="3" Scale="0" sap:unicode="false" sap:label="Ctd.reclamac." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Mahdt" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Fe. Prev. pago Subve" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Kunnr" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Solicitante" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Stafo" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Grupo actualiz." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Stwae" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Moneda estad." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="currency-code"/>
+    <Property Name="Kokrs" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Sociedad CO" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Amtbl" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unicode="false" sap:label="Valor crédito" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="HitypPr" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="JerTip DetPrec." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="BukrsVf" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Soc. facturad." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="DatFzau" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Fe.ctd.ac.pdo." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Fmbdat" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="PuestaDispoMat" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Zznia" Type="Edm.String" Nullable="false" MaxLength="13" sap:unicode="false" sap:label="NIA" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Yykostkl" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Centro coste" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Yyaufnr" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Orden ingresos" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Zzresponsable" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Responsable" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <NavigationProperty Name="SolicitudAdjunto_A" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.SolicitudAdjunto_A" FromRole="FromRole_SolicitudAdjunto_A" ToRole="ToRole_SolicitudAdjunto_A"/>
+    <NavigationProperty Name="SolicitudPed_A" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.SolicitudPedido_A" FromRole="FromRole_SolicitudPedido_A" ToRole="ToRole_SolicitudPedido_A"/>
+    <NavigationProperty Name="SolicitudMod_A" Relationship="ZUI5_MONITOR_PEDIDOS_SRV.SolicitudModificacion_A" FromRole="FromRole_SolicitudModificacion_A" ToRole="ToRole_SolicitudModificacion_A"/>
+   </EntityType>
+   <EntityType Name="SolicitudPedido" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="Vbeln"/>
+    </Key>
+    <Property Name="Vbeln" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Doc.ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Posnr" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Posición" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Matnr" Type="Edm.String" Nullable="false" MaxLength="18" sap:unicode="false" sap:label="Material" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Matwa" Type="Edm.String" Nullable="false" MaxLength="18" sap:unicode="false" sap:label="Mat.introduc." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Matkl" Type="Edm.String" Nullable="false" MaxLength="9" sap:unicode="false" sap:label="Grupo artículos" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Arktx" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Denominación" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Pstyv" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Tipo posición" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Zieme" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="UM p.ctd.prev." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+    <Property Name="Umziz" Type="Edm.Decimal" Nullable="false" Precision="5" Scale="0" sap:unicode="false" sap:label="Contador" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Umzin" Type="Edm.Decimal" Nullable="false" Precision="5" Scale="0" sap:unicode="false" sap:label="Denominador" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Meins" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="UM base" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+    <Property Name="Spart" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Sector" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Netwr" Type="Edm.Decimal" Nullable="false" Precision="16" Scale="3" sap:unicode="false" sap:unit="Waerk" sap:label="Valor neto" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Waerk" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Moneda doc." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="currency-code"/>
+    <Property Name="Vrkme" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="UM venta" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+    <Property Name="Umvkz" Type="Edm.Decimal" Nullable="false" Precision="5" Scale="0" sap:unicode="false" sap:label="Contador" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Umvkn" Type="Edm.Decimal" Nullable="false" Precision="5" Scale="0" sap:unicode="false" sap:label="Denomin." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Gewei" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Unidad de peso" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+    <Property Name="Werks" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Centro" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Vstel" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Puesto exped." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Awahr" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Probabil.pedido" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Erdat" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Creado el" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Ernam" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Creado por" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Erzet" Type="Edm.Time" Nullable="false" Precision="0" sap:unicode="false" sap:label="Hora" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Netpr" Type="Edm.Decimal" Nullable="false" Precision="12" Scale="3" sap:unicode="false" sap:unit="Waerk" sap:label="Precio neto" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Kpein" Type="Edm.Decimal" Nullable="false" Precision="5" Scale="0" sap:unicode="false" sap:label="Cantidad base" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Kmein" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Unidad medida" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+    <Property Name="Kzwi1" Type="Edm.Decimal" Nullable="false" Precision="14" Scale="3" sap:unicode="false" sap:unit="Waerk" sap:label="Subtotal 1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Kzwi2" Type="Edm.Decimal" Nullable="false" Precision="14" Scale="3" sap:unicode="false" sap:unit="Waerk" sap:label="Subtotal 2" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Bedae" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Cl.necesidad" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Cmpre" Type="Edm.Decimal" Nullable="false" Precision="12" Scale="3" sap:unicode="false" sap:unit="Waerk" sap:label="Precio de créd." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+   </EntityType>
+   <EntityType Name="DatosCliente" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="Kunnr"/>
+    </Key>
+    <Property Name="Kunnr" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Deudor" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Name1" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Nombre 1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Name2" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Nombre 2" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Stcd1" Type="Edm.String" Nullable="false" MaxLength="16" sap:unicode="false" sap:label="Nº ident.fis.1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Stras" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Calle/Número" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Pstlz" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Código postal" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Ort01" Type="Edm.String" Nullable="false" MaxLength="25" sap:unicode="false" sap:label="Población" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Land1" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="País" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Zterm" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Cond.pago" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Zwels" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Vías pago" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="SmtpAddr" Type="Edm.String" Nullable="false" MaxLength="241" sap:unicode="false" sap:label="Correo electr." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Nombre" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="30 caracteres" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Bukrs" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Sociedad" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+   </EntityType>
    <Association Name="Pedido_Posicion" sap:content-version="1">
     <End Type="ZUI5_MONITOR_PEDIDOS_SRV.PedidoCab" Multiplicity="1" Role="FromRole_Pedido_Posicion"/>
     <End Type="ZUI5_MONITOR_PEDIDOS_SRV.PedidoPosicion" Multiplicity="*" Role="ToRole_Pedido_Posicion"/>
@@ -1305,6 +1399,18 @@
      </Dependent>
     </ReferentialConstraint>
    </Association>
+   <Association Name="Solicitud_Fichero_A" sap:content-version="1">
+    <End Type="ZUI5_MONITOR_PEDIDOS_SRV.PedidoCab" Multiplicity="1" Role="FromRole_Solicitud_Fichero_A"/>
+    <End Type="ZUI5_MONITOR_PEDIDOS_SRV.Adjunto" Multiplicity="*" Role="ToRole_Solicitud_Fichero_A"/>
+    <ReferentialConstraint>
+     <Principal Role="FromRole_Solicitud_Fichero_A">
+      <PropertyRef Name="Vbeln"/>
+     </Principal>
+     <Dependent Role="ToRole_Solicitud_Fichero_A">
+      <PropertyRef Name="Numdoc"/>
+     </Dependent>
+    </ReferentialConstraint>
+   </Association>
    <Association Name="Pedido_HistorialMod" sap:content-version="1">
     <End Type="ZUI5_MONITOR_PEDIDOS_SRV.PedidoCab" Multiplicity="1" Role="FromRole_Pedido_HistorialMod"/>
     <End Type="ZUI5_MONITOR_PEDIDOS_SRV.HistorialModificacion" Multiplicity="*" Role="ToRole_Pedido_HistorialMod"/>
@@ -1313,6 +1419,42 @@
       <PropertyRef Name="Vbeln"/>
      </Principal>
      <Dependent Role="ToRole_Pedido_HistorialMod">
+      <PropertyRef Name="Numdoc"/>
+     </Dependent>
+    </ReferentialConstraint>
+   </Association>
+   <Association Name="SolicitudAdjunto_A" sap:content-version="1">
+    <End Type="ZUI5_MONITOR_PEDIDOS_SRV.Solicitud" Multiplicity="1" Role="FromRole_SolicitudAdjunto_A"/>
+    <End Type="ZUI5_MONITOR_PEDIDOS_SRV.Adjunto" Multiplicity="*" Role="ToRole_SolicitudAdjunto_A"/>
+    <ReferentialConstraint>
+     <Principal Role="FromRole_SolicitudAdjunto_A">
+      <PropertyRef Name="Vbeln"/>
+     </Principal>
+     <Dependent Role="ToRole_SolicitudAdjunto_A">
+      <PropertyRef Name="Numdoc"/>
+     </Dependent>
+    </ReferentialConstraint>
+   </Association>
+   <Association Name="SolicitudPedido_A" sap:content-version="1">
+    <End Type="ZUI5_MONITOR_PEDIDOS_SRV.Solicitud" Multiplicity="1" Role="FromRole_SolicitudPedido_A"/>
+    <End Type="ZUI5_MONITOR_PEDIDOS_SRV.SolicitudPedido" Multiplicity="*" Role="ToRole_SolicitudPedido_A"/>
+    <ReferentialConstraint>
+     <Principal Role="FromRole_SolicitudPedido_A">
+      <PropertyRef Name="Vbeln"/>
+     </Principal>
+     <Dependent Role="ToRole_SolicitudPedido_A">
+      <PropertyRef Name="Vbeln"/>
+     </Dependent>
+    </ReferentialConstraint>
+   </Association>
+   <Association Name="SolicitudModificacion_A" sap:content-version="1">
+    <End Type="ZUI5_MONITOR_PEDIDOS_SRV.Solicitud" Multiplicity="1" Role="FromRole_SolicitudModificacion_A"/>
+    <End Type="ZUI5_MONITOR_PEDIDOS_SRV.HistorialModificacion" Multiplicity="*" Role="ToRole_SolicitudModificacion_A"/>
+    <ReferentialConstraint>
+     <Principal Role="FromRole_SolicitudModificacion_A">
+      <PropertyRef Name="Vbeln"/>
+     </Principal>
+     <Dependent Role="ToRole_SolicitudModificacion_A">
       <PropertyRef Name="Numdoc"/>
      </Dependent>
     </ReferentialConstraint>
@@ -1365,6 +1507,18 @@
      </Dependent>
     </ReferentialConstraint>
    </Association>
+   <Association Name="AccionFichero_B" sap:content-version="1">
+    <End Type="ZUI5_MONITOR_PEDIDOS_SRV.Aprobar" Multiplicity="1" Role="FromRole_AccionFichero_B"/>
+    <End Type="ZUI5_MONITOR_PEDIDOS_SRV.AccionAprobar" Multiplicity="*" Role="ToRole_AccionFichero_B"/>
+    <ReferentialConstraint>
+     <Principal Role="FromRole_AccionFichero_B">
+      <PropertyRef Name="Accion"/>
+     </Principal>
+     <Dependent Role="ToRole_AccionFichero_B">
+      <PropertyRef Name="Accion"/>
+     </Dependent>
+    </ReferentialConstraint>
+   </Association>
    <Association Name="FicheroLiberacion" sap:content-version="1">
     <End Type="ZUI5_MONITOR_PEDIDOS_SRV.AccionLiberar" Multiplicity="*" Role="FromRole_FicheroLiberacion"/>
     <End Type="ZUI5_MONITOR_PEDIDOS_SRV.DamePedidos" Multiplicity="*" Role="ToRole_FicheroLiberacion"/>
@@ -1411,7 +1565,6 @@
     <EntitySet Name="DameOficinasSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.DameOficinas" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="DameContratosSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.DameContratos" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="SectorVentasSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.SectorVentas" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
-    <EntitySet Name="DatosClienteSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.DatosCliente" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="DatosNIASet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.DatosNIA" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="CamposDIRSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.CamposDIR" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="AccionAprobarSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.AccionAprobar" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
@@ -1429,6 +1582,10 @@
     <EntitySet Name="LiberarSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.Liberar" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="RespuestaLiberacionSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.RespuestaLiberacion" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <EntitySet Name="TiposRechazoSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.TiposRechazo" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+    <EntitySet Name="AprobarSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.Aprobar" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+    <EntitySet Name="SolicitudSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.Solicitud" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+    <EntitySet Name="SolicitudPedidoSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.SolicitudPedido" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+    <EntitySet Name="DatosClienteSet" EntityType="ZUI5_MONITOR_PEDIDOS_SRV.DatosCliente" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
     <AssociationSet Name="Pedido_CantidadSet" Association="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Cantidad" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
      <End EntitySet="PedidoCabSet" Role="FromRole_Pedido_Cantidad"/>
      <End EntitySet="PedidoSchdlSet" Role="ToRole_Pedido_Cantidad"/>
@@ -1445,6 +1602,10 @@
      <End EntitySet="PedidoCabSet" Role="FromRole_Pedido_Respuesta"/>
      <End EntitySet="RespuestaPedidoSet" Role="ToRole_Pedido_Respuesta"/>
     </AssociationSet>
+    <AssociationSet Name="Solicitud_Fichero_ASet" Association="ZUI5_MONITOR_PEDIDOS_SRV.Solicitud_Fichero_A" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="PedidoCabSet" Role="FromRole_Solicitud_Fichero_A"/>
+     <End EntitySet="AdjuntoSet" Role="ToRole_Solicitud_Fichero_A"/>
+    </AssociationSet>
     <AssociationSet Name="Pedido_AdjuntoSet" Association="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Adjunto" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
      <End EntitySet="PedidoCabSet" Role="FromRole_Pedido_Adjunto"/>
      <End EntitySet="AdjuntoSet" Role="ToRole_Pedido_Adjunto"/>
@@ -1456,6 +1617,18 @@
     <AssociationSet Name="FicheroLiberacionSet" Association="ZUI5_MONITOR_PEDIDOS_SRV.FicheroLiberacion" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
      <End EntitySet="AccionLiberarSet" Role="FromRole_FicheroLiberacion"/>
      <End EntitySet="DamePedidosSet" Role="ToRole_FicheroLiberacion"/>
+    </AssociationSet>
+    <AssociationSet Name="SolicitudModificacion_ASet" Association="ZUI5_MONITOR_PEDIDOS_SRV.SolicitudModificacion_A" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="SolicitudSet" Role="FromRole_SolicitudModificacion_A"/>
+     <End EntitySet="HistorialModificacionSet" Role="ToRole_SolicitudModificacion_A"/>
+    </AssociationSet>
+    <AssociationSet Name="SolicitudPedido_ASet" Association="ZUI5_MONITOR_PEDIDOS_SRV.SolicitudPedido_A" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="SolicitudSet" Role="FromRole_SolicitudPedido_A"/>
+     <End EntitySet="SolicitudPedidoSet" Role="ToRole_SolicitudPedido_A"/>
+    </AssociationSet>
+    <AssociationSet Name="SolicitudAdjunto_ASet" Association="ZUI5_MONITOR_PEDIDOS_SRV.SolicitudAdjunto_A" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="SolicitudSet" Role="FromRole_SolicitudAdjunto_A"/>
+     <End EntitySet="AdjuntoSet" Role="ToRole_SolicitudAdjunto_A"/>
     </AssociationSet>
     <AssociationSet Name="Pedido_ExtensionSet" Association="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Extension" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
      <End EntitySet="PedidoCabSet" Role="FromRole_Pedido_Extension"/>
@@ -1481,13 +1654,17 @@
      <End EntitySet="PedidoCabSet" Role="FromRole_Pedido_Cliente"/>
      <End EntitySet="PedidoClienteSet" Role="ToRole_Pedido_Cliente"/>
     </AssociationSet>
+    <AssociationSet Name="Pedido_Posicion_AssocSet" Association="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Posicion" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="PedidoCabSet" Role="FromRole_Pedido_Posicion"/>
+     <End EntitySet="PedidoPosicionSet" Role="ToRole_Pedido_Posicion"/>
+    </AssociationSet>
     <AssociationSet Name="FicheroRechazoSet" Association="ZUI5_MONITOR_PEDIDOS_SRV.FicheroRechazo" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
      <End EntitySet="AccionRechazarSet" Role="FromRole_FicheroRechazo"/>
      <End EntitySet="DamePedidosSet" Role="ToRole_FicheroRechazo"/>
     </AssociationSet>
-    <AssociationSet Name="PeSet" Association="ZUI5_MONITOR_PEDIDOS_SRV.Pedido_Posicion" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
-     <End EntitySet="PedidoCabSet" Role="FromRole_Pedido_Posicion"/>
-     <End EntitySet="PedidoPosicionSet" Role="ToRole_Pedido_Posicion"/>
+    <AssociationSet Name="AccionFichero_BSet" Association="ZUI5_MONITOR_PEDIDOS_SRV.AccionFichero_B" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="AprobarSet" Role="FromRole_AccionFichero_B"/>
+     <End EntitySet="AccionAprobarSet" Role="ToRole_AccionFichero_B"/>
     </AssociationSet>
    </EntityContainer>
    <atom:link rel="self" href="http://vhegdrd2ci.sap.aguasdevalencia.es:8000/sap/opu/odata/sap/ZUI5_MONITOR_PEDIDOS_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
