@@ -10,35 +10,35 @@
                 <m:Title text="" />
                 <m:ToolbarSpacer />
                 <m:Button
-                    id="botondel"
+                    id="botondelDis"
                     icon="sap-icon://delete"
                     text="{i18n>delPos}"
                     type="Emphasized"
                     press="onDeletePosPed"
-                    visible="true"
+                    visible="{= ${ModoApp>/mode}  === 'C' ?  true : false }"
                     enabled="true"
                 />
                 <m:Button
-                    id="botonadd"
+                    id="botonaddDisp"
                     icon="sap-icon://sys-add"
                     text="{i18n>addPos}"
                     type="Emphasized"
                     press="onaddPosPed"
-                    visible="true"
+                    visible="{= ${ModoApp>/mode}  === 'C' ?  true : false }"
                     enabled="true"
                 />
                 <m:Button
-                    id="botoncopy"
+                    id="botoncopyDisp"
                     icon="sap-icon://copy"
                     text="{i18n>copyPos}"
                     type="Emphasized"
                     press="onaddPosPed"
-                    visible="true"
+                    visible="{= ${ModoApp>/mode}  === 'C' ?  true : false }"
                     enabled="true"
                 />
             </m:OverflowToolbar>
     <m:VBox renderType="Bare">
-        <table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'PedidoPos>/'}"  visibleRowCountMode="Interactive"
+        <table:Table selectionMode="Single" id="TablaPosicionesDisp" rows="{path: 'DisplayPosPed>/'}" visibleRowCountMode="Interactive"
         visibleRowCount="3"
                 width= "100%">
         <!--<table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'DisplayPosPed>/results'}"  visibleRowCountMode="Interactive"-->
@@ -47,62 +47,62 @@
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>posicion}"/>
                 <table:template>
-                    <m:Text text="{PedidoPos>ItmNumber}"/>
-                    <!--<m:Text text="{DisplayPosPed>Posnr}"/>-->
+                    
+                    <m:Text text="{DisplayPosPed>Posnr}"/>
                 </table:template>
             </table:Column>    
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Material}"/>
                 <table:template>
-                    <m:Text text="{PedidoPos>Material}"/>
-                    <!--<m:Text text="{DisplayPosPed>Matnr}"/>-->
+                    
+                    <m:Text text="{DisplayPosPed>Matnr}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Descripcion}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>ShortText}"/>
-                    <!--<m:Text text="{DisplayPosPed>Arktx}"/>-->
+                    
+                    <m:Text text="{DisplayPosPed>Arktx}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Cantidad}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>ReqQty}"/>
-                    <!--<m:Text text="{DisplayPosPed>Kpein}"/>-->
+                    
+                    <m:Text text="{DisplayPosPed>Kpein}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Unidades}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>SalesUnit}"/>
-                    <!--<m:Text text="{DisplayPosPed>Meins}"/>-->
+                   
+                    <m:Text text="{DisplayPosPed>Meins}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Importe}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>CondValue}" />
-                    <!--<m:Text text="{DisplayPosPed>Netwr}" />-->
+                    
+                    <m:Text text="{DisplayPosPed>Netwr}" />
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Moneda}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>Currency}" />
-                    <!--<m:Text text="{DisplayPosPed>Waerk}" />-->
+                    
+                    <m:Text text="{DisplayPosPed>Waerk}" />
                 </table:template>
             </table:Column>
              <table:Column hAlign="Center">
                 <m:Label text="{i18n>zcost}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>Ykostl}" />
+                    <m:Text text="{DisplayPosPed>Ykostl}" />
                 </table:template>
             </table:Column>
              <table:Column hAlign="Center">
                 <m:Label text="{i18n>zord}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>Yaufnr}" />
+                    <m:Text text="{DisplayPosPed>Yaufnr}" />
                 </table:template>
             </table:Column>
         </table:Table>

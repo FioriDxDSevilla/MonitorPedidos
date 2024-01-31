@@ -124,7 +124,6 @@
                 id="Filtro9"
                 icon="sap-icon://thumb-up"
                 iconColor="Positive"
-                visible="false"
                 design="Horizontal"
                 text="Aprobación"
                 key="Approv"

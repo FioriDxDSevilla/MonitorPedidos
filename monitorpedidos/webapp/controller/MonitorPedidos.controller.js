@@ -1483,8 +1483,8 @@ sap.ui.define([
                         sStatus = "PDTE";
                         sAprob = false;
                         var aprob = true;
-                        this.oComponent.getModel("ModoApp").setProperty("/aprob", aprob);
-                        this.oComponent.getModel("ModoApp").refresh(true);
+                        //this.oComponent.getModel("ModoApp").setProperty("/aprob", aprob);
+                        //this.oComponent.getModel("ModoApp").refresh(true);
                         break;
                         //Cobradas
                     case "Sales":
@@ -1506,16 +1506,14 @@ sap.ui.define([
                 }
 
 
-                this.getView().byId("Filtro9").setVisible(false);
-                this.getView().byId("Filtr10").setVisible(false);
-
                 if (sStatus == "REDA") {
                     this.getView().byId("Filtr10").setVisible(true);
-                } else if(sStatus == "APRB") {
-                    this.getView().byId("Filtro9").setVisible(true);
-                } if (sAprob == true) {
+                } else if(sStatus == "APRB" && sAprob == true) {
+                    this.getView().byId("Filtr10").setVisible(false);
                     this._getDialogAprobaciones();
-              /*  } else if (sLiber == true) {
+                /*} else if (sAprob == true) {
+                    this._getDialogAprobaciones();
+                } else if (sLiber == true) {
                     this._getDialogLiberaciones();*/
                 } else {
                     
@@ -1910,9 +1908,9 @@ sap.ui.define([
                         urlParameters: {
                             $expand: [
                                 //"SolicitudCli_A",
+                                "SolicitudAdjunto_A",
                                 "SolicitudPed_A",
-                                //"SolicitudAdjunto_A",
-                                //"SolicitudMod_A"
+                                "SolicitudMod_A"
                             ],
                         },
                         success: function (data, response) {
@@ -1929,6 +1927,8 @@ sap.ui.define([
                                     SolicitudPed_A = [],
                                     SolicitudAprobacion_A = [],
                                     SolicitudHistorial_A = [];
+
+                                    that.oComponent.setModel(new JSONModel([]), "PedidoPos");
  
  
                                 if (data.results[0].Erdat) {
@@ -1940,21 +1940,21 @@ sap.ui.define([
                                 oModelDisplay.setData(data.results[0]);
                                 that.oComponent.setModel(oModelDisplay, "DisplayPEP");
  
-                                /*if ((that.modoapp === "D" || that.modoapp === "C") &&
+                                if ((that.modoapp === "D" || that.modoapp === "C") &&
                                     data.results[0].SolicitudAdjunto_A.results.length > 0) {
                                     var oModAdj = new JSONModel();
                                     var adjs = [],
                                         adj;
-                                    data.results[0].SolicitudAdjunto_A.forEach(function (el) {
+                                        data.results[0].SolicitudAdjunto_A.results.forEach(function (el) {
                                         var url;
                                         url = "";
-                                        data.results[0].AdjuntoSHPSet.results.forEach(function (elshp) {
+                                        /*data.results[0].AdjuntoSHPSet.results.forEach(function (elshp) {
                                             if (el.Descripcion == elshp.Descriptivo && el.Documento == elshp.Adjunto) {
                                                 url = elshp.Url;
                                             }
-                                        });
+                                        });*/
                                         adj = {
-                                            Filename: el.Documento,
+                                            Filename: el.Filename,
                                             Descripcion: el.Descripcion,
                                             URL: url
                                         };
@@ -1963,29 +1963,29 @@ sap.ui.define([
  
                                     oModAdj.setData(adjs);
                                     that.oComponent.setModel(new JSONModel(), "datosAdj");
-                                    that.oComponent.setModel(oModAdj, "AdjuntoSHPSet");
+                                    that.oComponent.setModel(oModAdj, "Adjuntos");
                                 } else {
                                     that.oComponent.setModel(new JSONModel(), "datosAdj");
-                                    that.oComponent.setModel(new JSONModel([]), "AdjuntoSHPSet");
-                                }*/
+                                    that.oComponent.setModel(new JSONModel([]), "Adjuntos");
+                                }
  
-                                /* SolicitudHistorial_A = data.results[0].SolicitudHistorial_A;
+                                SolicitudHistorial_A = data.results[0].SolicitudMod_A;
  
-                                 if (data.results[0].SolicitudHistorial_A.results.length > 0) {
+                                 if (SolicitudHistorial_A.results.length > 0) {
                                      var oModHist = new JSONModel();
-                                     var historial = data.results[0].SolicitudHistorial_A;
+                                     var historial = SolicitudHistorial_A.results;
  
-                                     historial.results.forEach(function (el) {
+                                    /* historial.results.forEach(function (el) {
                                          if (condition) {
  
                                          }
-                                     });
-                                     oModHist.setData(data.results[0].SolicitudHistorial_A);
+                                     });*/
+                                     oModHist.setData(SolicitudHistorial_A.results);
                                      that.oComponent.setModel(oModHist, "HistorialSol");
  
                                  } else {
                                      that.oComponent.setModel(new JSONModel(), "HistorialSol");
-                                 }*/
+                                 }
  
                                 SolicitudPed_A = data.results[0].SolicitudPed_A
  
@@ -1993,8 +1993,8 @@ sap.ui.define([
                                     var sreturn = "";
                                     sreturn = SolicitudPed_A.results[i].Netwr;
                                     SolicitudPed_A.results[i].Netwr = sreturn;
-                                    that.oComponent.getModel("PedidoPos").setProperty("/Ykostl", that.oComponent.getModel("DisplayPEP").getProperty("/Yykostkl"));
-                                    that.oComponent.getModel("PedidoPos").setProperty("/Yaufnr", that.oComponent.getModel("DisplayPEP").getProperty("/Yyaufnr"));
+                                    SolicitudPed_A.results[i].Ykostl = that.oComponent.getModel("DisplayPEP").getProperty("/Yykostkl");
+                                    SolicitudPed_A.results[i].Yaufnr = that.oComponent.getModel("DisplayPEP").getProperty("/Yyaufnr");
                                 }
  
                                 for (var i = 0; i < SolicitudPed_A.results.length; i++) {
@@ -2002,7 +2002,9 @@ sap.ui.define([
                                 }
  
                                 oModelSolicitud_Ped.setData(SolicitudPed_A);
-                                that.oComponent.setModel(oModelSolicitud_Ped, "DisplayPosPed");
+                                that.oComponent.getModel("PedidoPos").setData(oModelSolicitud_Ped.getData().results);
+                                that.oComponent.setModel(that.oComponent.getModel("PedidoPos"), "DisplayPosPed");
+                                //that.oComponent.setModel(PedidoPos, "DisplayPosPed");
  
  
                                
@@ -3455,6 +3457,7 @@ sap.ui.define([
                 }
 
                 var msg = oI18nModel.getProperty("SolAprob");
+                var msgLog = "";
 
                 MessageBox.warning(msg, {
                     actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
@@ -3464,7 +3467,7 @@ sap.ui.define([
                             var json1 = {
                                 Accion: accion,
                                 AprobarSet: DatosAprobaciones,
-                                AprobacionRespuesta: []
+                                RespAprobSet: []
                             }
                             sap.ui.core.BusyIndicator.show();
                             that.mainService.create("/AprobarSet", json1, {
@@ -3472,7 +3475,18 @@ sap.ui.define([
                                     if (result.AprobarSet.results[0].Solicitud) {
                                         sap.ui.core.BusyIndicator.hide(); 
                                         oTable.clearSelection();
-                                        //MessageBox.show(LogAprobacion.TextoLog);  
+                                        if (result.RespAprobSet.results.length > 1) {
+                                            for (var i = 0; i < result.RespAprobSet.results.length; i++) {
+                                                msgLog += result.RespAprobSet.results[i].TextoLog + "\r\n";  
+                                            }
+                                             
+                                            sap.m.MessageToast.show(msgLog);
+                                            that.byId("ApprovDial").close();
+                                        } else {
+                                            MessageBox.show(result.RespAprobSet.results[0].TextoLog); 
+                                            that.byId("ApprovDial").close();
+                                        }
+                                      
                                     }
                                 },
                                 error: function (err) {
@@ -3512,7 +3526,7 @@ sap.ui.define([
 
                 var that = this;
 
-                for (var i = 0; i < results_array.length; i++) {
+                /*for (var i = 0; i < results_array.length; i++) {
  
                     obj = {
                         Accion: accion,
@@ -3520,13 +3534,14 @@ sap.ui.define([
                     };
                     Datosrechazo.push(obj);
                     obj = {};
-                }
+                }*/
 
                
 
                 //sap.ui.core.BusyIndicator.show();
 
                 var msg = oI18nModel.getProperty("SolRechz");
+                var msgRechz = "";
 
                 /*this.mainService.create("/AccionRechazarSet", json1, {
                     success: function (result) {
@@ -3598,24 +3613,10 @@ sap.ui.define([
                                     new sap.m.ComboBox({
                                         id: "idCbRechazo",
                                         width: "120px",
-                                        /*items: {
-                                            path: "/TiposRechazo",
-                                            template: new sap.ui.core.ListItem({
-                                                key: "{Abgru}",
-                                                text: "{Bezei}"
-                                            })
-                                        }*/
                                         items: [
                                             new sap.ui.core.ListItem({ key: "ZR", text: "Rechazo definitivo" }),
                                             new sap.ui.core.ListItem({ key: "ZN", text: "Modificación de pedido necesaria" }),
                                         ]
-                                        /*items: { path: "TiposRechazo>/",
-                                            template: new sap.ui.core.Item({
-                                                key: "{TiposRechazo>Abgru}",
-                                                text:"{TiposRechazo>Bezei}"
-                                            })
-                                          
-                                        }*/
                                     }),
                                 ]
                             }),
@@ -3631,11 +3632,49 @@ sap.ui.define([
                             press: function () {
                                 //var sText = Core.byId("confirmationNote").getValue();
                                 //MessageToast.show("Note is: " + sText);
+                                var oComboBox = that.oConfirmDialog.mAggregations.content[0].mAggregations.content[1].sId;
+                                var oTextArea = that.oConfirmDialog.mAggregations.content[1].mProperties.value;
+                                if (oComboBox) {
+                                    var selectedKey = that.oConfirmDialog.mAggregations.content[0].mAggregations.content[1].mProperties.selectedKey;
+                                    //console.log("Selected Key:", selectedKey);
+                                } 
+
+                                for (var i = 0; i < results_array.length; i++) {
+ 
+                                    obj = {
+                                        Accion: accion,
+                                        Motivo: selectedKey,
+                                        Texto: oTextArea,
+                                        Solicitud: results_array[i].IDSOLICITUD
+                                    };
+                                    Datosrechazo.push(obj);
+                                    obj = {};
+                                }
+
+
                                 var json1 = {
                                     Accion: accion,
-                                    AccionRechazar: Datosrechazo,
-                                    FicheroRechazo: []
+                                    RechazarSet: Datosrechazo,
+                                    RespRechazoSet: []
                                 }
+                                that.mainService.create("/RechazarSet", json1,{
+                                    success: function (result) {
+                                        if (result.RechazarSet.results[0].Solicitud) {
+                                            sap.ui.core.BusyIndicator.hide();
+                                            oTable.clearSelection();
+                                            if (result.RechazarSet.results.length > 1) {
+                                                for (var i = 0; i < result.RespRechazoSet.results.length; i++) {
+                                                    msgRechz += result.RespRechazoSet.results[i].TextoLog + "\r\n";
+                                                }
+                                                sap.m.MessageToast.show(msgRechz);
+                                                that.byId("ApprovDial").close()
+                                            } else {
+                                            MessageBox.show(result.RespRechazoSet.results[0].TextoLog); 
+                                            that.byId("ApprovDial").close();
+                                            }
+                                        }
+                                    }
+                                });
                                 this.oConfirmDialog.close();
                             }.bind(this)
                         }),
@@ -3683,6 +3722,7 @@ sap.ui.define([
                 }
 
                 var msg = oI18nModel.getProperty("SolLiber");
+                var msgLog = "";
 
                 MessageBox.warning(msg, {
                     actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
@@ -3691,8 +3731,8 @@ sap.ui.define([
                         if (sAction == 'OK') {
                             var json1 = {
                                 Accion: accion,
-                                LiberarSet: DatosAprobaciones,
-                                LiberacionRespuesta: {}
+                                LiberarSet: DatosLiberaciones,
+                                LiberacionRespuesta: []
                             }
                             sap.ui.core.BusyIndicator.show();
                             that.mainService.create("/LiberarSet", json1, {
@@ -3701,6 +3741,17 @@ sap.ui.define([
                                         sap.ui.core.BusyIndicator.hide(); 
                                         //MessageBox.show(result.LiberacionRespuesta.TextoLog);  
                                         oTable.clearSelection();
+                                        if (result.LiberacionRespuesta.results.length > 1) {
+                                            for (var i = 0; i < result.LiberacionRespuesta.results.length; i++) {
+                                                msgLog += result.LiberacionRespuesta.results[i].TextoLog + "\r\n";  
+                                            }
+                                             
+                                            sap.m.MessageToast.show(msgLog);
+                                            that.byId("LiberacionDial").close();
+                                        } else {
+                                            MessageBox.show(result.LiberacionRespuesta.results[0].TextoLog); 
+                                            that.byId("LiberacionDial").close();
+                                        }
                                     }
                                     //oTable.clearSelection();
                                     //sap.ui.core.BusyIndicator.hide(); 

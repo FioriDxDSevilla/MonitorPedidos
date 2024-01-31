@@ -947,6 +947,8 @@ sap.ui.define([
 
           this.oComponent.getModel("PedidoPos").setProperty("/posSig", posSig);
           this.oComponent.setModel(oModPos, "PedidoPos");
+          this.oComponent.setModel(oModPos, "DisplayPosPed");
+
 
         } else {
 

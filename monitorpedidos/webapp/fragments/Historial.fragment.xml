@@ -9,35 +9,36 @@
 
     <m:VBox renderType="Bare">
 
-        <table:Table selectionMode="None" id="TablaHistorial" rows="{path: 'listadoSolicitudes>/'}">
+        <table:Table selectionMode="None" id="TablaHistorial" rows="{path: 'HistorialSol>/'}">
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>CampoModificado}"/>
                 <table:template>
-                    <m:Text text=""/>
+                    <m:Text text="{HistorialSol>Fname}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>ValorActual}" />
                 <table:template>
-                    <m:Text text=""/>
+                    <m:Text text="{HistorialSol>FNew}"/>
                 </table:template>
             </table:Column>
-            <table:Column hAlign="Center">
+            <!--<table:Column hAlign="Center">
                 <m:Label text="{i18n>ValorAnterior}" />
                 <table:template>
                     <m:Text text=""/>
                 </table:template>
-            </table:Column>
+            </table:Column>-->
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>FechaModificacion}" />
                 <table:template>
-                    <m:Text text=""/>
+                    <!--<m:Text text="{HistorialSol>Udate}"/>-->
+                    <m:Text text="{path: 'HistorialSol>Udate', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'dd/MM/yyyy'}}"  />
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>UsuarioModificacion}" />
                 <table:template>
-                    <m:Text text=""/>
+                    <m:Text text="{HistorialSol>Username}"/>
                 </table:template>
             </table:Column>
         </table:Table>
