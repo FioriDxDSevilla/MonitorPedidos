@@ -117,7 +117,7 @@
                 iconColor="Negative"
                 design="Horizontal"
                 text="Denegadas"
-                count="{Filtros>/Total}"
+                count="{Filtros>/TotalDen}"
                 key="Cancel"
             />
              <IconTabFilter
@@ -216,7 +216,7 @@
                         </ui:template>
                     </ui:Column>
                     
-                    <ui:Column
+                    <!--<ui:Column
                         width="auto"
                         filterProperty="ImpPedido"
                         sortProperty="ImpPedido"
@@ -225,6 +225,26 @@
                         <Label text="{i18n>imptotal}" />
                         <ui:template>
                             <Text text="{listadoSolicitudes>ImpPedido}" />
+                        </ui:template>
+                    </ui:Column>-->
+                    <ui:Column
+                        width="auto"
+                        filterProperty="Netwr"
+                        sortProperty="Netwr"
+                        tooltip="{i18n>import}">
+                        <Label text="{i18n>import}" />
+                         <ui:template>
+                            <Text text="{listadoSolicitudes>Netwr}" />
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="auto"
+                        filterProperty="Waerk"
+                        sortProperty="Waerk"
+                        tooltip="{i18n>Moneda}">
+                        <Label text="{i18n>Moneda}" />
+                         <ui:template>
+                            <Text text="{listadoSolicitudes>Waerk}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -304,6 +324,7 @@
                             <!--<Text text="{listadoSolicitudes>Numfactura}" />-->
                             <!--<Link text="{listadoSolicitudes>Numfactura}" press="handleLinkFact" />-->
                             	<ObjectIdentifier
+                                    id="f_numfact"
                                     title="{listadoSolicitudes>Numfactura}"
                                     titleActive = "true"
                                     titlePress="handleLinkFact" />
@@ -341,9 +362,23 @@
                             </Switch>-->
                             <!--<Link text="{listadoSolicitudes>Indcontrato}" press="handleLinkCont" />-->
                             <ObjectIdentifier
+                                    id="f_numcont"
                                     title="{listadoSolicitudes>Indcontrato}"
                                     titleActive = "true"
                                     titlePress="handleLinkCont" />
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column width="2%">
+                        <Label text="" />
+                        <ui:template>
+                            <Button
+                                id="TableButton4"
+                                icon="sap-icon://edit"
+                                tooltip="{i18n>modPos}"
+                                type="Ghost"
+                                press="onEditOrder"
+                                enabled="{PedidoCab>/editPos}"
+                            />
                         </ui:template>
                     </ui:Column>
                     <ui:Column width="2%">

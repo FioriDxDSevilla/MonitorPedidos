@@ -9,7 +9,7 @@
     xmlns:u="sap.ui.unified">
     <m:Panel expandable="false" width="100%">
         <m:VBox>
-            <f:Form editable="true" visible="{= ${ModoApp>/mode}  === 'C' ?  true : false }">
+            <f:Form editable="true" visible="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false }">
                 <f:layout>
                     <f:ResponsiveGridLayout/>
                 </f:layout>

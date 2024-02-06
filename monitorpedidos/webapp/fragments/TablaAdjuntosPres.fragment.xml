@@ -29,7 +29,7 @@
                 <Text text="" visible="{= ${ModoApp>/mode}  === 'D' ?  false : true }"/>
             </Column>  -->
             <Column >
-                <Text text="" visible="{= ${ModoApp>/mode}  === 'D' ?  false : true }"/>
+                <Text text="" visible="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true }"/>
             </Column>              
         </columns>
         <items>
@@ -38,7 +38,7 @@
                     <!--<Text id="nArchProv" text="{Adjuntos>Filename}" />-->
                     <Link text="{Adjuntos>Filename}" target="_blank" href="{Adjuntos>URL}" />
                     <Text id="dArchProv" text="{Adjuntos>Descripcion}" />
-                    <Button icon="sap-icon://delete" press=".onDeleteAdj" tooltip="{i18n>Eliminar}" visible="true"/>
+                    <Button icon="sap-icon://delete" press=".onDeleteAdj" tooltip="{i18n>Eliminar}" visible="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true }"/>
                     <Button icon="sap-icon://edit" press=".onChangeAdj" tooltip="{i18n>ModificarAdjunto}" visible="false"/>
                 </cells>
             </ColumnListItem>

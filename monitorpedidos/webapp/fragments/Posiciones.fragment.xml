@@ -15,7 +15,7 @@
                     text="{i18n>delPos}"
                     type="Emphasized"
                     press="onDeletePosPed"
-                    visible="true"
+                    visible="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
                     enabled="true"
                 />
                 <m:Button
@@ -24,7 +24,7 @@
                     text="{i18n>addPos}"
                     type="Emphasized"
                     press="onaddPosPed"
-                    visible="true"
+                    visible="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
                     enabled="true"
                 />
                 <m:Button
@@ -32,8 +32,8 @@
                     icon="sap-icon://copy"
                     text="{i18n>copyPos}"
                     type="Emphasized"
-                    press="onaddPosPed"
-                    visible="true"
+                    press="onCopyPosPed"
+                    visible="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
                     enabled="true"
                 />
             </m:OverflowToolbar>
@@ -44,6 +44,12 @@
         <!--<table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'DisplayPosPed>/results'}"  visibleRowCountMode="Interactive"-->
                 
 
+            <table:Column hAlign="Center">
+                <table:template>
+                    <m:Button id="botonedit" icon="sap-icon://edit" tooltip="{i18n>modPos}" type="Ghost" press="onModPosPed"/>
+                    <!--<m:Text text="{DisplayPosPed>Posnr}"/>-->
+                </table:template>
+            </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>posicion}"/>
                 <table:template>

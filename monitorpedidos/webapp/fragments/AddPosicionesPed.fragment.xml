@@ -59,24 +59,28 @@
             />
             <Label text="{i18n>import}" />
             <Input
+                id="f_importpos"
                 value="{posPedFrag>/CondValue}"
                 placeholder="0,00"
                 type="Number"
             />
             <Label text="{i18n>cant}" />
             <Input
+                id="f_cantpos"
                 value="{posPedFrag>/ReqQty}"
                 placeholder="0"
                 type="Number"
             />
              <Label text="{i18n>cantBase}" />
             <Input
+                id="f_cantbasepos"
                 value="{posPedFrag>/Kpein}"
                 placeholder="0"
                 type="Number"
             />
             <Label text="{i18n>Moneda}" />
             <ComboBox
+                id="f_monedapos"
                 editable="true"
                 width="200px"
                 items="{ path: 'listadoMoneda>/', sorter: { path: 'Waers' } }"
@@ -91,26 +95,29 @@
             </ComboBox>
             <Label text="{i18n>Unit}" />
             <Input
+                id="f_unitpos"
                 value="{posPedFrag>/SalesUnit}"
                 placeholder="UN"
                 type="Text"
             />
-            <Label text="{i18n>ceco}" />
+           <Label text="{i18n>ceco}" />
             <Input
-                id="f_cecos"
+                id="f_cecosPOS"
                 showValueHelp="true"
+                editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true }"
                 valueHelpRequest=".onValueHelpCecos"
-                value="{posPedFrag>/Ykostl}"
+                value="{DisplayPEP>/Ykostl}"
+                visible="false"
             />
             <Label text="{i18n>ord}" />
             <Input
-                id="f_ordenes"
+                id="f_ordenesPOS"
                 showValueHelp="true"
-                editable="{ModoApp>/cordenes}"
+                editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true }"
                 valueHelpRequest=".onValueHelpOrd"
-                value="{posPedFrag>/Yaufnr}"
-            />
-           
+                value="{DisplayPEP>/Yaufnr}"
+                visible="false"
+            />           
             <!--<ComboBox
                 value="{posPedFrag>/Waers}"
                 placeholder="EUR"

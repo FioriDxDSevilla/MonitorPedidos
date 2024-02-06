@@ -22,7 +22,7 @@
             <m:IconTabFilter text="{i18n>Posiciones}" key="Posiciones" visible="{= ${ModoApp>/mode}  === 'C' ?  true : false }">
                 <core:Fragment fragmentName="monitorpedidos.fragments.Posiciones" type="XML" />
             </m:IconTabFilter>
-             <m:IconTabFilter text="{i18n>Posiciones}" key="Posiciones" visible="{= ${ModoApp>/mode}  === 'D' ?  true : false }">
+             <m:IconTabFilter text="{i18n>Posiciones}" key="Posiciones" visible="{= ${ModoApp>/mode}  === 'D' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false }">
                 <core:Fragment fragmentName="monitorpedidos.fragments.PosicionesDisplay" type="XML" />
             </m:IconTabFilter>
         </m:items>

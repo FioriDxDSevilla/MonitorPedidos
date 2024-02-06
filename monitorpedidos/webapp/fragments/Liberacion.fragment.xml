@@ -87,7 +87,7 @@
                         </ui:template>
                     </ui:Column>
                     
-                    <ui:Column
+                    <!--<ui:Column
                         width="auto"
                         filterProperty="ImpPedido"
                         sortProperty="ImpPedido"
@@ -96,6 +96,26 @@
                         <Label text="{i18n>imptotal}" />
                         <ui:template>
                             <Text text="{listadoSolicitudes>ImpPedido}" />
+                        </ui:template>
+                    </ui:Column>-->
+                     <ui:Column
+                        width="auto"
+                        filterProperty="Netwr"
+                        sortProperty="Netwr"
+                        tooltip="{i18n>import}">
+                        <Label text="{i18n>import}" />
+                         <ui:template>
+                            <Text text="{listadoSolicitudes>Netwr}" />
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="auto"
+                        filterProperty="Waerk"
+                        sortProperty="Waerk"
+                        tooltip="{i18n>Moneda}">
+                        <Label text="{i18n>Moneda}" />
+                         <ui:template>
+                            <Text text="{listadoSolicitudes>Waerk}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
