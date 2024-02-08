@@ -921,6 +921,8 @@ sap.ui.define([
                     that.getView().byId("idOficinaV").setSelectedKey(null);
                     that.getView().byId("f_cecos").setValue(null);
                     that.getView().byId("f_ordenes").setValue(null);
+                    that.getView().byId("f_cecosPOS").setValue(null);
+                    that.getView().byId("f_ordenesPOS").setValue(null);
 
                     /*that.getView().byId("idCTipoPed").setSelectedKey(null);
                     that.getView().byId("idCSociedad").setSelectedKey(null);
@@ -1576,11 +1578,11 @@ sap.ui.define([
             oTableDisp.getRows()[aContexts].getCells()[5].setText(unitactual);
             oTableDisp.getRows()[aContexts].getCells()[6].setText(importactual);
             oTableDisp.getRows()[aContexts].getCells()[7].setText(monedactual);
-            if (cecosposicion != undefined) {
+            if (cecosposicion) {
               oTableDisp.getRows()[aContexts].getCells()[8].setText(cecosposicion);
             }else{
               oTableDisp.getRows()[aContexts].getCells()[8].setText(cecoscabecera);
-          } if (ordenposicion != undefined) {
+          } if (ordenposicion) {
             oTableDisp.getRows()[aContexts].getCells()[9].setText(ordenposicion);
           }else{
             oTableDisp.getRows()[aContexts].getCells()[9].setText(ordencabecera);
@@ -1597,11 +1599,11 @@ sap.ui.define([
           oTable.getRows()[aContexts].getCells()[5].setText(unitactual);
           oTable.getRows()[aContexts].getCells()[6].setText(importactual);
           oTable.getRows()[aContexts].getCells()[7].setText(monedactual);
-          if (cecosposicion != undefined) {
+          if (cecosposicion) {
             oTable.getRows()[aContexts].getCells()[8].setText(cecosposicion);
           }else{
           oTable.getRows()[aContexts].getCells()[8].setText(cecoscabecera);
-        } if (ordenposicion != undefined) {
+        } if (ordenposicion) {
           oTable.getRows()[aContexts].getCells()[9].setText(ordenposicion);
         }else{
           oTable.getRows()[aContexts].getCells()[9].setText(ordencabecera);
@@ -1679,8 +1681,8 @@ sap.ui.define([
           this.posicionesBackup = posBACK;
           this.posPedBackup = this.oComponent.getModel("ModoApp").getData().ItmNumber;
           this.totalPedido = this.oComponent.getModel("posPedFrag").getData().CondValue;
-          var cecopos = this.getView().byId("f_cecos").getValue();
-          var ordenpos = this.getView().byId("f_ordenes").getValue();
+          var cecopos = this.getView().byId("f_cecosPOS").getValue();
+          var ordenpos = this.getView().byId("f_ordenesPOS").getValue();
           var secu;
  
           if (posicion.mode === 'A') {
@@ -1692,7 +1694,7 @@ sap.ui.define([
           }
           var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
      
-          if (modeApp === 'M') {
+         /* if (modeApp === 'M') {
             this.getView().byId("f_ordenesPOS").setVisible(true);
             this.getView().byId("f_cecosPOS").setVisible(true);
             this.getView().byId("f_ordenesPOS").setValue(ordenpos);
@@ -1703,7 +1705,7 @@ sap.ui.define([
             this.getView().byId("f_cecosPOS").setVisible(false);
             this.getView().byId("f_ordenesPOS").setValue(ordenpos);
             this.getView().byId("f_cecosPOS").setValue(cecopos);
-          }
+          }*/
  
           //Mapeamos las posiciones
           var posicionN = {
@@ -2555,6 +2557,8 @@ sap.ui.define([
           this.getView().byId("f_cecosPOS").setVisible(true);
           this.getView().byId("f_ordenesPOS").setEditable(true);
           this.getView().byId("f_cecosPOS").setEditable(true);
+          this.getView().byId("f_ordenesPOS").setValue(recogeorden);
+          this.getView().byId("f_cecosPOS").setValue(recogececos);
         }
  
       },
@@ -2959,16 +2963,16 @@ sap.ui.define([
         codord = ord.Aufnr;
         nomord = ord.Ktext;
        
-        if (this.getView().byId("f_ordenesPOS") != undefined){
-          this.getView().byId("f_ordenesPOS").setValue(codord);
-        }else{
+        if (!this.getView().byId("f_ordenesPOS")){
           this.getView().byId("f_ordenes").setValue(codord);
+        }else{
+          this.getView().byId("f_ordenesPOS").setValue(codord);
         }
         //this.getView().byId("f_ordenesPOS").setValue(codord);
  
         this.oComponent.getModel("posPedFrag").setProperty("/Yaufnr", codord);
         this.oComponent.getModel("posPedFrag").refresh(true);
- 
+        this.getView().byId("f_codOrd").setValue(null);
         this.byId("ordDial").close();
  
       },
@@ -2996,16 +3000,17 @@ sap.ui.define([
         nomceco = ceco.Ltext;
        
         //var cecospos = this.getView().byId("f_cecosPOS");
-        if (this.getView().byId("f_cecosPOS") != undefined){
-          this.getView().byId("f_cecosPOS").setValue(codceco);
-        }else{
+        if (!this.getView().byId("f_cecosPOS")){
           this.getView().byId("f_cecos").setValue(codceco);
+        }else{
+          this.getView().byId("f_cecosPOS").setValue(codceco);
         }
         //this.getView().byId("f_cecosPOS").setValue(codceco);
         this.oComponent.getModel("posPedFrag").setProperty("/Ykostl", codceco);
         this.oComponent.getModel("posPedFrag").refresh(true);
+        this.getView().byId("f_codCeco").setValue(null);
         this.byId("cecoDial").close();
- 
+        
       },
 
       getSelectOrd: function (oEvent, oModel) {
