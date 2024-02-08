@@ -35,11 +35,11 @@
                 editable="false"
             />
             <Label text="{i18n>nomMat}" />
-            <Input
+           <Input
                 id="f_nommat"
                 value="{posPedFrag>/ShortText}"
                 maxLength="40"
-                editable="false"
+                editable="true"
             />
             <Label text="{i18n>mat}" />
             <Input

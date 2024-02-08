@@ -61,8 +61,10 @@
                                 <!--  -->
                         
                                 <core:Title text="" />
-                                <m:Text text="{PedidoCab>/ImpPedido}" textAlign="Right" id="txtPrice"/>
-                                <m:Text id="idMoneda" text="{PedidoCab>/Moneda}" />
+                                <m:Label/>
+                                <m:Text id="txtPrice" text="{PedidoCab>/ImpPedido} {PedidoCab>/Moneda}" textAlign="End"/>
+                                <!--<m:Text id="idMoneda" text="{PedidoCab>/Moneda}" textAlign="End"/>-->
+                                <core:Title text="" />
                                 <m:Label/>
                                 <m:Text text="{ModoApp>/Nomcont}" textAlign="End"/>
                                 <core:Title text="" /> 

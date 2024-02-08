@@ -2333,6 +2333,8 @@ sap.ui.define([
                                 that.oComponent.getModel("ModoApp").setProperty("/CvSector", that.oComponent.getModel("DisplayPEP").getProperty("/Spart"));
                                 that.oComponent.getModel("ModoApp").setProperty("/NomSoc", that.oComponent.getModel("DisplayPEP").getProperty("/Vtext"));
                                 that.oComponent.getModel("ModoApp").setProperty("/Nomcli", that.oComponent.getModel("DisplayPEP").getProperty("/Kunnr"));
+                                that.oComponent.getModel("ModoApp").setProperty("/Ykostl", that.oComponent.getModel("DisplayPEP").getProperty("/Yykostkl"));
+                                that.oComponent.getModel("ModoApp").setProperty("/Yaufnr", that.oComponent.getModel("DisplayPEP").getProperty("/Yyaufnr"));
                                 that.oComponent.getModel("ModoApp").refresh(true);
                                 that.oComponent.setModel(new JSONModel([]), "PedidoPos");
 
@@ -3887,6 +3889,7 @@ sap.ui.define([
                                         id: "idCbRechazo",
                                         width: "120px",
                                         items: [
+                                            new sap.ui.core.ListItem({ key: "", text: "" }),
                                             new sap.ui.core.ListItem({ key: "ZR", text: "Rechazo definitivo" }),
                                             new sap.ui.core.ListItem({ key: "ZN", text: "Modificación de pedido necesaria" }),
                                         ]
@@ -3940,10 +3943,15 @@ sap.ui.define([
                                                     msgRechz += result.RespRechazoSet.results[i].TextoLog + "\r\n";
                                                 }
                                                 sap.m.MessageToast.show(msgRechz);
-                                                that.byId("ApprovDial").close()
+                                                that.oConfirmDialog.destroyContent();
+                                                //oComboBox.setSelectedKey(null);
+                                                //oTextArea.setValue('');
+                                                that.byId("ApprovDial").close();
+                                                
                                             } else {
                                             MessageBox.show(result.RespRechazoSet.results[0].TextoLog); 
-                                            that.byId("ApprovDial").close();
+                                            that.oConfirmDialog.destroyContent();
+                                            that.byId("ApprovDial").close();  
                                             }
                                         }
                                     }
