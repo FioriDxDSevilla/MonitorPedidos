@@ -6,13 +6,13 @@
     xmlns:l="sap.ui.layout"
 >  
 <Dialog
-      id="cecoDial"
+      id="cecoDialCabecera"
       title="{i18n>TableCecos}"  
       resizable="true"
       >
  
     <fb:FilterBar
-        search=".onBusqCecos"
+        search=".onBusqCecosCabecera"
         showClearOnFB="false"
         showFilterConfiguration="false"
         filterBarExpanded="false"
@@ -27,7 +27,7 @@
             >
                 <fb:control>
                     <Input
-                        id="f_codCeco"
+                        id="f_codCecoCabecera"
                         value='{FiltrosCeco>/Kostl}'
                     />
                 </fb:control>
@@ -41,7 +41,7 @@
             >
                 <fb:control>
                     <Input
-                        id="f_nomCeco"
+                        id="f_nomCecoCabecera"
                         value='{FiltrosCeco>/Ltext}'
                     />
                 </fb:control>
@@ -54,7 +54,7 @@
                 visibleInFilterBar="true">
                 <fb:control>
                     <Input
-                        id="f_cecoSoc"
+                        id="f_cecoSocCabecera"
                         value='{FiltrosCeco>/Kokrs}'
                         editable="true"
                     />
@@ -62,7 +62,7 @@
             </fb:FilterGroupItem>
         </fb:filterGroupItems>
     </fb:FilterBar>
-    <Table id="idTableCecos" items="{
+    <Table id="idTableCecosCabecera" items="{
             path: 'listadoCecos>/'}" growing="true" growingThreshold="20">
         <columns>
             <Column width="10%">
@@ -79,7 +79,7 @@
             </Column>
         </columns>
         <items>
-            <ColumnListItem type="Active" press=".onPressCecos">
+            <ColumnListItem type="Active" press=".onPressCecosCabecera">
                 <cells>
                     <Text text="{listadoCecos>Kostl}" />
                     <Text text="{listadoCecos>Ltext}" />
@@ -91,7 +91,7 @@
     </Table>
             <OverflowToolbar >
                 <ToolbarSpacer/>
-                <Button text="Cancelar" type="Emphasized" press="CloseCecoDiag">
+                <Button text="Cancelar" type="Emphasized" press="CloseCecoDiagCabecera">
                 <layoutData>
                 <OverflowToolbarLayoutData
                     priority="NeverOverflow"/>

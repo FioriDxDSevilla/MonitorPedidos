@@ -63,7 +63,7 @@
                     id="f_cecos"
                     showValueHelp="true"
                     editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true }"
-                    valueHelpRequest=".onValueHelpCecos"
+                    valueHelpRequest=".onValueHelpCecosCabecera"
                     value="{DisplayPEP>/Yykostkl}"
                 />
                 <m:Label text="{i18n>ord}" />
@@ -71,7 +71,7 @@
                     id="f_ordenes"
                     showValueHelp="true"
                     editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true }"
-                    valueHelpRequest=".onValueHelpOrd"
+                    valueHelpRequest=".onValueHelpOrdCabecera"
                     value="{DisplayPEP>/Yyaufnr}"
                 />
 

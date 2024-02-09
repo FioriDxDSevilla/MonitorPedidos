@@ -3337,7 +3337,16 @@ sap.ui.define([
                     MessageBox.error(this.oI18nModel.getProperty("noCli"));
                 }
 
-                this.oComponent.getModel("ModoApp").setProperty("/ccontr", true);
+                //this.oComponent.getModel("ModoApp").setProperty("/ccontr", true);
+                var recogetipoped = this.getView().byId("idCTipoPed").getSelectedKey();
+                if (recogetipoped == 'ZSER') {
+                    this.oComponent.getModel("ModoApp").setProperty("/ccontr", false);
+                    this.getView().byId("idcontract").setVisible(false);
+ 
+                }else{
+                    this.oComponent.getModel("ModoApp").setProperty("/ccontr", true);
+                    this.getView().byId("idcontract").setVisible(true);
+                }
                 this.oComponent.getModel("ModoApp").refresh(true);
 
             },
@@ -3457,8 +3466,8 @@ sap.ui.define([
                 this.getView().byId("idzona").setSelectedKey(null);
                 this.getView().byId("idCCliente").setValue(null);
                 this.getView().byId("idcontract").setSelectedKey(null);
+                this.getView().byId("idcontract").setVisible(true);
                 this.byId("OptionDial").close();
-
             },
 
             buildListAreaVentas: function (values) {
@@ -3653,6 +3662,7 @@ sap.ui.define([
                 this.getView().byId("idCCliente").setValue(null);
                 this.getView().byId("descrProv").setValue(null);
                 this.getView().byId("idcontract").setSelectedKey(null);
+                this.getView().byId("idcontract").setVisible(true);
 
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
                 oRouter.navTo("RouteAltaPedidos");

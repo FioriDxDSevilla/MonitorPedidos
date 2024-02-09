@@ -9,6 +9,7 @@
 
     <m:Page id="page" title="{DisplayPEP>/Title}">
     <m:headerContent>
+    <m:Button id="BtnCancelar" text="Cancelar" icon="sap-icon://cancel"  visible="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false }" press="onCancelar"/>
     <m:Button id="BtnGrabar" text="Grabar" icon="sap-icon://save"  visible="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false }" press="onCrear"/>
     </m:headerContent>
         <m:content>

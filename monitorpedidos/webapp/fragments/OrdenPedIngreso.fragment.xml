@@ -6,12 +6,12 @@
     xmlns:l="sap.ui.layout"
 >  
 <Dialog
-      id="ordDial"
+      id="ordDialCabecera"
       title="{i18n>TableOrdenes}"  
       resizable="true">
  
     <fb:FilterBar
-        search=".onBusqOrdenes"
+        search=".onBusqOrdenesCabecera"
         showClearOnFB="false"
         showFilterConfiguration="false"
         filterBarExpanded="false"
@@ -26,7 +26,7 @@
             >
                 <fb:control>
                     <Input
-                        id="f_codOrd"
+                        id="f_codOrdCabecera"
                         value='{FiltrosOrd>/Aufnr}'
                     />
                 </fb:control>
@@ -40,7 +40,7 @@
             >
                 <fb:control>
                     <Input
-                        id="f_nomOrd"
+                        id="f_nomOrdCabecera"
                         value='{FiltrosOrd>/Ktext}'
                     />
                 </fb:control>
@@ -53,7 +53,7 @@
                 visibleInFilterBar="true">
                 <fb:control>
                     <Input
-                        id="f_ordbukrs"
+                        id="f_ordbukrsCabecera"
                         value='{FiltrosOrd>/Bukrs}'
                         editable="true"
                     />
@@ -66,7 +66,7 @@
                 </fb:FilterGroupItem> -->
         </fb:filterGroupItems>
     </fb:FilterBar>
-    <Table id="idTableOrdenes" items="{
+    <Table id="idTableOrdenesCabecera" items="{
             path: 'listadoOrdenes>/'}" growing="true" growingThreshold="20">
         <columns>
             <Column width="10%">
@@ -83,7 +83,7 @@
             </Column>
         </columns>
         <items>
-            <ColumnListItem type="Active" press=".onPressOrdenes">
+            <ColumnListItem type="Active" press=".onPressOrdenesCabecera">
                 <cells>
                     <Text text="{listadoOrdenes>Aufnr}" />
                     <Text text="{listadoOrdenes>Ktext}" />
@@ -95,7 +95,7 @@
     </Table>
             <OverflowToolbar >
                 <ToolbarSpacer/>
-                <Button text="Cancelar" type="Emphasized" press="CloseOrdDiag">
+                <Button text="Cancelar" type="Emphasized" press="CloseOrdDiagCabecera">
                 <layoutData>
                 <OverflowToolbarLayoutData
                     priority="NeverOverflow"/>
