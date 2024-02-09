@@ -10,6 +10,15 @@
                 <m:Title text="" />
                 <m:ToolbarSpacer />
                 <m:Button
+                    id="botonaddref"
+                    icon="sap-icon://sys-add"
+                    text="{i18n>addPosCon}"
+                    type="Emphasized"
+                    press="onaddPosPedCon"
+                    visible="{= !!${ModoApp>/Nomcont}}"
+                    enabled="true"
+                />
+                <m:Button
                     id="botondel"
                     icon="sap-icon://delete"
                     text="{i18n>delPos}"

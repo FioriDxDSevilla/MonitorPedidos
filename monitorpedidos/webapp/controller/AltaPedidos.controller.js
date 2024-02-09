@@ -925,7 +925,7 @@ sap.ui.define([
 
           that.mainService.create("/PedidoModSet", oJson, {
             success: function (result) {
-              if (result.Vbeln) {
+              if (result.Vbeln && result.Vbeln !== "0") {
                 sap.ui.core.BusyIndicator.hide();
                 message = modificar + result.Vbeln;
 
@@ -948,7 +948,7 @@ sap.ui.define([
                     that.getView().byId("idOficinaV").setSelectedKey(null);
                     that.getView().byId("f_cecos").setValue(null);
                     that.getView().byId("f_ordenes").setValue(null);
-                    that.getView().byId("f_cecosPOS").setValue(null);
+                    that.getView().byId("f_cecosPOS").setValue(null); 
                     that.getView().byId("f_ordenesPOS").setValue(null);
 
                     /*that.getView().byId("idCTipoPed").setSelectedKey(null);
@@ -964,7 +964,7 @@ sap.ui.define([
                     oRouter.navTo("RouteMonitorPedidos");
                   }
                 });
-              } else if (result.PedidoRespuestaSet.Vbeln === "0" && result.PedidoRespuestaSet.Mensaje) {
+              } else if (result.PedidoRespuestaSet.Mensaje) {
                 sap.ui.core.BusyIndicator.hide();
                 MessageBox.error(result.PedidoRespuestaSet.Mensaje);
               }
@@ -983,7 +983,7 @@ sap.ui.define([
 
           this.mainService.create("/PedidoCabSet", oJson, {
             success: function (result) {
-              if (result.Vbeln) {
+              if (result.Vbeln && result.Vbeln !== "0") {
                 sap.ui.core.BusyIndicator.hide();
                 message = crear + result.Vbeln;
 
@@ -1020,7 +1020,7 @@ sap.ui.define([
                     oRouter.navTo("RouteMonitorPedidos");
                   }
                 });
-              } else if (result.PedidoRespuestaSet.Vbeln === "0" && result.PedidoRespuestaSet.Mensaje) {
+              } else if (result.PedidoRespuestaSet.Mensaje) {
                 sap.ui.core.BusyIndicator.hide();
                 MessageBox.error(result.PedidoRespuestaSet.Mensaje);
               }
@@ -1037,8 +1037,12 @@ sap.ui.define([
         }
         that.getView().byId("f_cecos").setValue(null);
         that.getView().byId("f_ordenes").setValue(null);
-        that.getView().byId("f_cecosPOS").setValue(null);
-        that.getView().byId("f_ordenesPOS").setValue(null);
+        if(that.getView().byId("f_cecosPOS")){
+          that.getView().byId("f_cecosPOS").setValue(null);
+        }
+        if(that.getView().byId("f_ordenesPOS")){
+          that.getView().byId("f_ordenesPOS").setValue(null);
+        }
       },
 
       resolveCreatePed: function (result) {
@@ -2048,6 +2052,83 @@ sap.ui.define([
 
       onaddPosPed: function () {
         this._getDialogServicios();
+      },
+
+      onaddPosPedCon: function () {
+        this._getDialogPedContrato();
+      },
+
+      _getDialogPedContrato: function (sInputValue) {
+        var oView = this.getView();
+
+        if (!this.pDialogOptionsContrato) {
+            this.pDialogOptionsContrato = Fragment.load({
+                id: oView.getId(),
+                name: "monitorpedidos.fragments.PosicionesContrato",
+                controller: this,
+            }).then(function (oDialogOptionsContrato) {
+                // connect dialog to the root view of this component (models, lifecycle)
+                oView.addDependent(oDialogOptionsContrato);
+                return oDialogOptionsContrato;
+            });
+        }
+        this.pDialogOptionsContrato.then(function (oDialogOptionsContrato) {
+            oDialogOptionsContrato.open(sInputValue);
+        });
+
+        //this.oComponent.setModel(this.oComponent.getModel("PedidoPosContrato"), "ModoApp");
+      },
+
+      onNavAltaContrato: function () {
+
+        var oTable = this.getView().byId("TablaPosicionesContrato");
+        /*var t_indices = oTable.getBinding().aIndices;
+
+        this.oComponent.setModel(this.oComponent.getModel("PedidoPosContrato"), "PedidoPosContrato_Aux");
+
+        var aContexts = oTable.getSelectedIndices();
+        var items = aContexts.map(function (c) {
+            //return c.getObject();
+            return this.oComponent.getModel("PedidoPosContrato_Aux").getProperty("/" + t_indices[c]);
+        }.bind(this));                
+        var results_array = items;*/
+        var aSelectedIndices = oTable.getSelectedIndices();
+        var pedidosContrato = this.oComponent.getModel("PedidoPosContrato").getData();
+        var pedidosContrato_Aux = JSON.parse(JSON.stringify(pedidosContrato)); // Copy data model without references
+        var results_array = [];         
+        var oldPos = this.oComponent.getModel("PedidoPos").getData();
+        var posnr_ItmNumber = oldPos.length * 10;
+
+        for (var i = 0; i < aSelectedIndices.length; i++) {
+            var indice = aSelectedIndices[i];
+            var posicionPed = pedidosContrato_Aux[indice];
+            posnr_ItmNumber = posnr_ItmNumber + 10;
+            //posicionPed.Posnr = posnr_ItmNumber;
+            posicionPed.ItmNumber = posnr_ItmNumber;
+            results_array.push(posicionPed);                    
+        }        
+        results_array = oldPos.concat(results_array);
+
+        /*var posnr_ItmNumber;
+        for (var i = 0; i < results_array.length; i++) {
+            //results_array[i].Posnr = String((i+1) * 10).padStart(6, '0'); // establecer el formato de SAP 000000
+            posnr_ItmNumber = (i+1) * 10;
+            //results_array[i].Posnr = posnr_ItmNumber;
+            results_array[i].ItmNumber = posnr_ItmNumber;
+          }*/
+        
+        this.oComponent.getModel("PedidoPos").setData(results_array);
+        this.oComponent.getModel("ModoApp").refresh(true);
+
+        // Deseleccionar las opciones
+        aSelectedIndices.forEach(function(oItem) {
+          oTable.setSelectedIndex(-1);
+        });
+        this.byId("OptionDialContrato").close();
+      },
+
+      CloseOptionsDiagContrato: function () {
+        this.byId("OptionDialContrato").close();
       },
 
       onCopyPosPed: function () {
