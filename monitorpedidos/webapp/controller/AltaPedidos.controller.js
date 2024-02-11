@@ -360,6 +360,7 @@ sap.ui.define([
           var PurchNoC = this.getView().byId("f_refped").getValue();
           var SalesDist = this.oComponent.getModel("ModoApp").getData().Bzirk;
           var BillBlock = "ZR";
+          var OrdReason = this.getView().byId("f_campomotivo").getSelectedKey();
           //var Currency = this.getView().byId("idMoneda").getText();
           var Currency = this.oComponent.getModel("PedidoCab").getData().Moneda;
           var TxtCabecera = this.getView().byId("textAreaCabFact").getValue();
@@ -873,6 +874,7 @@ sap.ui.define([
             SalesOrg: SalesOrg,
             SalesDist: SalesDist,
             DistrChan: DistrChan,
+            OrdReason: OrdReason,
             Division: Division,
             SalesOff: SalesOff,
             PpSearch: PpSearch,

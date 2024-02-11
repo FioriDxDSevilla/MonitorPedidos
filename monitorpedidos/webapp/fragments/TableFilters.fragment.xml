@@ -156,8 +156,8 @@
                 <ui:columns>
                     <ui:Column
                         width="13em"
-                        filterProperty="IdSolicitud"
-                        sortProperty="IdSolicitud"
+                        filterProperty="IDSOLICITUD"
+                        sortProperty="IDSOLICITUD"
                         tooltip="{i18n>numped}"
                     >
                         <Label text="{i18n>numped}" />
@@ -195,8 +195,8 @@
                     </ui:Column>
                     <ui:Column
                         width="14em"
-                        filterProperty="Cliente"
-                        sortProperty="Cliente"
+                        filterProperty="CLIENTE"
+                        sortProperty="CLIENTE"
                         tooltip="{i18n>codcli}"
                     >
                         <Label text="{i18n>codcli}" />
@@ -249,8 +249,8 @@
                     </ui:Column>
                     <ui:Column
                         width="15em"
-                        filterProperty="Estado"
-                        sortProperty="Estado"
+                        filterProperty="ESTADO"
+                        sortProperty="ESTADO"
                         tooltip="{i18n>status}"
                     >
                         <Label text="{i18n>status}" />
