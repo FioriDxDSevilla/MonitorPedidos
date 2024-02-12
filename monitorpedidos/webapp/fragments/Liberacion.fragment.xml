@@ -27,8 +27,8 @@
                 <ui:columns>
                     <ui:Column
                         width="auto"
-                        filterProperty="IdSolicitud"
-                        sortProperty="IdSolicitud"
+                        filterProperty="IDSOLICITUD"
+                        sortProperty="IDSOLICITUD"
                         tooltip="{i18n>numped}"
                     >
                         <Label text="{i18n>numped}" />

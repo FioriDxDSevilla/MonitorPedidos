@@ -3488,7 +3488,7 @@ sap.ui.define([
                 var recogetipoped = this.getView().byId("idCTipoPed").getSelectedKey();
                 if (recogetipoped == 'ZSER') {
                     this.oComponent.getModel("ModoApp").setProperty("/ccontr", false);
-                    this.getView().byId("idcontract").setVisible(false);
+                    this.getView().byId("idcontract").setVisible(true);
  
                 }else{
                     this.oComponent.getModel("ModoApp").setProperty("/ccontr", true);
