@@ -1956,6 +1956,7 @@ sap.ui.define([
           var posInicial = 10;
           var secu = 1;
           var sumTotal = 0;
+          var cantTotal = 0;
 
           for (var i = 0; i <= posiciones.length - 1; i++) {
 
@@ -2007,7 +2008,8 @@ sap.ui.define([
 
             secu = secu + 1;
             sumTotal = (Number(sumTotal) + Number(posicionN.CondValue)).toFixed(2);
-            var sumTotaldiv = sumTotal/posicionN.ReqQty;
+            cantTotal = (Number(cantTotal) + Number(posicionN.ReqQty)).toFixed(2);
+            var sumTotaldiv = sumTotal/cantTotal;
             //this.getView().byId("inputimport").setValue(sumTotal);
             var posAnt = posiciones[i].ItmNumber;
           }
