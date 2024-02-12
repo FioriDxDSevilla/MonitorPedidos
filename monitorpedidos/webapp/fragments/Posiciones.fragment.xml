@@ -88,6 +88,13 @@
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
+                <m:Label text="{i18n>cantBase}" />
+                <table:template>
+                    <m:Text text="{PedidoPos>Kpein}"/>
+                    <!--<m:Text text="{DisplayPosPed>Kpein}"/>-->
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
                 <m:Label text="{i18n>Unidades}" />
                 <table:template>
                     <m:Text text="{PedidoPos>SalesUnit}"/>
