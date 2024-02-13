@@ -200,7 +200,9 @@
      <PropertyRef Name="Zterm"/>
     </Key>
     <Property Name="Kunnr" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Deudor" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Vtweg" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Canal distrib." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Vkorg" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Organiz.ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Spart" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Sector" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Zterm" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Cond.pago" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
    </EntityType>
    <EntityType Name="DameMonedas" sap:content-version="1">
@@ -248,8 +250,8 @@
      <PropertyRef Name="Secu"/>
      <PropertyRef Name="SdDoc"/>
     </Key>
-    <Property Name="Yykostkl" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Centro coste" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="BillDate" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Fecha factura" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Yykostkl" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Centro coste" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Yyaufnr" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Orden ingresos" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="ItmNumber" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Posición" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Secu" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Nº de dos pos." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>

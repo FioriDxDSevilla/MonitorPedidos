@@ -851,7 +851,7 @@ sap.ui.define([
                     this.oComponent.getModel("ModoApp").setProperty("/Pstlz", values[0].results[0].Pstlz);
                     this.oComponent.getModel("ModoApp").setProperty("/Land1", values[0].results[0].Land1);
                     this.oComponent.getModel("ModoApp").setProperty("/Zwels", values[0].results[0].Zwels);
-                    this.oComponent.getModel("ModoApp").setProperty("/Zterm", values[0].results[0].Zterm);
+                    //this.oComponent.getModel("ModoApp").setProperty("/Zterm", values[0].results[0].Zterm);
                     this.oComponent.getModel("ModoApp").refresh(true);
                 }
             },
@@ -2228,6 +2228,7 @@ sap.ui.define([
                                 that.DatosCliente(data.results[0].Kunnr, data.results[0].Vkorg);
                                 that.OficinaVenta(data.results[0].Vkorg, data.results[0].Vtweg, data.results[0].Spart);
                                 that.NIApedido(data.results[0].Kunnr, data.results[0].Vkorg);
+                                that.condicionPago(data.results[0].Kunnr, data.results[0].Vkorg, data.results[0].Vtweg, data.results[0].Spart);
                                 //this.DIRpedido(codcli, vkbur);
                                 that.OrganoGestor(data.results[0].Kunnr, data.results[0].Vkorg, vbeln);
                                 that.UnidadTramitadora(data.results[0].Kunnr, data.results[0].Vkorg, vbeln);
@@ -2427,6 +2428,7 @@ sap.ui.define([
                                 that.oComponent.setModel(that.oComponent.getModel("PedidoPos"), "DisplayPosPed");
 
                                 that.DatosAux(data.results[0].Vbeln);
+                                that.condicionPago(data.results[0].Kunnr, data.results[0].Vkorg, data.results[0].Vtweg, data.results[0].Spart);
                                 that.DatosCliente(data.results[0].Kunnr, data.results[0].Vkorg);
                                 that.OficinaVenta(data.results[0].Vkorg, data.results[0].Vtweg, data.results[0].Spart);
                                 that.NIApedido(data.results[0].Kunnr, data.results[0].Vkorg);
@@ -3521,7 +3523,7 @@ sap.ui.define([
 
                         this.oComponent.getModel("ModoApp").setProperty("/ccont", true);
                         this.oComponent.getModel("ModoApp").refresh(true);
-                        this.condicionPago(codcli, vkbur);
+                        this.condicionPago(codcli, vkbur, Cvcan, Cvsector);
                         this.DatosCliente(codcli, vkbur);
 
                     }
@@ -3533,7 +3535,7 @@ sap.ui.define([
 
             },
 
-            condicionPago: function (codcli, vkbur) {
+            condicionPago: function (codcli, vkbur, Cvcan, Cvsector) {
                 var aFilters = [],
                     aFilterIds = [],
                     aFilterValues = [];
@@ -3543,6 +3545,12 @@ sap.ui.define([
 
                 aFilterIds.push("Vkorg");
                 aFilterValues.push(vkbur);
+
+                aFilterIds.push("Vtweg");
+                aFilterValues.push(Cvcan);
+
+                aFilterIds.push("Spart");
+                aFilterValues.push(Cvsector);
 
                 aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
 
@@ -3557,10 +3565,12 @@ sap.ui.define([
                     if (!values[0].results[0].Zterm) {
                         MessageBox.warning(this.oI18nModel.getProperty("ErrCond"));
                     } else {
-                    var oModelCondicion = new JSONModel();
+                        this.oComponent.getModel("ModoApp").setProperty("/Zterm", values[0].results[0].Zterm);
+                        this.oComponent.getModel("ModoApp").refresh(true);
+                    /*var oModelCondicion = new JSONModel();
                     oModelCondicion.setData(values[0].results);
                     condPago = values[0].results[0].Zterm;
-                    this.oComponent.setModel(oModelCondicion, "CondicionPago");
+                    this.oComponent.setModel(oModelCondicion, "CondicionPago");*/
                     //this.oComponent.getModel("ContratoCliente").refresh(true);
                     }
                 }
@@ -3737,17 +3747,19 @@ sap.ui.define([
      
                                     aFiltersCli = Util.createSearchFilterObject(aFilterIdsCli, aFilterValuesCli);
                                     */
-                                    that.DatosAux(numCont);
+                                    //that.DatosAux(numCont);
                                     that.motivopedido(data.results[0].Auart, data.results[0].Vkorg);
+                                    that.condicionPago(data.results[0].Kunnr, data.results[0].Vkorg, data.results[0].Vtweg, data.results[0].Spart);
                                     that.DatosCliente(data.results[0].Kunnr, data.results[0].Vkorg);
                                     that.OficinaVenta(data.results[0].Vkorg, data.results[0].Vtweg, data.results[0].Spart);
                                     that.NIApedido(data.results[0].Kunnr, data.results[0].Vkorg);
+                                    
                                     //this.DIRpedido(codcli, vkbur);
-                                    that.OrganoGestor(data.results[0].Kunnr, data.results[0].Vkorg, numCont);
-                                    that.UnidadTramitadora(data.results[0].Kunnr, data.results[0].Vkorg, numCont);
-                                    that.OficinaContable(data.results[0].Kunnr, data.results[0].Vkorg, numCont);
-                                    that.CodigoAdmon(data.results[0].Kunnr, data.results[0].Vkorg, numCont);
-                                    that.Plataformapedido(data.results[0].Kunnr, data.results[0].Vkorg, numCont);
+                                    that.OrganoGestor(data.results[0].Kunnr, data.results[0].Vkorg, "");
+                                    that.UnidadTramitadora(data.results[0].Kunnr, data.results[0].Vkorg, "");
+                                    that.OficinaContable(data.results[0].Kunnr, data.results[0].Vkorg, "");
+                                    that.CodigoAdmon(data.results[0].Kunnr, data.results[0].Vkorg, "");
+                                    that.Plataformapedido(data.results[0].Kunnr, data.results[0].Vkorg, "");
                                     that.DameMonedas();
                               
                                     var title = oI18nModel.getProperty("detSolPCon") + " " + ('0000000000' + that.oComponent.getModel("DisplayPEP").getData().Vbeln).slice(-10);

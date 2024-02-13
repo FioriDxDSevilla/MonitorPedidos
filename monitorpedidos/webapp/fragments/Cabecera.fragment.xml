@@ -94,7 +94,7 @@
                     id="f_campocondicion"
                     editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }"
                     width="300px"
-                    value="{listadoCondicion>/Zterm}"/>
+                    value="{ModoApp>/Zterm}"/> 
                 <m:Label text="{i18n>NIA}" />
                 <!--<m:ComboBox id="f_camponia" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }" width="200px" items="{ path: 'listadoNIA>/', sorter: { path: 'Kunnr' } }" selectedKey="{DisplayPEP>/Zznia}">
                     <core:ListItem key="{listadoNIA>Nia}" text="{listadoNIA>Nia}" additionalText="{listadoNIA>Nia}" />
@@ -204,7 +204,7 @@
                 <m:Label text="{i18n>TextoCabeceraFactura}" wrapping="false" />
                 <m:TextArea id="textAreaCabFact" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" width="570px" value="{DisplayPEP>/Tdlinecab}"/>
                 <m:Label text="{i18n>InformacionRechazo}" />
-                <m:TextArea  id="textAreaCabInfRech" width="570px" editable="false"/>
+                <m:TextArea  id="textAreaCabInfRech" width="570px" editable="false" value="{DisplayPEP>/Tdlinerech}"/>
                 <m:Label text="{i18n>TextoAclaraciones}" />
                 <m:TextArea  id="textAreaCabAcl" width="570px" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" value="{DisplayPEP>/Tdlineacl}"/>
             </f:content>

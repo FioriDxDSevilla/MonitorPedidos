@@ -342,7 +342,7 @@ sap.ui.define([
           var Currency = this.oComponent.getModel("DisplayPEP").getData().Currency;
           var Currency = this.oComponent.getModel("PedidoCab").getData().Moneda;
           var TxtCabecera = this.getView().byId("textAreaCabFact").getValue();
-          var TxtInfRechazo = this.getView().byId("textAreaCabInfRech").getValue();
+          //var TxtInfRechazo = this.getView().byId("textAreaCabInfRech").getValue();
           var TxtAclaraciones = this.getView().byId("textAreaCabAcl").getValue();
           var Zznia = this.oComponent.getModel("DisplayPEP").getData().Zznia;
           var Zzresponsable = "";
@@ -364,7 +364,7 @@ sap.ui.define([
           //var Currency = this.getView().byId("idMoneda").getText();
           var Currency = this.oComponent.getModel("PedidoCab").getData().Moneda;
           var TxtCabecera = this.getView().byId("textAreaCabFact").getValue();
-          var TxtInfRechazo = this.getView().byId("textAreaCabInfRech").getValue();
+          //var TxtInfRechazo = this.getView().byId("textAreaCabInfRech").getValue();
           var TxtAclaraciones = this.getView().byId("textAreaCabAcl").getValue();
           var Zznia = this.getView().byId("f_camponia").getSelectedKey();
           var Zzresponsable = "";
