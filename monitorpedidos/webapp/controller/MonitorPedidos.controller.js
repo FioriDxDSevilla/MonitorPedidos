@@ -4121,6 +4121,7 @@ sap.ui.define([
 
             onNavAlta: function () {
 
+                          var modeApp = this.oComponent.getModel("ModoApp").getData().mode; //RECOGEMOS EL MODO EN QUE VIENE
                 this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
                 this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", ClasePed);
                 this.oComponent.getModel("ModoApp").setProperty("/SocPed", socPed);
@@ -4138,6 +4139,11 @@ sap.ui.define([
                 this.oComponent.getModel("ModoApp").setProperty("/CondPago", condPago);
                 this.oComponent.setModel(new JSONModel([]), "Adjuntos");
                 this.oComponent.setModel(new JSONModel(), "datosAdj");
+                if (modeApp === 'C') {
+                    this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", 0);
+                this.oComponent.getModel("PedidoCab").setProperty("/Moneda", 'EUR');
+                }
+
 
                 const oI18nModel = this.oComponent.getModel("i18n");
                 var title = oI18nModel.getProperty("detSolP");

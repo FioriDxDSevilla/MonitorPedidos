@@ -1,35 +1,70 @@
-<core:FragmentDefinition controllerName="monitorpedidos.controller.AltaPedidos"
+<core:FragmentDefinition
+    controllerName="monitorpedidos.controller.AltaPedidos"
     xmlns:m="sap.m"
     xmlns:core="sap.ui.core"
     xmlns:f="sap.ui.layout.form"
     xmlns:fb="sap.ui.comp.filterbar"
-    xmlns:l="sap.ui.layout">
+    xmlns:l="sap.ui.layout"
+>
     <!--    -->
     <m:VBox renderType="Bare">
-        <f:SimpleForm editable="true" maxContainerCols="2" layout="GridLayout" singleContainerFullSize="false" adjustLabelSpan="true">
-            <f:content >
+        <f:SimpleForm
+            editable="true"
+            maxContainerCols="2"
+            layout="GridLayout"
+            singleContainerFullSize="false"
+            adjustLabelSpan="true"
+        >
+            <f:content>
                 <!-- -->
-                <core:Title text="{i18n>TituloDatosdeCliente}" level="H5" />
+                <core:Title
+                    text="{i18n>TituloDatosdeCliente}"
+                    level="H5"
+                />
                 <m:Label text="{i18n>CodigoCliente}" />
-                <m:Input id="f_codigocli" enabled="false" editable="false" width="180px" value="{ModoApp>/Kunnr}">
+                <m:Input
+                    id="f_codigocli"
+                    enabled="false"
+                    editable="false"
+                    width="180px"
+                    value="{ModoApp>/Kunnr}"
+                >
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>NombreCliente}" />
-                <m:Input id="f_nomcli" enabled="false" editable="false" width="280px" value="{ModoApp>/Nombre}">
+                <m:Input
+                    id="f_nomcli"
+                    enabled="false"
+                    editable="false"
+                    width="280px"
+                    value="{ModoApp>/Nombre}"
+                >
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>CIF}" />
-                <m:Input id="f_cifcli" enabled="false" editable="false" width="180px" value="{ModoApp>/Stcd1}">
+                <m:Input
+                    id="f_cifcli"
+                    enabled="false"
+                    editable="false"
+                    width="180px"
+                    value="{ModoApp>/Stcd1}"
+                >
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>MailDestinatarioFactura}" />
-                <m:Input id="f_mailcli" enabled="true" editable="true" width="280px" value="{ModoApp>/SmtpAddr}">
+                <m:Input
+                    id="f_mailcli"
+                    enabled="true"
+                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }"
+                    width="280px"
+                    value="{ModoApp>/SmtpAddr}"
+                >
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
@@ -37,46 +72,88 @@
 
                 <core:Title text="" />
                 <m:Label text="{i18n>Direccion}" />
-                <m:Input id="f_dircli" enabled="false" editable="false" width="255px" value="{ModoApp>/Stras}">
+                <m:Input
+                    id="f_dircli"
+                    enabled="false"
+                    editable="false"
+                    width="255px"
+                    value="{ModoApp>/Stras}"
+                >
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>CodPostPob}" />
-                <m:Input id="f_codpostcli" enabled="false" editable="false" width="120px" value="{ModoApp>/Pstlz}">
+                <m:Input
+                    id="f_codpostcli"
+                    enabled="false"
+                    editable="false"
+                    width="120px"
+                    value="{ModoApp>/Pstlz}"
+                >
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
-                <m:Input enabled="false" editable="false" width="120px" value="{ModoApp>/Ort01}">
+                <m:Input
+                    enabled="false"
+                    editable="false"
+                    width="120px"
+                    value="{ModoApp>/Ort01}"
+                >
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>Pais}" />
-                <m:Input id="f_paiscli" enabled="false" editable="false" width="120px" value="{ModoApp>/Land1}">
+                <m:Input
+                    id="f_paiscli"
+                    enabled="false"
+                    editable="false"
+                    width="120px"
+                    value="{ModoApp>/Land1}"
+                >
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>ViaPago}" />
-                <m:Input id="f_viapagocli" enabled="false" editable="false" width="120px" value="{ModoApp>/Zwels}">
+                <m:Input
+                    id="f_viapagocli"
+                    enabled="false"
+                    editable="false"
+                    width="120px"
+                    value="{ModoApp>/Zwels}"
+                >
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>CondicionPago}" />
-                <m:Input id="f_condpagocli" enabled="false" editable="false" width="120px" value="{ModoApp>/Zterm}">
+                <m:Input
+                    id="f_condpagocli"
+                    enabled="false"
+                    editable="false"
+                    width="120px"
+                    value="{ModoApp>/Zterm}"
+                >
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
-                <m:Input id="f_funcint" enabled="false" editable="false" visible="false" width="120px" value="{ModoApp>/Stceg}">
+                <m:Input
+                    id="f_funcint"
+                    enabled="false"
+                    editable="false"
+                    visible="false"
+                    width="120px"
+                    value="{ModoApp>/Stceg}"
+                >
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
-            </f:content >
+            </f:content>
         </f:SimpleForm>
     </m:VBox>
 </core:FragmentDefinition>
