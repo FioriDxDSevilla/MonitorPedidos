@@ -950,8 +950,12 @@ sap.ui.define([
                     that.getView().byId("idOficinaV").setSelectedKey(null);
                     that.getView().byId("f_cecos").setValue(null);
                     that.getView().byId("f_ordenes").setValue(null);
-                    that.getView().byId("f_cecosPOS").setValue(null);
-                    that.getView().byId("f_ordenesPOS").setValue(null);
+                    if (that.getView().byId("f_cecosPOS")) {
+                      that.getView().byId("f_cecosPOS").setValue(null);
+                    }
+                    if (that.getView().byId("f_ordenesPOS")) {
+                      that.getView().byId("f_ordenesPOS").setValue(null);
+                    }
 
                     /*that.getView().byId("idCTipoPed").setSelectedKey(null);
                     that.getView().byId("idCSociedad").setSelectedKey(null);
@@ -3217,8 +3221,8 @@ sap.ui.define([
         }*/
         //this.getView().byId("f_ordenesPOS").setValue(codord);
 
-        this.oComponent.getModel("posPedFrag").setProperty("/Yaufnr", codord);
-        this.oComponent.getModel("posPedFrag").refresh(true);
+        //this.oComponent.getModel("posPedFrag").setProperty("/Yaufnr", codord);
+        //this.oComponent.getModel("posPedFrag").refresh(true);
         this.getView().byId("f_codOrdCabecera").setValue(null);
         this.byId("ordDialCabecera").close();
 
@@ -3267,8 +3271,8 @@ sap.ui.define([
         this.getView().byId("f_cecos").setValue(codceco);
 
         //this.getView().byId("f_cecosPOS").setValue(codceco);
-        this.oComponent.getModel("posPedFrag").setProperty("/Ykostl", codceco);
-        this.oComponent.getModel("posPedFrag").refresh(true);
+        //this.oComponent.getModel("posPedFrag").setProperty("/Ykostl", codceco);
+        //this.oComponent.getModel("posPedFrag").refresh(true);
         this.getView().byId("f_codCecoCabecera").setValue(null);
         this.byId("cecoDialCabecera").close();
 

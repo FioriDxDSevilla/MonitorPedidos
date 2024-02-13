@@ -62,7 +62,7 @@
                  <m:Input
                     id="f_cecos"
                     showValueHelp="true"
-                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }"
+                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }"
                     valueHelpRequest=".onValueHelpCecosCabecera"
                     value="{DisplayPEP>/Yykostkl}"
                 />
@@ -70,7 +70,7 @@
                 <m:Input
                     id="f_ordenes"
                     showValueHelp="true"
-                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }"
+                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }"
                     valueHelpRequest=".onValueHelpOrdCabecera"
                     value="{DisplayPEP>/Yyaufnr}"
                 />

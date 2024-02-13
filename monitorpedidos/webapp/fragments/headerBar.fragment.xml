@@ -26,6 +26,20 @@
                 />
             </layoutData>
         </Button>
+        <Button
+            id="CargaPed"
+            icon="sap-icon://arrow-top"
+            type="Emphasized"            
+            text="{i18n>carga}"
+           
+        >
+            <layoutData>
+                <OverflowToolbarLayoutData
+                    id="Over3"
+                    priority="NeverOverflow"
+                />
+            </layoutData>
+        </Button>
         <IconTabHeader
             id="iconTabHeader"
             selectedKey="invalidKey"
