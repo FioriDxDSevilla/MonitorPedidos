@@ -431,13 +431,13 @@ sap.ui.define([
                     if (sStatus === "REDA") {
                         this.oComponent.getModel("Filtros").setProperty("/totalred", 0);
                     } else if (sStatus === "APRB")  {
-                        //this.oComponent.getModel("Filtros").setProperty("/totalapr", 0);
+                        this.oComponent.getModel("Filtros").setProperty("/totalpdte", 0);
                     } else if (sStatus === "FINA") {
                         this.oComponent.getModel("Filtros").setProperty("/totalfin", 0);
                     } else if (sStatus === "FACT") {
                         this.oComponent.getModel("Filtros").setProperty("/totalfac", 0);
                     } else if (sStatus === "PDTE") {
-                        this.oComponent.getModel("Filtros").setProperty("/totalpdte", 0);
+                        this.oComponent.getModel("Filtros").setProperty("/totalaprov", 0);
                     } else if (sStatus === "COBR") {
                         this.oComponent.getModel("Filtros").setProperty("/totalcob", 0);
                     } else if (sStatus === "DEN") {
