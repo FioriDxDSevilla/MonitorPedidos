@@ -1,0 +1,64 @@
+<core:FragmentDefinition controllerName="monitorpedidos.controller.MonitorPedidos"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:f="sap.ui.layout.form">
+    <Dialog id="OptionDialogCliente" title="{i18n>AltaCliente}" resizable="true">
+
+        <f:SimpleForm id="fDatosCabCliente" editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="3" labelSpanM="4" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1" singleContainerFullSize="false">
+            <f:content>
+                <core:Title text=""/>
+                <Label text="{i18n>NifCliente}"/>
+                <Input placeholder="" />
+                <Label text="{i18n>NombreCliente}"/>
+                <Input placeholder=""/>
+                <Label text="{i18n>Telefono}"/>
+                <Input placeholder=""/>
+                <Label text="{i18n>MailContacto}"/>
+                <Input placeholder=""/>
+
+                <core:Title text="{i18n>Direccion}"/>
+                <Label text="{i18n>Calle}"/>
+                <Input />
+                <Label text="{i18n>CodPostal}"/>
+                <Input />
+                <Label text="{i18n>Poblacion}"/>
+                <Input />
+                <Label text="{i18n>Pais}"/>
+                <Input />
+                <Label text="{i18n>Region}"/>
+                <Input />
+
+                <core:Title text="{i18n>CamposDIR}"/>
+                <Label text="{i18n>Plataforma}"/>
+                <Input />
+                <Label text="{i18n>DirOrganoGestor}"/>
+                <Input />
+                <Label text="{i18n>DirUnidadTramitadora}"/>
+                <Input />
+                <Label text="{i18n>DirOficinaContable}"/>
+                <Input />
+                <Label text="{i18n>DirAdministracion}"/>
+                <Input />
+                <core:Title text=" "/>
+                <Label text="{i18n>CondicionPago}"/>
+                 <Input />
+                 
+            </f:content>
+        </f:SimpleForm>
+        <OverflowToolbar>
+            <Button text="Crear" type="Emphasized">
+                <layoutData>
+                    <OverflowToolbarLayoutData priority="NeverOverflow" />
+                </layoutData>
+            </Button>
+            <ToolbarSpacer />
+            <Button text="Cancelar" type="Emphasized" press="CloseClientDialog">
+                <layoutData>
+                    <OverflowToolbarLayoutData priority="NeverOverflow" />
+                </layoutData>
+            </Button>
+        </OverflowToolbar>
+    </Dialog>
+</core:FragmentDefinition>

@@ -5057,7 +5057,57 @@ sap.ui.define([
                         shellHash: hashUrl
                     }
                 });
-            }
+            }, 
+            
+            //LÓGICA PARA LOS DIFERENTES MENU ITEMS QUE SE CREEN
+
+            onGetKeyFromItemMenu: function(oEvent){
+            //console.log(oEvent.getSource().getProperty("key"));
+            var selectedKey = oEvent.getSource().getProperty("key");
+            
+            switch(selectedKey){
+
+                case "CrearCliente": 
+                this.onNavToCrearCliente(oEvent);
+                break;
+                
+            };
+
+            /* #### ALTA DE CLIENTES ##### */
+            //METODOS PARA LA ALTA DE CLIENTES
+
+            },
+            onNavToCrearCliente: function(oEvent){
+                this._getDialogAltaCliente(oEvent);
+
+            },
+
+     
+
+            _getDialogAltaCliente: function (sInputValue) {
+                var oView = this.getView();
+
+                if (!this.pDialogCliente) {
+                    this.pDialogCliente = Fragment.load({
+                        id: oView.getId(),
+                        name: "monitorpedidos.fragments.AltaClienteOption",
+                        controller: this,
+                    }).then(function (oDialogCliente) {
+                        // connect dialog to the root view of this component (models, lifecycle)
+                        oView.addDependent(oDialogCliente);
+                        return oDialogCliente;
+                    });
+                }
+                this.pDialogCliente.then(function (oDialogCliente) {
+                    oDialogCliente.open(sInputValue);
+                    //this._configDialogCliente(oDialog)
+                });
+            },
+
+            CloseClientDialog: function () {
+
+                this.byId("OptionDialogCliente").close();
+            },
 
         });
     });
