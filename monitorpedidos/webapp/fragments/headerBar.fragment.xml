@@ -29,7 +29,8 @@
         <Button
             id="CargaPed"
             icon="sap-icon://arrow-top"
-            type="Emphasized"            
+            type="Emphasized"  
+            press="onGoToZpv"          
             text="{i18n>carga}"
            
         >
