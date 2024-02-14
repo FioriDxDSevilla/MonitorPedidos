@@ -55,14 +55,26 @@ sap.ui.define([
                 vedit = false;
                 var Usuario = "";
 
-                this.ListadoSolicitudes(
+                /*this.ListadoSolicitudes(
                     Usuario,
-                    //Numped,
+                    Numped,
                     fechai,
                     fechaf,
                     Imported,
                     Importeh,
-                    Cliente);
+                    Cliente);*/
+
+                this.ListadoSolicitudes(
+                    Usuario,
+                    Numped,
+                    Fechad,
+                    Fechah,
+                    Imported,
+                    Importeh,
+                    Cliente,
+                    LineaServicio,
+                    codmat,
+                    ClasePed);
 
                 //Mapear los campos por defecto de los filtros:
 
@@ -229,7 +241,7 @@ sap.ui.define([
             //FILTROS DE LISTADO DE PEDIDOS
             ListadoSolicitudes: function (
                 Usuario,
-                //Numped,
+                Numped,
                 Fechad,
                 Fechah,
                 Imported,
@@ -1636,8 +1648,43 @@ sap.ui.define([
                             responsable,
                             ClasePed
                         );
-                    }
-                    if (checkTodos === 'X') {
+                    } else if (checkMisPed === undefined) {
+                        this.getView().byId("Filtr10").setVisible(true);
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.oComponent.getModel("PedidoCab").refresh(true);
+                        this.ListadoSolStatus(
+                            Usuario,
+                            Numped,
+                            Fechad,
+                            Fechah,
+                            Imported,
+                            Importeh,
+                            sStatus,
+                            Cliente,
+                            LineaServicio,
+                            codmat,
+                            responsable,
+                            ClasePed
+                        );
+                    } else if (checkTodos === 'X') {
+                        this.getView().byId("Filtr10").setVisible(true);
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.oComponent.getModel("PedidoCab").refresh(true);
+                        this.ListadoSolStatus(
+                            Usuario,
+                            Numped,
+                            Fechad,
+                            Fechah,
+                            Imported,
+                            Importeh,
+                            sStatus,
+                            Cliente,
+                            LineaServicio,
+                            codmat,
+                            responsable,
+                            ClasePed
+                        );
+                    } else if (checkTodos === 'X') {
                         this.getView().byId("Filtr10").setVisible(true);
                         this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
                         this.oComponent.getModel("PedidoCab").refresh(true);
@@ -1680,7 +1727,82 @@ sap.ui.define([
                     this.oComponent.getModel("PedidoCab").refresh(true);
                     this._getDialogAprobaciones();
                 } else if (sStatus == "APRB" && sAprob == false) {
-                    this.getView().byId("Filtr10").setVisible(false);
+                    if (checkMisPed === 'X') {
+                        this.getView().byId("Filtr10").setVisible(false);
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.oComponent.getModel("PedidoCab").refresh(true);
+                        this.ListadoSolStatus(
+                            Usuario,
+                            Numped,
+                            Fechad,
+                            Fechah,
+                            Imported,
+                            Importeh,
+                            sStatus,
+                            Cliente,
+                            LineaServicio,
+                            codmat,
+                            responsable,
+                            ClasePed
+                        );  
+                    } else if (checkMisPed === undefined) {
+                        this.getView().byId("Filtr10").setVisible(false);
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.oComponent.getModel("PedidoCab").refresh(true);
+                        this.ListadoSolStatus(
+                            Usuario,
+                            Numped,
+                            Fechad,
+                            Fechah,
+                            Imported,
+                            Importeh,
+                            sStatus,
+                            Cliente,
+                            LineaServicio,
+                            codmat,
+                            responsable,
+                            ClasePed
+                        );  
+                    } else if (checkTodos === 'X') {
+                        this.getView().byId("Filtr10").setVisible(false);
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.oComponent.getModel("PedidoCab").refresh(true);
+                        this.ListadoSolStatus(
+                            Usuario,
+                            Numped,
+                            Fechad,
+                            Fechah,
+                            Imported,
+                            Importeh,
+                            sStatus,
+                            Cliente,
+                            LineaServicio,
+                            codmat,
+                            responsable,
+                            ClasePed
+                        );  
+                    } else if(checkTodos === undefined) {
+                       
+                        this.getView().byId("Filtr10").setVisible(false);
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.oComponent.getModel("PedidoCab").refresh(true);
+                        this.ListadoSolStatus(
+                            Usuario,
+                            Numped,
+                            Fechad,
+                            Fechah,
+                            Imported,
+                            Importeh,
+                            sStatus,
+                            Cliente,
+                            LineaServicio,
+                            codmat,
+                            responsable,
+                            ClasePed
+                        );  
+                    }
+                    
+                    /*this.getView().byId("Filtr10").setVisible(false);
                     this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
                     this.oComponent.getModel("PedidoCab").refresh(true);
                     this.ListadoSolStatus(
@@ -1696,9 +1818,84 @@ sap.ui.define([
                         codmat,
                         responsable,
                         ClasePed
-                    );
+                    );*/
                 } else {
-                    this.getView().byId("Filtr10").setVisible(false);
+                    if (checkMisPed === 'X') {
+                        this.getView().byId("Filtr10").setVisible(false);
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.oComponent.getModel("PedidoCab").refresh(true);
+                        this.ListadoSolStatus(
+                            Usuario,
+                            Numped,
+                            Fechad,
+                            Fechah,
+                            Imported,
+                            Importeh,
+                            sStatus,
+                            Cliente,
+                            LineaServicio,
+                            codmat,
+                            responsable,
+                            ClasePed
+                        ); 
+                    } else if (checkMisPed === undefined) {
+                        this.getView().byId("Filtr10").setVisible(false);
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.oComponent.getModel("PedidoCab").refresh(true);
+                        this.ListadoSolStatus(
+                            Usuario,
+                            Numped,
+                            Fechad,
+                            Fechah,
+                            Imported,
+                            Importeh,
+                            sStatus,
+                            Cliente,
+                            LineaServicio,
+                            codmat,
+                            responsable,
+                            ClasePed
+                        );
+                    } else if (checkTodos === 'X') {
+                        this.getView().byId("Filtr10").setVisible(false);
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.oComponent.getModel("PedidoCab").refresh(true);
+                        this.ListadoSolStatus(
+                            Usuario,
+                            Numped,
+                            Fechad,
+                            Fechah,
+                            Imported,
+                            Importeh,
+                            sStatus,
+                            Cliente,
+                            LineaServicio,
+                            codmat,
+                            responsable,
+                            ClasePed
+                        );
+                    } else if (checkTodos === undefined) {
+                        this.getView().byId("Filtr10").setVisible(false);
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.oComponent.getModel("PedidoCab").refresh(true);
+                        this.ListadoSolStatus(
+                            Usuario,
+                            Numped,
+                            Fechad,
+                            Fechah,
+                            Imported,
+                            Importeh,
+                            sStatus,
+                            Cliente,
+                            LineaServicio,
+                            codmat,
+                            responsable,
+                            ClasePed
+                        );
+                    }
+
+
+                    /*this.getView().byId("Filtr10").setVisible(false);
                     this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
                     this.oComponent.getModel("PedidoCab").refresh(true);
                     this.ListadoSolStatus(
@@ -1714,7 +1911,7 @@ sap.ui.define([
                         codmat,
                         responsable,
                         ClasePed
-                    );
+                    );*/
                 }
             },
 
@@ -1777,7 +1974,7 @@ sap.ui.define([
                 checkTodos = 'X';
                 this.ListadoSolicitudes(
                     Usuario,
-                    //Numped,
+                    Numped,
                     Fechad,
                     Fechah,
                     Imported,
@@ -3342,9 +3539,37 @@ sap.ui.define([
                         codmat,
                         responsable,
                         ClasePed);
+                } else if (checkMisPed === undefined) {
+                    that.ListadoSolStatus(
+                        Usuario,
+                        Numped,
+                        Fechad,
+                        Fechah,
+                        Imported,
+                        Importeh,
+                        sStatus,
+                        Cliente,
+                        LineaServicio,
+                        codmat,
+                        responsable,
+                        ClasePed);
                 }
 
                 if (checkTodos === 'X') {
+                    that.ListadoSolStatus(
+                        Usuario,
+                        Numped,
+                        Fechad,
+                        Fechah,
+                        Imported,
+                        Importeh,
+                        sStatus,
+                        Cliente,
+                        LineaServicio,
+                        codmat,
+                        responsable,
+                        ClasePed);
+                } else if (checkTodos === undefined) {
                     that.ListadoSolStatus(
                         Usuario,
                         Numped,
@@ -3838,7 +4063,7 @@ sap.ui.define([
 
             onNavAltaContrato: function () {
 
-                this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
+                //this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
                 this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", ClasePed);
                 this.oComponent.getModel("ModoApp").setProperty("/SocPed", socPed);
                 //this.oComponent.getModel("ModoApp").setProperty("/NomSoc", nomSoc);
@@ -4323,7 +4548,7 @@ sap.ui.define([
                 } else {
 
                     var modeApp = this.oComponent.getModel("ModoApp").getData().mode; //RECOGEMOS EL MODO EN QUE VIENE
-                    this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
+                    //this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
                     this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", ClasePed);
                     this.oComponent.getModel("ModoApp").setProperty("/SocPed", socPed);
                     this.oComponent.getModel("ModoApp").setProperty("/NomSoc", vText);

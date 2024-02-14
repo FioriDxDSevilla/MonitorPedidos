@@ -351,7 +351,7 @@ sap.ui.define([
 
         } else {
 
-          var DocType = this.oComponent.getModel("ModoApp").getData().Tipopedido;
+          var DocType = this.oComponent.getModel("ModoApp").getData().Clasepedido;
           var SalesOrg = this.oComponent.getModel("ModoApp").getData().Vkbur;
           var DistrChan = this.oComponent.getModel("ModoApp").getData().CvCanal;
           var Division = this.oComponent.getModel("ModoApp").getData().CvSector;
@@ -950,6 +950,7 @@ sap.ui.define([
                     that.getView().byId("idOficinaV").setSelectedKey(null);
                     that.getView().byId("f_cecos").setValue(null);
                     that.getView().byId("f_ordenes").setValue(null);
+                    
                     if (that.getView().byId("f_cecosPOS")) {
                       that.getView().byId("f_cecosPOS").setValue(null);
                     }
@@ -970,9 +971,9 @@ sap.ui.define([
                     oRouter.navTo("RouteMonitorPedidos");
                   }
                 });
-              } else if (result.PedidoRespuestaSet.Mensaje) {
+              } else if (result.PedidoRespuestaModSet.Mensaje) {
                 sap.ui.core.BusyIndicator.hide();
-                MessageBox.error(result.PedidoRespuestaSet.Mensaje);
+                MessageBox.error(result.PedidoRespuestaModSet.Mensaje);
               }
             },
             error: function (err) {
