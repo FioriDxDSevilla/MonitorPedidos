@@ -20,7 +20,7 @@ sap.ui.define([
 
   function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util, MessageBox, ExportTypeCSV, Export, exportLibrary, Dialog, DialogType, Button, ButtonType, Text) {
     "use strict";
-    var codmat, nommat, codord, nomord, codceco, nomceco, fechaPos, codordPos, nomordPos, codcecoPos, nomcecoPos;
+    var codmat, nommat, codord, nomord, codceco, nomceco, fechaPos, codordPos, nomordPos, codcecoPos, nomcecoPos, sStatus;
     return Controller.extend("monitorpedidos.controller.AltaPedidos", {
 
       onInit: function () {
@@ -99,6 +99,77 @@ sap.ui.define([
 
         var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
         oRouter.navTo("RouteMonitorPedidos");
+      },
+
+      onFilterSelectAlta: function (oEvent) {
+        var skey = oEvent.getParameter("key");
+        sStatus = "";
+
+        switch (skey) {
+          //Todas
+          case "Cabecera":
+            sStatus = "Cab";
+            break;
+          //En redaccion
+          case "Datos Cliente":
+            sStatus = "DatosCli";
+            break;
+          //Pdte. Aprobar
+          case "Adjuntos":
+            sStatus = "Adj";
+            break;
+          //Pdte. Financiero
+          case "Historial":
+            sStatus = "Hist";
+            break;
+          //Pdte. Facturar
+          case "Posiciones":
+            sStatus = "Pos";
+            break;
+          //Pdte. Cobrar
+          case "PosicionesDisp":
+            sStatus = "PosDisp";
+            break;
+        }
+
+        if (sStatus == "PosDisp") {
+          var datos = this.oComponent.getModel("DisplayPEP").getData().SolicitudPed_A.results;
+          var sumCant = 0;
+          var sumImp = 0;
+          var moneda = "EUR";
+          for (var i = 0; i < datos.length; i++) {
+            var resultados = datos[i];
+            var cantidades = datos[i].Kpein;
+            sumCant = (Number(sumCant) + Number(cantidades)).toFixed(2);
+            var importes = datos[i].Netwr;
+            sumImp = (Number(sumImp) + Number(importes)).toFixed(2);
+            var moneda = datos[i].Waerk;
+          }
+          var sumTotaldiv = 0;
+          sumTotaldiv = (sumImp / sumCant).toFixed(2);
+          this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", sumTotaldiv);
+          this.oComponent.getModel("PedidoCab").setProperty("/Moneda", moneda);
+          this.oComponent.getModel("PedidoCab").refresh(true);
+        } else if (sStatus == "Pos") {
+          var datos = this.oComponent.getModel("DisplayPEP").getData().SolicitudPed_A.results;
+          var sumCant = 0;
+          var sumImp = 0;
+          var moneda = "EUR";
+          for (var i = 0; i < datos.length; i++) {
+            var resultados = datos[i];
+            var cantidades = datos[i].Kpein;
+            sumCant = (Number(sumCant) + Number(cantidades)).toFixed(2);
+            var importes = datos[i].Netwr;
+            sumImp = (Number(sumImp) + Number(importes)).toFixed(2);
+            var moneda = datos[i].Waerk;
+          }
+          var sumTotaldiv = 0;
+          sumTotaldiv = (sumImp / sumCant).toFixed(2);
+          this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", sumTotaldiv);
+          this.oComponent.getModel("PedidoCab").setProperty("/Moneda", moneda);
+          this.oComponent.getModel("PedidoCab").refresh(true);
+        } else {
+        }
       },
 
       fechahoy: function () {
@@ -950,7 +1021,7 @@ sap.ui.define([
                     that.getView().byId("idOficinaV").setSelectedKey(null);
                     that.getView().byId("f_cecos").setValue(null);
                     that.getView().byId("f_ordenes").setValue(null);
-                    
+
                     if (that.getView().byId("f_cecosPOS")) {
                       that.getView().byId("f_cecosPOS").setValue(null);
                     }
@@ -2014,7 +2085,7 @@ sap.ui.define([
             secu = secu + 1;
             sumTotal = (Number(sumTotal) + Number(posicionN.CondValue)).toFixed(2);
             cantTotal = (Number(cantTotal) + Number(posicionN.ReqQty)).toFixed(2);
-            var sumTotaldiv = sumTotal/cantTotal;
+            var sumTotaldiv = (sumTotal/cantTotal).toFixed(2);
             //this.getView().byId("inputimport").setValue(sumTotal);
             var posAnt = posiciones[i].ItmNumber;
           }

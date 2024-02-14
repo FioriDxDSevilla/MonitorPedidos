@@ -13,7 +13,7 @@
                 <core:Title text="{i18n>TituloDatosCabeceraPedido}" level="H5" />
 
                 <m:Label text="{i18n>ClasePedido}" />
-                <m:Input id="f_claseped" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" width="150px" value="{ModoApp>/Clasepedido}">
+                <m:Input id="f_claseped" editable="{= ${ModoApp>/mode}  === 'C' ?  false : true ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" width="150px" value="{ModoApp>/Clasepedido}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S2" />
                     </m:layoutData>
@@ -22,19 +22,19 @@
                 <m:Label text="{i18n>AreaVentas}" />
 
                 <!-- <m:VBox>-->
-                <m:Input id="f_orgventas" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" width="125px" value="{ModoApp>/Vtext}">
+                <m:Input id="f_orgventas" editable="{= ${ModoApp>/mode}  === 'C' ?  false : true ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" width="125px" value="{ModoApp>/Vtext}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S2" indent="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>channel}" />
-                <m:Input id="idCanal" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" width="125px" value="{ModoApp>/CvCanal}">
+                <m:Input id="idCanal" editable="{= ${ModoApp>/mode}  === 'C' ?  false : true ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" width="125px" value="{ModoApp>/CvCanal}">
                     <m:layoutData>
                         <l:GridData span="XL1 L1 M1 S1" indent="XL1 L1 M1 S1" />
                     </m:layoutData>
                 </m:Input>
                 <m:Label text="{i18n>sector}" />
-                <m:Input id="idSector" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" width="125px" value="{ModoApp>/CvSector}">
+                <m:Input id="idSector" editable="{= ${ModoApp>/mode}  === 'C' ?  false : true ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" width="125px" value="{ModoApp>/CvSector}">
                     <m:layoutData>
                         <l:GridData span="XL1 L1 M1 S1" indent="XL1 L1 M1 S1" />
                     </m:layoutData>
@@ -77,7 +77,7 @@
 
                 <core:Title text="" />
                 <m:Label text="{i18n>MotivoPedido}" />
-                <m:ComboBox id="f_campomotivo" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" width="300px" items="{ path: 'listadoMotivo>/', sorter: { path: 'Augru' } }" selectedKey="{DisplayPEP>/Augru}" change=".onMotivoPedido">
+                <m:ComboBox id="f_campomotivo" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" width="300px" items="{ path: 'listadoMotivo>/', sorter: { path: 'Augru' } }" selectedKey="{DisplayPEP>/Augru}" change=".onMotivoPedido">
                     <core:ListItem key="{listadoMotivo>Augru}" text="{listadoMotivo>Bezei}" additionalText="{listadoMotivo>Bezei}" />
                 </m:ComboBox>
                 <m:Label text="{i18n>BloqueoFactura}" />

@@ -39,7 +39,14 @@
                         <Label text="{i18n>Cantidad}" />
                         <table:template>
                             <!--<Text text="{PedidoPosContrato>ReqQty}"/>-->
-                            <Text text="{PedidoPosContrato>Kpein}"/>
+                            <Text text="{PedidoPosContrato>ReqQty}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column hAlign="Center">
+                        <m:Label text="{i18n>cantBase}" />
+                        <table:template>
+                            <m:Text text="{PedidoPosContrato>Kpein}"/>
+                            <!--<m:Text text="{PedidoPosContrato>Kpein}"/>-->
                         </table:template>
                     </table:Column>
                     <table:Column hAlign="Center">

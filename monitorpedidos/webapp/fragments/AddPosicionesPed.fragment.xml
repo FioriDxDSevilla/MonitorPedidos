@@ -104,7 +104,7 @@
             <Input
                 id="f_cecosPOS"
                 showValueHelp="true"
-                editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true }"
+                editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
                 valueHelpRequest=".onValueHelpCecosPosicion"
                 value="{DisplayPEP>/Ykostl}"
                 visible="false"
@@ -113,7 +113,7 @@
             <Input
                 id="f_ordenesPOS"
                 showValueHelp="true"
-                editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true }"
+                editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
                 valueHelpRequest=".onValueHelpOrdPosicion"
                 value="{DisplayPEP>/Yaufnr}"
                 visible="false"

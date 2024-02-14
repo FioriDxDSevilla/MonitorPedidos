@@ -32,7 +32,7 @@
                     icon="sap-icon://copy"
                     text="{i18n>copyPos}"
                     type="Emphasized"
-                    press="onaddPosPed"
+                    press="onCopyPosPed"
                     visible="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
                     enabled="true"
                 />
@@ -73,9 +73,15 @@
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Cantidad}" />
+                <table:template>                    
+                    <m:Text text="{DisplayPosPed>ReqQty}"/>
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>cantBase}" />
                 <table:template>
-                    
                     <m:Text text="{DisplayPosPed>Kpein}"/>
+                    <!--<m:Text text="{DisplayPosPed>Kpein}"/>-->
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">

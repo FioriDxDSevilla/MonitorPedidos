@@ -5,7 +5,7 @@
     xmlns:fb="sap.ui.comp.filterbar"
     xmlns:l="sap.ui.layout">
 
-    <m:IconTabBar class="sapUiResponsiveContentPadding">
+    <m:IconTabBar id="icontabDetallePedido" select=".onFilterSelectAlta" class="sapUiResponsiveContentPadding">
         <m:items>
             <m:IconTabFilter text="{i18n>Cabecera}" key="Cabecera">
                 <core:Fragment fragmentName="monitorpedidos.fragments.Cabecera" type="XML" />
@@ -22,7 +22,7 @@
             <m:IconTabFilter text="{i18n>Posiciones}" key="Posiciones" visible="{= ${ModoApp>/mode}  === 'C' ?  true : false }">
                 <core:Fragment fragmentName="monitorpedidos.fragments.Posiciones" type="XML" />
             </m:IconTabFilter>
-             <m:IconTabFilter text="{i18n>Posiciones}" key="Posiciones" visible="{= ${ModoApp>/mode}  === 'D' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false }">
+             <m:IconTabFilter id="f_posicionesDisp" text="{i18n>Posiciones}" key="Posiciones" visible="{= ${ModoApp>/mode}  === 'D' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false }">
                 <core:Fragment fragmentName="monitorpedidos.fragments.PosicionesDisplay" type="XML" />
             </m:IconTabFilter>
         </m:items>
