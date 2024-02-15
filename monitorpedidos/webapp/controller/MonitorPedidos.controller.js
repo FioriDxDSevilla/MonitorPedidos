@@ -5162,5 +5162,61 @@ sap.ui.define([
                 this.byId("OptionDialogCliente").close();
             },
 
+            //VERIFICAR SI EL DNI TIENE UN FORMATO VALIDO
+
+            onVerifyNIF: function(){
+                var inputNifCliente = this.getView().byId("inputNifCliente");
+                var inputText = inputNifCliente.getValue();
+                var dniRegex = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i;
+
+                if (dniRegex.test(inputText)) {
+                    var numero = inputText.substring(0, 8);
+                    var letra = inputText.charAt(8).toUpperCase();
+
+                    var letrasValidas = 'TRWAGMYFPDXBNJZSQVHLCKE';
+                    var letraEsperada = letrasValidas.charAt(numero % 23);
+
+                    if (letra === letraEsperada) {
+                        inputNifCliente.setValueState("Success");
+                        
+                    } else {
+                        inputNifCliente.setValueState("Error");
+                    }
+                } else {
+                    inputNifCliente.setValueState("Error");
+                }
+
+            },
+
+            //VERIFICAR SI EL TELF TIENE UN FORMATO VALIDO
+            onVerifyTelf: function(){
+                var inputTelefonoCliente = this.getView().byId("inputTelefonoCliente");
+                var inputText = inputTelefonoCliente.getValue();
+                //var telefonoRegex = /^(?:\+34|0034|34)?[6-9][0-9]{8}$/;
+                var telefonoRegex = /^\+\d+[0-9]{8}$/;
+
+                if (telefonoRegex.test(inputText)) {
+                    inputTelefonoCliente.setValueState("Success");
+                } else {
+                    inputTelefonoCliente.setValueState("Error")
+                }
+
+            },       
+            //VERIFICAR SI EL EMAIL TIENE UN FORMATO VALIDO
+            
+            onVerifyEmail: function(){
+                var inputEmailCliente = this.getView().byId("inputMailContacto");
+                var inputText = inputEmailCliente.getValue();
+                var emailregex = new RegExp("^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z-]+\\.)+[a-zA-Z]{2,6}");
+                
+                if (emailregex.test(inputText)) {
+                    inputEmailCliente.setValueState("Success");
+                } else {
+                    inputEmailCliente.setValueState("Error")
+                }
+
+            }
+
+
         });
     });

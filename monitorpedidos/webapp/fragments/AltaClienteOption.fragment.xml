@@ -3,47 +3,63 @@
     xmlns:l="sap.ui.layout"
     xmlns:core="sap.ui.core"
     xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns:f="sap.ui.layout.form">
+    xmlns:f="sap.ui.layout.form"
+    xmlns:upload="sap.m.upload"
+    >
     <Dialog id="OptionDialogCliente" title="{i18n>AltaCliente}" resizable="true">
 
         <f:SimpleForm id="fDatosCabCliente" editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="3" labelSpanM="4" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1" singleContainerFullSize="false">
             <f:content>
-                <core:Title text=""/>
+                <Label text="{i18n>sociedad}" />
+                <ComboBox id="idAreaClientes" items="{ path: 'AreaVentas>/', sorter: { path: 'Vtext' } }" change=".onChangeArea" showSecondaryValues="true" width="auto">
+                    <core:ListItem key="{AreaVentas>Vkorg}" text="{AreaVentas>Vtext}" additionalText ="{AreaVentas>Vkorg}"/>
+                </ComboBox>
+                
+                <Text text=" " />
+                <Title text="{i18n>DatosPersonales}"/>
                 <Label text="{i18n>NifCliente}"/>
-                <Input placeholder="" />
-                <Label text="{i18n>NombreCliente}"/>
-                <Input placeholder=""/>
+                <Input id="inputNifCliente" maxLength="10" liveChange="onVerifyNIF" />
+                <Label text="{i18n>Nombrecliente}"/>
+                <Input id="inputNombreCliente" maxLength="35"/>
                 <Label text="{i18n>Telefono}"/>
-                <Input placeholder=""/>
+                <Input id="inputTelefonoCliente" maxLength="16" type="Tel" liveChange="onVerifyTelf" />
                 <Label text="{i18n>MailContacto}"/>
-                <Input placeholder=""/>
+                <Input id="inputMailContacto" maxLength="24" type="Email" liveChange="onVerifyEmail" />
 
-                <core:Title text="{i18n>Direccion}"/>
-                <Label text="{i18n>Calle}"/>
-                <Input />
+                <Text text=" "/>
+                <Title text="{i18n>DatosDireccion}"/>
+                <Label text="{i18n>Calle}" />
+                <Input id="inputCalleCliente" maxLength="35"/>
                 <Label text="{i18n>CodPostal}"/>
-                <Input />
+                <Input id="inputCodPostalCliente" maxLength="10"/>
                 <Label text="{i18n>Poblacion}"/>
-                <Input />
+                <Input id="inputPoblacionCliente" maxLength="25"/>
                 <Label text="{i18n>Pais}"/>
-                <Input />
+                <Input id="inputPaisCliente" maxLength="15"/>
                 <Label text="{i18n>Region}"/>
-                <Input />
+                <Input id="inputRegionCliente" maxLength="25"/>
 
-                <core:Title text="{i18n>CamposDIR}"/>
+                <Text text=" "/>
+                <Title text="{i18n>CamposDIR}"/>
                 <Label text="{i18n>Plataforma}"/>
-                <Input />
+                <Input id="inputPlataformaCliente" maxLength="15"/>
                 <Label text="{i18n>DirOrganoGestor}"/>
-                <Input />
+                <Input id="inputOrganoGestorCliente" maxLength="15"/>
                 <Label text="{i18n>DirUnidadTramitadora}"/>
-                <Input />
+                <Input id="inputUnidadTramitadoraCliente" maxLength="15"/>
                 <Label text="{i18n>DirOficinaContable}"/>
-                <Input />
+                <Input id="inputOficinaContableCliente" maxLength="15"/>
                 <Label text="{i18n>DirAdministracion}"/>
-                <Input />
-                <core:Title text=" "/>
+                <Input id="inputAdministracionCliente" maxLength="15"/>
+
+                <Title text=""/>
                 <Label text="{i18n>CondicionPago}"/>
-                 <Input />
+                <Input id="inputCondicionPagoCliente" maxLength="4" />
+
+                <Text text=" "/>
+                <Title text="{i18n>AdjuntarDocumentacion}"/>
+                <Label id="inputAdjuntarDocumentacionCliente" text=""/>
+                <upload:UploadSet id="uploadSetDNI" fileTypes="pdf" instantUpload="true" />
                  
             </f:content>
         </f:SimpleForm>
