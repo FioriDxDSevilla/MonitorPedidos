@@ -881,7 +881,11 @@ sap.ui.define([
                     MessageBox.error(this.oI18nModel.getProperty("noCli"));
                 }
 
+                this.CanalVentas();
+                this.ObtenerZonas();
+
                 this.oComponent.getModel("ModoApp").setProperty("/ccont", true);
+                this.oComponent.getModel("ModoApp").setProperty("/cvcan", true);
                 this.oComponent.getModel("ModoApp").refresh(true);
 
                 this.byId("cliDial").close();
@@ -3836,10 +3840,12 @@ sap.ui.define([
                 /*var mode = this.oComponent.getModel("ModoApp").getValue();
                 mode.cclient = true;
                 this.oComponent.getModel("ModoApp").refresh(true);*/
-                this.oComponent.getModel("ModoApp").setProperty("/ccont", true);
+                this.oComponent.getModel("ModoApp").setProperty("/cped", true);
                 this.oComponent.getModel("ModoApp").refresh(true);
                 Bzirk = this.getView().byId("idzona").getSelectedKey();
                 Bztxt = this.getView().byId("idzona")._getSelectedItemText();
+                this.TiposPedidoAlta(TipoPed);
+                this.OficinaVenta(vkbur, Cvcan, Cvsector);
 
             },
 
@@ -3916,9 +3922,12 @@ sap.ui.define([
                     this.getView().byId("idcontract").setVisible(true);
                 }*/
 
+                this.CanalVentas();
+                this.ObtenerZonas();
+
                 //this.oComponent.getModel("ModoApp").setProperty("/cvent", true);
-                //this.oComponent.getModel("ModoApp").setProperty("/cvcan", true);
                 this.oComponent.getModel("ModoApp").setProperty("/ccont", true);
+                this.oComponent.getModel("ModoApp").setProperty("/cvcan", true);
 
                 this.oComponent.getModel("ModoApp").refresh(true);
 
@@ -4044,6 +4053,15 @@ sap.ui.define([
 
                 if (!numCont || numCont == undefined) {
                     MessageBox.warning(this.oI18nModel.getProperty("noCont"));
+
+                    this.oComponent.getModel("ModoApp").setProperty("/cvcan", true);
+                    this.oComponent.getModel("ModoApp").setProperty("/cvsector", false);
+                    this.oComponent.getModel("ModoApp").setProperty("/czona", false);
+                    this.oComponent.getModel("ModoApp").setProperty("/cped", false);
+                    this.getView().byId("idCanal").setSelectedKey(null);
+                    this.getView().byId("idSector").setSelectedKey(null);
+                    this.getView().byId("idzona").setSelectedKey(null);
+                    this.getView().byId("idCTipoPed").setSelectedKey(null);
                 } else {
                     var soli = this.oComponent.getModel("ContratoCliente").getData();
                     for (var i = 0; i < soli.length; i++) {
@@ -4062,6 +4080,10 @@ sap.ui.define([
                     this.ObtenerZonas();
                     this.OficinaVenta(vkbur, Cvcan, Cvsector);
                     this.TiposPedidoAlta(TipoPed);
+
+                    this.oComponent.getModel("ModoApp").setProperty("/cvcan", false);
+                    this.oComponent.getModel("ModoApp").setProperty("/cvsector", false);
+                    this.oComponent.getModel("ModoApp").setProperty("/czona", false);
 
                     this.getView().byId("idCanal").setSelectedKey(Cvcan);
                     this.getView().byId("idSector").setSelectedKey(Cvsector);
@@ -4263,7 +4285,7 @@ sap.ui.define([
                 this.oComponent.getModel("ModoApp").setProperty("/cvsector", true);
                 this.oComponent.getModel("ModoApp").refresh(true);
                 Cvcan = this.getView().byId("idCanal").getSelectedKey();
-                //this.SectorVentas();
+                this.SectorVentas();
             },
 
             SectorVentas: function () {
