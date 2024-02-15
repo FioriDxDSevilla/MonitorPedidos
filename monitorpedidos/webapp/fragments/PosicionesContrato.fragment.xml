@@ -8,78 +8,94 @@
     xmlns:table="sap.ui.table"
     xmlns:tnt="sap.tnt"
 >
-    <Dialog id="OptionDialContrato" title="{i18n>SolicitudAlta}" resizable="true">
-        <table:Table selectionMode="MultiToggle" id="TablaPosicionesContrato" rows="{path: 'PedidoPosContrato>/'}"
-                    visibleRowCount="4"
-                    width= "100%">
-                    <!--<table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'DisplayPosPed>/results'}"  visibleRowCountMode="Interactive"-->               
+    <Dialog
+        id="OptionDialContrato"
+        title="{i18n>SolicitudAlta}"
+        resizable="true"
+    >
+        <table:Table
+            selectionMode="MultiToggle"
+            id="TablaPosicionesContrato"
+            rows="{path: 'PedidoPosContrato>/'}"
+            visibleRowCount="4"
+            width="100%"
+        >
+            <!--<table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'DisplayPosPed>/results'}"  visibleRowCountMode="Interactive"-->
 
-                    <table:Column hAlign="Center">
-                        <Label text="{i18n>posicion}"/>
-                        <table:template>
-                            <!--<Text text="{PedidoPosContrato>ItmNumber}"/>-->
-                            <Text text="{PedidoPosContrato>Posnr}"/>
-                        </table:template>
-                    </table:Column>    
-                    <table:Column hAlign="Center">
-                        <Label text="{i18n>Material}"/>
-                        <table:template>
-                            <!--<Text text="{PedidoPosContrato>Material}"/>-->
-                            <Text text="{PedidoPosContrato>Matnr}"/>
-                        </table:template>
-                    </table:Column>
-                    <table:Column hAlign="Center">
-                        <Label text="{i18n>Descripcion}" />
-                        <table:template>
-                            <!--<Text text="{PedidoPosContrato>ShortText}"/>-->
-                            <Text text="{PedidoPosContrato>Arktx}"/>
-                        </table:template>
-                    </table:Column>
-                    <table:Column hAlign="Center">
-                        <Label text="{i18n>Cantidad}" />
-                        <table:template>
-                            <!--<Text text="{PedidoPosContrato>ReqQty}"/>-->
-                            <Text text="{PedidoPosContrato>ReqQty}"/>
-                        </table:template>
-                    </table:Column>
-                    <table:Column hAlign="Center">
-                        <m:Label text="{i18n>cantBase}" />
-                        <table:template>
-                            <m:Text text="{PedidoPosContrato>Kpein}"/>
-                            <!--<m:Text text="{PedidoPosContrato>Kpein}"/>-->
-                        </table:template>
-                    </table:Column>
-                    <table:Column hAlign="Center">
-                        <Label text="{i18n>Unidades}" />
-                        <table:template>
-                            <!--<Text text="{PedidoPosContrato>SalesUnit}"/>-->
-                            <Text text="{PedidoPosContrato>Meins}"/>
-                        </table:template>
-                    </table:Column>
-                    <table:Column hAlign="Center">
-                        <Label text="{i18n>Importe}" />
-                        <table:template>
-                            <!--<Text text="{PedidoPosContrato>CondValue}" />-->
-                            <Text text="{PedidoPosContrato>Netwr}" />
-                        </table:template>
-                    </table:Column>
-                    <table:Column hAlign="Center">
-                        <Label text="{i18n>Moneda}" />
-                        <table:template>
-                            <!--<Text text="{PedidoPosContrato>Currency}" />-->
-                            <Text text="{PedidoPosContrato>Waerk}" />
-                        </table:template>
-                    </table:Column>
-                </table:Table>
+            <table:Column hAlign="Center">
+                <Label text="{i18n>posicion}" />
+                <table:template>
+                    <!--<Text text="{PedidoPosContrato>ItmNumber}"/>-->
+                    <Text text="{PedidoPosContrato>Posnr}" />
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <Label text="{i18n>Material}" />
+                <table:template>
+                    <!--<Text text="{PedidoPosContrato>Material}"/>-->
+                    <Text text="{PedidoPosContrato>Matnr}" />
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <Label text="{i18n>Descripcion}" />
+                <table:template>
+                    <!--<Text text="{PedidoPosContrato>ShortText}"/>-->
+                    <Text text="{PedidoPosContrato>Arktx}" />
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <Label text="{i18n>Cantidad}" />
+                <table:template>
+                    <!--<Text text="{PedidoPosContrato>ReqQty}"/>-->
+                    <Text text="{PedidoPosContrato>ReqQty}" />
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <Label text="{i18n>cantBase}" />
+                <table:template>
+                    <Text text="{PedidoPosContrato>Kpein}" />
+                    <!--<Text text="{PedidoPosContrato>Kpein}"/>-->
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <Label text="{i18n>Unidades}" />
+                <table:template>
+                    <!--<Text text="{PedidoPosContrato>SalesUnit}"/>-->
+                    <Text text="{PedidoPosContrato>Meins}" />
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <Label text="{i18n>Importe}" />
+                <table:template>
+                    <!--<Text text="{PedidoPosContrato>CondValue}" />-->
+                    <Text text="{PedidoPosContrato>Netwr}" />
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <Label text="{i18n>Moneda}" />
+                <table:template>
+                    <!--<Text text="{PedidoPosContrato>Currency}" />-->
+                    <Text text="{PedidoPosContrato>Waerk}" />
+                </table:template>
+            </table:Column>
+        </table:Table>
 
         <OverflowToolbar>
-            <Button text="Crear" type="Emphasized" press="onNavAltaContrato">
+            <Button
+                text="Crear"
+                type="Emphasized"
+                press="onNavAltaContrato"
+            >
                 <layoutData>
                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                 </layoutData>
             </Button>
             <ToolbarSpacer />
-            <Button text="Cancelar" type="Emphasized" press="CloseOptionsDiagContrato">
+            <Button
+                text="Cancelar"
+                type="Emphasized"
+                press="CloseOptionsDiagContrato"
+            >
                 <layoutData>
                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                 </layoutData>

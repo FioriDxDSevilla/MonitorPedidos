@@ -138,7 +138,7 @@
                 rows="{
                             path: 'listadoSolicitudes>/'}"
                 visibleRowCountMode="Interactive"
-                width="100%"
+                width="auto"
                 enableCellFilter="{ui>/cellFilterOn}"
                 filter="filterOption"
                 sort="sortOption">
@@ -155,7 +155,7 @@
 				</ui:extension>
                 <ui:columns>
                     <ui:Column
-                        width="13em"
+                        width="10em"
                         filterProperty="IDSOLICITUD"
                         sortProperty="IDSOLICITUD"
                         tooltip="{i18n>numped}"
@@ -170,7 +170,7 @@
                     </ui:Column>
 
                     <ui:Column
-                        width="16em"
+                        width="10em"
                         filterProperty="Fechadoc"
                         sortProperty="Fechadoc"
                         tooltip="{i18n>fechadocu}"
@@ -183,7 +183,7 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="12em"
+                        width="7em"
                         filterProperty="Creador"
                         sortProperty="Creador"
                         tooltip="{i18n>creador}"
@@ -194,7 +194,7 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="14em"
+                        width="10em"
                         filterProperty="CLIENTE"
                         sortProperty="CLIENTE"
                         tooltip="{i18n>codcli}"
@@ -205,7 +205,7 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="30em"
+                        width="10em"
                         filterProperty="Nombrecliente"
                         sortProperty="Nombrecliente"
                         tooltip="{i18n>nomcli}"
@@ -228,7 +228,7 @@
                         </ui:template>
                     </ui:Column>-->
                     <ui:Column
-                        width="15em"
+                        width="6em"
                         filterProperty="Netwr"
                         sortProperty="Netwr"
                         tooltip="{i18n>import}">
@@ -238,7 +238,7 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="auto"
+                        width="3em"
                         filterProperty="Waerk"
                         sortProperty="Waerk"
                         tooltip="{i18n>Moneda}">
@@ -248,7 +248,7 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="15em"
+                        width="8em"
                         filterProperty="ESTADO"
                         sortProperty="ESTADO"
                         tooltip="{i18n>status}"
@@ -259,7 +259,7 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="13em"
+                        width="8em"
                         filterProperty="Zorden"
                         sortProperty="Zorden"
                         tooltip="{i18n>zord}"
@@ -270,7 +270,7 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="12em"
+                        width="4em"
                         filterProperty="Zcoste"
                         sortProperty="Zcoste"
                         tooltip="{i18n>zcost}"
@@ -281,7 +281,7 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="12em"
+                        width="8em"
                         filterProperty="Nombreapr"
                         sortProperty="Nombreapr"
                         tooltip="{i18n>nomapprov}"
@@ -303,7 +303,7 @@
                         </ui:template>
                     </ui:Column>-->
                     <ui:Column
-                        width="auto"
+                        width="5em"
                         filterProperty="Orgventas"
                         sortProperty="Orgventas"
                         tooltip="{i18n>orgventas}"
@@ -314,7 +314,7 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="14em"
+                        width="6em"
                         filterProperty="Numfactura"
                         sortProperty="Numfactura"
                         tooltip="{i18n>Numfactura}"
@@ -331,7 +331,7 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="35em"
+                        width="8em"
                         filterProperty="Referenciped"
                         sortProperty="Referenciped"
                         tooltip="{i18n>Referenciped}"
@@ -343,7 +343,7 @@
                     </ui:Column>
 
                     <ui:Column
-                        width="18em"
+                        width="3em"
                         filterProperty="Indcontrato"
                         sortProperty="Indcontrato"
                         tooltip="{i18n>Indcontrato}"

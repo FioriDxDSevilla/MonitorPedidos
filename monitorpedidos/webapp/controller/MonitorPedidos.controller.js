@@ -1,17 +1,17 @@
 sap.ui.define([
-        "sap/ui/core/mvc/Controller",
-        "sap/ui/model/json/JSONModel",
-        "sap/ui/core/Fragment",
-        "sap/ui/core/routing/History",
-        "sap/ui/model/Filter",
-        "sap/ui/model/FilterOperator",
-        "monitorpedidos/model/Util",
-        "sap/m/MessageBox",
-        "sap/ui/core/util/ExportTypeCSV",
-        "sap/ui/core/util/Export",
-        "sap/ui/export/library",
-        "sap/ui/export/Spreadsheet"
-    ],
+    "sap/ui/core/mvc/Controller",
+    "sap/ui/model/json/JSONModel",
+    "sap/ui/core/Fragment",
+    "sap/ui/core/routing/History",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+    "monitorpedidos/model/Util",
+    "sap/m/MessageBox",
+    "sap/ui/core/util/ExportTypeCSV",
+    "sap/ui/core/util/Export",
+    "sap/ui/export/library",
+    "sap/ui/export/Spreadsheet"
+],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
@@ -430,7 +430,7 @@ sap.ui.define([
                     MessageBox.warning(this.oI18nModel.getProperty("noSol"));
                     if (sStatus === "REDA") {
                         this.oComponent.getModel("Filtros").setProperty("/totalred", 0);
-                    } else if (sStatus === "APRB")  {
+                    } else if (sStatus === "APRB") {
                         this.oComponent.getModel("Filtros").setProperty("/totalpdte", 0);
                     } else if (sStatus === "FINA") {
                         this.oComponent.getModel("Filtros").setProperty("/totalfin", 0);
@@ -441,12 +441,12 @@ sap.ui.define([
                     } else if (sStatus === "COBR") {
                         this.oComponent.getModel("Filtros").setProperty("/totalcob", 0);
                     } else if (sStatus === "DEN") {
-                        this.oComponent.getModel("Filtros").setProperty("/TotalDen", 0); 
+                        this.oComponent.getModel("Filtros").setProperty("/TotalDen", 0);
                     } else {
                         this.oComponent.getModel("Filtros").setProperty("/Total", 0);
                     }
                     //this.oComponent.getModel("Filtros").setProperty("/Total", '0');
-                    
+
                     //Si no hay solicitudes, se borra el listado
                     this.oComponent.setModel(new JSONModel(), "listadoSolicitudes");
                 }
@@ -854,8 +854,37 @@ sap.ui.define([
                 codcli = acr.Kunnr;
                 nomcli = acr.Name1;
                 this.getView().byId("f_client").setValue(nomcli);
-                this.byId("cliDial").close();
+                this.getView().byId("idCCliente").setValue(codcli);
+                this.getView().byId("descrProv").setValue(nomcli);
 
+                sap.ui.core.BusyIndicator.show();
+
+                if (vkbur) {
+                    var aFilters = [],
+                        aFilterIds = [],
+                        aFilterValues = [];
+
+                    aFilterIds.push("Kunnr");
+                    aFilterValues.push(codcli);
+
+                    aFilterIds.push("Bukrs");
+                    aFilterValues.push(vkbur);
+
+                    aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                    Promise.all([
+                        this.readDataEntity(this.mainService, "/DameClientesSet", aFilters),
+                    ]).then(this.buildCliente.bind(this), this.errorFatal.bind(this));
+
+
+                } else {
+                    MessageBox.error(this.oI18nModel.getProperty("noCli"));
+                }
+
+                this.oComponent.getModel("ModoApp").setProperty("/ccont", true);
+                this.oComponent.getModel("ModoApp").refresh(true);
+
+                this.byId("cliDial").close();
             },
 
             DatosCliente: function (codcli, vkbur) {
@@ -1444,7 +1473,7 @@ sap.ui.define([
                         this._configDialog(oButton);
                         oDialog.open();
                     }
-                    .bind(this));
+                        .bind(this));
 
             },
 
@@ -1571,7 +1600,7 @@ sap.ui.define([
                         sAprob = false;
                         vedit = false;
                         break;
-                        //En redaccion
+                    //En redaccion
                     case "Ok":
                         sStatus = "REDA";
                         //this.oComponent.getModel("ModoApp").setProperty("/redacc", redacc);
@@ -1579,25 +1608,25 @@ sap.ui.define([
                         //this._getDialogAprobaciones();
                         vedit = true;
                         break;
-                        //Pdte. Aprobar
+                    //Pdte. Aprobar
                     case "Heavy":
                         sStatus = "APRB";
                         sAprob = false;
                         vedit = false;
                         break;
-                        //Pdte. Financiero
+                    //Pdte. Financiero
                     case "Overweight":
                         sStatus = "FINA";
                         sAprob = false;
                         vedit = false;
                         break;
-                        //Pdte. Facturar
+                    //Pdte. Facturar
                     case "Money":
                         sStatus = "FACT";
                         sAprob = false;
                         vedit = false;
                         break;
-                        //Pdte. Cobrar
+                    //Pdte. Cobrar
                     case "Payment":
                         sStatus = "PDTE";
                         sAprob = false;
@@ -1606,13 +1635,13 @@ sap.ui.define([
                         //this.oComponent.getModel("ModoApp").setProperty("/aprob", aprob);
                         //this.oComponent.getModel("ModoApp").refresh(true);
                         break;
-                        //Cobradas
+                    //Cobradas
                     case "Sales":
                         sStatus = "COBR";
                         sAprob = false;
                         vedit = false;
                         break;
-                        //Denegadas
+                    //Denegadas
                     case "Cancel":
                         sStatus = "DEN";
                         sAprob = false;
@@ -1684,7 +1713,7 @@ sap.ui.define([
                             responsable,
                             ClasePed
                         );
-                    } else if (checkTodos === 'X') {
+                    } else if (checkTodos === undefined) {
                         this.getView().byId("Filtr10").setVisible(true);
                         this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
                         this.oComponent.getModel("PedidoCab").refresh(true);
@@ -1744,7 +1773,7 @@ sap.ui.define([
                             codmat,
                             responsable,
                             ClasePed
-                        );  
+                        );
                     } else if (checkMisPed === undefined) {
                         this.getView().byId("Filtr10").setVisible(false);
                         this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
@@ -1762,7 +1791,7 @@ sap.ui.define([
                             codmat,
                             responsable,
                             ClasePed
-                        );  
+                        );
                     } else if (checkTodos === 'X') {
                         this.getView().byId("Filtr10").setVisible(false);
                         this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
@@ -1780,9 +1809,9 @@ sap.ui.define([
                             codmat,
                             responsable,
                             ClasePed
-                        );  
-                    } else if(checkTodos === undefined) {
-                       
+                        );
+                    } else if (checkTodos === undefined) {
+
                         this.getView().byId("Filtr10").setVisible(false);
                         this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
                         this.oComponent.getModel("PedidoCab").refresh(true);
@@ -1799,9 +1828,9 @@ sap.ui.define([
                             codmat,
                             responsable,
                             ClasePed
-                        );  
+                        );
                     }
-                    
+
                     /*this.getView().byId("Filtr10").setVisible(false);
                     this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
                     this.oComponent.getModel("PedidoCab").refresh(true);
@@ -1837,7 +1866,7 @@ sap.ui.define([
                             codmat,
                             responsable,
                             ClasePed
-                        ); 
+                        );
                     } else if (checkMisPed === undefined) {
                         this.getView().byId("Filtr10").setVisible(false);
                         this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
@@ -2780,7 +2809,7 @@ sap.ui.define([
 
             },
 
-            getSelectedContrato: function (oEvent) {    
+            getSelectedContrato: function (oEvent) {
                 var oModCont = this.oComponent.getModel("ContratoCliente").getData();
                 const sOperationPath = oEvent.getSource().getBindingContext("ContratoCliente").getPath();
                 const sOperation = sOperationPath.split("/").slice(-1).pop();
@@ -3475,7 +3504,7 @@ sap.ui.define([
                     vordenes = false;
                     vtitle = this.oI18nModel.getProperty("visPed");
                     boton,
-                    modApp = this.modoapp;
+                        modApp = this.modoapp;
                 }
 
                 var config = {
@@ -3670,8 +3699,8 @@ sap.ui.define([
             TiposPedidoAlta: function (TipoPed) {
 
                 var aFilters = [],
-                aFilterIds = [],
-                aFilterValues = [];
+                    aFilterIds = [],
+                    aFilterValues = [];
 
                 aFilterIds.push("Auart");
                 aFilterValues.push(TipoPed);
@@ -3920,7 +3949,7 @@ sap.ui.define([
                         //this.oComponent.getModel("ModoApp").refresh(true);
                         this.DatosCliente(codcli, vkbur);
                         //this.motivopedido(TipoPed, vkbur);-->Cambiaremos el punto donde se llama al mot.
-                        
+
                     }
                 }
 
@@ -4024,10 +4053,10 @@ sap.ui.define([
                             Bzirk = soli[i].Bzirk;
                             TipoPed = soli[i].Auart;
                         }
-                        
-                    }              
 
-                    this.condicionPago(codcli, vkbur, Cvcan, Cvsector); 
+                    }
+
+                    this.condicionPago(codcli, vkbur, Cvcan, Cvsector);
                     this.CanalVentas();
                     this.SectorVentas();
                     this.ObtenerZonas();
@@ -4065,6 +4094,7 @@ sap.ui.define([
 
                 //this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
                 this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", ClasePed);
+                ClasePed = "";
                 this.oComponent.getModel("ModoApp").setProperty("/SocPed", socPed);
                 //this.oComponent.getModel("ModoApp").setProperty("/NomSoc", nomSoc);
                 this.oComponent.getModel("ModoApp").setProperty("/NomSoc", vText);
@@ -4550,6 +4580,7 @@ sap.ui.define([
                     var modeApp = this.oComponent.getModel("ModoApp").getData().mode; //RECOGEMOS EL MODO EN QUE VIENE
                     //this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
                     this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", ClasePed);
+                    ClasePed = "";
                     this.oComponent.getModel("ModoApp").setProperty("/SocPed", socPed);
                     this.oComponent.getModel("ModoApp").setProperty("/NomSoc", vText);
                     this.oComponent.getModel("ModoApp").setProperty("/Vkbur", vkbur);
@@ -5057,32 +5088,32 @@ sap.ui.define([
                         shellHash: hashUrl
                     }
                 });
-            }, 
-            
+            },
+
             //LÓGICA PARA LOS DIFERENTES MENU ITEMS QUE SE CREEN
 
-            onGetKeyFromItemMenu: function(oEvent){
-            //console.log(oEvent.getSource().getProperty("key"));
-            var selectedKey = oEvent.getSource().getProperty("key");
-            
-            switch(selectedKey){
+            onGetKeyFromItemMenu: function (oEvent) {
+                //console.log(oEvent.getSource().getProperty("key"));
+                var selectedKey = oEvent.getSource().getProperty("key");
 
-                case "CrearCliente": 
-                this.onNavToCrearCliente(oEvent);
-                break;
-                
-            };
+                switch (selectedKey) {
 
-            /* #### ALTA DE CLIENTES ##### */
-            //METODOS PARA LA ALTA DE CLIENTES
+                    case "CrearCliente":
+                        this.onNavToCrearCliente(oEvent);
+                        break;
+
+                };
+
+                /* #### ALTA DE CLIENTES ##### */
+                //METODOS PARA LA ALTA DE CLIENTES
 
             },
-            onNavToCrearCliente: function(oEvent){
+            onNavToCrearCliente: function (oEvent) {
                 this._getDialogAltaCliente(oEvent);
 
             },
 
-     
+
 
             _getDialogAltaCliente: function (sInputValue) {
                 var oView = this.getView();
