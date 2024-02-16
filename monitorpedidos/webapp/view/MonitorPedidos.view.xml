@@ -6,13 +6,22 @@
         <headerContent>
             <MenuButton icon="sap-icon://menu" tooltip="Más opciones" >
                 <menu>
-                    <Menu>
+                    <Menu> 
                         <MenuItem 
-                        text="{i18n>CrearCliente}" 
-                        icon="sap-icon://person-placeholder" 
-                        id="menuItemCrearCliente" 
-                        press="onGetKeyFromItemMenu" 
-                        key="CrearCliente"/>
+                            text="{i18n>carga}" 
+                            icon="sap-icon://arrow-top"
+                            id="menuItemCargaPedidos" 
+                            press="onGetKeyFromItemMenu" 
+                            key="CargaPedidos"
+                        />
+
+                        <MenuItem 
+                            text="{i18n>CrearCliente}" 
+                            icon="sap-icon://person-placeholder" 
+                            id="menuItemCrearCliente" 
+                            press="onGetKeyFromItemMenu" 
+                            key="CrearCliente"
+                        />                       
                     </Menu>
                 </menu>
             </MenuButton>

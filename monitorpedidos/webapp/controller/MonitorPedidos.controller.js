@@ -5124,6 +5124,10 @@ sap.ui.define([
                         this.onNavToCrearCliente(oEvent);
                         break;
 
+                    case "CargaPedidos":
+                        this.onGoToZpv();
+                        break;
+
                 };
 
                 /* #### ALTA DE CLIENTES ##### */
@@ -5164,7 +5168,7 @@ sap.ui.define([
 
             //VERIFICAR SI EL DNI TIENE UN FORMATO VALIDO
 
-            onVerifyNIF: function(){
+            onVerifyNIF: function () {
                 var inputNifCliente = this.getView().byId("inputNifCliente");
                 var inputText = inputNifCliente.getValue();
                 var dniRegex = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i;
@@ -5178,7 +5182,7 @@ sap.ui.define([
 
                     if (letra === letraEsperada) {
                         inputNifCliente.setValueState("Success");
-                        
+
                     } else {
                         inputNifCliente.setValueState("Error");
                     }
@@ -5189,7 +5193,7 @@ sap.ui.define([
             },
 
             //VERIFICAR SI EL TELF TIENE UN FORMATO VALIDO
-            onVerifyTelf: function(){
+            onVerifyTelf: function () {
                 var inputTelefonoCliente = this.getView().byId("inputTelefonoCliente");
                 var inputText = inputTelefonoCliente.getValue();
                 //var telefonoRegex = /^(?:\+34|0034|34)?[6-9][0-9]{8}$/;
@@ -5201,14 +5205,14 @@ sap.ui.define([
                     inputTelefonoCliente.setValueState("Error")
                 }
 
-            },       
+            },
             //VERIFICAR SI EL EMAIL TIENE UN FORMATO VALIDO
-            
-            onVerifyEmail: function(){
+
+            onVerifyEmail: function () {
                 var inputEmailCliente = this.getView().byId("inputMailContacto");
                 var inputText = inputEmailCliente.getValue();
                 var emailregex = new RegExp("^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z-]+\\.)+[a-zA-Z]{2,6}");
-                
+
                 if (emailregex.test(inputText)) {
                     inputEmailCliente.setValueState("Success");
                 } else {

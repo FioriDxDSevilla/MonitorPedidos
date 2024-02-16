@@ -32,7 +32,7 @@
             type="Emphasized"  
             press="onGoToZpv"          
             text="{i18n>carga}"
-           
+           visible="false"
         >
             <layoutData>
                 <OverflowToolbarLayoutData

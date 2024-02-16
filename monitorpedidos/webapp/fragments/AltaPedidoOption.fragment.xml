@@ -62,7 +62,7 @@
 
                 <!--sexta opción escogible-->
                  <Label text="{i18n>zona}" />
-                <ComboBox id="idzona" items="{ path: 'ZonaVentas>/', sorter: { path: 'Bztxt' } }" editable="{ModoApp>/czona}"  change=".onChangeZona" showSecondaryValues="true">
+                <ComboBox id="idzona" items="{ path: 'ZonaVentas>/', sorter: { path: 'Bzirk' } }" editable="{ModoApp>/czona}"  change=".onChangeZona" showSecondaryValues="true">
                     <core:ListItem key="{ZonaVentas>Bzirk}" text="{ZonaVentas>Bztxt}" additionalText ="{ZonaVentas>Bzirk}"/>
                 </ComboBox>
 
