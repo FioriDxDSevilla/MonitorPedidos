@@ -4037,6 +4037,8 @@ sap.ui.define([
                     var oModelUsuario = new JSONModel();
                     oModelUsuario.setData(values[0].results);
                     this.oComponent.setModel(oModelUsuario, "Usuario");
+                    this.oComponent.getModel("Usuario").setProperty("/user", this.oComponent.getModel("Usuario").getData()[0].Bname);
+                    this.oComponent.getModel("Usuario").refresh(true);
                 }
             },
 
@@ -4469,7 +4471,8 @@ sap.ui.define([
 
             onNavAltaContrato: function () {
 
-                //this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
+                this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
+                TipoPed = "";
                 this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", ClasePed);
                 ClasePed = "";
                 this.oComponent.getModel("ModoApp").setProperty("/SocPed", socPed);
@@ -4955,7 +4958,8 @@ sap.ui.define([
                 } else {
 
                     var modeApp = this.oComponent.getModel("ModoApp").getData().mode; //RECOGEMOS EL MODO EN QUE VIENE
-                    //this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
+                    this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
+                    TipoPed = "";
                     this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", ClasePed);
                     ClasePed = "";
                     this.oComponent.getModel("ModoApp").setProperty("/SocPed", socPed);

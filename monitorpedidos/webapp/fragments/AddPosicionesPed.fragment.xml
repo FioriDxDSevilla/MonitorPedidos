@@ -106,8 +106,8 @@
                 showValueHelp="true"
                 editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
                 valueHelpRequest=".onValueHelpCecosPosicion"
-                value="{DisplayPEP>/Ykostl}"
-                visible="false"
+                value="{posPedFrag>/Ykostl}"
+                visible="true"
             />
             <Label text="{i18n>ord}" />
             <Input
@@ -115,8 +115,8 @@
                 showValueHelp="true"
                 editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
                 valueHelpRequest=".onValueHelpOrdPosicion"
-                value="{DisplayPEP>/Yaufnr}"
-                visible="false"
+                value="{posPedFrag>/Yaufnr}"
+                visible="true"
             />           
             <!--<ComboBox
                 value="{posPedFrag>/Waers}"

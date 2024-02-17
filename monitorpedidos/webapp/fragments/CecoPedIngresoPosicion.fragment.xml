@@ -91,7 +91,7 @@
     </Table>
             <OverflowToolbar >
                 <ToolbarSpacer/>
-                <Button text="Cancelar" type="Emphasized" press="cecoDialPosicion">
+                <Button text="Cancelar" type="Emphasized" press="CloseCecoDiagPosicion">
                 <layoutData>
                 <OverflowToolbarLayoutData
                     priority="NeverOverflow"/>

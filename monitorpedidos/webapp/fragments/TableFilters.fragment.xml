@@ -377,7 +377,7 @@
                                 tooltip="{i18n>modPos}"
                                 type="Ghost"
                                 press="onEditOrder"
-                                enabled="{PedidoCab>/editPos}"
+                                enabled="{= ${listadoSolicitudes>Creador} === ${Usuario>/user} }"
                             />
                         </ui:template>
                     </ui:Column>
