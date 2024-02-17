@@ -91,7 +91,7 @@
                 iconColor="Negative"
                 design="Horizontal"
                 text="Pdte. Cobrar"
-                count="{Filtros>/totalaprov}"
+                count="{Filtros>/totalpdtecobr}"
                 key="Payment"
             />
             <!--<IconTabSeparator
