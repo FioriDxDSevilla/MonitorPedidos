@@ -53,7 +53,7 @@ sap.ui.define([
                 var date = new Date();
                 var fechai, fechaf;
                 vedit = false;
-                var Usuario = "";
+               
 
                 /*this.ListadoSolicitudes(
                     Usuario,
@@ -63,18 +63,6 @@ sap.ui.define([
                     Imported,
                     Importeh,
                     Cliente);*/
-
-                this.ListadoSolicitudes(
-                    Usuario,
-                    Numped,
-                    Fechad,
-                    Fechah,
-                    Imported,
-                    Importeh,
-                    Cliente,
-                    LineaServicio,
-                    codmat,
-                    ClasePed);
 
                 //Mapear los campos por defecto de los filtros:
 
@@ -103,6 +91,23 @@ sap.ui.define([
                 this.getUser();
                 this.AreasVenta();
                 this.modoapp = "";
+
+                //De primeras mostrará las solicitudes de Mi usuario
+                //Usuario = "";
+
+                this.ListadoSolicitudes(
+                    Usuario,
+                    Numped,
+                    Fechad,
+                    Fechah,
+                    Imported,
+                    Importeh,
+                    Cliente,
+                    LineaServicio,
+                    codmat,
+                    ClasePed);
+
+
             },
 
             dameTiposped: function () {
