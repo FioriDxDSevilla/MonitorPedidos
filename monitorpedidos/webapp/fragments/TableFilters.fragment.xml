@@ -368,7 +368,7 @@
                                     titlePress="handleLinkCont" />
                         </ui:template>
                     </ui:Column>
-                    <ui:Column width="2%">
+                    <ui:Column id="colbtnedit" width="2%" visible="false">
                         <Label text="" />
                         <ui:template>
                             <Button
@@ -377,7 +377,8 @@
                                 tooltip="{i18n>modPos}"
                                 type="Ghost"
                                 press="onEditOrder"
-                                enabled="{= ${listadoSolicitudes>Creador} === ${Usuario>/user} }"
+                                enabled="{= ${listadoSolicitudes>Creador} === ${Usuario>/user} &amp;&amp; ${PedidoCab>editPos}}"
+                                visible="true"
                             />
                         </ui:template>
                     </ui:Column>

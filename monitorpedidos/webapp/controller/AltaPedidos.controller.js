@@ -32,6 +32,8 @@ sap.ui.define([
         var oModAdj = new JSONModel();
         var oModAdjSHP = new JSONModel();
 
+
+
         /*if (this.oComponent.getModel("ModoApp").getProperty("/mode") == 'D') {
  
           //////DESHABILITAR LOS CAMPOS PARA EL MODO VISUALIZACIÓN DE PEDIDO ////////////////////
@@ -136,17 +138,20 @@ sap.ui.define([
           var datos = this.oComponent.getModel("DisplayPEP").getData().SolicitudPed_A.results;
           var sumCant = 0;
           var sumImp = 0;
+          var sumCantBase = 0;
           var moneda = "EUR";
           for (var i = 0; i < datos.length; i++) {
-            var resultados = datos[i];
-            var cantidades = datos[i].Kpein;
+            var cantidades = datos[i].ReqQty;
+            var cantbases = datos[i].Kpein;
             sumCant = (Number(sumCant) + Number(cantidades)).toFixed(2);
             var importes = datos[i].Netwr;
             sumImp = (Number(sumImp) + Number(importes)).toFixed(2);
             var moneda = datos[i].Waerk;
+            sumCantBase = (Number(sumCantBase) + Number(cantbases)).toFixed(2);
+
           }
           var sumTotaldiv = 0;
-          sumTotaldiv = (sumImp / sumCant).toFixed(2);
+          sumTotaldiv = (Number(sumImp / sumCantBase) * Number(sumCant)).toFixed(2);
           this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", sumTotaldiv);
           this.oComponent.getModel("PedidoCab").setProperty("/Moneda", moneda);
           this.oComponent.getModel("PedidoCab").refresh(true);
@@ -155,16 +160,19 @@ sap.ui.define([
           var sumCant = 0;
           var sumImp = 0;
           var moneda = "EUR";
+          var sumCantBase = 0;
           for (var i = 0; i < datos.length; i++) {
             var resultados = datos[i];
-            var cantidades = datos[i].Kpein;
+            var cantidades = datos[i].ReqQty;
+            var cantbases = datos[i].Kpein;
             sumCant = (Number(sumCant) + Number(cantidades)).toFixed(2);
             var importes = datos[i].Netwr;
             sumImp = (Number(sumImp) + Number(importes)).toFixed(2);
             var moneda = datos[i].Waerk;
+            sumCantBase = (Number(sumCantBase) + Number(cantbases)).toFixed(2);
           }
           var sumTotaldiv = 0;
-          sumTotaldiv = (sumImp / sumCant).toFixed(2);
+          sumTotaldiv = (Number(sumImp / sumCantBase) * Number(sumCant)).toFixed(2);
           this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", sumTotaldiv);
           this.oComponent.getModel("PedidoCab").setProperty("/Moneda", moneda);
           this.oComponent.getModel("PedidoCab").refresh(true);
@@ -1152,501 +1160,6 @@ sap.ui.define([
         }
       },
 
-      /*addPedPos: function () {
-        var num;
-        var posiciones = [],
-          cabecera = [];
-
-        var posicion = this.oComponent.getModel("posPedFrag").getData();
-        var omodApp = this.oComponent.getModel("ModoApp").getData().modeAlta;
-
-        posiciones = this.oComponent.getModel("PedidoPos").getData();
-        cabecera = this.oComponent.getModel("PedidoCab").getData();
-
-        var aFilters = [],
-          aFilterIds = [],
-          aFilterValues = [];
-
-        // Posicion Pedido  
-        if (posicion.ItmNumber) {
-          num = Util.zfill(posicion.ItmNumber, 8);
-          aFilterIds.push("ItmNumber");
-          aFilterValues.push(posicion.ItmNumber);
-        }
-
-        //Material
-        if (posicion.Material) {
-          aFilterIds.push("Material");
-          aFilterValues.push(posicion.Material);
-        }
-
-        //Descripcion Material
-        if (posicion.ShortText) {
-          aFilterIds.push("ShortText");
-          aFilterValues.push(posicion.ShortText);
-        }
-
-        //Fecha de Precio
-        if (posicion.BillDate) {
-          aFilterIds.push("BillDate");
-          aFilterValues.push(posicion.BillDate);
-        }
-
-        //Precio posiciones
-        if (posicion.CondValue) {
-          aFilterIds.push("CondValue");
-          aFilterValues.push(posicion.CondValue);
-        }
-
-        //Cantidad posicion
-        if (posicion.ReqQty) {
-          aFilterIds.push("ReqQty");
-          aFilterValues.push(posicion.ReqQty);
-        }
-
-        //Cantidad base
-        if (posicion.Kpein) {
-          aFilterIds.push("Kpein");
-          aFilterValues.push(posicion.Kpein);
-        }
-
-
-        //Moneda
-        if (posicion.Currency) {
-          aFilterIds.push("Currency");
-          aFilterValues.push(posicion.Currency);
-        }
-
-        //Unidad
-        if (posicion.SalesUnit) {
-          aFilterIds.push("SalesUnit");
-          aFilterValues.push(posicion.SalesUnit);
-        }
-
-        //Area de Venta
-        if (posicion.Plant) {
-          aFilterIds.push("Plant");
-          aFilterValues.push(posicion.Plant);
-        }
-
-        //Centro de Coste
-        if (posicion.Ykostl) {
-          aFilterIds.push("Ykostl");
-          aFilterValues.push(posicion.Ykostl);
-        }
-
-        //Orden de Ingreso
-        if (posicion.Yaufnr) {
-          aFilterIds.push("Yaufnr");
-          aFilterValues.push(posicion.Yaufnr);
-        }
-
-        var posBACK = [];
-        this.posicionesBackup = [];
-
-        posiciones.forEach(function (Linea) {
-          posBACK.push(Linea);
-        });
-
-        this.posicionesBackup = posBACK;
-        this.posPedBackup = this.oComponent.getModel("ModoApp").getData().ItmNumber;
-        this.totalPedido = this.oComponent.getModel("posPedFrag").getData().CondValue;
-
-        var secu;
-
-        if (posicion.mode === 'A') {
-          secu = posicion.Secu;
-
-        } else {
-          secu = posiciones.length + 1;
-
-        }
-
-        //Mapeamos las posiciones
-        var posicionN = {
-          ItmNumber: posicion.ItmNumber,
-          CondType: "PR00",
-          SalesUnit: posicion.SalesUnit,
-          Material: posicion.Material,
-          ShortText: posicion.ShortText,
-          BillDate: posicion.BillDate,
-          ReqQty: posicion.ReqQty,
-          Kpein: posicion.Kpein,
-          Currency: posicion.Currency,
-          CondValue: posicion.CondValue,
-          Yaufnr: posicion.Yaufnr,
-          Ykostl: posicion.Ykostl,
-          //Zterm: condPago,
-          //Secu: secu
-        }
-
-        if (posicion.mode === 'A') {
-          posiciones.push(posicionN);
-
-          if (posicion.type === "P") {
-            var posSig = this.oComponent.getModel("ModoApp").getData().ItmNumber;
-
-            posSig = posSig + 10;
-            this.oComponent.getModel("ModoApp").setProperty("/posPed", posSig);
-            this.oComponent.getModel("ModoApp").refresh(true);
-          }
-
-        }
-
-        this.ordenaPedPos(true);
-
-      },
-
-      addPedPos: function () {
-        var num;
-        var posiciones = [],
-          cabecera = [];
-
-        var posicion = this.oComponent.getModel("posPedFrag").getData();
-        var omodApp = this.oComponent.getModel("ModoApp").getData().modeAlta;
-
-        posiciones = this.oComponent.getModel("PedidoPos").getData();
-        cabecera = this.oComponent.getModel("PedidoCab").getData();
-
-        var aFilters = [],
-          aFilterIds = [],
-          aFilterValues = [];
-
-
-        var oTable = this.getView().byId("TablaPosiciones");
-        var posactual = this.getView().byId("f_tipopedpos").getValue();
-        var matactual = this.getView().byId("f_material").getValue();
-        var descactual = this.getView().byId("f_nommat").getValue();
-        var importactual = this.getView().byId("f_importpos").getValue();
-        var cantactual = this.getView().byId("f_cantpos").getValue();
-        var monedactual = this.getView().byId("f_monedapos").getValue();
-        var unitactual = this.getView().byId("f_unitpos").getValue();
-        var cecosactual = this.getView().byId("f_cecos").getValue();
-        var ordenactual = this.getView().byId("f_ordenes").getValue();
-
-        if (posicion.Vbelp == posactual && oTable.getSelectedIndices().length > 0) {
-          var aContexts = oTable.getSelectedIndices();
-          oTable.getRows()[aContexts].getCells()[1].setText(posactual);
-          oTable.getRows()[aContexts].getCells()[2].setText(matactual);
-          oTable.getRows()[aContexts].getCells()[3].setText(descactual);
-          oTable.getRows()[aContexts].getCells()[4].setText(cantactual);
-          oTable.getRows()[aContexts].getCells()[5].setText(unitactual);
-          oTable.getRows()[aContexts].getCells()[6].setText(importactual);
-          oTable.getRows()[aContexts].getCells()[7].setText(monedactual);
-          oTable.getRows()[aContexts].getCells()[8].setText(cecosactual);
-          oTable.getRows()[aContexts].getCells()[9].setText(ordenactual);
-
-        } else {
-
-          // Posicion Pedido  
-          if (posicion.ItmNumber) {
-            num = Util.zfill(posicion.ItmNumber, 8);
-            aFilterIds.push("ItmNumber");
-            aFilterValues.push(posicion.ItmNumber);
-          }
-
-          //Material
-          if (posicion.Material) {
-            aFilterIds.push("Material");
-            aFilterValues.push(posicion.Material);
-          }
-
-          //Descripcion Material
-          if (posicion.ShortText) {
-            aFilterIds.push("ShortText");
-            aFilterValues.push(posicion.ShortText);
-          }
-
-          //Fecha de Precio
-          if (posicion.BillDate) {
-            aFilterIds.push("BillDate");
-            aFilterValues.push(posicion.BillDate);
-          }
-
-          //Precio posiciones
-          if (posicion.CondValue) {
-            aFilterIds.push("CondValue");
-            aFilterValues.push(posicion.CondValue);
-          }
-
-          //Cantidad posicion
-          if (posicion.ReqQty) {
-            aFilterIds.push("ReqQty");
-            aFilterValues.push(posicion.ReqQty);
-          }
-
-          //Cantidad base
-          if (posicion.Kpein) {
-            aFilterIds.push("Kpein");
-            aFilterValues.push(posicion.Kpein);
-          }
-
-          //Moneda
-          if (posicion.Currency) {
-            aFilterIds.push("Currency");
-            aFilterValues.push(posicion.Currency);
-          }
-
-          //Unidad
-          if (posicion.SalesUnit) {
-            aFilterIds.push("SalesUnit");
-            aFilterValues.push(posicion.SalesUnit);
-          }
-
-          //Area de Venta
-          if (posicion.Plant) {
-            aFilterIds.push("Plant");
-            aFilterValues.push(posicion.Plant);
-          }
-
-          //Centro de Coste
-          if (posicion.Ykostl) {
-            aFilterIds.push("Ykostl");
-            aFilterValues.push(posicion.Ykostl);
-          }
-
-          //Orden de Ingreso
-          if (posicion.Yaufnr) {
-            aFilterIds.push("Yaufnr");
-            aFilterValues.push(posicion.Yaufnr);
-          }
-
-          var posBACK = [];
-          this.posicionesBackup = [];
-
-          posiciones.forEach(function (Linea) {
-            posBACK.push(Linea);
-          });
-
-          this.posicionesBackup = posBACK;
-          this.posPedBackup = this.oComponent.getModel("ModoApp").getData().ItmNumber;
-          this.totalPedido = this.oComponent.getModel("posPedFrag").getData().CondValue;
-
-          var cecopos = this.getView().byId("f_cecos").getValue();
-          var ordenpos = this.getView().byId("f_ordenes").getValue();
-
-          var secu;
-
-          if (posicion.mode === 'A') {
-            secu = posicion.Secu;
-
-          } else {
-            secu = posiciones.length + 1;
-
-          }
-
-          //Mapeamos las posiciones
-          var posicionN = {
-            ItmNumber: posicion.ItmNumber,
-            CondType: "PR00",
-            SalesUnit: posicion.SalesUnit,
-            Material: posicion.Material,
-            ShortText: posicion.ShortText,
-            BillDate: posicion.BillDate,
-            ReqQty: posicion.ReqQty,
-            Kpein: posicion.Kpein,
-            Currency: posicion.Currency,
-            CondValue: posicion.CondValue,
-            //Yaufnr: posicion.Yaufnr,
-            //Ykostl: posicion.Ykostl,
-            Yaufnr: this.getView().byId("f_cecos").getValue(),
-            Ykostl: this.getView().byId("f_ordenes").getValue(),
-            //Zterm: condPago,
-            //Secu: secu
-          }
-
-          if (posicion.mode === 'A') {
-            posiciones.push(posicionN);
-
-            if (posicion.type === "P") {
-              var posSig = this.oComponent.getModel("ModoApp").getData().ItmNumber;
-
-              posSig = posSig + 10;
-              this.oComponent.getModel("ModoApp").setProperty("/posPed", posSig);
-              this.oComponent.getModel("ModoApp").refresh(true);
-            }
-
-          }
-        }
-
-        this.ordenaPedPos(true);
-
-      },
-
-      addPedPos: function () {
-        var num;
-        var posiciones = [],
-          cabecera = [];
-
-        var posicion = this.oComponent.getModel("posPedFrag").getData();
-        var omodApp = this.oComponent.getModel("ModoApp").getData().modeAlta;
-
-        posiciones = this.oComponent.getModel("PedidoPos").getData();
-        cabecera = this.oComponent.getModel("PedidoCab").getData();
-
-        var aFilters = [],
-          aFilterIds = [],
-          aFilterValues = [];
-
-        var oTable = this.getView().byId("TablaPosiciones");
-        var posactual = this.getView().byId("f_tipopedpos").getValue();
-        var matactual = this.getView().byId("f_material").getValue();
-        var descactual = this.getView().byId("f_nommat").getValue();
-        var importactual = this.getView().byId("f_importpos").getValue();
-        var cantactual = this.getView().byId("f_cantpos").getValue();
-        var monedactual = this.getView().byId("f_monedapos").getValue();
-        var unitactual = this.getView().byId("f_unitpos").getValue();
-        var cecosactual = this.getView().byId("f_cecos").getValue();
-        var ordenactual = this.getView().byId("f_ordenes").getValue();
-
-        if (posicion.Vbelp == posactual && oTable.getSelectedIndices().length > 0) {
-          var aContexts = oTable.getSelectedIndices();
-          oTable.getRows()[aContexts].getCells()[1].setText(posactual);
-          oTable.getRows()[aContexts].getCells()[2].setText(matactual);
-          oTable.getRows()[aContexts].getCells()[3].setText(descactual);
-          oTable.getRows()[aContexts].getCells()[4].setText(cantactual);
-          oTable.getRows()[aContexts].getCells()[5].setText(unitactual);
-          oTable.getRows()[aContexts].getCells()[6].setText(importactual);
-          oTable.getRows()[aContexts].getCells()[7].setText(monedactual);
-          oTable.getRows()[aContexts].getCells()[8].setText(cecosactual);
-          oTable.getRows()[aContexts].getCells()[9].setText(ordenactual);
-
-        } else {
-
-          // Posicion Pedido  
-          if (posicion.ItmNumber) {
-            num = Util.zfill(posicion.ItmNumber, 8);
-            aFilterIds.push("ItmNumber");
-            aFilterValues.push(posicion.ItmNumber);
-          }
-
-          //Material
-          if (posicion.Material) {
-            aFilterIds.push("Material");
-            aFilterValues.push(posicion.Material);
-          }
-
-          //Descripcion Material
-          if (posicion.ShortText) {
-            aFilterIds.push("ShortText");
-            aFilterValues.push(posicion.ShortText);
-          }
-
-          //Fecha de Precio
-          if (posicion.BillDate) {
-            aFilterIds.push("BillDate");
-            aFilterValues.push(posicion.BillDate);
-          }
-
-          //Precio posiciones
-          if (posicion.CondValue) {
-            aFilterIds.push("CondValue");
-            aFilterValues.push(posicion.CondValue);
-          }
-
-          //Cantidad posicion
-          if (posicion.ReqQty) {
-            aFilterIds.push("ReqQty");
-            aFilterValues.push(posicion.ReqQty);
-          }
-
-          //Cantidad base
-          if (posicion.Kpein) {
-            aFilterIds.push("Kpein");
-            aFilterValues.push(posicion.Kpein);
-          }
-
-          //Moneda
-          if (posicion.Currency) {
-            aFilterIds.push("Currency");
-            aFilterValues.push(posicion.Currency);
-          }
-
-          //Unidad
-          if (posicion.SalesUnit) {
-            aFilterIds.push("SalesUnit");
-            aFilterValues.push(posicion.SalesUnit);
-          }
-
-          //Area de Venta
-          if (posicion.Plant) {
-            aFilterIds.push("Plant");
-            aFilterValues.push(posicion.Plant);
-          }
-
-          var posBACK = [];
-          this.posicionesBackup = [];
-
-          posiciones.forEach(function (Linea) {
-            posBACK.push(Linea);
-          });
-
-          this.posicionesBackup = posBACK;
-          this.posPedBackup = this.oComponent.getModel("ModoApp").getData().ItmNumber;
-          this.totalPedido = this.oComponent.getModel("posPedFrag").getData().CondValue;
-          var cecopos = this.getView().byId("f_cecos").getValue();
-          var ordenpos = this.getView().byId("f_ordenes").getValue();
-          var secu;
-
-          if (posicion.mode === 'A') {
-            secu = posicion.Secu;
-
-          } else {
-            secu = posiciones.length + 1;
-
-          }
-          var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-          var recogececos = this.getView().byId("f_cecos").getValue();
-          var recogeorden = this.getView().byId("f_ordenes").getValue();
-          if (modeApp === 'M') {
-            this.getView().byId("f_ordenesPOS").setVisible(true);
-            this.getView().byId("f_cecosPOS").setVisible(true);
-            this.getView().byId("f_ordenesPOS").setValue(recogeorden);
-            this.getView().byId("f_cecosPOS").setValue(recogececos);
-
-          } else if (modeApp === 'C') {
-            this.getView().byId("f_ordenesPOS").setVisible(false);
-            this.getView().byId("f_cecosPOS").setVisible(false);
-            this.getView().byId("f_ordenesPOS").setValue(recogeorden);
-            this.getView().byId("f_cecosPOS").setValue(recogececos);
-          }
-
-          //Mapeamos las posiciones
-          var posicionN = {
-            ItmNumber: posicion.ItmNumber,
-            CondType: "PR00",
-            SalesUnit: posicion.SalesUnit,
-            Material: posicion.Material,
-            ShortText: posicion.ShortText,
-            BillDate: posicion.BillDate,
-            ReqQty: posicion.ReqQty,
-            Kpein: posicion.Kpein,
-            Currency: posicion.Currency,
-            CondValue: posicion.CondValue,
-            Ykostl: this.getView().byId("f_cecos").getValue(),
-            Yaufnr: this.getView().byId("f_ordenes").getValue(),
-            //Zterm: condPago,
-            //Secu: secu
-          }
-
-          if (posicion.mode === 'A') {
-            posiciones.push(posicionN);
-
-            if (posicion.type === "P") {
-              var posSig = this.oComponent.getModel("ModoApp").getData().ItmNumber;
-
-              posSig = posSig + 10;
-              this.oComponent.getModel("ModoApp").setProperty("/posPed", posSig);
-              this.oComponent.getModel("ModoApp").refresh(true);
-            }
-
-          }
-        }
-
-        this.ordenaPedPos(true);
-
-      },*/
-
       addPedPos: function () {
         var posiciones = [];
         var posicionN;
@@ -1654,7 +1167,7 @@ sap.ui.define([
         var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
         var posPedFrag = this.oComponent.getModel("posPedFrag").getData();
         var modePosPed = posPedFrag.mode;
-        
+
         var fechaposicion = this.getView().byId("DTPdesde").getValue();
         var posactual = this.getView().byId("f_tipopedpos").getValue();
         posactual = ('000000' + posactual).slice(-6); // Establecemos el formato de 6 caracteres 000010
@@ -1689,13 +1202,13 @@ sap.ui.define([
             Yaufnr: ordenposicion
           }
 
-          if(modePosPed == 'M'){
+          if (modePosPed == 'M') {
             var indexPosPed = posPedFrag.index;
             // Modificamos la posición seleccionada
             posiciones[indexPosPed] = posicionN;
-          }else{
+          } else {
             posiciones.push(posicionN);
-          }          
+          }
           this.oComponent.getModel("DisplayPosPed").refresh(true);
         } else {
           posiciones = this.oComponent.getModel("PedidoPos").getData();
@@ -1717,14 +1230,14 @@ sap.ui.define([
             Ykostl: cecosposicion,
             Yaufnr: ordenposicion
           }
-          
-          if(modePosPed == 'M'){
+
+          if (modePosPed == 'M') {
             var indexPosPed = posPedFrag.index;
             // Modificamos la posición seleccionada
             posiciones[indexPosPed] = posicionN;
-          }else{
+          } else {
             posiciones.push(posicionN);
-          }  
+          }
           this.oComponent.getModel("PedidoPos").refresh(true);
         }
 
@@ -1865,6 +1378,7 @@ sap.ui.define([
           var secu = 1;
           var sumTotal = 0;
           var cantTotal = 0;
+          var cantBaseTotal = 0;
 
           for (var i = 0; i <= posiciones.length - 1; i++) {
 
@@ -1893,32 +1407,15 @@ sap.ui.define([
               }
 
             }
-            //NUEVA Lógica de Secu para Modificar pedido
-            /*if (modeApp == "M") {
-                //Estamos modificando una pos creada
-                if (!posicionN.modificabe) {
-                    posicionN.Secu = posiciones[i].Secu;
-                } else {
-                    /**
-                     * fmunozmorales - 19.04.23 - prueba secuencia
-                     
-                    //posicionN.Secu = secuModi;
-                    secuModi = secuModi + 1;
-                }
 
-            } else {
-                posicionN.Secu = secu;
-            }*/
             posicionN.Secu = posiciones[i].Secu;
-
-            //secuModi = secuModi + 1;
             posicionesN.push(posicionN);
 
             secu = secu + 1;
             sumTotal = (Number(sumTotal) + Number(posicionN.CondValue)).toFixed(2);
             cantTotal = (Number(cantTotal) + Number(posicionN.ReqQty)).toFixed(2);
-            var sumTotaldiv = (sumTotal/cantTotal).toFixed(2);
-            //this.getView().byId("inputimport").setValue(sumTotal);
+            cantBaseTotal = (Number(cantBaseTotal) + Number(posicionN.Kpein)).toFixed(2);
+            var sumTotaldiv = ((sumTotal / cantBaseTotal) * cantTotal).toFixed(2);
             var posAnt = posiciones[i].ItmNumber;
           }
 
@@ -2049,7 +1546,7 @@ sap.ui.define([
       onCopyPosPed: function () {
 
         var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-        var oTable, aContexts, items;
+        var oTable, aContexts;
 
         if (modeApp == 'M') {
           oTable = this.getView().byId("TablaPosicionesDisp");
@@ -2058,11 +1555,11 @@ sap.ui.define([
           if (aContexts.length == 0) {
             //Mostramos un error porque no se ha seleccionado una linea
             MessageBox.warning(this.oI18nModel.getProperty("errModPos"));
-          }else{
+          } else {
             var posiciones = this.oComponent.getModel("DisplayPosPed").getData();
             var posiciones_Aux = JSON.parse(JSON.stringify(posiciones)); // Copy data model without references
             var pedidoCopy = posiciones_Aux[aContexts[0]];
-            var itmNumberCopy = Number(posiciones_Aux[posiciones_Aux.length-1].Posnr) + 10;
+            var itmNumberCopy = Number(posiciones_Aux[posiciones_Aux.length - 1].Posnr) + 10;
             pedidoCopy.Posnr = ('000000' + itmNumberCopy).slice(-6);
 
             posiciones.push(pedidoCopy);
@@ -2076,12 +1573,12 @@ sap.ui.define([
           if (aContexts.length == 0) {
             //Mostramos un error porque no se ha seleccionado una linea
             MessageBox.warning(this.oI18nModel.getProperty("errModPos"));
-          }else{
+          } else {
             var posiciones = this.oComponent.getModel("PedidoPos").getData();
             var posiciones_Aux = JSON.parse(JSON.stringify(posiciones)); // Copy data model without references
             var pedidoCopy = posiciones_Aux[aContexts[0]];
-            var itmNumberCopy = Number(posiciones_Aux[posiciones_Aux.length-1].Posnr) + 10;
-            pedidoCopy.Posnr = ('000000' + itmNumberCopy).slice(-6);
+            var itmNumberCopy = Number(posiciones_Aux[posiciones_Aux.length - 1].ItmNumber) + 10;
+            pedidoCopy.ItmNumber = ('000000' + itmNumberCopy).slice(-6);
 
             posiciones.push(pedidoCopy);
             this.oComponent.getModel("PedidoPos").refresh(true);
@@ -2121,16 +1618,16 @@ sap.ui.define([
             mode: "M",
             type: "P",
             index: aContexts[0],
-            Vbelp: items[0].Posnr,
-            ShortText: items[0].Arktx,
-            Material: items[0].Matnr,
-            BillDate: items[0].Erdat,
-            CondValue: items[0].Netwr,
+            Vbelp: items[0].ItmNumber,
+            ShortText: items[0].ShortText,
+            Material: items[0].Material,
+            BillDate: items[0].BillDate,
+            CondValue: items[0].CondValue,
             ReqQty: items[0].ReqQty, // revisar!!
             Kpein: items[0].Kpein,
-            Currency: items[0].Waerk,
-            SalesUnit: items[0].Meins,
-            Yykostl: items[0].Yykostkl,
+            Currency: items[0].Currency,
+            SalesUnit: items[0].SalesUnit,
+            Yykostl: items[0].Yykostl,
             Yyaufnr: items[0].Yyaufnr,
             Ykostl: items[0].Ykostl,
             Yaufnr: items[0].Yaufnr
@@ -2151,11 +1648,25 @@ sap.ui.define([
               oView.addDependent(oDialogPosiciones);
               return oDialogPosiciones;
             });
+            ///DESHABILITAR SCROLL EN LOS INPUT NUMERICOS
+            var oInput = this.byId("f_importpos");
+            oInput.attachBrowserEvent("mousewheel", function (oEvent) {
+              oEvent.preventDefault();
+            });
+            var oInput = this.byId("f_cantpos");
+            oInput.attachBrowserEvent("mousewheel", function (oEvent) {
+              oEvent.preventDefault();
+            });
+            var oInput = this.byId("f_cantbasepos");
+            oInput.attachBrowserEvent("mousewheel", function (oEvent) {
+              oEvent.preventDefault();
+            });
           }
 
           this.pDialogPosiciones.then(function (oDialogPosiciones) {
             oDialogPosiciones.open();
           });
+
         }
       },
 
@@ -2432,6 +1943,7 @@ sap.ui.define([
         var pedidosPos;
         var posicion = 10;
 
+
         if (modeApp == 'M') {
           pedidosPos = this.oComponent.getModel("DisplayPosPed").getData();
         } else {
@@ -2472,10 +1984,24 @@ sap.ui.define([
             oView.addDependent(oDialogPosiciones);
             return oDialogPosiciones;
           });
+          ///DESHABILITAR SCROLL EN LOS INPUT NUMERICOS
+          var oInput = this.byId("f_importpos");
+          oInput.attachBrowserEvent("mousewheel", function (oEvent) {
+            oEvent.preventDefault();
+          });
+          var oInput = this.byId("f_cantpos");
+          oInput.attachBrowserEvent("mousewheel", function (oEvent) {
+            oEvent.preventDefault();
+          });
+          var oInput = this.byId("f_cantbasepos");
+          oInput.attachBrowserEvent("mousewheel", function (oEvent) {
+            oEvent.preventDefault();
+          });
         }
         this.pDialogPosiciones.then(function (oDialogPosiciones) {
           oDialogPosiciones.open(sInputValue);
         });
+
       },
 
       onBusqMateriales: function () {

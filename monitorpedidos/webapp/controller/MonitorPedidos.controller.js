@@ -1608,6 +1608,8 @@ sap.ui.define([
                         sStatus = "";
                         sAprob = false;
                         vedit = false;
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.getView().byId("colbtnedit").setVisible(false);
                         break;
                         //En redaccion
                     case "Ok":
@@ -1616,24 +1618,32 @@ sap.ui.define([
                         //this.oComponent.getModel("ModoApp").refresh(true);
                         //this._getDialogAprobaciones();
                         vedit = true;
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.getView().byId("colbtnedit").setVisible(true);
                         break;
                         //Pdte. Aprobar
                     case "Heavy":
                         sStatus = "APRB";
                         sAprob = false;
                         vedit = false;
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.getView().byId("colbtnedit").setVisible(false);
                         break;
                         //Pdte. Financiero
                     case "Overweight":
                         sStatus = "FINA";
                         sAprob = false;
                         vedit = false;
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.getView().byId("colbtnedit").setVisible(false);
                         break;
                         //Pdte. Facturar
                     case "Money":
                         sStatus = "FACT";
                         sAprob = false;
                         vedit = false;
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.getView().byId("colbtnedit").setVisible(false);
                         break;
                         //Pdte. Cobrar
                     case "Payment":
@@ -1641,6 +1651,8 @@ sap.ui.define([
                         sAprob = false;
                         var aprob = true;
                         vedit = false;
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.getView().byId("colbtnedit").setVisible(false);
                         //this.oComponent.getModel("ModoApp").setProperty("/aprob", aprob);
                         //this.oComponent.getModel("ModoApp").refresh(true);
                         break;
@@ -1649,18 +1661,25 @@ sap.ui.define([
                         sStatus = "COBR";
                         sAprob = false;
                         vedit = false;
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.getView().byId("colbtnedit").setVisible(false);
                         break;
                         //Denegadas
                     case "Cancel":
                         sStatus = "DEN";
                         sAprob = false;
                         vedit = false;
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                        this.getView().byId("TableButton4").setVisible(false);
+                        this.getView().byId("colbtnedit").setVisible(false);
+
                         break;
                     case "Approv":
                         //this.ListadoSolStatus(s);
                         sStatus = "APRB";
                         sAprob = true;
                         vedit = false;
+                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
 
                         //this._getDialogAprobaciones();
                         break;
