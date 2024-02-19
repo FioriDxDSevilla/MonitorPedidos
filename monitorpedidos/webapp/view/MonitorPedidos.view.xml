@@ -34,8 +34,8 @@
                 <RadioButtonGroup id="rbGroup" columns="2" select="onRadioButtonSelect">
                     <buttons>
                         <!--<RadioButton text="Mis Pedidos" visible="false" selected="true"/>-->
-                        <RadioButton id="rbTrue" text="Mis Pedidos" selected="true"/>
-                        <RadioButton id="rbFalse" text="Todos" />
+                        <RadioButton id="rbTrue" text="Mis Pedidos"/>
+                        <RadioButton id="rbFalse" text="Todos" selected="true" />
                     </buttons>
                 </RadioButtonGroup>
             </OverflowToolbar>

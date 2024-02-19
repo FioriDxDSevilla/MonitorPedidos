@@ -2090,133 +2090,73 @@ sap.ui.define([
       },
 
       onModPosPed: function () {
-        var oTable = this.getView().byId("TablaPosiciones");
-        var oTableDisp = this.getView().byId("TablaPosicionesDisp");
-        var aContexts = oTable.getSelectedIndices(); //getSelectedContexts();
-        var aContextsDisp = oTableDisp.getSelectedIndices();
 
-        if (this.oComponent.getModel("ModoApp").getData().mode == "M") {
-          var oModel = this.getView().getModel("DisplayPosPed");
+        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
+        var oTable, aContexts, items;
 
-          var items = aContextsDisp.map(function (c) {
-            //return c.getObject();
+        if (modeApp == 'M') {
+          oTable = this.getView().byId("TablaPosicionesDisp");
+          aContexts = oTable.getSelectedIndices();
+          items = aContexts.map(function (c) {
             return this.oComponent.getModel("DisplayPosPed").getProperty("/" + c);
           }.bind(this));
         } else {
-          var oModel = this.getView().getModel("PedidoPos");
-          var aRows = oModel.getData();
-          var items = aContexts.map(function (c) {
-            //return c.getObject();
+          oTable = this.getView().byId("TablaPosiciones");
+          aContexts = oTable.getSelectedIndices();
+          items = aContexts.map(function (c) {
             return this.oComponent.getModel("PedidoPos").getProperty("/" + c);
           }.bind(this));
         }
 
-
-        //var nextPos =  oTable.getRows()[aContexts].getCells()[0].getText() + 10;
-
-        if (items.length == 1) {
-          //Seleccionamos la linea marcada
-          /*for (var i = aContexts.length - 1; i >= 0; i--) {
-          var oThisObj = aContexts[i].getObject();
-          var index = $.map(aRows, function(obj, index) {
-              if (obj === oThisObj) {
-                  return index;
-          }});
-          }*/
-          //Obtenemos los datos de la linesa.
-          var selrow = items[0]; //aRows[index[0]];
-          fechaPos = items[0].Erdat
-          var posCopy = selrow.ItmNumber;
-        } else {
+        if (items.length == 0) {
+          //Mostramos un error porque no se ha seleccionado una linea
           MessageBox.warning(this.oI18nModel.getProperty("errModPos"));
-        }
-
-
-        if (this.oComponent.getModel("ModoApp").getData().mode == "M") {
-          var posicion = oTableDisp.getRows()[aContextsDisp].getCells()[1].getText();
-          var matpos = oTableDisp.getRows()[aContextsDisp].getCells()[2].getText();
-          var descpos = oTableDisp.getRows()[aContextsDisp].getCells()[3].getText();
-          var cantpos = oTableDisp.getRows()[aContextsDisp].getCells()[4].getText();
-          var cantbasepos = oTableDisp.getRows()[aContextsDisp].getCells()[5].getText();
-          var unitpos = oTableDisp.getRows()[aContextsDisp].getCells()[6].getText();
-          var importpos = oTableDisp.getRows()[aContextsDisp].getCells()[7].getText();
-          var currpos = oTableDisp.getRows()[aContextsDisp].getCells()[8].getText();
-          var cecopos = oTableDisp.getRows()[aContextsDisp].getCells()[9].getText();
-          var ordenpos = oTableDisp.getRows()[aContextsDisp].getCells()[10].getText();
-          var fechapos = fechaPos;
-
         } else {
-          var posicion = oTable.getRows()[aContexts].getCells()[1].getText();
-          var matpos = oTable.getRows()[aContexts].getCells()[2].getText();
-          var descpos = oTable.getRows()[aContexts].getCells()[3].getText();
-          var cantpos = oTable.getRows()[aContexts].getCells()[4].getText();
-          var cantbasepos = oTable.getRows()[aContexts].getCells()[5].getText();
-          var unitpos = oTable.getRows()[aContexts].getCells()[6].getText();
-          var importpos = oTable.getRows()[aContexts].getCells()[7].getText();
-          var currpos = oTable.getRows()[aContexts].getCells()[8].getText();
-          var cecopos = oTable.getRows()[aContexts].getCells()[9].getText();
-          var ordenpos = oTable.getRows()[aContexts].getCells()[10].getText();
-          var fechapos = this.oComponent.getModel("posPedFrag").getProperty("/BillDate");
+          //Obtenemos la fecha de la linea seleccionada
+          fechaPos = items[0].Erdat
 
-        }
-        /*var posicion = oTable.getRows()[aContexts].getCells()[1].getText();
-        var matpos = oTable.getRows()[aContexts].getCells()[2].getText();
-        var descpos = oTable.getRows()[aContexts].getCells()[3].getText();
-        var cantpos = oTable.getRows()[aContexts].getCells()[4].getText();
-        var unitpos = oTable.getRows()[aContexts].getCells()[5].getText();
-        var importpos = oTable.getRows()[aContexts].getCells()[6].getText();
-        var currpos = oTable.getRows()[aContexts].getCells()[7].getText();
-        var cecopos = oTable.getRows()[aContexts].getCells()[8].getText();
-        var ordenpos = oTable.getRows()[aContexts].getCells()[9].getText();
-        var fechapos = this.oComponent.getModel("posPedFrag").getProperty("/BillDate");*/
+          ///////ABRIR DIALOGO
+          var oView = this.getView();
+          var configPos = {
+            mode: "M",
+            type: "P",
+            index: aContexts[0],
+            Vbelp: items[0].Posnr,
+            ShortText: items[0].Arktx,
+            Material: items[0].Matnr,
+            BillDate: items[0].Erdat,
+            CondValue: items[0].Netwr,
+            ReqQty: items[0].ReqQty, // revisar!!
+            Kpein: items[0].Kpein,
+            Currency: items[0].Waerk,
+            SalesUnit: items[0].Meins,
+            Yykostl: items[0].Yykostkl,
+            Yyaufnr: items[0].Yyaufnr,
+            Ykostl: items[0].Ykostl,
+            Yaufnr: items[0].Yaufnr
+          }
 
-        ///////ABRIR DIALOGO
-        var oView = this.getView();
-        var ItmNumber = this.oComponent.getModel("ModoApp").getData().ItmNumber;
-        var configPos = {
-          mode: "A",
-          type: "P",
-          Vbelp: ItmNumber
-        }
+          var oModConfigPos = new JSONModel();
+          oModConfigPos.setData(configPos);
+          this.oComponent.setModel(oModConfigPos, "posPedFrag");
+          this.oComponent.getModel("posPedFrag").refresh(true);
 
-        var oModConfigPos = new JSONModel();
-        oModConfigPos.setData(configPos);
-        this.oComponent.setModel(oModConfigPos, "posPedFrag");
+          if (!this.pDialogPosiciones) {
+            this.pDialogPosiciones = Fragment.load({
+              id: oView.getId(),
+              name: "monitorpedidos.fragments.AddPosicionesPed",
+              controller: this,
+            }).then(function (oDialogPosiciones) {
+              // connect dialog to the root view of this component (models, lifecycle)
+              oView.addDependent(oDialogPosiciones);
+              return oDialogPosiciones;
+            });
+          }
 
-        if (!this.pDialogPosiciones) {
-          this.pDialogPosiciones = Fragment.load({
-            id: oView.getId(),
-            name: "monitorpedidos.fragments.AddPosicionesPed",
-            controller: this,
-          }).then(function (oDialogPosiciones) {
-            // connect dialog to the root view of this component (models, lifecycle)
-            oView.addDependent(oDialogPosiciones);
-            return oDialogPosiciones;
+          this.pDialogPosiciones.then(function (oDialogPosiciones) {
+            oDialogPosiciones.open();
           });
         }
-        this.getView().byId("f_ordenesPOS").setVisible(true);
-        this.getView().byId("f_cecosPOS").setVisible(true);
-        this.pDialogPosiciones.then(function (oDialogPosiciones) {
-          oDialogPosiciones.open();
-          //this._configDialogCliente(oDialog)
-        });
-
-        console.log(this.oComponent.getModel("ModoApp").getData().mode);
-
-        ////INSERTAR DATOS EN EL DIALOGO
-        this.getView().byId("f_tipopedpos").setValue(posicion);
-        this.getView().byId("f_nommat").setValue(descpos);
-        this.getView().byId("f_material").setValue(matpos);
-        this.getView().byId("DTPdesde").setValue(fechapos);
-        this.getView().byId("f_importpos").setValue(importpos);
-        this.getView().byId("f_cantpos").setValue(cantpos);
-        this.getView().byId("f_cantbasepos").setValue(cantbasepos);
-        this.getView().byId("f_monedapos").setSelectedKey(currpos);
-        this.getView().byId("f_unitpos").setValue(unitpos);
-        this.getView().byId("f_cecos").setValue(cecopos);
-        this.getView().byId("f_cecosPOS").setValue(cecopos);
-        this.getView().byId("f_ordenesPOS").setValue(ordenpos);
-
       },
 
       cancelPedPos: function () {
