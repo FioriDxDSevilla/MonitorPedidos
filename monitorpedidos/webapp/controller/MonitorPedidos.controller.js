@@ -2030,7 +2030,7 @@ sap.ui.define([
                 var oRbGroup = this.getView().byId("rbGroup"); // Get the RadioButtonGroup control
                 var oSelectedButton = oRbGroup.getSelectedButton(); // Get the selected radio button
 
-                if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbTrue") {
+                if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbTrue" || oSelectedButton.getId() === "application-ZPV-monitor-component---MonitorPedidos--rbTrue") {
                     //Si está marcado un status y queremos acceder a Mis Pedidos comprobamos en que estatus estamos
                     if (sStatus === "") {
                         Usuario = this.oComponent.getModel("Usuario").getData()[0].Bname;
@@ -2203,7 +2203,7 @@ sap.ui.define([
                             ClasePed);
                     }
 
-                } else if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbFalse") {
+                } else if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbFalse" || oSelectedButton.getId() === "application-ZPV-monitor-component---MonitorPedidos--rbFalse") {
                     //Si está marcado un status y queremos acceder a Todos los Pedidos comprobamos en que estatus estamos
                     if (sStatus === "") {
                         Usuario = "";
