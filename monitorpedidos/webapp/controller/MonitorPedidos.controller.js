@@ -229,8 +229,8 @@ sap.ui.define([
                 // Cliente = this.getView().byId("f_client").getSelectedKey();
                 Cliente = codcli;
                 this.ListadoSolicitudes(
-                    //Usuario,
-                    //Numped,
+                    Usuario,
+                    Numped,
                     Fechad,
                     Fechah,
                     Imported,

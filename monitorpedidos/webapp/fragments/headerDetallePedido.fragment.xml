@@ -5,7 +5,7 @@
     xmlns:fb="sap.ui.comp.filterbar"
     xmlns:l="sap.ui.layout">
 
-    <m:IconTabBar id="icontabDetallePedido" select=".onFilterSelectAlta" class="sapUiResponsiveContentPadding">
+    <m:IconTabBar id="icontabDetallePedido"  class="sapUiResponsiveContentPadding">
         <m:items>
             <m:IconTabFilter text="{i18n>Cabecera}" key="Cabecera">
                 <core:Fragment fragmentName="monitorpedidos.fragments.Cabecera" type="XML" />

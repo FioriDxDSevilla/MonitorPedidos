@@ -74,7 +74,7 @@
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Cantidad}" />
                 <table:template>                    
-                    <m:Text text="{DisplayPosPed>ReqQty}"/>
+                    <m:Text text="{DisplayPosPed>Kwmeng}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
@@ -95,7 +95,7 @@
                 <m:Label text="{i18n>Importe}" />
                 <table:template>
                     
-                    <m:Text text="{DisplayPosPed>Netwr}" />
+                    <m:Text text="{DisplayPosPed>Netpr}" />
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
