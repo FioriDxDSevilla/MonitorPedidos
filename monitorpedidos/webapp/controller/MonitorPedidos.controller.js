@@ -4768,7 +4768,13 @@ sap.ui.define([
             },
 
             onNavAlta: function () {
-
+                var idArea = this.getView().byId("idArea").getValue();
+                var idCCliente = this.getView().byId("idCCliente").getValue();
+                //var idcontract = this.getView().byId("idcontract").getValue();
+                var idCanal = this.getView().byId("idCanal").getValue();
+                var idSector = this.getView().byId("idSector").getValue();
+                var idzona = this.getView().byId("idzona").getValue();
+                var idCTipoPed = this.getView().byId("idCTipoPed").getValue();
                 if (numCont) {
                     var that = this;
                     const oI18nModel = this.oComponent.getModel("i18n");
@@ -5025,6 +5031,14 @@ sap.ui.define([
                     this.Plataformapedido(codcli, vkbur, vbeln);
                     this.DameMonedas();
 
+					                    
+                    /* 
+                    VALIDACIÓN SI LOS CAMPOS VAN VACÍOS PARA QUE NO SE REDIRIJA A LA SECCIÓN DE ALTA DE PEDIDO 
+                    */
+                    if (idArea != "" && idCCliente != "" && idCanal != "" && idSector != "" && idzona != "" && idCTipoPed != "") {
+
+
+			
                     /**
                      * Cuando ya navegamos al alta debe de borrar todos los campos de opciones 
                      * para que cuando se entre de nuevo aparezcan vacios para crear una nueva peticion
@@ -5585,7 +5599,7 @@ sap.ui.define([
                 if (telefonoRegex.test(inputText)) {
                     inputTelefonoCliente.setValueState("Success");
                 } else {
-                    inputTelefonoCliente.setValueState("Error")
+                    inputTelefonoCliente.setValueState("Error");
                 }
 
             },
@@ -5599,7 +5613,7 @@ sap.ui.define([
                 if (emailregex.test(inputText)) {
                     inputEmailCliente.setValueState("Success");
                 } else {
-                    inputEmailCliente.setValueState("Error")
+                    inputEmailCliente.setValueState("Error");
                 }
 
             }

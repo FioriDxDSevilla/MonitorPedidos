@@ -15,7 +15,7 @@
                     text="{i18n>addPosCon}"
                     type="Emphasized"
                     press="onaddPosPedCon"
-                    visible="{= !!${ModoApp>/Nomcont}}"
+                    visible="{= (${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false) &amp;&amp; (!!${ModoApp>/Nomcont})}"
                     enabled="true"
                 />
                 <m:Button
@@ -24,7 +24,7 @@
                     text="{i18n>delPos}"
                     type="Emphasized"
                     press="onDeletePosPed"
-                    visible="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
+                    visible="{= (${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false)}"
                     enabled="true"
                 />
                 <m:Button
@@ -33,7 +33,7 @@
                     text="{i18n>addPos}"
                     type="Emphasized"
                     press="onaddPosPed"
-                    visible="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
+                    visible="{= (${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false) &amp;&amp; (${ModoApp>/Nomcont} === true )}"
                     enabled="true"
                 />
                 <m:Button
@@ -42,7 +42,7 @@
                     text="{i18n>copyPos}"
                     type="Emphasized"
                     press="onCopyPosPed"
-                    visible="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
+                    visible="{= (${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false) &amp;&amp; (${ModoApp>/Nomcont} === true )}"
                     enabled="true"
                 />
             </m:OverflowToolbar>
