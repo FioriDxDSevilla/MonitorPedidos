@@ -219,7 +219,7 @@ sap.ui.define([
 
             onBusqSolicitudes: function (oEvent) {
 
-                //var Usuario = this.getView().byId("f_usuario").getValue();
+                var Usuario = this.getView().byId("f_usuario").getValue();
                 //Numped = this.getView().byId("f_numsolic").getValue();
                 Fechad = this.getView().byId("DTPdesde").getValue();
                 Fechah = this.getView().byId("DTPhasta").getValue();
@@ -228,6 +228,8 @@ sap.ui.define([
                 ClasePed = arrayKeys;
                 // Cliente = this.getView().byId("f_client").getSelectedKey();
                 Cliente = codcli;
+                //LineaServicio = 
+                responsable = this.getView().byId("f_approv").getValue();
                 this.ListadoSolicitudes(
                     Usuario,
                     Numped,
@@ -238,6 +240,7 @@ sap.ui.define([
                     Cliente,
                     LineaServicio,
                     codmat,
+                    responsable,
                     ClasePed
                 )
 
@@ -254,6 +257,7 @@ sap.ui.define([
                 Cliente,
                 LineaServicio,
                 codmat,
+                responsable,
                 ClasePed
             ) {
                 var aFilterIds, aFilterValues, aFilters;
@@ -277,6 +281,7 @@ sap.ui.define([
                     "CLIENTE",
                     "LINEA",
                     "MATERIAL",
+                    "ZRESPONSABLE",
                     "TIPO"
                 ];
                 aFilterValues = [
@@ -289,6 +294,7 @@ sap.ui.define([
                     Cliente,
                     LineaServicio,
                     codmat,
+                    responsable,
                     ClasePed
                 ];
 
@@ -326,14 +332,16 @@ sap.ui.define([
                         aFilterValues.splice(i, 1);
                     }
                 }
-                if (Imported == "" && Importeh == "" || Imported == undefined && Importeh == undefined) {
+                if (Imported == "" || Imported == undefined ) {
                     var i = aFilterIds.indexOf("IMPORTED");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
                         aFilterValues.splice(i, 1);
                     }
+                }
 
+                if (Importeh == ""|| Importeh == undefined) {
                     var j = aFilterIds.indexOf("IMPORTEH");
 
                     if (j !== -1) {
@@ -341,6 +349,7 @@ sap.ui.define([
                         aFilterValues.splice(j, 1);
                     }
                 }
+
                 if (Cliente == "" || Cliente == undefined) {
                     var i = aFilterIds.indexOf("CLIENTE");
 
@@ -360,6 +369,15 @@ sap.ui.define([
 
                 if (codmat == "" || codmat == undefined) {
                     var i = aFilterIds.indexOf("MATERIAL");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                if (responsable == "" || responsable == undefined) {
+                    var i = aFilterIds.indexOf("ZRESPONSABLE");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
@@ -2245,6 +2263,7 @@ sap.ui.define([
                         );
                     } else if (sStatus === "REDA") {
                         Usuario = "";
+                        responsable = "";
                         this.getView().byId("Filtr10").setVisible(true);
                         this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
                         this.oComponent.getModel("PedidoCab").refresh(true);
@@ -4595,8 +4614,10 @@ sap.ui.define([
                 this.getView().byId("descrProv").setValue(null);
                 this.getView().byId("idcontract").setSelectedKey(null);
 
+                this.CloseOptionsDiagContrato();
+
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-                oRouter.navTo("RouteAltaPedidos");
+                oRouter.navTo("RouteAltaPedidos");                
             },
 
             CloseOptionsDiagContrato: function () {
