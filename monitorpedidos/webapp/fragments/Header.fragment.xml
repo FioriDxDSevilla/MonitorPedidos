@@ -38,17 +38,20 @@
                     <Input id="f_client" showValueHelp="true" valueHelpRequest=".onValueHelpRequest" />
                 </fb:control>
             </fb:FilterGroupItem>
-            <fb:FilterGroupItem id="id6" groupName="FiltrosCli" name="O" label="{i18n>ord}" visibleInFilterBar="true">
+
+            <fb:FilterGroupItem id="id6" groupName="FiltrosCli" name="Ce" label="{i18n>ceco}" visibleInFilterBar="true">
+                <fb:control>
+                    <Input id="f_cecos" showValueHelp="true" valueHelpRequest=".onValueHelpRequestCecos" />
+                </fb:control>
+            </fb:FilterGroupItem>
+            
+            <fb:FilterGroupItem id="id7" groupName="FiltrosCli" name="O" label="{i18n>ord}" visibleInFilterBar="true">
                 <fb:control>
                     <Input id="f_ordenes" showValueHelp="true" valueHelpRequest=".onValueHelpRequestOrd" />
                 </fb:control>
             </fb:FilterGroupItem>
 
-            <fb:FilterGroupItem id="id7" groupName="FiltrosCli" name="Ce" label="{i18n>ceco}" visibleInFilterBar="true">
-                <fb:control>
-                    <Input id="f_cecos" showValueHelp="true" valueHelpRequest=".onValueHelpRequestCecos" />
-                </fb:control>
-            </fb:FilterGroupItem>
+            
             <fb:FilterGroupItem id="id11" groupName="FiltrosCli" name="Of" label="{i18n>ofi}" visibleInFilterBar="true">
                 <fb:control>
                     <Input id="f_oficinas" showValueHelp="true" valueHelpRequest=".onValueHelpRequestOficinas" />
@@ -69,8 +72,8 @@
 
             <fb:FilterGroupItem id="id10" groupName="FiltrosCli" name="H" label="{i18n>lineas}" visibleInFilterBar="true">
                 <fb:control>
-                    <ComboBox id="f_line" change=".onChangefLineas" items="{path: 'LineasServicio>/', sorter: {path: 'Bztxt'}}" filterSecondaryValues="true">
-                        <core:Item key="{LineasServicio>Bzirk}" text="{LineasServicio>Bztxt}" />
+                    <ComboBox id="f_line" change=".onChangefLineas" items="{path: 'LineasServicio>/', sorter: {path: 'Bztxt'}}" filterSecondaryValues="true" showSecondaryValues="true">
+                         <core:ListItem key="{LineasServicio>Bzirk}" text="{LineasServicio>Bztxt}" additionalText ="{LineasServicio>Bzirk}"/>
                     </ComboBox>
                 </fb:control>
             </fb:FilterGroupItem>

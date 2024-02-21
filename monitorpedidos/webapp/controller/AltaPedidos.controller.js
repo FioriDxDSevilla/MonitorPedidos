@@ -32,7 +32,7 @@ sap.ui.define([
         var oModAdj = new JSONModel();
         var oModAdjSHP = new JSONModel();
         var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-        if (modeApp == 'M') {
+        if (modeApp == 'M' || modeApp == 'D') {
           const myRoute = this.getOwnerComponent().getRouter().getRoute("RouteAltaPedidos");
         myRoute.attachPatternMatched(this.onMyRoutePatternMatched, this);
         }

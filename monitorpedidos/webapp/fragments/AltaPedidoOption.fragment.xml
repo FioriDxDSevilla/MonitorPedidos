@@ -16,7 +16,7 @@
                 </ComboBox>-->
 
                 <Label text="{i18n>sociedad}" required="true"/>
-                <ComboBox id="idArea" items="{ path: 'AreaVentas>/', sorter: { path: 'Vtext' } }"  change=".onChangeArea" showSecondaryValues="true" filterSecondaryValues="true" required="true" >
+                <ComboBox id="idArea" items="{ path: 'AreaVentas>/', sorter: { path: 'Vkorg' } }"  change=".onChangeArea" showSecondaryValues="true" filterSecondaryValues="true" required="true" >
                     <core:ListItem key="{AreaVentas>Vkorg}" text="{AreaVentas>Vtext}" additionalText ="{AreaVentas>Vkorg}"/>
                 </ComboBox>
 

@@ -103,6 +103,9 @@ sap.ui.define([
                     Imported,
                     Importeh,
                     Cliente,
+                    codceco,
+                    codord,
+                    vkbur,
                     LineaServicio,
                     codmat,
                     ClasePed);
@@ -146,7 +149,7 @@ sap.ui.define([
 
             onChangefLineas: function () {
                 LineaServicio = this.getView().byId("f_line").getSelectedKey();
-                console.log(LineaServicio);
+                //console.log(LineaServicio);
             },
 
             handleSelectionChange: function (oEvent) {
@@ -226,9 +229,14 @@ sap.ui.define([
                 Imported = this.getView().byId("f_impdesde").getValue();
                 Importeh = this.getView().byId("f_imphasta").getValue();
                 ClasePed = arrayKeys;
+                //var ceco = this.getView().byId("f_codCeco").getValue();
+                var ceco = codceco;
+                //var order = this.getView().byId().getValue();
+                var orden = codord;
+                var orgventas = vkbur;
                 // Cliente = this.getView().byId("f_client").getSelectedKey();
                 Cliente = codcli;
-                //LineaServicio = 
+                LineaServicio = this.getView().byId("f_line").getSelectedKey();
                 responsable = this.getView().byId("f_approv").getValue();
                 this.ListadoSolicitudes(
                     Usuario,
@@ -238,6 +246,9 @@ sap.ui.define([
                     Imported,
                     Importeh,
                     Cliente,
+                    ceco,
+                    orden,
+                    orgventas,
                     LineaServicio,
                     codmat,
                     responsable,
@@ -255,6 +266,9 @@ sap.ui.define([
                 Imported,
                 Importeh,
                 Cliente,
+                ceco,
+                orden,
+                orgventas,
                 LineaServicio,
                 codmat,
                 responsable,
@@ -279,6 +293,9 @@ sap.ui.define([
                     "IMPORTED",
                     "IMPORTEH",
                     "CLIENTE",
+                    "CECO",
+                    "ORDEN",
+                    "ORGVENTAS",
                     "LINEA",
                     "MATERIAL",
                     "ZRESPONSABLE",
@@ -292,6 +309,9 @@ sap.ui.define([
                     Imported,
                     Importeh,
                     Cliente,
+                    ceco,
+                    orden,
+                    orgventas,
                     LineaServicio,
                     codmat,
                     responsable,
@@ -358,6 +378,34 @@ sap.ui.define([
                         aFilterValues.splice(i, 1);
                     }
                 }
+
+                if (ceco == "" || ceco == undefined) {
+                    var i = aFilterIds.indexOf("CECO");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                if (orden == "" || orden == undefined) {
+                    var i = aFilterIds.indexOf("ORDEN");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                if (orgventas == "" || orgventas == undefined) {
+                    var i = aFilterIds.indexOf("ORGVENTAS");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
                 if (LineaServicio == "" || LineaServicio == undefined) {
                     var i = aFilterIds.indexOf("LINEA");
 
@@ -449,6 +497,7 @@ sap.ui.define([
                     } else {
                         this.oComponent.getModel("Filtros").setProperty("/Total", "");
                     }
+                    vkbur = "";
                 } else {
                     MessageBox.warning(this.oI18nModel.getProperty("noSol"));
                     if (sStatus === "REDA") {
@@ -653,6 +702,7 @@ sap.ui.define([
             },
 
             onBusqOrdenes: function () {
+                var Ceco = codceco;
                 var Aufnr = this.getView().byId("f_codOrd").getValue();
                 var Ktext = this.getView().byId("f_nomOrd").getValue();
                 var Bukrs = this.getView().byId("f_ordbukrs").getValue();
@@ -663,17 +713,28 @@ sap.ui.define([
                 //FILTRADO DE CLIENTES////////////////////////////////////////////////////////////////////////////////////////////
 
                 aFilterIds = [
+                    "Ceco",
                     "Aufnr",
                     "Ktext",
                     "Bukrs"
                 ];
                 aFilterValues = [
+                    Ceco,
                     Aufnr,
                     Ktext,
                     Bukrs
                 ];
 
-                if (Aufnr == "") {
+                if (Ceco == "" || Ceco == undefined) {
+                    var i = aFilterIds.indexOf("Ceco");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                if (Aufnr == "" || Aufnr == undefined) {
                     var i = aFilterIds.indexOf("Aufnr");
 
                     if (i !== -1) {
@@ -682,7 +743,7 @@ sap.ui.define([
                     }
                 }
 
-                if (Ktext == "") {
+                if (Ktext == "" || Ktext == undefined) {
                     var i = aFilterIds.indexOf("Ktext");
 
                     if (i !== -1) {
@@ -691,7 +752,7 @@ sap.ui.define([
                     }
                 }
 
-                if (Bukrs == "") {
+                if (Bukrs == "" || Bukrs == undefined) {
                     var i = aFilterIds.indexOf("Bukrs");
 
                     if (i !== -1) {
@@ -730,7 +791,7 @@ sap.ui.define([
                     Bukrs
                 ];
 
-                if (Kostl == "") {
+                if (Kostl == "" || Kostl == undefined) {
                     var i = aFilterIds.indexOf("Kostl");
 
                     if (i !== -1) {
@@ -739,7 +800,7 @@ sap.ui.define([
                     }
                 }
 
-                if (Ltext == "") {
+                if (Ltext == "" || Ltext == undefined) {
                     var i = aFilterIds.indexOf("Ltext");
 
                     if (i !== -1) {
@@ -748,7 +809,7 @@ sap.ui.define([
                     }
                 }
 
-                if (Bukrs == "") {
+                if (Bukrs == "" || Bukrs == undefined) {
                     var i = aFilterIds.indexOf("Kokrs");
 
                     if (i !== -1) {
@@ -1272,7 +1333,7 @@ sap.ui.define([
                 var ord = this.getSelectOrd(oEvent, "listadoOrdenes");
                 codord = ord.Aufnr;
                 nomord = ord.Ktext;
-                this.getView().byId("f_ording").setValue(codord);
+                this.getView().byId("f_ordenes").setValue(codord);
                 this.byId("ordDial").close();
 
             },
@@ -1348,6 +1409,10 @@ sap.ui.define([
 
             CloseCecoDiag: function () {
                 this.byId("cecoDial").close();
+            },
+
+            CloseOficinasDiag: function () {
+                this.byId("ofiDial").close();
             },
 
             onValueHelpRequest: function (oEvent) {
@@ -2018,6 +2083,9 @@ sap.ui.define([
                     Imported,
                     Importeh,
                     Cliente,
+                    codceco,
+                    codord,
+                    vkbur,
                     sStatus,
                     LineaServicio,
                     codmat,
@@ -2056,6 +2124,9 @@ sap.ui.define([
                     Importeh,
                     sStatus,
                     Cliente,
+                    codceco,
+                    codord,
+                    vkbur,
                     LineaServicio,
                     codmat,
                     responsable,
@@ -2233,6 +2304,9 @@ sap.ui.define([
                             Imported,
                             Importeh,
                             Cliente,
+                            codceco,
+                            codord,
+                            vkbur,
                             sStatus,
                             LineaServicio,
                             codmat,
@@ -2408,6 +2482,9 @@ sap.ui.define([
                             Imported,
                             Importeh,
                             Cliente,
+                            codceco,
+                            codord,
+                            vkbur,
                             sStatus,
                             LineaServicio,
                             codmat,
