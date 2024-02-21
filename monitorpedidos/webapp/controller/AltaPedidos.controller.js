@@ -45,6 +45,9 @@ sap.ui.define([
         this.actualizaimp();
       },*/
 
+      onNavBack : function(){
+        this.onCancelar();
+      },
 
       onCancelar: function () {
         this.getView().byId("textAreaCabFact").setValue(null);
@@ -75,7 +78,8 @@ sap.ui.define([
         var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
         //this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", '0');
         //this.oComponent.getModel("PedidoCab").setProperty("/Moneda", 'EUR');
-
+        var calculo = 0;
+        var sumCalculo = 0;
         //MODO DE MODIFICACION Y VISUALIZACION DE PEDIDOS
         if (modeApp == 'M'|| modeApp == 'D') {
           var datos = this.oComponent.getModel("DisplayPosPed").getData();
@@ -88,9 +92,9 @@ sap.ui.define([
             var cantbases = datos[i].Kpein;
             var moneda = datos[i].Waerk;
             var importes = datos[i].Netpr;
-            sumCant = (Number(sumCant) + Number(cantidades)).toFixed(2);
-            sumImp = (Number(sumImp) + Number(importes)).toFixed(2);
-            sumCantBase = (Number(sumCantBase) + Number(cantbases)).toFixed(2);
+             calculo = Number((importes / cantbases) * cantidades).toFixed(2);
+             sumCalculo = Number(Number(sumCalculo)+Number(calculo)).toFixed(2);
+    
           }
           //MODO DE CREACION DE PEDIDOS
         } else if (modeApp == 'C') {
@@ -104,14 +108,11 @@ sap.ui.define([
             var cantbases = datos[i].Kpein;
             var moneda = datos[i].Waerk;
             var importes = datos[i].CondValue;
-            sumCant = (Number(sumCant) + Number(cantidades)).toFixed(2);
-            sumImp = (Number(sumImp) + Number(importes)).toFixed(2);
-            sumCantBase = (Number(sumCantBase) + Number(cantbases)).toFixed(2);
+            calculo = Number((importes / cantbases) * cantidades).toFixed(2);
+             sumCalculo = Number(Number(sumCalculo)+Number(calculo)).toFixed(2);
           }
         }
-        var sumTotaldiv = 0;
-        sumTotaldiv = (Number(sumImp / sumCantBase) * Number(sumCant)).toFixed(2);
-        this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", sumTotaldiv);
+        this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", sumCalculo);
         this.oComponent.getModel("PedidoCab").setProperty("/Moneda", moneda);
         this.oComponent.getModel("PedidoCab").refresh(true);
       },

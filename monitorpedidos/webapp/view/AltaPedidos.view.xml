@@ -7,7 +7,7 @@
     xmlns:layout="sap.ui.layout"
     xmlns:l="sap.ui.layout" height="100%">
 
-    <m:Page id="page" title="{DisplayPEP>/Title}">
+    <m:Page id="page" title="{DisplayPEP>/Title}" showNavButton="true" navButtonPress=".onNavBack">
     <m:headerContent>
     <m:Button id="BtnCancelar" text="Cancelar" icon="sap-icon://cancel"  visible="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false }" press="onCancelar"/>
     <m:Button id="BtnGrabar" text="Grabar" icon="sap-icon://save"  visible="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false }" press="onCrear"/>
