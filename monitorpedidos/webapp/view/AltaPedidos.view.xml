@@ -63,7 +63,7 @@
                         
                                 <core:Title text="" />
                                 <m:Label/>
-                                <m:Text id="txtPrice" text="{PedidoCab>/ImpPedido} {PedidoCab>/Moneda}" textAlign="End"/>
+                                <m:Text id="txtPrice" text="{PedidoCab>/ImpPedido} EUR" textAlign="End"/>
                                 <!--<m:Text id="idMoneda" text="{PedidoCab>/Moneda}" textAlign="End"/>-->
                                 <!--<core:Title text="" />
                                 <m:Label/>

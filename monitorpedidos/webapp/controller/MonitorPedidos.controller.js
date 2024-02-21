@@ -1,17 +1,17 @@
 sap.ui.define([
-        "sap/ui/core/mvc/Controller",
-        "sap/ui/model/json/JSONModel",
-        "sap/ui/core/Fragment",
-        "sap/ui/core/routing/History",
-        "sap/ui/model/Filter",
-        "sap/ui/model/FilterOperator",
-        "monitorpedidos/model/Util",
-        "sap/m/MessageBox",
-        "sap/ui/core/util/ExportTypeCSV",
-        "sap/ui/core/util/Export",
-        "sap/ui/export/library",
-        "sap/ui/export/Spreadsheet"
-    ],
+    "sap/ui/core/mvc/Controller",
+    "sap/ui/model/json/JSONModel",
+    "sap/ui/core/Fragment",
+    "sap/ui/core/routing/History",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+    "monitorpedidos/model/Util",
+    "sap/m/MessageBox",
+    "sap/ui/core/util/ExportTypeCSV",
+    "sap/ui/core/util/Export",
+    "sap/ui/export/library",
+    "sap/ui/export/Spreadsheet"
+],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
@@ -53,7 +53,7 @@ sap.ui.define([
                 var date = new Date();
                 var fechai, fechaf;
                 vedit = false;
-               
+
 
                 /*this.ListadoSolicitudes(
                     Usuario,
@@ -352,7 +352,7 @@ sap.ui.define([
                         aFilterValues.splice(i, 1);
                     }
                 }
-                if (Imported == "" || Imported == undefined ) {
+                if (Imported == "" || Imported == undefined) {
                     var i = aFilterIds.indexOf("IMPORTED");
 
                     if (i !== -1) {
@@ -361,7 +361,7 @@ sap.ui.define([
                     }
                 }
 
-                if (Importeh == ""|| Importeh == undefined) {
+                if (Importeh == "" || Importeh == undefined) {
                     var j = aFilterIds.indexOf("IMPORTEH");
 
                     if (j !== -1) {
@@ -1565,7 +1565,7 @@ sap.ui.define([
                         this._configDialog(oButton);
                         oDialog.open();
                     }
-                    .bind(this));
+                        .bind(this));
 
             },
 
@@ -1694,7 +1694,7 @@ sap.ui.define([
                         this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
                         this.getView().byId("colbtnedit").setVisible(false);
                         break;
-                        //En redaccion
+                    //En redaccion
                     case "Ok":
                         sStatus = "REDA";
                         //this.oComponent.getModel("ModoApp").setProperty("/redacc", redacc);
@@ -1704,7 +1704,7 @@ sap.ui.define([
                         this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
                         this.getView().byId("colbtnedit").setVisible(true);
                         break;
-                        //Pdte. Aprobar
+                    //Pdte. Aprobar
                     case "Heavy":
                         sStatus = "APRB";
                         sAprob = false;
@@ -1712,7 +1712,7 @@ sap.ui.define([
                         this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
                         this.getView().byId("colbtnedit").setVisible(false);
                         break;
-                        //Pdte. Financiero
+                    //Pdte. Financiero
                     case "Overweight":
                         sStatus = "FINA";
                         sAprob = false;
@@ -1720,7 +1720,7 @@ sap.ui.define([
                         this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
                         this.getView().byId("colbtnedit").setVisible(false);
                         break;
-                        //Pdte. Facturar
+                    //Pdte. Facturar
                     case "Money":
                         sStatus = "FACT";
                         sAprob = false;
@@ -1728,7 +1728,7 @@ sap.ui.define([
                         this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
                         this.getView().byId("colbtnedit").setVisible(false);
                         break;
-                        //Pdte. Cobrar
+                    //Pdte. Cobrar
                     case "Payment":
                         sStatus = "PDTE";
                         sAprob = false;
@@ -1739,7 +1739,7 @@ sap.ui.define([
                         //this.oComponent.getModel("ModoApp").setProperty("/aprob", aprob);
                         //this.oComponent.getModel("ModoApp").refresh(true);
                         break;
-                        //Cobradas
+                    //Cobradas
                     case "Sales":
                         sStatus = "COBR";
                         sAprob = false;
@@ -1747,7 +1747,7 @@ sap.ui.define([
                         this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
                         this.getView().byId("colbtnedit").setVisible(false);
                         break;
-                        //Denegadas
+                    //Denegadas
                     case "Cancel":
                         sStatus = "DEN";
                         sAprob = false;
@@ -2997,8 +2997,6 @@ sap.ui.define([
                                 that.oComponent.setModel(that.oComponent.getModel("PedidoPos"), "DisplayPosPed");
                                 //that.oComponent.setModel(PedidoPos, "DisplayPosPed");
 
-
-
                                 /*aFilterIdsCli.push("Kunnr");
                                 aFilterValuesCli.push(data.results[0].Kunnr);
  
@@ -3059,23 +3057,7 @@ sap.ui.define([
                                 that.oComponent.getModel("ModoApp").setProperty("/Nomcli", that.oComponent.getModel("DisplayPEP").getProperty("/Kunnr"));
                                 that.oComponent.setModel(new JSONModel([]), "PedidoPos");
                                 that.oComponent.getModel("ModoApp").refresh(true);
-
-                                /*for (var i = 0; i < SolicitudPed_A.results.length; i++) {
-                                    that.oComponent.getModel("PedidoPos").setProperty("/ItmNumber", SolicitudPed_A.results[i].Posnr);
-                                    that.oComponent.getModel("PedidoPos").setProperty("/Material", SolicitudPed_A.results[i].Matnr);
-                                    that.oComponent.getModel("PedidoPos").setProperty("/ShortText", SolicitudPed_A.results[i].Arktx);
-                                    that.oComponent.getModel("PedidoPos").setProperty("/ReqQty", SolicitudPed_A.results[i].Kpein);
-                                    that.oComponent.getModel("PedidoPos").setProperty("/SalesUnit", SolicitudPed_A.results[i].Meins);
-                                    that.oComponent.getModel("PedidoPos").setProperty("/CondValue", SolicitudPed_A.results[i].Netwr);
-                                    that.oComponent.getModel("PedidoPos").setProperty("/Currency", SolicitudPed_A.results[i].Waerk);
-                                    that.oComponent.getModel("PedidoPos").setProperty("/Ykostl", that.oComponent.getModel("DisplayPEP").getProperty("/Yykostkl"));
-                                    that.oComponent.getModel("PedidoPos").setProperty("/Yaufnr", that.oComponent.getModel("DisplayPEP").getProperty("/Yyaufnr"));
-                                    that.oComponent.getModel("PedidoPos").refresh(true);
-                                    
-                                }*/
-
-                                //that.oComponent.getModel("PedidoPos").setData(that.oComponent.getModel("DisplayPosPed").getData());
-
+                                that.actualizaimp();
 
                             }
                             if (response) {
@@ -3086,6 +3068,51 @@ sap.ui.define([
                     }),
                 ]);
 
+            },
+
+            actualizaimp: function () {
+                var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
+                //this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", '0');
+                //this.oComponent.getModel("PedidoCab").setProperty("/Moneda", 'EUR');
+
+                //MODO DE MODIFICACION Y VISUALIZACION DE PEDIDOS
+                if (modeApp == 'M' || modeApp == 'D') {
+                    var datos = this.oComponent.getModel("DisplayPosPed").getData();
+                    var sumCant = 0;
+                    var sumImp = 0;
+                    var sumCantBase = 0;
+                    var moneda = "EUR";
+                    for (var i = 0; i < datos.length; i++) {
+                        var cantidades = datos[i].Kwmeng;
+                        var cantbases = datos[i].Kpein;
+                        var moneda = datos[i].Waerk;
+                        var importes = datos[i].Netpr;
+                        sumCant = (Number(sumCant) + Number(cantidades)).toFixed(2);
+                        sumImp = (Number(sumImp) + Number(importes)).toFixed(2);
+                        sumCantBase = (Number(sumCantBase) + Number(cantbases)).toFixed(2);
+                    }
+                    //MODO DE CREACION DE PEDIDOS
+                } else if (modeApp == 'C') {
+                    var datos = this.oComponent.getModel("PedidoPos").getData();
+                    var sumCant = 0;
+                    var sumImp = 0;
+                    var sumCantBase = 0;
+                    var moneda = "EUR";
+                    for (var i = 0; i < datos.length; i++) {
+                        var cantidades = datos[i].ReqQty;
+                        var cantbases = datos[i].Kpein;
+                        var moneda = datos[i].Waerk;
+                        var importes = datos[i].CondValue;
+                        sumCant = (Number(sumCant) + Number(cantidades)).toFixed(2);
+                        sumImp = (Number(sumImp) + Number(importes)).toFixed(2);
+                        sumCantBase = (Number(sumCantBase) + Number(cantbases)).toFixed(2);
+                    }
+                }
+                var sumTotaldiv = 0;
+                sumTotaldiv = (Number(sumImp / sumCantBase) * Number(sumCant)).toFixed(2);
+                this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", sumTotaldiv);
+                this.oComponent.getModel("PedidoCab").setProperty("/Moneda", moneda);
+                this.oComponent.getModel("PedidoCab").refresh(true);
             },
 
             onEditOrder: function (oEvent) {
@@ -3266,6 +3293,7 @@ sap.ui.define([
                                 that.oComponent.getModel("ModoApp").setProperty("/Yaufnr", that.oComponent.getModel("DisplayPEP").getProperty("/Yyaufnr"));
                                 that.oComponent.getModel("ModoApp").refresh(true);
                                 that.oComponent.setModel(new JSONModel([]), "PedidoPos");
+                                that.actualizaimp();
 
                             }
                             if (response) {
@@ -3932,6 +3960,12 @@ sap.ui.define([
 
             // METODOS Y FUNCIONES PARA EL ALTA DE PEDIDOS
             onNavToAltaPedidos: function (oEvent) {
+                if (this.oComponent.getModel("ModoApp")) {
+                    this.oComponent.getModel("ModoApp").setProperty("/Nomcont", "");
+                    this.oComponent.getModel("ModoApp").setProperty("/Numcont", "");
+                }
+                numCont = "";
+                nomCont = "";
                 this._getDialogOptions();
                 this.modoapp = 'C';
             },
@@ -3983,7 +4017,7 @@ sap.ui.define([
                     vordenes = false;
                     vtitle = this.oI18nModel.getProperty("visPed");
                     boton,
-                    modApp = this.modoapp;
+                        modApp = this.modoapp;
                 }
 
                 var config = {
@@ -4667,6 +4701,7 @@ sap.ui.define([
                 //this.oComponent.getModel("posPedFrag").setData(results_array);
                 //this.oComponent.getModel("PedidoPos").setData(aSelectedData);
                 this.oComponent.getModel("ModoApp").refresh(true);
+                this.actualizaimp();
 
                 this.NIApedido(codcli, vkbur);
                 //this.DIRpedido(codcli, vkbur);
@@ -4694,7 +4729,7 @@ sap.ui.define([
                 this.CloseOptionsDiagContrato();
 
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-                oRouter.navTo("RouteAltaPedidos");                
+                oRouter.navTo("RouteAltaPedidos");
             },
 
             CloseOptionsDiagContrato: function () {
@@ -5106,8 +5141,9 @@ sap.ui.define([
                     this.oComponent.setModel(new JSONModel([]), "Adjuntos");
                     this.oComponent.setModel(new JSONModel(), "datosAdj");
                     if (modeApp === 'C') {
-                        this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", 0);
+                        this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", '0');
                         this.oComponent.getModel("PedidoCab").setProperty("/Moneda", 'EUR');
+                        this.oComponent.getModel("PedidoCab").refresh(true);
                     }
 
 
@@ -5129,32 +5165,32 @@ sap.ui.define([
                     this.Plataformapedido(codcli, vkbur, vbeln);
                     this.DameMonedas();
 
-					                    
+
                     /* 
                     VALIDACIÓN SI LOS CAMPOS VAN VACÍOS PARA QUE NO SE REDIRIJA A LA SECCIÓN DE ALTA DE PEDIDO 
                     */
                     if (idArea != "" && idCCliente != "" && idCanal != "" && idSector != "" && idzona != "" && idCTipoPed != "") {
 
 
-			
-                    /**
-                     * Cuando ya navegamos al alta debe de borrar todos los campos de opciones 
-                     * para que cuando se entre de nuevo aparezcan vacios para crear una nueva peticion
-                     */
-                    this.getView().byId("idCTipoPed").setSelectedKey(null);
-                    //this.getView().byId("idCSociedad").setSelectedKey(null);
-                    this.getView().byId("idArea").setSelectedKey(null);
-                    this.getView().byId("idCanal").setSelectedKey(null);
-                    this.getView().byId("idSector").setSelectedKey(null);
-                    this.getView().byId("idzona").setSelectedKey(null);
-                    this.getView().byId("idCCliente").setValue(null);
-                    this.getView().byId("descrProv").setValue(null);
-                    this.getView().byId("idcontract").setSelectedKey(null);
-                    this.getView().byId("idcontract").setVisible(true);
 
-                    var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-                    oRouter.navTo("RouteAltaPedidos");
-                }
+                        /**
+                         * Cuando ya navegamos al alta debe de borrar todos los campos de opciones 
+                         * para que cuando se entre de nuevo aparezcan vacios para crear una nueva peticion
+                         */
+                        this.getView().byId("idCTipoPed").setSelectedKey(null);
+                        //this.getView().byId("idCSociedad").setSelectedKey(null);
+                        this.getView().byId("idArea").setSelectedKey(null);
+                        this.getView().byId("idCanal").setSelectedKey(null);
+                        this.getView().byId("idSector").setSelectedKey(null);
+                        this.getView().byId("idzona").setSelectedKey(null);
+                        this.getView().byId("idCCliente").setValue(null);
+                        this.getView().byId("descrProv").setValue(null);
+                        this.getView().byId("idcontract").setSelectedKey(null);
+                        this.getView().byId("idcontract").setVisible(true);
+
+                        var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                        oRouter.navTo("RouteAltaPedidos");
+                    }
                 }
             },
 

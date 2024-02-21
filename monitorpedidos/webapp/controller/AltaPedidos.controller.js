@@ -32,18 +32,18 @@ sap.ui.define([
         var oModAdj = new JSONModel();
         var oModAdjSHP = new JSONModel();
         var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-        if (modeApp == 'M' || modeApp == 'D') {
+        /*if (modeApp == 'M' || modeApp == 'D') {
           const myRoute = this.getOwnerComponent().getRouter().getRoute("RouteAltaPedidos");
         myRoute.attachPatternMatched(this.onMyRoutePatternMatched, this);
-        }
+        }*/
         
 
       },
 
-      onMyRoutePatternMatched(event) {
+      /*onMyRoutePatternMatched(event) {
         // your code when the view is about to be displayed ..
         this.actualizaimp();
-      },
+      },*/
 
 
       onCancelar: function () {
@@ -73,9 +73,11 @@ sap.ui.define([
 
       actualizaimp: function () {
         var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
+        //this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", '0');
+        //this.oComponent.getModel("PedidoCab").setProperty("/Moneda", 'EUR');
 
-        //MODO DE MODIFICACION DE PEDIDOS
-        if (modeApp = 'M') {
+        //MODO DE MODIFICACION Y VISUALIZACION DE PEDIDOS
+        if (modeApp == 'M'|| modeApp == 'D') {
           var datos = this.oComponent.getModel("DisplayPosPed").getData();
           var sumCant = 0;
           var sumImp = 0;
@@ -91,7 +93,7 @@ sap.ui.define([
             sumCantBase = (Number(sumCantBase) + Number(cantbases)).toFixed(2);
           }
           //MODO DE CREACION DE PEDIDOS
-        } else if (modeApp = 'C') {
+        } else if (modeApp == 'C') {
           var datos = this.oComponent.getModel("PedidoPos").getData();
           var sumCant = 0;
           var sumImp = 0;
@@ -1195,108 +1197,7 @@ sap.ui.define([
         return error;
       },
 
-      /*ordenaPedPos: function (actualiza) {
-
-        var posiciones = this.oComponent.getModel("PedidoPos").getData();
-        //var secuModi = this.oComponent.getModel("ModoApp").getData().secuModi;
-        //var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-
-        var posicionesN = [],
-          posicionN;
-
-        if (posiciones.length > 0) {
-
-          var posInicial = 10;
-          var secu = 1;
-          var sumTotal = 0;
-
-          for (var i = 0; i <= posiciones.length - 1; i++) {
-
-            posicionN = Object.assign({}, posiciones[i]);
-
-
-            if (i == 0) {
-
-              posicionN.ItmNumber = posInicial;
-
-              //posicionN.PosnrT = posInicial;
-              //posicionN.Secu      = secu;
-            } else {
-
-              if (posiciones[i].ItmNumber == posAnt) {
-
-                posicionN.ItmNumber = posicionesN[i - 1].ItmNumber;
-
-                //posicionN.PosnrT = "";
-                //posicionN.Secu      = secu;//posicionesN[i-1].Secu + 1;
-              } else {
-
-                posicionN.ItmNumber = posicionesN[i - 1].ItmNumber + 10;
-
-                //posicionN.PosnrT = posicionesN[i - 1].Posnr + 10
-                //posicionN.Secu      = secu;//1;
-              }
-
-            }
-            
-            posicionN.Secu = posiciones[i].Secu;
-
-            //secuModi = secuModi + 1;
-            posicionesN.push(posicionN);
-
-
-            secu = secu + 1;
-            sumTotal = (Number(sumTotal) + Number(posicionN.CondValue)).toFixed(2);
-            //this.getView().byId("inputimport").setValue(sumTotal);
-            var posAnt = posiciones[i].ItmNumber;
-          }
-
-          if (sumTotal == 0) {
-            sumTotal = "0.00";
-          }
-          var moneda = this.oComponent.getModel("posPedFrag").getData().Currency;
-
-          this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", sumTotal);
-          this.oComponent.getModel("PedidoCab").setProperty("/Moneda", moneda);
-          this.oComponent.getModel("PedidoCab").refresh(true);
-
-          //var PosSigCre = posicionesN[posiciones.length - 1].Posnr;
-          var PosSigCre = posicionesN[posiciones.length - 1].ItmNumber
-          var posSig = this.oComponent.getModel("posPedFrag").getData().Vbelp;
-          posSig = PosSigCre + 10;
-          //this.oComponent.getModel("ModoApp").setProperty("/posPed", posSig);
-          //this.oComponent.getModel("ModoApp").setProperty("/secuModi", secuModi);
-          //this.oComponent.getModel("ModoApp").refresh(true);
-
-          var oModPos = new JSONModel();
-
-          oModPos.setData(posicionesN);
-
-          this.oComponent.getModel("PedidoPos").setProperty("/posSig", posSig);
-          this.oComponent.setModel(oModPos, "PedidoPos");
-          this.oComponent.setModel(oModPos, "DisplayPosPed");
-
-
-        } else {
-
-          this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", 0);
-          this.oComponent.getModel("PedidoCab").refresh(true);
-
-          var posSig = this.oComponent.getModel("posPedFrag").getData().ItmNumber;
-          posSig = 10;
-          this.oComponent.getModel("posPedFrag").setProperty("/posPed", posSig);
-          //this.oComponent.getModel("posPedFrag").refresh(true);
-
-          //this.oComponent.getModel("PedidoPos").refresh(true);
-        }
-        this.oComponent.setModel(new JSONModel(), "listadoCecos");
-        this.oComponent.setModel(new JSONModel(), "listadoOrdenes");
-        this.oComponent.setModel(new JSONModel(), "listadoServicios");
-
-        this.byId("pedPosDial").close();
-      },
-      */
-
+      
       ordenaPedPos: function (actualiza) {
 
         var posiciones = this.oComponent.getModel("PedidoPos").getData();
@@ -1345,6 +1246,7 @@ sap.ui.define([
             posicionN.Secu = posiciones[i].Secu;
             posicionesN.push(posicionN);
             secu = secu + 1;
+            var posAnt = posicionesN[i].ItmNumber;
           }
           //ACTUALIZACION IMPORTES    
           this.actualizaimp();
@@ -1366,7 +1268,8 @@ sap.ui.define([
 
         } else {
 
-          this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", 0);
+          this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", '0');
+          this.oComponent.getModel("PedidoCab").setProperty("/Moneda", 'EUR');
           this.oComponent.getModel("PedidoCab").refresh(true);
           this.actualizaimp();
 
@@ -1999,13 +1902,16 @@ sap.ui.define([
 
         if (modeApp == 'M') {
           pedidosPos = this.oComponent.getModel("DisplayPosPed").getData();
+          if (pedidosPos.length > 0) {
+            posicion = Number(pedidosPos[pedidosPos.length - 1].Posnr) + 10;
+          }
         } else {
           pedidosPos = this.oComponent.getModel("PedidoPos").getData();
+          if (pedidosPos.length > 0) {
+            posicion = Number(pedidosPos[pedidosPos.length - 1].ItmNumber) + 10;
+          }
         }
 
-        if (pedidosPos.length > 0) {
-          posicion = Number(pedidosPos[pedidosPos.length - 1].Posnr) + 10;
-        }
 
         var recogececos = this.getView().byId("f_cecos").getValue();
         var recogeorden = this.getView().byId("f_ordenes").getValue();
