@@ -35,7 +35,7 @@
             </fb:FilterGroupItem>
             <fb:FilterGroupItem id="id5" groupName="FiltrosCli" name="D" label="{i18n>client}" visibleInFilterBar="true">
                 <fb:control>
-                    <Input id="f_client" showValueHelp="true" valueHelpRequest=".onValueHelpRequest" />
+                    <Input id="f_client" showValueHelp="true" valueHelpRequest=".onValueHelpRequestClienteMonitor" />
                 </fb:control>
             </fb:FilterGroupItem>
 

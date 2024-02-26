@@ -18,10 +18,16 @@ sap.ui.define([
     function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util, MessageBox, ExportTypeCSV, Export, exportLibrary) {
         "use strict";
 
-        var EdmType = exportLibrary.EdmType;
+       // var EdmType = exportLibrary.EdmType;
 
-        var codcli, sumTotal, nomcli, Numped, Fechad, Fechah, Imported, Importeh, Cliente, ClasePed, codmat, nommat, LineaServicio, codord, nomord, codceco, nomceco, vkbur, socPed, TipoPed, numCont, nomSoc, vText, nomCont, Bzirk, Bztxt, Cvcan, Cvsector, Posped, condPago, Centges, Centuni, Centpro, Codadm, Plataforma, sStatus, sAprob, sLiber, responsable, vedit, checkMisPed, checkTodos, Usuario;
+        var codcli, nomcli, socPed, TipoPed, numCont, vText, nomCont, Bzirk, Bztxt, Cvcan, Cvsector, condPago, sAprob, responsable, vedit, checkMisPed, checkTodos;
         var arrayKeys = [];
+
+        // Variables utilizadas en los filtros
+        var Usuario, Numped, Fechad, Fechah, Imported, Importeh, sStatus, Cliente, codceco, codord, vkbur, LineaServicio, codmat, ClasePed;
+        
+        // Variables no utilizadas ???
+        var nomceco, nomord, nommat, sumTotal, nomSoc, Posped, Centges, Centuni, Centpro, Codadm, Plataforma;
 
         return Controller.extend("monitorpedidos.controller.MonitorPedidos", {
             onInit: function () {
@@ -30,9 +36,6 @@ sap.ui.define([
                 this.oI18nModel = this.oComponent.getModel("i18n");
 
                 //PARSEADO INICIAL DE LAS FECHAS DESDE Y HASTA/////////////////
-
-                var today = new Date();
-                //today.toLocaleDateString("es-ES");
                 var today1 = new Date();
                 //today1.toLocaleDateString("es-ES");
                 today1.setDate(today1.getDate() - 30);
@@ -50,160 +53,35 @@ sap.ui.define([
                     "-" +
                     ("0" + today.getDate()).slice(-2);*/
 
-                var date = new Date();
-                var fechai, fechaf;
+                //var date = new Date();
+                //var fechai, fechaf;
                 vedit = false;
-
-
-                /*this.ListadoSolicitudes(
-                    Usuario,
-                    Numped,
-                    fechai,
-                    fechaf,
-                    Imported,
-                    Importeh,
-                    Cliente);*/
-
-                //Mapear los campos por defecto de los filtros:
-
-                var filtros = {
-                    fechaD: fechai,
-                    fechaH: fechaf
-
-                };
 
                 var oModFiltr = new JSONModel();
                 var oModFiltrosAcr = new JSONModel();
                 var oModCab = new JSONModel();
 
 
-                oModFiltr.setData(filtros);
+                //oModFiltr.setData(filtros);
 
                 this.oComponent.setModel(oModFiltr, "Filtros");
                 this.oComponent.setModel(oModFiltrosAcr, "FiltrosCli");
                 this.oComponent.setModel(oModCab, "PedidoCab");
 
+                // Inicializar valores mostrados en los filtros
                 this.dameTiposped();
                 this.dameLineas();
                 this.DameOrganizaciones();
                 //this.TiposPedidoAlta();
                 this.motivosRechazo();
+
+                //De primeras mostrará las solicitudes de Mi usuario
                 this.getUser();
                 this.AreasVenta();
                 this.modoapp = "";
-
-                //De primeras mostrará las solicitudes de Mi usuario
-                //Usuario = "";
-
-                this.ListadoSolicitudes(
-                    Usuario,
-                    Numped,
-                    Fechad,
-                    Fechah,
-                    Imported,
-                    Importeh,
-                    Cliente,
-                    codceco,
-                    codord,
-                    vkbur,
-                    LineaServicio,
-                    codmat,
-                    ClasePed);
-
-
             },
 
-            dameTiposped: function () {
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/ClasePedSet", ""),
-                ]).then(this.buildClasePed.bind(this), this.errorFatal.bind(this));
-            },
-
-            dameLineas: function () {
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/LineasServicioSet", ""),
-                ]).then(this.buildLineas.bind(this), this.errorFatal.bind(this));
-            },
-
-            buildClasePed: function (values) {
-
-                if (values[0].results) {
-                    var oModelClasePed = new JSONModel();
-                    oModelClasePed.setData(values[0].results);
-                    oModelClasePed.setSizeLimit(300);
-                    this.oComponent.setModel(oModelClasePed, "Tipospedido");
-                }
-
-            },
-
-            buildLineas: function (values) {
-
-                if (values[0].results) {
-                    var oModelLineas = new JSONModel();
-                    oModelLineas.setData(values[0].results);
-                    this.oComponent.setModel(oModelLineas, "LineasServicio");
-                }
-
-            },
-
-
-            onChangefLineas: function () {
-                LineaServicio = this.getView().byId("f_line").getSelectedKey();
-                //console.log(LineaServicio);
-            },
-
-            handleSelectionChange: function (oEvent) {
-                var changedItem = oEvent.getParameter("changedItem");
-                var isSelected = oEvent.getParameter("selected");
-
-                var state = "Selected";
-                if (!isSelected) {
-                    state = "Deselected";
-                    //arrayKeys.pop(changedItem.mProperties.key);
-                    var valor = changedItem.mProperties.key;
-                    for (var i = 0; i < arrayKeys.length; i++) {
-                        if (valor == arrayKeys[i]) {
-                            //console.log("Igual");
-                            const index = arrayKeys.findIndex(x => x.key === valor);
-
-                            arrayKeys.splice(index, 1);
-                        }
-
-                    }
-
-                } else {
-                    arrayKeys.push(changedItem.mProperties.key);
-                }
-
-
-
-                //changedItem.mProperties.key
-                //arrayKeys++;
-
-                /*MessageBox.show("Event 'selectionChange': " + state + " '" + changedItem.getText() + "'", {
-                    width: "auto"
-                });*/
-            },
-
-            /*handleSelectionFinish: function (oEvent) {
-                var selectedItems = oEvent.getParameter("selectedItems");
-                var messageText = "Event 'selectionFinished': [";
-
-                for (var i = 0; i < selectedItems.length; i++) {
-                    messageText += "'" + selectedItems[i].getText() + "'";
-                    if (i != selectedItems.length - 1) {
-                        messageText += ",";
-                    }
-                }
-
-                messageText += "]";
-
-                MessageBox.show(messageText, {
-                    width: "auto"
-                });
-            },*/
-
-            //MÉTODO PARA LEER LAS ENTITIES///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // -------------------------------------- FUNCIÓN PARA LEER LAS ENTIDADES DEL OData --------------------------------------
             readDataEntity: function (oModel, path, aFilters) {
                 return new Promise(function (resolve, reject) {
                     oModel.read(path, {
@@ -218,53 +96,179 @@ sap.ui.define([
                 });
             },
 
-            //MÉTODOS PARA LISTADO DE PEDIDOS Y LLAMADA AL ODATA PARA TRAER LOS DATOS A LA TABLA PRINCIPAL //////////////////////////////////////////////
+            // -------------------------------------- FUNCIONES EJECUTADAS AL INICIAR LA APLICACIÓN --------------------------------------
+            dameTiposped: function () {
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/ClasePedSet", ""),
+                ]).then(this.buildClasePed.bind(this), this.errorFatal.bind(this));
+            },
 
-            onBusqSolicitudes: function (oEvent) {
+            buildClasePed: function (values) {
 
-                var Usuario = this.getView().byId("f_usuario").getValue();
-                //Numped = this.getView().byId("f_numsolic").getValue();
-                Fechad = this.getView().byId("DTPdesde").getValue();
-                Fechah = this.getView().byId("DTPhasta").getValue();
-                Imported = this.getView().byId("f_impdesde").getValue();
-                Importeh = this.getView().byId("f_imphasta").getValue();
-                ClasePed = arrayKeys;
-                //var ceco = this.getView().byId("f_codCeco").getValue();
-                var ceco = codceco;
-                //var order = this.getView().byId().getValue();
-                var orden = codord;
-                var orgventas = vkbur;
-                // Cliente = this.getView().byId("f_client").getSelectedKey();
-                Cliente = codcli;
-                LineaServicio = this.getView().byId("f_line").getSelectedKey();
-                responsable = this.getView().byId("f_approv").getValue();
+                if (values[0].results) {
+                    var oModelClasePed = new JSONModel();
+                    oModelClasePed.setData(values[0].results);
+                    oModelClasePed.setSizeLimit(300);
+                    this.oComponent.setModel(oModelClasePed, "Tipospedido");
+                }
+
+            },
+
+            dameLineas: function () {
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/LineasServicioSet", ""),
+                ]).then(this.buildLineas.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildLineas: function (values) {
+
+                if (values[0].results) {
+                    var oModelLineas = new JSONModel();
+                    oModelLineas.setData(values[0].results);
+                    this.oComponent.setModel(oModelLineas, "LineasServicio");
+                }
+
+            },
+
+            DameOrganizaciones: function () {
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/OrganizacionesSet", ""),
+                ]).then(this.buildSociedades.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildSociedades: function (values) {
+                if (values[0].results) {
+                    var oModelOgranizacion = new JSONModel();
+                    oModelOgranizacion.setData(values[0].results);
+                    oModelOgranizacion.setSizeLimit(300);
+                    this.oComponent.setModel(oModelOgranizacion, "Organizaciones");
+                }
+
+            },
+
+            TiposPedidoAlta: function (TipoPed) {
+
+                var aFilters = [],
+                    aFilterIds = [],
+                    aFilterValues = [];
+
+                aFilterIds.push("Auart");
+                aFilterValues.push(TipoPed);
+
+
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/TipoPedidoSet", aFilters),
+                ]).then(this.buildTiposPed.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildTiposPed: function (values) {
+                if (values[0].results) {
+                    var oModelTiposPed = new JSONModel();
+                    oModelTiposPed.setData(values[0].results);
+                    this.oComponent.setModel(oModelTiposPed, "TipospedidoAlta");
+                }
+
+            },
+
+            motivosRechazo: function () {
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/TiposRechazoSet", ""),
+                ]).then(this.buildTiposRechazo.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildTiposRechazo: function (values) {
+                if (values[0].results) {
+                    var oModelTiposRechazo = new JSONModel();
+                    oModelTiposRechazo.setData(values[0].results);
+                    this.oComponent.setModel(oModelTiposRechazo, "TiposRechazo");
+                }
+
+            },
+
+            getUser: function () {
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/DameUsuarioSet", ""),
+                ]).then(this.buildUsuario.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildUsuario: function (values) {
+                if (values[0].results) {
+                    var oModelUsuario = new JSONModel();
+                    oModelUsuario.setData(values[0].results);
+                    this.oComponent.setModel(oModelUsuario, "Usuario");
+                    Usuario = this.oComponent.getModel("Usuario").getData()[0].Bname;
+                    this.oComponent.getModel("Usuario").setProperty("/user", Usuario);
+                    this.oComponent.getModel("Usuario").refresh(true);
+                }
+
                 this.ListadoSolicitudes(
                     Usuario,
-                    Numped,
+                    //Numped,
                     Fechad,
                     Fechah,
                     Imported,
                     Importeh,
+                    sStatus,
                     Cliente,
-                    ceco,
-                    orden,
-                    orgventas,
+                    codceco,
+                    codord,
+                    vkbur,
                     LineaServicio,
                     codmat,
                     responsable,
-                    ClasePed
-                )
-
+                    ClasePed);
             },
 
-            //FILTROS DE LISTADO DE PEDIDOS
+            AreasVenta: function () {
+                /*var mode = this.oComponent.getModel("ModoApp").getData();
+
+                mode.cvent = true;
+                this.oComponent.getModel("ModoApp").refresh(true);*/
+                //this.oComponent.getModel("ModoApp").setProperty("/cvent", true);
+                //this.oComponent.getModel("ModoApp").setProperty("/cclient", true);
+                //this.oComponent.getModel("ModoApp").refresh(true);
+
+                //Calculamos los centos asociados a la sociedad
+                //var bukrs = this.oComponent.getModel("PedidoCab").getData().Bukrs;
+                //socPed = this.getView().byId("idCSociedad").getSelectedKey();
+                //nomSoc = this.getView().byId("idCSociedad")._getSelectedItemText();
+                //this.getView().byId("idArea").setValue(nomSoc);
+                //vkbur = this.getView().byId("idCSociedad").getSelectedKey();
+                //var user = ''  
+
+                var aFilterIds,
+                    aFilterValues,
+                    aFilters;
+
+                aFilterIds = ["Vkorg"];
+                aFilterValues = [socPed];
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                Promise.all([this.readDataEntity(this.mainService, "/AreaVentasSet", "")]).then(
+                    this.buildListAreaVentas.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildListAreaVentas: function (values) {
+                if (values[0].results) {
+                    var oModelListAreaVentas = new JSONModel();
+                    oModelListAreaVentas.setData(values[0].results);
+                    //                    var AreaVenta = values[0].results[0].Vkorg;
+                    this.oComponent.setModel(oModelListAreaVentas, "AreaVentas");
+                }
+            },
+
+            // -------------------------------------- FUNCIONES PARA LA OBTENCIÓN DE LOS DATOS DEL MONITOR Y FILTRADO --------------------------------------
+            // OBTENER DATOS DEL MONITOR EN BASE A LOS FILTROS
             ListadoSolicitudes: function (
                 Usuario,
-                Numped,
+                //Numped,
                 Fechad,
                 Fechah,
                 Imported,
                 Importeh,
+                sStatus,
                 Cliente,
                 ceco,
                 orden,
@@ -287,11 +291,12 @@ sap.ui.define([
 
                 aFilterIds = [
                     "USUARIO",
-                    "IDSOLICITUD",
+                    //"IDSOLICITUD",
                     "FECHAD",
                     "FECHAH",
                     "IMPORTED",
                     "IMPORTEH",
+                    "ESTADO",
                     "CLIENTE",
                     "CECO",
                     "ORDEN",
@@ -303,11 +308,12 @@ sap.ui.define([
                 ];
                 aFilterValues = [
                     Usuario,
-                    Numped,
+                    //Numped,
                     fec_ini,
                     fec_fin,
                     Imported,
                     Importeh,
+                    sStatus,
                     Cliente,
                     ceco,
                     orden,
@@ -326,14 +332,14 @@ sap.ui.define([
                         aFilterValues.splice(i, 1);
                     }
                 }
-                if (Numped == "" || Numped == undefined) {
+                /*if (Numped == "" || Numped == undefined) {
                     var i = aFilterIds.indexOf("IDSOLICITUD");
 
                     if (i !== -1) {
                         aFilterIds.splice(i, 1);
                         aFilterValues.splice(i, 1);
                     }
-                }
+                }*/
 
                 if (fec_ini == "" || fec_ini == null) {
                     var i = aFilterIds.indexOf("FECHAD");
@@ -362,11 +368,20 @@ sap.ui.define([
                 }
 
                 if (Importeh == "" || Importeh == undefined) {
-                    var j = aFilterIds.indexOf("IMPORTEH");
+                    var i = aFilterIds.indexOf("IMPORTEH");
 
-                    if (j !== -1) {
-                        aFilterIds.splice(j, 1);
-                        aFilterValues.splice(j, 1);
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
+                    }
+                }
+
+                if (sStatus == "" || sStatus == undefined) {
+                    var i = aFilterIds.indexOf("ESTADO");
+
+                    if (i !== -1) {
+                        aFilterIds.splice(i, 1);
+                        aFilterValues.splice(i, 1);
                     }
                 }
 
@@ -442,24 +457,6 @@ sap.ui.define([
                     }
                 }
 
-                /* if (ceco == "" || ceco == undefined) {
-                     var i = aFilterIds.indexOf("Ceco");
- 
-                     if (i !== -1) {
-                         aFilterIds.splice(i, 1);
-                         aFilterValues.splice(i, 1);
-                     }
-                 }*/
-
-                /*if (!ClasePed) {
-                    var i = aFilterIds.indexOf("Tipo");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }*/
-
                 aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
 
                 sap.ui.core.BusyIndicator.show();
@@ -522,8 +519,399 @@ sap.ui.define([
                     //Si no hay solicitudes, se borra el listado
                     this.oComponent.setModel(new JSONModel(), "listadoSolicitudes");
                 }
+            },            
+
+            //MÉTODO PARA EL CAMBIO DE ESTADO (ICON TAB FILTERS)
+            onFilterSelect: function(oEvent) {
+                var skey = oEvent.getParameter("key");
+                sStatus = "";
+                vedit = false;
+                sAprob = false;
+                
+                switch (skey) {
+                    case "Free":
+                        sStatus = "";
+                        break;
+                    case "Ok":
+                        sStatus = "REDA";
+                        vedit = true;
+                        break;
+                    case "Heavy":
+                        sStatus = "APRB";
+                        break;
+                    case "Overweight":
+                        sStatus = "FINA";
+                        break;
+                    case "Money":
+                        sStatus = "FACT";
+                        break;
+                    case "Payment":
+                        sStatus = "PDTE";
+                        break;
+                    case "Sales":
+                        sStatus = "COBR";
+                        break;
+                    case "Cancel":
+                        sStatus = "DEN";
+                        break;
+                    case "Approv":
+                        sStatus = "APRB";
+                        sAprob = true;
+                        break;
+                }
+         
+                this.getView().byId("Filtr10").setVisible(vedit);
+                this.getView().byId("colbtnedit").setVisible(vedit);
+                this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                this.oComponent.getModel("PedidoCab").refresh(true);               
+            
+                this.ListadoSolicitudes(
+                    Usuario,
+                    //Numped,
+                    Fechad,
+                    Fechah,
+                    Imported,
+                    Importeh,
+                    sStatus,
+                    Cliente,
+                    codceco,
+                    codord,
+                    vkbur,
+                    LineaServicio,
+                    codmat,
+                    responsable,
+                    ClasePed);                
+            },   
+            
+            // FUNCIÓN PARA SELECCIONAR EL RADIO BUTTON (Mis pedidos / Todos)
+            onRadioButtonSelect: function (oEvent) {
+                var oRbGroup = this.getView().byId("rbGroup"); // Get the RadioButtonGroup control
+                var oSelectedButton = oRbGroup.getSelectedButton(); // Get the selected radio button
+
+                if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbTrue" || oSelectedButton.getId() === "application-ZPV-monitor-component---MonitorPedidos--rbTrue") {
+                    Usuario = this.oComponent.getModel("Usuario").getData()[0].Bname;                    
+                } else if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbFalse" || oSelectedButton.getId() === "application-ZPV-monitor-component---MonitorPedidos--rbFalse") {
+                    Usuario = "";
+                };
+
+                this.ListadoSolicitudes(
+                    Usuario,
+                    //Numped,
+                    Fechad,
+                    Fechah,
+                    Imported,
+                    Importeh,
+                    sStatus,
+                    Cliente,
+                    codceco,
+                    codord,
+                    vkbur,
+                    LineaServicio,
+                    codmat,
+                    responsable,
+                    ClasePed);
             },
 
+            // FUNCION DE LA BUSQUEDA PRINCIPAL
+            onBusqSolicitudes: function (oEvent) {
+                this.ListadoSolicitudes(
+                    Usuario,
+                    //Numped,
+                    Fechad,
+                    Fechah,
+                    Imported,
+                    Importeh,
+                    sStatus,
+                    Cliente,
+                    codceco,
+                    codord,
+                    vkbur,
+                    LineaServicio,
+                    codmat,
+                    responsable,
+                    ClasePed);
+
+                var usuario = this.getView().byId("f_usuario").getValue();
+                if(usuario){
+                    Usuario = usuario;
+                }
+                
+                //Numped = this.getView().byId("f_numsolic").getValue();
+                Fechad = this.getView().byId("DTPdesde").getValue();
+                Fechah = this.getView().byId("DTPhasta").getValue();
+                Imported = this.getView().byId("f_impdesde").getValue();
+                Importeh = this.getView().byId("f_imphasta").getValue();
+                //sStatus
+                Cliente = this.getView().byId("f_client").getSelectedKey();
+                //Cliente = codcli;
+                var ceco = this.getView().byId("f_codCeco").getValue();
+                //var ceco = codceco;
+                var order = this.getView().byId().getValue();
+                //var orden = codord;
+                var orgventas = vkbur;
+                LineaServicio = this.getView().byId("f_line").getSelectedKey();
+                var codmat = codmat;
+                responsable = this.getView().byId("f_approv").getValue();
+                ClasePed = arrayKeys;
+
+                this.ListadoSolicitudes(
+                    Usuario,
+                    //Numped,
+                    Fechad,
+                    Fechah,
+                    Imported,
+                    Importeh,
+                    sStatus,
+                    Cliente,
+                    codceco,
+                    codord,
+                    vkbur,
+                    LineaServicio,
+                    codmat,
+                    responsable,
+                    ClasePed);
+                
+                /*this.ListadoSolicitudes(
+                    Usuario,
+                    //Numped,
+                    Fechad,
+                    Fechah,
+                    Imported,
+                    Importeh,
+                    sStatus,
+                    Cliente,
+                    ceco,
+                    orden,
+                    orgventas,
+                    LineaServicio,
+                    codmat,
+                    responsable,
+                    ClasePed
+                )*/
+
+            },
+
+            // FUNCIONES DEL DIÁLOGO DE BÚSQUEDA DE CLIENTES
+            onValueHelpRequestClienteMonitor: function (oEvent) {
+                this._getDialogClienteMonitor();
+            },
+
+            _getDialogClienteMonitor: function (sInputValue) {
+                var oView = this.getView();
+
+                if (!this.pDialogCliente) {
+                    this.pDialogCliente = Fragment.load({
+                        id: oView.getId(),
+                        name: "monitorpedidos.fragments.BusqClientesMonitor",
+                        controller: this,
+                    }).then(function (oDialogCliente) {
+                        // connect dialog to the root view of this component (models, lifecycle)
+                        oView.addDependent(oDialogCliente);
+                        return oDialogCliente;
+                    });
+                }
+                this.pDialogCliente.then(function (oDialogCliente) {
+                    oDialogCliente.open(sInputValue);
+                    //this._configDialogCliente(oDialog)
+                });
+            },            
+
+            CloseCliDiagMonitor: function () {
+                //this.getView().byId("f_nameAcrMoni").setValue(null);
+                //this.getView().byId("f_lifnrAcrMoni").setValue(null);
+                //this.getView().byId("f_nifAcrMoni").setValue(null);
+                this.byId("cliDialMonitor").close();
+                //this.oComponent.setModel(new JSONModel(), "listadoClientes");
+                //this.oComponent.getModel("listadoClientes").refresh(true);
+            },
+
+            onBusqClientesMonitor: function () {
+                var Stcd1 = this.getView().byId("f_nameAcrMoni").getValue();
+                var Kunnr = this.getView().byId("f_lifnrAcrMoni").getValue();
+                var Name1 = this.getView().byId("f_nifAcrMoni").getValue();
+
+                var aFilterIds = [], aFilterValues = [];
+
+                var addFilter = function (id, value) {
+                    if (value !== "") {
+                        aFilterIds.push(id);
+                        aFilterValues.push(value);
+                    }
+                };
+
+                addFilter("Stcd1", Stcd1);
+                addFilter("Kunnr", Kunnr);
+                addFilter("Name1", Name1);
+
+                var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                sap.ui.core.BusyIndicator.show();
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/DameClientesSet", aFilters),
+                ]).then(this.buildClientesModelMonitor.bind(this), this.errorFatal.bind(this));
+
+            },
+
+            buildClientesModelMonitor: function (values) {
+                var oModelClientes = new JSONModel();                
+                if (values[0].results) {                    
+                    // Eliminar los clientes duplicados
+                    var uniqueElements = {};
+
+                    var arrayClientes = values[0].results.filter(function(item) {
+                        return uniqueElements.hasOwnProperty(item.Kunnr) ? false : (uniqueElements[item.Kunnr] = true);
+                    });
+                    
+                    oModelClientes.setData(arrayClientes);                    
+                }
+                this.oComponent.setModel(oModelClientes, "listadoClientes");
+                this.oComponent.getModel("listadoClientes").refresh(true);
+                sap.ui.core.BusyIndicator.hide();
+            },
+
+            onPressClienteMonitor: function (oEvent) {
+                var acr = this.getSelect(oEvent, "listadoClientes");
+                codcli = acr.Kunnr;
+                nomcli = acr.Name1;
+                Cliente = codcli;
+                this.getView().byId("f_client").setValue(nomcli);
+                this.CloseCliDiagMonitor();
+            },
+
+            
+
+            
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+            
+
+            onChangefLineas: function () {
+                LineaServicio = this.getView().byId("f_line").getSelectedKey();
+                //console.log(LineaServicio);
+            },
+
+            handleSelectionChange: function (oEvent) {
+                var changedItem = oEvent.getParameter("changedItem");
+                var isSelected = oEvent.getParameter("selected");
+
+                var state = "Selected";
+                if (!isSelected) {
+                    state = "Deselected";
+                    //arrayKeys.pop(changedItem.mProperties.key);
+                    var valor = changedItem.mProperties.key;
+                    for (var i = 0; i < arrayKeys.length; i++) {
+                        if (valor == arrayKeys[i]) {
+                            //console.log("Igual");
+                            const index = arrayKeys.findIndex(x => x.key === valor);
+
+                            arrayKeys.splice(index, 1);
+                        }
+
+                    }
+
+                } else {
+                    arrayKeys.push(changedItem.mProperties.key);
+                }
+
+
+
+                //changedItem.mProperties.key
+                //arrayKeys++;
+
+                /*MessageBox.show("Event 'selectionChange': " + state + " '" + changedItem.getText() + "'", {
+                    width: "auto"
+                });*/
+            },
+
+            /*handleSelectionFinish: function (oEvent) {
+                var selectedItems = oEvent.getParameter("selectedItems");
+                var messageText = "Event 'selectionFinished': [";
+
+                for (var i = 0; i < selectedItems.length; i++) {
+                    messageText += "'" + selectedItems[i].getText() + "'";
+                    if (i != selectedItems.length - 1) {
+                        messageText += ",";
+                    }
+                }
+
+                messageText += "]";
+
+                MessageBox.show(messageText, {
+                    width: "auto"
+                });
+            },*/
+
+            
+
+            
+
+            
+
+            
+            DatosCliente: function (codcli, vkbur) {
+                //var kunnr = codcli;
+                //var Bukrs = vkbur
+
+                var aFilters = [],
+                    aFilterIds = [],
+                    aFilterValues = [];
+
+                aFilterIds.push("Kunnr");
+                aFilterValues.push(codcli);
+
+                aFilterIds.push("Bukrs");
+                aFilterValues.push(vkbur);
+
+
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/DatosClienteSet", aFilters),
+                ]).then(this.buildDatosClientes.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildDatosClientes: function (values) {
+                if (values[0].results) {
+                    var oModelDatosCliente = new JSONModel();
+                    oModelDatosCliente.setData(values[0].results);
+                    this.oComponent.getModel("ModoApp").setProperty("/Kunnr", values[0].results[0].Kunnr);
+                    this.oComponent.getModel("ModoApp").setProperty("/Nombre", values[0].results[0].Nombre);
+                    this.oComponent.getModel("ModoApp").setProperty("/Stcd1", values[0].results[0].Stcd1);
+                    this.oComponent.getModel("ModoApp").setProperty("/Stras", values[0].results[0].Stras);
+                    this.oComponent.getModel("ModoApp").setProperty("/SmtpAddr", values[0].results[0].SmtpAddr);
+                    this.oComponent.getModel("ModoApp").setProperty("/Ort01", values[0].results[0].Ort01);
+                    this.oComponent.getModel("ModoApp").setProperty("/Pstlz", values[0].results[0].Pstlz);
+                    this.oComponent.getModel("ModoApp").setProperty("/Land1", values[0].results[0].Land1);
+                    this.oComponent.getModel("ModoApp").setProperty("/Zwels", values[0].results[0].Zwels);
+                    //this.oComponent.getModel("ModoApp").setProperty("/Zterm", values[0].results[0].Zterm);
+                    this.oComponent.getModel("ModoApp").refresh(true);
+                }
+            },
+            
             handleLinkFact: function () {
                 //                MessageBox.alert("Link was clicked!");
                 var numFact = this.getView().byId("f_numfac").getValue();
@@ -566,75 +954,7 @@ sap.ui.define([
 
 
 
-            //MÉTODOS PARA LA BÚSQUEDA DE CLIENTES Y SU DIÁLOGO//////////////////////////////////////////////////////////////////
-
-            onBusqClientes: function () {
-                var Kunnr = this.getView().byId("f_lifnrAcr").getValue();
-                var Stcd1 = this.getView().byId("f_nameAcr").getValue();
-                var Name1 = this.getView().byId("f_nifAcr").getValue();
-                var Bukrs = this.getView().byId("f_nifcAcr").getValue();
-
-                var aFilterIds, aFilterValues, aFilters;
-
-                //FILTRADO DE CLIENTES////////////////////////////////////////////////////////////////////////////////////////////
-
-                aFilterIds = [
-                    "Stcd1",
-                    "Name1",
-                    "Kunnr",
-                    "Bukrs"
-                ];
-                aFilterValues = [
-                    Stcd1,
-                    Name1,
-                    Kunnr,
-                    Bukrs
-                ];
-
-                if (Stcd1 == "") {
-                    var i = aFilterIds.indexOf("Stcd1");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-
-                if (Name1 == "") {
-                    var i = aFilterIds.indexOf("Name1");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-
-                if (Bukrs == "" || Bukrs == undefined) {
-                    var i = aFilterIds.indexOf("Bukrs");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-                if (Kunnr == "") {
-                    var i = aFilterIds.indexOf("Kunnr");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                sap.ui.core.BusyIndicator.show();
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/DameClientesSet", aFilters),
-                ]).then(this.buildClientesModel.bind(this), this.errorFatal.bind(this));
-
-            },
+            
 
             onBusqMateriales: function () {
                 var Matnr = this.getView().byId("f_codMat").getValue();
@@ -883,15 +1203,7 @@ sap.ui.define([
                 ]).then(this.buildOficinasModel.bind(this), this.errorFatal.bind(this));
             },
 
-            buildClientesModel: function (values) {
-                if (values[0].results) {
-                    sap.ui.core.BusyIndicator.hide();
-                    var oModelClientes = new JSONModel();
-                    oModelClientes.setData(values[0].results);
-                    this.oComponent.setModel(oModelClientes, "listadoClientes");
-                    this.oComponent.getModel("listadoClientes").refresh(true);
-                }
-            },
+            
 
             buildMaterialesModel: function (values) {
                 if (values[0].results) {
@@ -933,89 +1245,9 @@ sap.ui.define([
                 }
             },
 
-            onPressCliente: function (oEvent) {
-                var acr = this.getSelect(oEvent, "listadoClientes");
-                codcli = acr.Kunnr;
-                nomcli = acr.Name1;
-                this.getView().byId("f_client").setValue(nomcli);
-                this.getView().byId("idCCliente").setValue(codcli);
-                this.getView().byId("descrProv").setValue(nomcli);
+            
 
-                sap.ui.core.BusyIndicator.show();
-
-                if (vkbur) {
-                    var aFilters = [],
-                        aFilterIds = [],
-                        aFilterValues = [];
-
-                    aFilterIds.push("Kunnr");
-                    aFilterValues.push(codcli);
-
-                    aFilterIds.push("Bukrs");
-                    aFilterValues.push(vkbur);
-
-                    aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                    Promise.all([
-                        this.readDataEntity(this.mainService, "/DameClientesSet", aFilters),
-                    ]).then(this.buildCliente.bind(this), this.errorFatal.bind(this));
-
-
-                } else {
-                    MessageBox.error(this.oI18nModel.getProperty("noCli"));
-                }
-
-                this.CanalVentas();
-                this.ObtenerZonas();
-
-                this.oComponent.getModel("ModoApp").setProperty("/ccont", true);
-                this.oComponent.getModel("ModoApp").setProperty("/cvcan", true);
-                this.oComponent.getModel("ModoApp").refresh(true);
-
-                this.byId("cliDial").close();
-            },
-
-            DatosCliente: function (codcli, vkbur) {
-                //var kunnr = codcli;
-                //var Bukrs = vkbur
-
-                var aFilters = [],
-                    aFilterIds = [],
-                    aFilterValues = [];
-
-                aFilterIds.push("Kunnr");
-                aFilterValues.push(codcli);
-
-                aFilterIds.push("Bukrs");
-                aFilterValues.push(vkbur);
-
-
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/DatosClienteSet", aFilters),
-                ]).then(this.buildDatosClientes.bind(this), this.errorFatal.bind(this));
-            },
-
-            buildDatosClientes: function (values) {
-                var that = this;
-                if (values[0].results) {
-                    var oModelDatosCliente = new JSONModel();
-                    oModelDatosCliente.setData(values[0].results);
-                    this.oComponent.getModel("ModoApp").setProperty("/Kunnr", values[0].results[0].Kunnr);
-                    this.oComponent.getModel("ModoApp").setProperty("/Nombre", values[0].results[0].Nombre);
-                    this.oComponent.getModel("ModoApp").setProperty("/Stcd1", values[0].results[0].Stcd1);
-                    this.oComponent.getModel("ModoApp").setProperty("/Stras", values[0].results[0].Stras);
-                    this.oComponent.getModel("ModoApp").setProperty("/SmtpAddr", values[0].results[0].SmtpAddr);
-                    this.oComponent.getModel("ModoApp").setProperty("/Ort01", values[0].results[0].Ort01);
-                    this.oComponent.getModel("ModoApp").setProperty("/Pstlz", values[0].results[0].Pstlz);
-                    this.oComponent.getModel("ModoApp").setProperty("/Land1", values[0].results[0].Land1);
-                    this.oComponent.getModel("ModoApp").setProperty("/Zwels", values[0].results[0].Zwels);
-                    //this.oComponent.getModel("ModoApp").setProperty("/Zterm", values[0].results[0].Zterm);
-                    this.oComponent.getModel("ModoApp").refresh(true);
-                }
-            },
+            
 
             NIApedido: function (codcli, vkbur) {
                 //var Kunnr = this.getOwnerComponent().getModel("ModoApp").getData().Codcli;
@@ -1395,9 +1627,7 @@ sap.ui.define([
                 return idOficinas;
             },
 
-            CloseCliDiag: function () {
-                this.byId("cliDial").close();
-            },
+            
 
             CloseMatDiag: function () {
                 this.byId("matDial").close();
@@ -1415,11 +1645,7 @@ sap.ui.define([
                 this.byId("ofiDial").close();
             },
 
-            onValueHelpRequest: function (oEvent) {
-                //this.Dialog = sap.ui.xmlfragment("aguasdevalencia.fragment.ClienteMonitorPedidos", this);
-                //this.Dialog.open();
-                this._getDialogCliente();
-            },
+            
 
             onValueHelpRequestMat: function (oEvent) {
                 //this.Dialog = sap.ui.xmlfragment("aguasdevalencia.fragment.ClienteMonitorPedidos", this);
@@ -1445,25 +1671,7 @@ sap.ui.define([
                 this._getDialogOficinas(oEvent);
             },
 
-            _getDialogCliente: function (sInputValue) {
-                var oView = this.getView();
-
-                if (!this.pDialogCliente) {
-                    this.pDialogCliente = Fragment.load({
-                        id: oView.getId(),
-                        name: "monitorpedidos.fragments.BusqClientes",
-                        controller: this,
-                    }).then(function (oDialogCliente) {
-                        // connect dialog to the root view of this component (models, lifecycle)
-                        oView.addDependent(oDialogCliente);
-                        return oDialogCliente;
-                    });
-                }
-                this.pDialogCliente.then(function (oDialogCliente) {
-                    oDialogCliente.open(sInputValue);
-                    //this._configDialogCliente(oDialog)
-                });
-            },
+            
 
             _getDialogMaterial: function (sInputValue) {
                 var oView = this.getView();
@@ -1593,7 +1801,7 @@ sap.ui.define([
                 syncStyleClass("sapUiSizeCompact", this.getView(), oDialog);
             },
 
-            _configDialogCliente: function (oDialog) {
+            /*_configDialogCliente: function (oDialog) {
                 var sResponsivePadding = oButton.data("responsivePadding");
                 var sResponsiveStyleClasses =
                     "sapUiResponsivePadding--header sapUiResponsivePadding--subHeader sapUiResponsivePadding--content sapUiResponsivePadding--footer";
@@ -1603,7 +1811,7 @@ sap.ui.define([
                 }
                 /*else {
                                    oDialog.removeStyleClass(sResponsiveStyleClasses);
-                               }*/
+                               }*//*
 
                 // Set custom text for the confirmation button
                 var sCustomConfirmButtonText = oButton.data("confirmButtonText");
@@ -1611,7 +1819,7 @@ sap.ui.define([
 
                 // toggle compact style
                 syncStyleClass("sapUiSizeCompact", this.getView(), oDialog);
-            },
+            },*/
 
             _getDialogUpload: function (sInputValue) {
                 var oView = this.getView();
@@ -1677,1002 +1885,18 @@ sap.ui.define([
                 });
             },
 
-            //MÉTODO PARA EL CAMBIO DE ESTADO (ICON TAB FILTERS) ///////////////////////////////////////////////////////////////////////////////////////////////
-            onFilterSelect: function (oEvent) {
+             
 
-                var skey = oEvent.getParameter("key");
-                sStatus = "";
-                sAprob = "";
-                sLiber = "";
+            
 
-                switch (skey) {
-                    //Todas
-                    case "Free":
-                        sStatus = "";
-                        sAprob = false;
-                        vedit = false;
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.getView().byId("colbtnedit").setVisible(false);
-                        break;
-                    //En redaccion
-                    case "Ok":
-                        sStatus = "REDA";
-                        //this.oComponent.getModel("ModoApp").setProperty("/redacc", redacc);
-                        //this.oComponent.getModel("ModoApp").refresh(true);
-                        //this._getDialogAprobaciones();
-                        vedit = true;
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.getView().byId("colbtnedit").setVisible(true);
-                        break;
-                    //Pdte. Aprobar
-                    case "Heavy":
-                        sStatus = "APRB";
-                        sAprob = false;
-                        vedit = false;
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.getView().byId("colbtnedit").setVisible(false);
-                        break;
-                    //Pdte. Financiero
-                    case "Overweight":
-                        sStatus = "FINA";
-                        sAprob = false;
-                        vedit = false;
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.getView().byId("colbtnedit").setVisible(false);
-                        break;
-                    //Pdte. Facturar
-                    case "Money":
-                        sStatus = "FACT";
-                        sAprob = false;
-                        vedit = false;
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.getView().byId("colbtnedit").setVisible(false);
-                        break;
-                    //Pdte. Cobrar
-                    case "Payment":
-                        sStatus = "PDTE";
-                        sAprob = false;
-                        var aprob = true;
-                        vedit = false;
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.getView().byId("colbtnedit").setVisible(false);
-                        //this.oComponent.getModel("ModoApp").setProperty("/aprob", aprob);
-                        //this.oComponent.getModel("ModoApp").refresh(true);
-                        break;
-                    //Cobradas
-                    case "Sales":
-                        sStatus = "COBR";
-                        sAprob = false;
-                        vedit = false;
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.getView().byId("colbtnedit").setVisible(false);
-                        break;
-                    //Denegadas
-                    case "Cancel":
-                        sStatus = "DEN";
-                        sAprob = false;
-                        vedit = false;
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.getView().byId("TableButton4").setVisible(false);
-                        this.getView().byId("colbtnedit").setVisible(false);
-
-                        break;
-                    case "Approv":
-                        //this.ListadoSolStatus(s);
-                        sStatus = "APRB";
-                        sAprob = true;
-                        vedit = false;
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-
-                        //this._getDialogAprobaciones();
-                        break;
-                }
-
-
-                if (sStatus == "REDA") {
-                    if (checkMisPed === 'X') {
-                        this.getView().byId("Filtr10").setVisible(true);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (checkMisPed === undefined) {
-                        this.getView().byId("Filtr10").setVisible(true);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (checkTodos === 'X') {
-                        this.getView().byId("Filtr10").setVisible(true);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (checkTodos === undefined) {
-                        this.getView().byId("Filtr10").setVisible(true);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    }
-                    //this.getView().byId("Filtr10").setVisible(true);
-                    //this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                    //this.oComponent.getModel("PedidoCab").refresh(true);
-                    //this.ListadoSolStatus(
-                    //    //Usuario,
-                    //    //Numped,
-                    //    Fechad,
-                    //    Fechah,
-                    //    Imported,
-                    //    Importeh,
-                    //    Cliente,
-                    //    sStatus,
-                    //    LineaServicio,
-                    //    codmat,
-                    //    responsable
-                    //    /*,
-                    //    ClasePed*/
-                    //);
-                } else if (sStatus == "APRB" && sAprob == true) {
-                    this.getView().byId("Filtr10").setVisible(false);
-                    this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                    this.oComponent.getModel("PedidoCab").refresh(true);
-                    this._getDialogAprobaciones();
-                } else if (sStatus == "APRB" && sAprob == false) {
-                    if (checkMisPed === 'X') {
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (checkMisPed === undefined) {
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (checkTodos === 'X') {
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (checkTodos === undefined) {
-
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    }
-
-                    /*this.getView().byId("Filtr10").setVisible(false);
-                    this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                    this.oComponent.getModel("PedidoCab").refresh(true);
-                    this.ListadoSolStatus(
-                        Usuario,
-                        Numped,
-                        Fechad,
-                        Fechah,
-                        Imported,
-                        Importeh,
-                        sStatus,
-                        Cliente,
-                        LineaServicio,
-                        codmat,
-                        responsable,
-                        ClasePed
-                    );*/
-                } else {
-                    if (checkMisPed === 'X') {
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (checkMisPed === undefined) {
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (checkTodos === 'X') {
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (checkTodos === undefined) {
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    }
-
-
-                    /*this.getView().byId("Filtr10").setVisible(false);
-                    this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                    this.oComponent.getModel("PedidoCab").refresh(true);
-                    this.ListadoSolStatus(
-                        Usuario,
-                        Numped,
-                        Fechad,
-                        Fechah,
-                        Imported,
-                        Importeh,
-                        sStatus,
-                        Cliente,
-                        LineaServicio,
-                        codmat,
-                        responsable,
-                        ClasePed
-                    );*/
-                }
-            },
-
-            onBusqMisPedidos: function () {
-                /*if (sStatus == "" || sStatus == "REDA" || sStatus == "APROB" || sStatus == "FINA" || sStatus == "FACT" || sStatus == "PDTE" || sStatus == "COBR" || sStatus == "DEN")  {
-                    var Usuario = this.oComponent.getModel("Usuario").getData()[0].Bname;
-                    this.ListadoSolStatus(
-                        Usuario,
-                        //Numped,
-                        Fechad,
-                        Fechah,
-                        Imported,
-                        Importeh,
-                        Cliente,
-                        sStatus,
-                        LineaServicio,
-                        codmat,
-                        responsable,
-                        ClasePed
-                    );    
-                } else {*/
-                Usuario = this.oComponent.getModel("Usuario").getData()[0].Bname;
-                checkMisPed = 'X';
-                this.ListadoSolicitudes(
-                    Usuario,
-                    Numped,
-                    Fechad,
-                    Fechah,
-                    Imported,
-                    Importeh,
-                    Cliente,
-                    codceco,
-                    codord,
-                    vkbur,
-                    sStatus,
-                    LineaServicio,
-                    codmat,
-                    responsable,
-                    ClasePed)
-                //}
-
-            },
-
-            onBusqTodos: function () {
-                /*if (sStatus == "" || sStatus == "REDA" || sStatus == "APROB" || sStatus == "FINA" || sStatus == "FACT" || sStatus == "PDTE" || sStatus == "COBR" || sStatus == "DEN")  {
-                    var Usuario = "";
-                    this.ListadoSolStatus(
-                        Usuario,
-                        //Numped,
-                        Fechad,
-                        Fechah,
-                        Imported,
-                        Importeh,
-                        sStatus,
-                        Cliente,
-                        LineaServicio,
-                        codmat,
-                        responsable,
-                        ClasePed
-                    );    
-                } else {*/
-                Usuario = "";
-                checkTodos = 'X';
-                this.ListadoSolicitudes(
-                    Usuario,
-                    Numped,
-                    Fechad,
-                    Fechah,
-                    Imported,
-                    Importeh,
-                    sStatus,
-                    Cliente,
-                    codceco,
-                    codord,
-                    vkbur,
-                    LineaServicio,
-                    codmat,
-                    responsable,
-                    ClasePed)
-                //}
-            },
-
-            onRadioButtonSelect: function (oEvent) {
-                var oRbGroup = this.getView().byId("rbGroup"); // Get the RadioButtonGroup control
-                var oSelectedButton = oRbGroup.getSelectedButton(); // Get the selected radio button
-
-                if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbTrue" || oSelectedButton.getId() === "application-ZPV-monitor-component---MonitorPedidos--rbTrue") {
-                    //Si está marcado un status y queremos acceder a Mis Pedidos comprobamos en que estatus estamos
-                    if (sStatus === "") {
-                        Usuario = this.oComponent.getModel("Usuario").getData()[0].Bname;
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (sStatus === "REDA") {
-                        Usuario = this.oComponent.getModel("Usuario").getData()[0].Bname;
-                        this.getView().byId("Filtr10").setVisible(true);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (sStatus === "APRB" && sAprob == false) {
-                        Usuario = this.oComponent.getModel("Usuario").getData()[0].Bname;
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (sStatus === "FINA") {
-                        Usuario = this.oComponent.getModel("Usuario").getData()[0].Bname;
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (sStatus === "FACT") {
-                        Usuario = this.oComponent.getModel("Usuario").getData()[0].Bname;
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (sStatus === "PDTE") {
-                        Usuario = this.oComponent.getModel("Usuario").getData()[0].Bname;
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (sStatus === "COBR") {
-                        Usuario = this.oComponent.getModel("Usuario").getData()[0].Bname;
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (sStatus === "DEN") {
-                        Usuario = this.oComponent.getModel("Usuario").getData()[0].Bname;
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else {
-                        //Si queremos ver mis pedidos primero y luego navegar por los filtros de estado
-                        checkMisPed = 'X';
-                        Usuario = this.oComponent.getModel("Usuario").getData()[0].Bname;
-                        this.ListadoSolicitudes(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            Cliente,
-                            codceco,
-                            codord,
-                            vkbur,
-                            sStatus,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed);
-                    }
-
-                } else if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbFalse" || oSelectedButton.getId() === "application-ZPV-monitor-component---MonitorPedidos--rbFalse") {
-                    //Si está marcado un status y queremos acceder a Todos los Pedidos comprobamos en que estatus estamos
-                    if (sStatus === "") {
-                        Usuario = "";
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (sStatus === "REDA") {
-                        Usuario = "";
-                        responsable = "";
-                        this.getView().byId("Filtr10").setVisible(true);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (sStatus === "APRB" && sAprob == false) {
-                        Usuario = "";
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (sStatus === "FINA") {
-                        Usuario = "";
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (sStatus === "FACT") {
-                        Usuario = "";
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (sStatus === "PDTE") {
-                        Usuario = "";
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (sStatus === "COBR") {
-                        Usuario = "";
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-                    } else if (sStatus === "DEN") {
-                        Usuario = "";
-                        this.getView().byId("Filtr10").setVisible(false);
-                        this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                        this.ListadoSolStatus(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            sStatus,
-                            Cliente,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed
-                        );
-
-                    } else {
-                        //Si queremos ver todos los pedidos primero y luego navegar por los filtros de estado
-                        Usuario = "";
-                        checkTodos = 'X';
-                        this.ListadoSolicitudes(
-                            Usuario,
-                            Numped,
-                            Fechad,
-                            Fechah,
-                            Imported,
-                            Importeh,
-                            Cliente,
-                            codceco,
-                            codord,
-                            vkbur,
-                            sStatus,
-                            LineaServicio,
-                            codmat,
-                            responsable,
-                            ClasePed);
-                    }
-
-                };
-            },
+            
 
 
             onEnviarLiberacion: function () {
                 this._getDialogLiberaciones();
             },
 
-            ListadoSolStatus: function (
-                Usuario,
-                Numped,
-                Fechad,
-                Fechah,
-                Imported,
-                Importeh,
-                sStatus,
-                Cliente,
-                LineaServicio,
-                codmat,
-                responsable,
-                ClasePed
-            ) {
-                var aFilterIds, aFilterValues, aFilters;
-
-                //Numped = Util.zfill(Numped, 10); //Rellenar el Número de Pedido con ceros a la izquierda
-
-                if (Date.parse(Fechad)) {
-                    var fec_ini = Date.parse(Fechad);
-                }
-                if (Date.parse(Fechah)) {
-                    var fec_fin = Date.parse(Fechah);
-                }
-
-                aFilterIds = [
-                    "USUARIO",
-                    "IDSOLICITUD",
-                    "FECHAD",
-                    "FECHAH",
-                    "IMPORTED",
-                    "IMPORTEH",
-                    "ESTADO",
-                    "CLIENTE",
-                    "LINEA",
-                    "MATERIAL",
-                    "ZRESPONSABLE",
-                    "TIPO"
-                ];
-                aFilterValues = [
-                    Usuario,
-                    Numped,
-                    fec_ini,
-                    fec_fin,
-                    Imported,
-                    Importeh,
-                    sStatus,
-                    Cliente,
-                    LineaServicio,
-                    codmat,
-                    responsable,
-                    ClasePed
-                ];
-
-                if (Usuario == "" || Usuario == undefined) {
-                    var i = aFilterIds.indexOf("USUARIO");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-
-                if (Numped == "" || Numped == undefined) {
-                    var i = aFilterIds.indexOf("IDSOLICITUD");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-                if (fec_ini == "" || fec_ini == null) {
-                    var i = aFilterIds.indexOf("FECHAD");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-
-                if (fec_fin == "" || fec_fin == null) {
-                    var i = aFilterIds.indexOf("FECHAH");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-                if (Imported == "" && Importeh == "" || Imported == undefined && Importeh == undefined) {
-                    var i = aFilterIds.indexOf("IMPORTED");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-
-                    var j = aFilterIds.indexOf("IMPORTEH");
-
-                    if (j !== -1) {
-                        aFilterIds.splice(j, 1);
-                        aFilterValues.splice(j, 1);
-                    }
-                }
-
-
-                if (sStatus == "" || sStatus == undefined) {
-                    var i = aFilterIds.indexOf("ESTADO");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-
-                if (Cliente == "REDA" || Cliente == "APRB" || Cliente == "FINA" || Cliente == "FACT" || Cliente == "PDTE" || Cliente == "COBR" || Cliente == "DEN") {
-                    Cliente = "";
-                }
-
-                if (Cliente == "" || Cliente == undefined) {
-                    var i = aFilterIds.indexOf("CLIENTE");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-                if (LineaServicio == "" || LineaServicio == undefined) {
-                    var i = aFilterIds.indexOf("LINEA");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-
-
-                if (codmat == "" || codmat == undefined) {
-                    var i = aFilterIds.indexOf("MATERIAL");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-
-                if (responsable == "" || responsable == undefined) {
-                    var i = aFilterIds.indexOf("ZRESPONSABLE");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-
-                if (ClasePed == "" || ClasePed == undefined) {
-                    var i = aFilterIds.indexOf("TIPO");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-
-
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                sap.ui.core.BusyIndicator.show();
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/DamePedidosSet", aFilters),
-                ]).then(this.buildListadoModel.bind(this), this.errorFatal.bind(this));
-
-            },
+            
 
             /////////////////////////////VISUALIZAR PEDIDO/////////////////////////////////////////////////////////
 
@@ -3775,7 +2999,7 @@ sap.ui.define([
                 sap.ui.core.BusyIndicator.hide();
             },
 
-            //METODO PARA DESCARGA EXCELL
+            //METODO PARA DESCARGA EXCEL
             onDownExcel: function (oEvent) {
                 var aCols, oRowBinding, oSettings, oSheet, oTable;
 
@@ -3906,6 +3130,157 @@ sap.ui.define([
                 });
 
                 return aCols;
+            },
+
+            onValueHelpRequest: function (oEvent) {
+                this._getDialogCliente();
+            },
+
+            _getDialogCliente: function (sInputValue) {
+                var oView = this.getView();
+
+                if (!this.pDialogCliente) {
+                    this.pDialogCliente = Fragment.load({
+                        id: oView.getId(),
+                        name: "monitorpedidos.fragments.BusqClientes",
+                        controller: this,
+                    }).then(function (oDialogCliente) {
+                        // connect dialog to the root view of this component (models, lifecycle)
+                        oView.addDependent(oDialogCliente);
+                        return oDialogCliente;
+                    });
+                }
+                this.pDialogCliente.then(function (oDialogCliente) {
+                    oDialogCliente.open(sInputValue);
+                    //this._configDialogCliente(oDialog)
+                });
+            },
+
+            CloseCliDiag: function () {
+                this.getView().byId("f_lifnrAcr").setValue(null);
+                this.getView().byId("f_nameAcr").setValue(null);
+                this.getView().byId("f_nifAcr").setValue(null);
+                this.getView().byId("f_nifcAcr").setValue(null);
+                this.byId("cliDial").close();
+                this.oComponent.setModel(new JSONModel(), "listadoClientes");
+                this.oComponent.getModel("listadoClientes").refresh(true);
+            },
+
+            onBusqClientes: function () {
+                var Stcd1 = this.getView().byId("f_nameAcr").getValue();
+                var Kunnr = this.getView().byId("f_lifnrAcr").getValue();
+                var Name1 = this.getView().byId("f_nifAcr").getValue();
+                var Bukrs = this.getView().byId("f_nifcAcr").getValue();
+
+                var aFilterIds = [], aFilterValues = [];
+
+                var addFilter = function (id, value) {
+                    if (value !== "") {
+                        aFilterIds.push(id);
+                        aFilterValues.push(value);
+                    }
+                };
+
+                addFilter("Stcd1", Stcd1);
+                addFilter("Kunnr", Kunnr);
+                addFilter("Name1", Name1);                
+                addFilter("Bukrs", Bukrs);
+
+                var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                sap.ui.core.BusyIndicator.show();
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/DameClientesSet", aFilters),
+                ]).then(this.buildClientesModel.bind(this), this.errorFatal.bind(this));
+
+            },
+
+            buildClientesModel: function (values) {
+                var oModelClientes = new JSONModel();                
+                if (values[0].results) {                    
+                    oModelClientes.setData(values[0].results);                    
+                }
+                this.oComponent.setModel(oModelClientes, "listadoClientes");
+                this.oComponent.getModel("listadoClientes").refresh(true);
+                sap.ui.core.BusyIndicator.hide();
+            },
+
+            onPressCliente: function (oEvent) {
+                var acr = this.getSelect(oEvent, "listadoClientes");
+                codcli = acr.Kunnr;
+                nomcli = acr.Name1;
+                this.getView().byId("f_client").setValue(nomcli);
+                //this.getView().byId("idCCliente").setValue(codcli);
+                //this.getView().byId("descrProv").setValue(nomcli);
+
+                sap.ui.core.BusyIndicator.show();
+
+                if (vkbur) {
+                    var aFilters = [],
+                        aFilterIds = [],
+                        aFilterValues = [];
+
+                    aFilterIds.push("Kunnr");
+                    aFilterValues.push(codcli);
+
+                    aFilterIds.push("Bukrs");
+                    aFilterValues.push(vkbur);
+
+                    aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                    Promise.all([
+                        this.readDataEntity(this.mainService, "/DameClientesSet", aFilters),
+                    ]).then(this.buildCliente.bind(this), this.errorFatal.bind(this));
+
+
+                } else {
+                    MessageBox.error(this.oI18nModel.getProperty("noCli"));
+                }
+
+                this.CanalVentas();
+                this.ObtenerZonas();
+
+                this.oComponent.getModel("ModoApp").setProperty("/ccont", true);
+                this.oComponent.getModel("ModoApp").setProperty("/cvcan", true);
+                this.oComponent.getModel("ModoApp").refresh(true);
+
+                this.byId("cliDial").close();
+            },
+
+            buildCliente: function (values) {
+
+                var error = false;
+
+                if (values[0].results) {
+                    //nomcli
+                    if (values[0].results.length == 0) {
+                        MessageBox.error(this.oI18nModel.getProperty("noCli"));
+                        error = true;
+                    } else if (values[0].results.length > 1) {
+                        //univCli
+                        MessageBox.warning(this.oI18nModel.getProperty("univCli"));
+                        this.oComponent.getModel("PedidoCab").setProperty("/Name1", "");
+                        this.oComponent.getModel("PedidoCab").refresh(true);
+                    } else if (values[0].results.length == 1) {
+                        this.oComponent.getModel("PedidoCab").setProperty("/Name1", values[0].results[0].Name1);
+                        this.oComponent.getModel("PedidoCab").setProperty("/Kunnr", values[0].results[0].Kunnr);
+                        codcli = values[0].results[0].Kunnr;
+                        nomcli = values[0].results[0].Name1;
+                        this.oComponent.getModel("PedidoCab").refresh(true);
+
+                        //this.oComponent.getModel("ModoApp").setProperty("/ccont", true);
+                        //this.oComponent.getModel("ModoApp").refresh(true);
+                        this.DatosCliente(codcli, vkbur);
+                        //this.motivopedido(TipoPed, vkbur);-->Cambiaremos el punto donde se llama al mot.
+
+                    }
+                }
+
+                sap.ui.core.BusyIndicator.hide();
+
+                this.DameContratosCliente();
+
             },
 
             filterOption: function (oEvent) {
@@ -4047,8 +3422,7 @@ sap.ui.define([
             },
 
             _getDialogAprobaciones: function (sInputValue) {
-                var oView = this.getView(),
-                    that = this;
+                var oView = this.getView();
                 sap.ui.core.BusyIndicator.hide();
                 if (!this.pDialogAprobaciones) {
                     this.pDialogAprobaciones = Fragment.load({
@@ -4067,65 +3441,22 @@ sap.ui.define([
 
                 responsable = this.oComponent.getModel("Usuario").getData()[0].Bname;
 
-                if (checkMisPed === 'X') {
-                    that.ListadoSolStatus(
-                        Usuario,
-                        Numped,
-                        Fechad,
-                        Fechah,
-                        Imported,
-                        Importeh,
-                        sStatus,
-                        Cliente,
-                        LineaServicio,
-                        codmat,
-                        responsable,
-                        ClasePed);
-                } else if (checkMisPed === undefined) {
-                    that.ListadoSolStatus(
-                        Usuario,
-                        Numped,
-                        Fechad,
-                        Fechah,
-                        Imported,
-                        Importeh,
-                        sStatus,
-                        Cliente,
-                        LineaServicio,
-                        codmat,
-                        responsable,
-                        ClasePed);
-                }
-
-                if (checkTodos === 'X') {
-                    that.ListadoSolStatus(
-                        Usuario,
-                        Numped,
-                        Fechad,
-                        Fechah,
-                        Imported,
-                        Importeh,
-                        sStatus,
-                        Cliente,
-                        LineaServicio,
-                        codmat,
-                        responsable,
-                        ClasePed);
-                } else if (checkTodos === undefined) {
-                    that.ListadoSolStatus(
-                        Usuario,
-                        Numped,
-                        Fechad,
-                        Fechah,
-                        Imported,
-                        Importeh,
-                        sStatus,
-                        Cliente,
-                        LineaServicio,
-                        codmat,
-                        responsable,
-                        ClasePed);
-                }
+                this.ListadoSolicitudes(
+                    Usuario,
+                    //Numped,
+                    Fechad,
+                    Fechah,
+                    Imported,
+                    Importeh,
+                    sStatus,
+                    Cliente,
+                    codceco,
+                    codord,
+                    vkbur,
+                    LineaServicio,
+                    codmat,
+                    responsable,
+                    ClasePed);
 
             },
 
@@ -4150,92 +3481,37 @@ sap.ui.define([
 
                 responsable = "";
 
-                that.ListadoSolStatus(
+                that.ListadoSolicitudes(
                     "",
+                    //Numped,
                     Fechad,
                     Fechah,
                     Imported,
                     Importeh,
                     sStatus,
                     Cliente,
+                    "",
+                    "",
+                    "",
                     LineaServicio,
                     codmat,
                     responsable,
                     "");
             },
 
-            DameOrganizaciones: function () {
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/OrganizacionesSet", ""),
-                ]).then(this.buildSociedades.bind(this), this.errorFatal.bind(this));
-            },
+            
 
-            buildSociedades: function (values) {
-                if (values[0].results) {
-                    var oModelOgranizacion = new JSONModel();
-                    oModelOgranizacion.setData(values[0].results);
-                    oModelOgranizacion.setSizeLimit(300);
-                    this.oComponent.setModel(oModelOgranizacion, "Organizaciones");
-                }
+            
 
-            },
+            
 
-            getUser: function () {
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/DameUsuarioSet", ""),
-                ]).then(this.buildUsuario.bind(this), this.errorFatal.bind(this));
-            },
+            
 
-            buildUsuario: function (values) {
-                if (values[0].results) {
-                    var oModelUsuario = new JSONModel();
-                    oModelUsuario.setData(values[0].results);
-                    this.oComponent.setModel(oModelUsuario, "Usuario");
-                    this.oComponent.getModel("Usuario").setProperty("/user", this.oComponent.getModel("Usuario").getData()[0].Bname);
-                    this.oComponent.getModel("Usuario").refresh(true);
-                }
-            },
+            
 
-            motivosRechazo: function () {
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/TiposRechazoSet", ""),
-                ]).then(this.buildTiposRechazo.bind(this), this.errorFatal.bind(this));
-            },
+            
 
-            buildTiposRechazo: function (values) {
-                if (values[0].results) {
-                    var oModelTiposRechazo = new JSONModel();
-                    oModelTiposRechazo.setData(values[0].results);
-                    this.oComponent.setModel(oModelTiposRechazo, "TiposRechazo");
-                }
-
-            },
-
-            TiposPedidoAlta: function (TipoPed) {
-
-                var aFilters = [],
-                    aFilterIds = [],
-                    aFilterValues = [];
-
-                aFilterIds.push("Auart");
-                aFilterValues.push(TipoPed);
-
-
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/TipoPedidoSet", aFilters),
-                ]).then(this.buildTiposPed.bind(this), this.errorFatal.bind(this));
-            },
-
-            buildTiposPed: function (values) {
-                if (values[0].results) {
-                    var oModelTiposPed = new JSONModel();
-                    oModelTiposPed.setData(values[0].results);
-                    this.oComponent.setModel(oModelTiposPed, "TipospedidoAlta");
-                }
-
-            },
+            
 
             onChangeTipoPed: function () {
                 //var mode = this.oComponent.getModel("ModoApp").getData();
@@ -4249,34 +3525,7 @@ sap.ui.define([
                 //                this.oComponent.getModel("ModoApp").refresh(true);
             },
 
-            AreasVenta: function () {
-                /*var mode = this.oComponent.getModel("ModoApp").getData();
-
-                mode.cvent = true;
-                this.oComponent.getModel("ModoApp").refresh(true);*/
-                //this.oComponent.getModel("ModoApp").setProperty("/cvent", true);
-                //this.oComponent.getModel("ModoApp").setProperty("/cclient", true);
-                //this.oComponent.getModel("ModoApp").refresh(true);
-
-                //Calculamos los centos asociados a la sociedad
-                //var bukrs = this.oComponent.getModel("PedidoCab").getData().Bukrs;
-                //socPed = this.getView().byId("idCSociedad").getSelectedKey();
-                //nomSoc = this.getView().byId("idCSociedad")._getSelectedItemText();
-                //this.getView().byId("idArea").setValue(nomSoc);
-                //vkbur = this.getView().byId("idCSociedad").getSelectedKey();
-                //var user = ''  
-
-                var aFilterIds,
-                    aFilterValues,
-                    aFilters;
-
-                aFilterIds = ["Vkorg"];
-                aFilterValues = [socPed];
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                Promise.all([this.readDataEntity(this.mainService, "/AreaVentasSet", "")]).then(
-                    this.buildListAreaVentas.bind(this), this.errorFatal.bind(this));
-            },
+            
 
             /*onChangeSoc: function () {
 
@@ -4444,40 +3693,7 @@ sap.ui.define([
 
             },
 
-            buildCliente: function (values) {
-
-                var error = false;
-
-                if (values[0].results) {
-                    //nomcli
-                    if (values[0].results.length == 0) {
-                        MessageBox.error(this.oI18nModel.getProperty("noCli"));
-                        error = true;
-                    } else if (values[0].results.length > 1) {
-                        //univCli
-                        MessageBox.warning(this.oI18nModel.getProperty("univCli"));
-                        this.oComponent.getModel("PedidoCab").setProperty("/Name1", "");
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                    } else if (values[0].results.length == 1) {
-                        this.oComponent.getModel("PedidoCab").setProperty("/Name1", values[0].results[0].Name1);
-                        this.oComponent.getModel("PedidoCab").setProperty("/Kunnr", values[0].results[0].Kunnr);
-                        codcli = values[0].results[0].Kunnr;
-                        nomcli = values[0].results[0].Name1;
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-
-                        //this.oComponent.getModel("ModoApp").setProperty("/ccont", true);
-                        //this.oComponent.getModel("ModoApp").refresh(true);
-                        this.DatosCliente(codcli, vkbur);
-                        //this.motivopedido(TipoPed, vkbur);-->Cambiaremos el punto donde se llama al mot.
-
-                    }
-                }
-
-                sap.ui.core.BusyIndicator.hide();
-
-                this.DameContratosCliente();
-
-            },
+            
 
             condicionPago: function (codcli, vkbur, Cvcan, Cvsector) {
                 var aFilters = [],
@@ -4749,17 +3965,7 @@ sap.ui.define([
                 this.byId("OptionDial").close();
             },
 
-            buildListAreaVentas: function (values) {
-                if (values[0].results) {
-                    var oModelListAreaVentas = new JSONModel();
-                    oModelListAreaVentas.setData(values[0].results);
-                    //                    var AreaVenta = values[0].results[0].Vkorg;
-                    this.oComponent.setModel(oModelListAreaVentas, "AreaVentas");
-
-
-                }
-
-            },
+            
 
             buildListZonaVentas: function (values) {
                 if (values[0].results) {

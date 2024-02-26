@@ -310,7 +310,7 @@
                     >
                         <Label text="{i18n>orgventas}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Orgventas}" />
+                            <Text text="{listadoSolicitudes>ORGVENTAS}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
