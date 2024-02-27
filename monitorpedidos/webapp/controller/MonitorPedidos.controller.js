@@ -824,7 +824,6 @@ sap.ui.define([
                 return idOrden;
             },
 
-
             // FUNCIONES DEL DIÁLOGO DE BÚSQUEDA DE OFICINA DE VENTAS EN LOS FILTROS PRINCIPALES
             onValueHelpRequestOficinasMonitor: function (oEvent) {
                 this._getDialogOficinasMonitor(oEvent);
@@ -987,12 +986,12 @@ sap.ui.define([
                 return idMaterial;
             },
             
-            // FUNCIONES DEL DIÁLOGO DE BÚSQUEDA DE CECOS EN LOS FILTROS PRINCIPALES
+            // FUNCIONES SELECCIÓN DE BÚSQUEDA DE CECOS EN LOS FILTROS PRINCIPALES
             onChangefLineas: function () {
                 filtroLineaServicio = this.getView().byId("f_line").getSelectedKey();
             },
 
-            // FUNCIONES DEL DIÁLOGO DE BÚSQUEDA DE CLASE DE DOCUMENTOS EN LOS FILTROS PRINCIPALES
+            // FUNCIONES SELECCIÓN DE CLASE DE DOCUMENTO EN LOS FILTROS PRINCIPALES
             handleSelectionChange: function (oEvent) {
                 var changedItem = oEvent.getParameter("changedItem");
                 var isSelected = oEvent.getParameter("selected");
@@ -2238,17 +2237,18 @@ sap.ui.define([
                 }*/
 
                 var aFilterIds, aFilterValues, aFilters;
-                var numsol = soli;
+                var numsol = soli.IDSOLICITUD;
                 var modApp;
 
-                aFilterIds = ["Vbeln"];
-                aFilterValues = [numsol.IDSOLICITUD];
+                //aFilterIds = ["Vbeln"];
+                //aFilterValues = [numsol.IDSOLICITUD];
 
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+                //aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
 
                 Promise.all([
                     this.mainService.read("/SolicitudSet", {
-                        filters: aFilters,
+                        //filters: aFilters,
+                        filters: [new sap.ui.model.Filter("Vbeln", "EQ", numsol, "")],
                         urlParameters: {
                             $expand: [
                                 //"SolicitudCli_A",
@@ -2481,19 +2481,20 @@ sap.ui.define([
                 var aFilterIdsCli, aFilterValuesCli, aFiltersCli;
                 var aFilterIds, aFilterValues, aFilters;
 
-                var numsol = soli;
+                var numsol = soli.IDSOLICITUD;
                 var modApp;
 
                 this.modoapp = "M";
 
-                aFilterIds = ["Vbeln"];
-                aFilterValues = [numsol.IDSOLICITUD];
+                //aFilterIds = ["Vbeln"];
+                //aFilterValues = [numsol.IDSOLICITUD];
 
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+                //aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
 
                 Promise.all([
                     this.mainService.read("/SolicitudSet", {
-                        filters: aFilters,
+                        //filters: aFilters,
+                        filters: [new sap.ui.model.Filter("Vbeln", "EQ", numsol, "")],
                         urlParameters: {
                             $expand: [
                                 "SolicitudAdjunto_A",
@@ -4241,14 +4242,15 @@ sap.ui.define([
 
                     var aFilterIds, aFilterValues, aFilters;
 
-                    aFilterIds = ["Vbeln"];
-                    aFilterValues = [numCont];
+                    //aFilterIds = ["Vbeln"];
+                    //aFilterValues = [numCont];
 
-                    aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+                    //aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
 
                     Promise.all([
                         this.mainService.read("/SolicitudSet", {
-                            filters: aFilters,
+                            //filters: aFilters,
+                            filters: [new sap.ui.model.Filter("Vbeln", "EQ", numCont, "")],
                             urlParameters: {
                                 $expand: [
                                     //"SolicitudCli_A",
