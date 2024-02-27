@@ -5,14 +5,30 @@ jQuery.sap.declare("monitorpedidos.model.Util");
 monitorpedidos.model.Util = {
     createSearchFilterObject: function (aFilterIds, aFilterValues) {
 
-        var aFilters = [],
-            iCount;
-
-        for (iCount = 0; iCount < aFilterIds.length; iCount = iCount + 1) {
-            aFilters.push(new sap.ui.model.Filter(aFilterIds[iCount], "EQ", aFilterValues[iCount], ""));
+        var aFiltersAND = [];
+        
+        for (let i = 0; i < aFilterIds.length; i++) {
+            // Si es un array, se establecen condiciones OR
+            if(Array.isArray(aFilterValues[i])){
+                var aFiltersOR = []
+                for (var j = 0; j < aFilterValues[i].length; j++) {
+                    aFiltersOR.push(new sap.ui.model.Filter(aFilterIds[i], "EQ", aFilterValues[i][j], ""));
+                }
+                if (aFiltersOR.length > 0) {
+                    aFiltersAND.push(new sap.ui.model.Filter(
+                        {
+                            filters: aFiltersOR,
+                            and: false
+                        }
+                    ));    
+                }
+                //oFilters.push(newsap.ui.model.Filter({filters:[newsap.ui.model.Filter("code", sap.ui.model.FilterOperator.EQ, oItem.code),newsap.ui.model.Filter("referencenumber", sap.ui.model.FilterOperator.EQ, oItem.referencenumber)],and: true})});
+            }else{ // Si no es un array, se establce una condición AND
+                aFiltersAND.push(new sap.ui.model.Filter(aFilterIds[i], "EQ", aFilterValues[i], ""));
+            }
         }
+        var aFilters = new sap.ui.model.Filter({ filters: aFiltersAND, and: true });
         return aFilters;
-
     },
 
     zfill: function (number, width) {

@@ -528,7 +528,7 @@ sap.ui.define([
                 filtroMaterial = this.getView().byId("f_material").getValue();
                 filtroResponsable = this.getView().byId("f_approv").getValue();
                 filtroLineaServicio = this.getView().byId("f_line").getSelectedKey();
-                //filtroClasePed = arrayKeys;
+                filtroClasePed = arrayKeys;
 
                 this.ListadoSolicitudes(
                     filtroUsuario,
@@ -825,82 +825,7 @@ sap.ui.define([
             },
 
 
-            // FUNCIONES DEL DIÁLOGO DE BÚSQUEDA DE CECOS EN LOS FILTROS PRINCIPALES
-            // ********************** ORG VENTAS
-
-            // FUNCIONES DEL DIÁLOGO DE BÚSQUEDA DE CECOS EN LOS FILTROS PRINCIPALES
-            onValueHelpRequestMatMonitor: function (oEvent) {
-                this._getDialogMaterialMonitor();
-            },
-
-            _getDialogMaterialMonitor: function (sInputValue) {
-                var oView = this.getView();
-
-                if (!this.pDialogMaterial) {
-                    this.pDialogMaterial = Fragment.load({
-                        id: oView.getId(),
-                        name: "monitorpedidos.fragments.BusqMaterialesMonitor",
-                        controller: this,
-                    }).then(function (oDialogMaterial) {
-                        // connect dialog to the root view of this component (models, lifecycle)
-                        oView.addDependent(oDialogMaterial);
-                        return oDialogMaterial;
-                    });
-                }
-                this.pDialogMaterial.then(function (oDialogMaterial) {
-                    oDialogMaterial.open(sInputValue);
-                });
-            },
-
-            closeMatDiagMonitor: function () {
-                this.byId("matDialMonitor").close();
-            },
-
-            onBusqMaterialesMonitor: function () {
-                var Matnr = this.getView().byId("f_codMatMoni").getValue();
-                var Maktx = this.getView().byId("f_nomMatMoni").getValue();
-                var Matkl = this.getView().byId("f_grArtMoni").getValue();
-
-                var aFilterIds = [], aFilterValues = [];
-
-                var addFilter = function (id, value) {
-                    if (value) {
-                        aFilterIds.push(id);
-                        aFilterValues.push(value);
-                    }
-                };
-
-                addFilter("Matnr", Matnr);
-                addFilter("Maktx", Maktx);
-                addFilter("Matkl", Matkl);
-
-                var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                sap.ui.core.BusyIndicator.show();
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/DameMaterialSet", aFilters),
-                ]).then(this.buildMaterialesModelMonitor.bind(this), this.errorFatal.bind(this));                
-            },
-
-            buildMaterialesModelMonitor: function (values) {
-                var oModelMateriales = new JSONModel();
-                if (values[0].results) {
-                    oModelMateriales.setData(values[0].results);                    
-                }
-                sap.ui.core.BusyIndicator.hide();
-                this.oComponent.setModel(oModelMateriales, "listadoMateriales");
-                this.oComponent.getModel("listadoMateriales").refresh(true);
-            },
-
-            onPressMaterialMonitor: function (oEvent) {
-                var mat = this.getSelectMat(oEvent, "listadoMateriales");
-                filtroMaterial = mat.Matnr;
-                nommat = mat.Maktx;
-                this.getView().byId("f_material").setValue(filtroMaterial);
-                this.closeMatDiagMonitor();
-            },
-
+            // FUNCIONES DEL DIÁLOGO DE BÚSQUEDA DE OFICINA DE VENTAS EN LOS FILTROS PRINCIPALES
             onValueHelpRequestOficinasMonitor: function (oEvent) {
                 this._getDialogOficinasMonitor(oEvent);
             },
@@ -981,76 +906,126 @@ sap.ui.define([
                 return idOficinas;
             },
 
-
-
-
-
-
-
-
-
-
-
-
-
-            
-            
-
-            onChangefLineas: function () {
-                filtroLineaServicio = this.getView().byId("f_line").getSelectedKey();
-                //console.log(filtroLineaServicio);
+            // FUNCIONES DEL DIÁLOGO DE BÚSQUEDA DE MATERIAL EN LOS FILTROS PRINCIPALES
+            onValueHelpRequestMatMonitor: function (oEvent) {
+                this._getDialogMaterialMonitor();
             },
 
+            _getDialogMaterialMonitor: function (sInputValue) {
+                var oView = this.getView();
+
+                if (!this.pDialogMaterial) {
+                    this.pDialogMaterial = Fragment.load({
+                        id: oView.getId(),
+                        name: "monitorpedidos.fragments.BusqMaterialesMonitor",
+                        controller: this,
+                    }).then(function (oDialogMaterial) {
+                        // connect dialog to the root view of this component (models, lifecycle)
+                        oView.addDependent(oDialogMaterial);
+                        return oDialogMaterial;
+                    });
+                }
+                this.pDialogMaterial.then(function (oDialogMaterial) {
+                    oDialogMaterial.open(sInputValue);
+                });
+            },
+
+            closeMatDiagMonitor: function () {
+                this.byId("matDialMonitor").close();
+            },
+
+            onBusqMaterialesMonitor: function () {
+                var Matnr = this.getView().byId("f_codMatMoni").getValue();
+                var Maktx = this.getView().byId("f_nomMatMoni").getValue();
+                var Matkl = this.getView().byId("f_grArtMoni").getValue();
+
+                var aFilterIds = [], aFilterValues = [];
+
+                var addFilter = function (id, value) {
+                    if (value) {
+                        aFilterIds.push(id);
+                        aFilterValues.push(value);
+                    }
+                };
+
+                addFilter("Matnr", Matnr);
+                addFilter("Maktx", Maktx);
+                addFilter("Matkl", Matkl);
+
+                var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                sap.ui.core.BusyIndicator.show();
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/DameMaterialSet", aFilters),
+                ]).then(this.buildMaterialesModelMonitor.bind(this), this.errorFatal.bind(this));                
+            },
+
+            buildMaterialesModelMonitor: function (values) {
+                var oModelMateriales = new JSONModel();
+                if (values[0].results) {
+                    oModelMateriales.setData(values[0].results);                    
+                }
+                sap.ui.core.BusyIndicator.hide();
+                this.oComponent.setModel(oModelMateriales, "listadoMateriales");
+                this.oComponent.getModel("listadoMateriales").refresh(true);
+            },
+
+            onPressMaterialMonitor: function (oEvent) {
+                var mat = this.getSelectMat(oEvent, "listadoMateriales");
+                filtroMaterial = mat.Matnr;
+                nommat = mat.Maktx;
+                this.getView().byId("f_material").setValue(filtroMaterial);
+                this.closeMatDiagMonitor();
+            },
+
+            getSelectMat: function (oEvent, oModel) {
+                var oModMat = this.oComponent.getModel(oModel).getData();
+                const sOperationPath = oEvent.getSource().getBindingContext(oModel).getPath();
+                const sOperation = sOperationPath.split("/").slice(-1).pop();
+                var idMaterial = oModMat[sOperation];
+                return idMaterial;
+            },
+            
+            // FUNCIONES DEL DIÁLOGO DE BÚSQUEDA DE CECOS EN LOS FILTROS PRINCIPALES
+            onChangefLineas: function () {
+                filtroLineaServicio = this.getView().byId("f_line").getSelectedKey();
+            },
+
+            // FUNCIONES DEL DIÁLOGO DE BÚSQUEDA DE CLASE DE DOCUMENTOS EN LOS FILTROS PRINCIPALES
             handleSelectionChange: function (oEvent) {
                 var changedItem = oEvent.getParameter("changedItem");
                 var isSelected = oEvent.getParameter("selected");
-
-                var state = "Selected";
-                if (!isSelected) {
-                    state = "Deselected";
-                    //arrayKeys.pop(changedItem.mProperties.key);
-                    var valor = changedItem.mProperties.key;
-                    for (var i = 0; i < arrayKeys.length; i++) {
-                        if (valor == arrayKeys[i]) {
-                            //console.log("Igual");
-                            const index = arrayKeys.findIndex(x => x.key === valor);
-
-                            arrayKeys.splice(index, 1);
-                        }
-
-                    }
-
+                
+                if (isSelected) {
+                    arrayKeys.push(changedItem.getKey());
                 } else {
-                    arrayKeys.push(changedItem.mProperties.key);
+                    var index = arrayKeys.indexOf(changedItem.getKey());
+                    if (index !== -1) {
+                        arrayKeys.splice(index, 1);
+                    }
                 }
-
-
-
-                //changedItem.mProperties.key
-                //arrayKeys++;
-
-                /*MessageBox.show("Event 'selectionChange': " + state + " '" + changedItem.getText() + "'", {
-                    width: "auto"
-                });*/
             },
 
-            /*handleSelectionFinish: function (oEvent) {
-                var selectedItems = oEvent.getParameter("selectedItems");
-                var messageText = "Event 'selectionFinished': [";
 
-                for (var i = 0; i < selectedItems.length; i++) {
-                    messageText += "'" + selectedItems[i].getText() + "'";
-                    if (i != selectedItems.length - 1) {
-                        messageText += ",";
-                    }
-                }
 
-                messageText += "]";
 
-                MessageBox.show(messageText, {
-                    width: "auto"
-                });
-            },*/
+
+
+
+
+
+
+
+
+
+            
+            
+
+            
+
+            
+
 
             
 
@@ -1777,13 +1752,7 @@ sap.ui.define([
 
             
 
-            getSelectMat: function (oEvent, oModel) {
-                var oModMat = this.oComponent.getModel(oModel).getData();
-                const sOperationPath = oEvent.getSource().getBindingContext(oModel).getPath();
-                const sOperation = sOperationPath.split("/").slice(-1).pop();
-                var idMaterial = oModMat[sOperation];
-                return idMaterial;
-            },
+            
 
             
 
@@ -3367,6 +3336,7 @@ sap.ui.define([
                 codcli = acr.Kunnr;
                 nomcli = acr.Name1;
                 this.getView().byId("f_client").setValue(nomcli);
+                this.getView().byId("idCCliente").setValueState("None");
                 //this.getView().byId("idCCliente").setValue(codcli);
                 //this.getView().byId("descrProv").setValue(nomcli);
 
