@@ -23,6 +23,7 @@ sap.ui.define([
         var codcli, nomcli, socPed, TipoPed, numCont, vText, nomCont, Bzirk, Bztxt, Cvcan, Cvsector, condPago, vedit, checkMisPed, checkTodos;
         var arrayKeys = [];
 
+        var btnEditar, accionLiberar;
         // Variables utilizadas en los filtros
         var filtroUsuario, filtroFechaDsd, filtroFechaHst, filtroImporteDsd, filtroImporteHst, filtroEstado, filtroClienteCod, filtroClienteTxt, filtroCeco, filtroOrden, filtroOficionaVentas, filtroLineaServicio, filtroMaterial, filtroClasePed, filtroResponsable;
         var Usuario, Numped, Fechad, Fechah, Imported, Importeh, sStatus, Cliente, codceco, codord, vkbur, LineaServicio, codmat, ClasePed, responsable;
@@ -44,8 +45,8 @@ sap.ui.define([
                 this.oComponent.setModel(oModFiltrosAcr, "FiltrosCli");
 
                 this.oComponent.setModel(oModCab, "PedidoCab");
-                vedit = false;
-                this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
+                btnEditar = false, accionLiberar = false;
+                this.oComponent.getModel("PedidoCab").setProperty("/editPos", btnEditar);
                 this.oComponent.getModel("PedidoCab").refresh(true);
 
                 // Inicializar valores mostrados en los filtros
@@ -249,261 +250,6 @@ sap.ui.define([
             },
 
             // -------------------------------------- FUNCIONES PARA LA OBTENCIÓN DE LOS DATOS DEL MONITOR Y FILTRADO --------------------------------------
-            // OBTENER DATOS DEL MONITOR EN BASE A LOS FILTROS
-            ListadoSolicitudes: function (
-                filtroUsuario,
-                //Numped,
-                filtroFechaDsd,
-                filtroFechaHst,
-                filtroImporteDsd,
-                filtroImporteHst,
-                filtroEstado,
-                filtroClienteCod,
-                filtroCeco,
-                filtroOrden,
-                filtroOficionaVentas,
-                filtroLineaServicio,
-                filtroMaterial,
-                filtroResponsable,
-                filtroClasePed
-            ) {
-                var aFilterIds = [], aFilterValues = [];
-
-                var addFilter = function (id, value) {
-                    if (value) {
-                        aFilterIds.push(id);
-                        aFilterValues.push(value);
-                    }
-                };
-
-                addFilter("USUARIO", filtroUsuario);
-                addFilter("FECHAD", Date.parse(filtroFechaDsd));
-                addFilter("FECHAH", Date.parse(filtroFechaHst));
-                addFilter("IMPORTED", filtroImporteDsd);
-                addFilter("IMPORTEH", filtroImporteHst);
-                addFilter("ESTADO", filtroEstado);
-                addFilter("CLIENTE", filtroClienteCod);
-                addFilter("CECO", filtroCeco);
-                addFilter("ORDEN", filtroOrden);
-                addFilter("ORGVENTAS", filtroOficionaVentas);
-                addFilter("LINEA", filtroLineaServicio);
-                addFilter("MATERIAL", filtroMaterial);
-                addFilter("ZRESPONSABLE", filtroResponsable);
-                addFilter("TIPO", filtroClasePed);
-
-                var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                sap.ui.core.BusyIndicator.show();
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/DamePedidosSet", aFilters),
-                ]).then(this.buildListadoModel.bind(this), this.errorFatal.bind(this));
-            },
-
-            buildListadoModel: function (values) {
-                if (values[0].results.length >= 1) {
-                    var oModelSolicitudes = new JSONModel(values[0].results);
-                    if(filtroEstado === "APRB")
-                        this.oComponent.setModel(oModelSolicitudes, "listadoSolicitudesAPRB");
-                    this.oComponent.setModel(oModelSolicitudes, "listadoSolicitudes");
-                } else {
-                    MessageBox.warning(this.oI18nModel.getProperty("noSol"));
-                    //Si no hay solicitudes, se borra el listado
-                    if(filtroEstado === "APRB")
-                        this.oComponent.setModel(new JSONModel(), "listadoSolicitudesAPRB");
-                    this.oComponent.setModel(new JSONModel(), "listadoSolicitudes");                        
-                }
-                sap.ui.core.BusyIndicator.hide();
-            },
-            
-            calcularTotalEstados: function() {
-
-                // -- ELIMINAR LOS FILTROS DE LA TABLA --
-                var tablaMonitor = this.getView().byId("idTablePEPs");
-                //set group of table and column to false          
-                tablaMonitor.setEnableGrouping(false);
-                tablaMonitor.clearSelection();
-
-                var oListBinding = tablaMonitor.getBinding();
-                if (oListBinding) {
-                    oListBinding.aSorters = null;
-                    oListBinding.aFilters = null;   
-                }                
-                
-                for (var iColCounter = 0; iColCounter < tablaMonitor.getColumns().length; iColCounter++) {
-                    tablaMonitor.getColumns()[iColCounter].setSorted(false);
-                    tablaMonitor.getColumns()[iColCounter].setFilterValue("");
-                    tablaMonitor.getColumns()[iColCounter].setFiltered(false);
-                    tablaMonitor.getColumns()[iColCounter].setGrouped(false);
-                }
-
-                //after reset, set the enableGrouping back to true
-                tablaMonitor.setEnableGrouping(true);
-
-                // -- ACTUALIZAR EL TOTAL EN CADA ESTADO --
-                var estados = ["","REDA", "APRB", "FINA", "FACT", "PDTE", "COBR", "DEN"];
-
-                var addFilter = function (id, value) {
-                    if (value) {
-                        aFilterIds.push(id);
-                        aFilterValues.push(value);
-                    }
-                };
-
-                for (let i = 0; i < estados.length; i++) {
-                    let estado = estados[i];
-                    
-                    var aFilterIds = [], aFilterValues = [];
-
-                    addFilter("USUARIO", filtroUsuario);
-                    addFilter("FECHAD", Date.parse(filtroFechaDsd));
-                    addFilter("FECHAH", Date.parse(filtroFechaHst));
-                    addFilter("IMPORTED", filtroImporteDsd);
-                    addFilter("IMPORTEH", filtroImporteHst);
-                    addFilter("ESTADO", estado);
-                    addFilter("CLIENTE", filtroClienteCod);
-                    addFilter("CECO", filtroCeco);
-                    addFilter("ORDEN", filtroOrden);
-                    addFilter("ORGVENTAS", filtroOficionaVentas);
-                    addFilter("LINEA", filtroLineaServicio);
-                    addFilter("MATERIAL", filtroMaterial);
-                    addFilter("ZRESPONSABLE", filtroResponsable);
-                    addFilter("TIPO", filtroClasePed);
-
-                    var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                    var that = this;
-
-                    Promise.all([
-                        this.readDataEntity(this.mainService, "/DamePedidosSet/$count", aFilters, {
-                            async: true
-                        }),
-                    ]).then(function(results) {
-                        switch (estado) {
-                            case '': 
-                                that.oComponent.getModel("Filtros").setProperty("/Total", results[0]);
-                                break;
-                            case 'REDA': 
-                                that.oComponent.getModel("Filtros").setProperty("/totalred", results[0]);
-                                break;
-                            case 'APRB': 
-                                that.oComponent.getModel("Filtros").setProperty("/totalpdte", results[0]);
-                                break;
-                            case 'FINA': 
-                                that.oComponent.getModel("Filtros").setProperty("/totalfin", results[0]);
-                                break;
-                            case 'FACT': 
-                                that.oComponent.getModel("Filtros").setProperty("/totalfac", results[0]);
-                                break;
-                            case 'PDTE': 
-                                that.oComponent.getModel("Filtros").setProperty("/totalpdtecobr", results[0]);
-                                break;
-                            case 'COBR': 
-                                that.oComponent.getModel("Filtros").setProperty("/totalcob", results[0]);
-                                break;
-                            case 'DEN': 
-                                that.oComponent.getModel("Filtros").setProperty("/TotalDen", results[0]);
-                                break;
-                        }
-                    }, "");            
-                }
-            },
-
-            //MÉTODO PARA EL CAMBIO DE ESTADO (ICON TAB FILTERS)
-            onFilterSelect: function(oEvent) {
-                var skey = oEvent.getParameter("key");
-                filtroEstado = "";
-                vedit = false;
-                
-                switch (skey) {
-                    case "Free":
-                        filtroEstado = "";
-                        break;
-                    case "Ok":
-                        filtroEstado = "REDA";
-                        vedit = true;
-                        break;
-                    case "Heavy":
-                        filtroEstado = "APRB";
-                        break;
-                    case "Overweight":
-                        filtroEstado = "FINA";
-                        break;
-                    case "Money":
-                        filtroEstado = "FACT";
-                        break;
-                    case "Payment":
-                        filtroEstado = "PDTE";
-                        break;
-                    case "Sales":
-                        filtroEstado = "COBR";
-                        break;
-                    case "Cancel":
-                        filtroEstado = "DEN";
-                        break;                    
-                }
-
-                if(skey === 'Approv'){
-                    filtroEstado = "APRB";
-                    this._getDialogAprobaciones();
-                    this.getView().byId("rbGroup").setVisible(false);                    
-                }else{
-                    this.getView().byId("rbGroup").setVisible(true);                                 
-                
-                    this.ListadoSolicitudes(
-                        filtroUsuario,
-                        //Numped,
-                        filtroFechaDsd,
-                        filtroFechaHst,
-                        filtroImporteDsd,
-                        filtroImporteHst,
-                        filtroEstado,
-                        filtroClienteCod,
-                        filtroCeco,
-                        filtroOrden,
-                        filtroOficionaVentas,
-                        filtroLineaServicio,
-                        filtroMaterial,
-                        filtroResponsable,
-                        filtroClasePed);                    
-                }
-                this.calcularTotalEstados();
-                this.getView().byId("Filtr10").setVisible(vedit);
-                this.getView().byId("colbtnedit").setVisible(vedit);
-                this.oComponent.getModel("PedidoCab").setProperty("/editPos", vedit);
-                this.oComponent.getModel("PedidoCab").refresh(true);  
-            },   
-            
-            // FUNCIÓN PARA SELECCIONAR EL RADIO BUTTON (Mis pedidos / Todos)
-            onRadioButtonSelect: function (oEvent) {
-                var oRbGroup = this.getView().byId("rbGroup"); // Get the RadioButtonGroup control
-                var oSelectedButton = oRbGroup.getSelectedButton(); // Get the selected radio button
-
-                if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbTrue" || oSelectedButton.getId() === "application-ZPV-monitor-component---MonitorPedidos--rbTrue") {
-                    filtroUsuario = this.oComponent.getModel("Usuario").getData()[0].Bname;                    
-                } else if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbFalse" || oSelectedButton.getId() === "application-ZPV-monitor-component---MonitorPedidos--rbFalse") {
-                    filtroUsuario = "";
-                };
-
-                this.ListadoSolicitudes(
-                    filtroUsuario,
-                    //Numped,
-                    filtroFechaDsd,
-                    filtroFechaHst,
-                    filtroImporteDsd,
-                    filtroImporteHst,
-                    filtroEstado,
-                    filtroClienteCod,
-                    filtroCeco,
-                    filtroOrden,
-                    filtroOficionaVentas,
-                    filtroLineaServicio,
-                    filtroMaterial,
-                    filtroResponsable,
-                    filtroClasePed);
-                this.calcularTotalEstados();
-            },
-
             // FUNCION DE LA BUSQUEDA PRINCIPAL
             onBusqSolicitudes: function (oEvent) {
                 
@@ -1006,6 +752,404 @@ sap.ui.define([
                 }
             },
 
+            // OBTENER DATOS DEL MONITOR EN BASE A LOS FILTROS
+            ListadoSolicitudes: function (
+                filtroUsuario,
+                //Numped,
+                filtroFechaDsd,
+                filtroFechaHst,
+                filtroImporteDsd,
+                filtroImporteHst,
+                filtroEstado,
+                filtroClienteCod,
+                filtroCeco,
+                filtroOrden,
+                filtroOficionaVentas,
+                filtroLineaServicio,
+                filtroMaterial,
+                filtroResponsable,
+                filtroClasePed
+            ) {
+                var aFilterIds = [], aFilterValues = [];
+
+                var addFilter = function (id, value) {
+                    if (value) {
+                        aFilterIds.push(id);
+                        aFilterValues.push(value);
+                    }
+                };
+
+                addFilter("USUARIO", filtroUsuario);
+                addFilter("FECHAD", Date.parse(filtroFechaDsd));
+                addFilter("FECHAH", Date.parse(filtroFechaHst));
+                addFilter("IMPORTEH", filtroImporteHst);
+                addFilter("ESTADO", filtroEstado);
+                addFilter("CLIENTE", filtroClienteCod);
+                addFilter("CECO", filtroCeco);
+                addFilter("ORDEN", filtroOrden);
+                addFilter("ORGVENTAS", filtroOficionaVentas);
+                addFilter("LINEA", filtroLineaServicio);
+                addFilter("MATERIAL", filtroMaterial);
+                addFilter("ZRESPONSABLE", filtroResponsable);
+                addFilter("TIPO", filtroClasePed);
+
+                var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                sap.ui.core.BusyIndicator.show();
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/DamePedidosSet", aFilters),
+                ]).then(this.buildListadoModel.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildListadoModel: function (values) {
+                if (values[0].results.length >= 1) {
+                    var oModelSolicitudes = new JSONModel(values[0].results);
+                    if(filtroEstado === "APRB")
+                        this.oComponent.setModel(oModelSolicitudes, "listadoSolicitudesAPRB");
+                    if (accionLiberar)
+                        this.oComponent.setModel(oModelSolicitudes, "listadoSolicitudesLiberar");
+                    else
+                        this.oComponent.setModel(oModelSolicitudes, "listadoSolicitudes");
+                } else {
+                    MessageBox.warning(this.oI18nModel.getProperty("noSol"));
+                    //Si no hay solicitudes, se borra el listado
+                    if(filtroEstado === "APRB")
+                        this.oComponent.setModel(new JSONModel(), "listadoSolicitudesAPRB");
+                    if (accionLiberar)
+                        this.oComponent.setModel(new JSONModel(), "listadoSolicitudesLiberar");
+                    else
+                        this.oComponent.setModel(new JSONModel(), "listadoSolicitudes");                        
+                }
+                sap.ui.core.BusyIndicator.hide();
+            },
+            
+            calcularTotalEstados: function() {
+
+                // -- ELIMINAR LOS FILTROS DE LA TABLA --
+                var tablaMonitor = this.getView().byId("idTablePEPs");
+                //set group of table and column to false          
+                tablaMonitor.setEnableGrouping(false);
+                tablaMonitor.clearSelection();
+
+                var oListBinding = tablaMonitor.getBinding();
+                if (oListBinding) {
+                    oListBinding.aSorters = null;
+                    oListBinding.aFilters = null;   
+                }                
+                
+                for (var iColCounter = 0; iColCounter < tablaMonitor.getColumns().length; iColCounter++) {
+                    tablaMonitor.getColumns()[iColCounter].setSorted(false);
+                    tablaMonitor.getColumns()[iColCounter].setFilterValue("");
+                    tablaMonitor.getColumns()[iColCounter].setFiltered(false);
+                    tablaMonitor.getColumns()[iColCounter].setGrouped(false);
+                }
+
+                //after reset, set the enableGrouping back to true
+                tablaMonitor.setEnableGrouping(true);
+
+                // -- ACTUALIZAR EL TOTAL EN CADA ESTADO --
+                var estados = ["","REDA", "APRB", "FINA", "FACT", "PDTE", "COBR", "DEN"];
+
+                var addFilter = function (id, value) {
+                    if (value) {
+                        aFilterIds.push(id);
+                        aFilterValues.push(value);
+                    }
+                };
+
+                for (let i = 0; i < estados.length; i++) {
+                    let estado = estados[i];
+                    
+                    var aFilterIds = [], aFilterValues = [];
+
+                    addFilter("USUARIO", filtroUsuario);
+                    addFilter("FECHAD", Date.parse(filtroFechaDsd));
+                    addFilter("FECHAH", Date.parse(filtroFechaHst));
+                    addFilter("IMPORTED", filtroImporteDsd);
+                    addFilter("IMPORTEH", filtroImporteHst);
+                    addFilter("ESTADO", estado);
+                    addFilter("CLIENTE", filtroClienteCod);
+                    addFilter("CECO", filtroCeco);
+                    addFilter("ORDEN", filtroOrden);
+                    addFilter("ORGVENTAS", filtroOficionaVentas);
+                    addFilter("LINEA", filtroLineaServicio);
+                    addFilter("MATERIAL", filtroMaterial);
+                    addFilter("ZRESPONSABLE", filtroResponsable);
+                    addFilter("TIPO", filtroClasePed);
+
+                    var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                    var that = this;
+
+                    Promise.all([
+                        this.readDataEntity(this.mainService, "/DamePedidosSet/$count", aFilters, {
+                            async: true
+                        }),
+                    ]).then(function(results) {
+                        switch (estado) {
+                            case '': 
+                                that.oComponent.getModel("Filtros").setProperty("/Total", results[0]);
+                                break;
+                            case 'REDA': 
+                                that.oComponent.getModel("Filtros").setProperty("/totalred", results[0]);
+                                break;
+                            case 'APRB': 
+                                that.oComponent.getModel("Filtros").setProperty("/totalpdte", results[0]);
+                                break;
+                            case 'FINA': 
+                                that.oComponent.getModel("Filtros").setProperty("/totalfin", results[0]);
+                                break;
+                            case 'FACT': 
+                                that.oComponent.getModel("Filtros").setProperty("/totalfac", results[0]);
+                                break;
+                            case 'PDTE': 
+                                that.oComponent.getModel("Filtros").setProperty("/totalpdtecobr", results[0]);
+                                break;
+                            case 'COBR': 
+                                that.oComponent.getModel("Filtros").setProperty("/totalcob", results[0]);
+                                break;
+                            case 'DEN': 
+                                that.oComponent.getModel("Filtros").setProperty("/TotalDen", results[0]);
+                                break;
+                        }
+                    }, "");            
+                }
+            },
+
+            //MÉTODO PARA EL CAMBIO DE ESTADO (ICON TAB FILTERS)
+            onFilterSelect: function(oEvent) {
+                var skey = oEvent.getParameter("key");
+                filtroEstado = "";
+                btnEditar = false;
+                
+                switch (skey) {
+                    case "Free":
+                        filtroEstado = "";
+                        break;
+                    case "Ok":
+                        filtroEstado = "REDA";
+                        btnEditar = true;
+                        break;
+                    case "Heavy":
+                        filtroEstado = "APRB";
+                        break;
+                    case "Overweight":
+                        filtroEstado = "FINA";
+                        break;
+                    case "Money":
+                        filtroEstado = "FACT";
+                        break;
+                    case "Payment":
+                        filtroEstado = "PDTE";
+                        break;
+                    case "Sales":
+                        filtroEstado = "COBR";
+                        break;
+                    case "Cancel":
+                        filtroEstado = "DEN";
+                        break;                    
+                }
+
+                if(skey === 'Approv'){
+                    filtroEstado = "APRB";
+                    this._getDialogAprobaciones();
+                    this.getView().byId("rbGroup").setVisible(false);                    
+                }else{
+                    this.getView().byId("rbGroup").setVisible(true);                                 
+                
+                    this.ListadoSolicitudes(
+                        filtroUsuario,
+                        //Numped,
+                        filtroFechaDsd,
+                        filtroFechaHst,
+                        filtroImporteDsd,
+                        filtroImporteHst,
+                        filtroEstado,
+                        filtroClienteCod,
+                        filtroCeco,
+                        filtroOrden,
+                        filtroOficionaVentas,
+                        filtroLineaServicio,
+                        filtroMaterial,
+                        filtroResponsable,
+                        filtroClasePed);                    
+                }
+                this.calcularTotalEstados();
+                this.getView().byId("Filtr10").setVisible(btnEditar);
+                this.getView().byId("colbtnedit").setVisible(btnEditar);
+                this.oComponent.getModel("PedidoCab").setProperty("/editPos", btnEditar);
+                this.oComponent.getModel("PedidoCab").refresh(true);  
+            }, 
+            
+            // DIÁLOGO DE LIBERACIONES
+            onEnviarLiberacion: function () {
+                accionLiberar = true;
+                this._getDialogLiberaciones();                
+            },
+
+            _getDialogLiberaciones: function (sInputValue) {
+                
+                this.ListadoSolicitudes(
+                    usuario, //filtroUsuario
+                    //Numped,
+                    "", // filtroFechaDsd,
+                    "", // filtroFechaHst,
+                    "", // filtroImporteDsd,
+                    "", // filtroImporteHst,
+                    filtroEstado,
+                    "", // filtroClienteCod,
+                    "", // filtroCeco
+                    "", // filtroOrden
+                    "", // filtroOficionaVentas
+                    "", // filtroLineaServicio,
+                    "", // filtroMaterial,
+                    "", // filtroResponsable,
+                    ""); // filtroClasePed                
+
+                var oView = this.getView();                
+                if (!this.pDialogLiberacion) {
+                    this.pDialogLiberacion = Fragment.load({
+                        id: oView.getId(),
+                        name: "monitorpedidos.fragments.Liberacion",
+                        controller: this,
+                    }).then(function (oDialogLiberacion) {
+                        // connect dialog to the root view of this component (models, lifecycle)
+                        oView.addDependent(oDialogLiberacion);
+                        return oDialogLiberacion;
+                    });
+                }
+                this.pDialogLiberacion.then(function (oDialogLiberacion) {
+                    oDialogLiberacion.open(sInputValue);
+                });                     
+            },
+
+            onLiberacion: function (oEvent) {
+                const oI18nModel = this.oComponent.getModel("i18n");
+                var oTable = this.getView().byId("b_idTablePEPs");
+                var t_indices = oTable.getBinding().aIndices;
+
+                var aContexts = oTable.getSelectedIndices();
+                var items = aContexts.map(function (c) {
+                    //return c.getObject();
+                    return this.oComponent.getModel("listadoSolicitudesLiberar").getProperty("/" + t_indices[c]);
+                }.bind(this));
+
+                var results_array = items;
+                var DatosLiberaciones = [];
+                var obj = {};
+                var accion = "L";
+
+                var that = this;
+                for (var i = 0; i < results_array.length; i++) {
+                    obj = {
+                        Accion: accion,
+                        Solicitud: results_array[i].IDSOLICITUD
+                    };
+                    DatosLiberaciones.push(obj);
+                    obj = {};
+                }
+
+                var msg = oI18nModel.getProperty("SolLiber");
+                var msgLog = "";
+
+                MessageBox.warning(msg, {
+                    actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+                    emphasizedAction: MessageBox.Action.OK,
+                    onClose: function (sAction) {
+                        if (sAction == 'OK') {
+                            var json1 = {
+                                Accion: accion,
+                                LiberarSet: DatosLiberaciones,
+                                LiberacionRespuesta: []
+                            }
+                            sap.ui.core.BusyIndicator.show();
+                            that.mainService.create("/LiberarSet", json1, {
+                                success: function (result) {
+                                    if (result.LiberarSet.results[0].Solicitud) {                                                                                
+                                        if (result.LiberacionRespuesta.results.length > 1) {
+                                            for (var i = 0; i < result.LiberacionRespuesta.results.length; i++) {
+                                                msgLog += result.LiberacionRespuesta.results[i].TextoLog + "\r\n";
+                                            }
+                                            sap.m.MessageToast.show(msgLog);
+                                        } else {
+                                            MessageBox.show(result.LiberacionRespuesta.results[0].TextoLog);                                            
+                                        }
+                                        oTable.clearSelection();
+                                        accionLiberar = false;
+                                        // Refrescamos los filtros
+                                        that.ListadoSolicitudes(
+                                            filtroUsuario,
+                                            //Numped,
+                                            filtroFechaDsd,
+                                            filtroFechaHst,
+                                            filtroImporteDsd,
+                                            filtroImporteHst,
+                                            filtroEstado,
+                                            filtroClienteCod,
+                                            filtroCeco,
+                                            filtroOrden,
+                                            filtroOficionaVentas,
+                                            filtroLineaServicio,
+                                            filtroMaterial,
+                                            filtroResponsable,
+                                            filtroClasePed);                                         
+                                        that.calcularTotalEstados();
+                                        that.byId("LiberacionDial").close();
+                                    }
+                                    sap.ui.core.BusyIndicator.hide();
+                                },
+                                error: function (err) {
+                                    sap.m.MessageBox.error("Solicitud no Liberada.", {
+                                        title: "Error",
+                                        initialFocus: null,
+                                    });                                                                        
+                                    oTable.clearSelection();
+                                    sap.ui.core.BusyIndicator.hide();
+                                },
+                                async: true,
+                            });
+                        } else {
+                            oTable.clearSelection();
+                        }
+                    }
+                });                
+            },
+
+            onCancelliberacion: function () {
+                accionLiberar = false;
+                this.byId("LiberacionDial").close();
+            },
+            
+            // FUNCIÓN PARA SELECCIONAR EL RADIO BUTTON (Mis pedidos / Todos)
+            onRadioButtonSelect: function (oEvent) {
+                var oRbGroup = this.getView().byId("rbGroup"); // Get the RadioButtonGroup control
+                var oSelectedButton = oRbGroup.getSelectedButton(); // Get the selected radio button
+
+                if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbTrue" || oSelectedButton.getId() === "application-ZPV-monitor-component---MonitorPedidos--rbTrue") {
+                    filtroUsuario = this.oComponent.getModel("Usuario").getData()[0].Bname;                    
+                } else if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbFalse" || oSelectedButton.getId() === "application-ZPV-monitor-component---MonitorPedidos--rbFalse") {
+                    filtroUsuario = "";
+                };
+
+                this.ListadoSolicitudes(
+                    filtroUsuario,
+                    //Numped,
+                    filtroFechaDsd,
+                    filtroFechaHst,
+                    filtroImporteDsd,
+                    filtroImporteHst,
+                    filtroEstado,
+                    filtroClienteCod,
+                    filtroCeco,
+                    filtroOrden,
+                    filtroOficionaVentas,
+                    filtroLineaServicio,
+                    filtroMaterial,
+                    filtroResponsable,
+                    filtroClasePed);
+                this.calcularTotalEstados();
+            },
 
 
 
@@ -2022,9 +2166,7 @@ sap.ui.define([
             
 
 
-            onEnviarLiberacion: function () {
-                this._getDialogLiberaciones();
-            },
+            
 
             
 
@@ -3548,6 +3690,7 @@ sap.ui.define([
                 this.oComponent.setModel(new JSONModel([]), "PedidoPos");
             },
 
+            // DIÁLOGO DE APROBACIONES
             _getDialogAprobaciones: function (sInputValue) {
 
                 this.ListadoSolicitudes(
@@ -3584,42 +3727,7 @@ sap.ui.define([
                 });
             },
 
-            _getDialogLiberaciones: function (sInputValue) {
-                var oView = this.getView(),
-                    that = this;
-                sap.ui.core.BusyIndicator.hide();
-                if (!this.pDialogLiberacion) {
-                    this.pDialogLiberacion = Fragment.load({
-                        id: oView.getId(),
-                        name: "monitorpedidos.fragments.Liberacion",
-                        controller: this,
-                    }).then(function (oDialogLiberacion) {
-                        // connect dialog to the root view of this component (models, lifecycle)
-                        oView.addDependent(oDialogLiberacion);
-                        return oDialogLiberacion;
-                    });
-                }
-                this.pDialogLiberacion.then(function (oDialogLiberacion) {
-                    oDialogLiberacion.open(sInputValue);
-                });
-
-                that.ListadoSolicitudes(
-                    usuario, //filtroUsuario
-                    //Numped,
-                    "", // filtroFechaDsd,
-                    "", // filtroFechaHst,
-                    "", // filtroImporteDsd,
-                    "", // filtroImporteHst,
-                    filtroEstado,
-                    "", // filtroClienteCod,
-                    "", // filtroCeco
-                    "", // filtroOrden
-                    "", // filtroOficionaVentas
-                    "", // filtroLineaServicio,
-                    "", // filtroMaterial,
-                    "", // filtroResponsable,
-                    ""); // filtroClasePed
-            },
+            
 
             
 
@@ -4622,9 +4730,7 @@ sap.ui.define([
                 this.byId("ApprovDial").close();
             },
 
-            oncancelliberacion: function () {
-                this.byId("LiberacionDial").close();
-            },
+            
 
 
             buildMotivo: function (values) {
@@ -4915,90 +5021,7 @@ sap.ui.define([
                 this.oConfirmDialog.open();
             },
 
-            onLiberacion: function (oEvent) {
-                const oI18nModel = this.oComponent.getModel("i18n");
-                var oTable = this.getView().byId("b_idTablePEPs");
-                var t_indices = oTable.getBinding().aIndices;
-
-                var aContexts = oTable.getSelectedIndices();
-                var items = aContexts.map(function (c) {
-                    //return c.getObject();
-                    return this.oComponent.getModel("listadoSolicitudes").getProperty("/" + t_indices[c]);
-                }.bind(this));
-
-
-                var results_array = items;
-                var DatosLiberaciones = [];
-                var LiberacionRespuesta = [];
-                var obj = {};
-                var accion = "L";
-
-
-                var that = this;
-
-                for (var i = 0; i < results_array.length; i++) {
-
-                    obj = {
-                        Accion: accion,
-                        Solicitud: results_array[i].IDSOLICITUD
-                    };
-                    DatosLiberaciones.push(obj);
-                    obj = {};
-                }
-
-                var msg = oI18nModel.getProperty("SolLiber");
-                var msgLog = "";
-
-                MessageBox.warning(msg, {
-                    actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
-                    emphasizedAction: MessageBox.Action.OK,
-                    onClose: function (sAction) {
-                        if (sAction == 'OK') {
-                            var json1 = {
-                                Accion: accion,
-                                LiberarSet: DatosLiberaciones,
-                                LiberacionRespuesta: []
-                            }
-                            sap.ui.core.BusyIndicator.show();
-                            that.mainService.create("/LiberarSet", json1, {
-                                success: function (result) {
-                                    if (result.LiberarSet.results[0].Solicitud) {
-                                        sap.ui.core.BusyIndicator.hide();
-                                        //MessageBox.show(result.LiberacionRespuesta.TextoLog);  
-                                        oTable.clearSelection();
-                                        if (result.LiberacionRespuesta.results.length > 1) {
-                                            for (var i = 0; i < result.LiberacionRespuesta.results.length; i++) {
-                                                msgLog += result.LiberacionRespuesta.results[i].TextoLog + "\r\n";
-                                            }
-
-                                            sap.m.MessageToast.show(msgLog);
-                                            that.byId("LiberacionDial").close();
-                                        } else {
-                                            MessageBox.show(result.LiberacionRespuesta.results[0].TextoLog);
-                                            that.byId("LiberacionDial").close();
-                                        }
-                                    }
-                                    //oTable.clearSelection();
-                                    //sap.ui.core.BusyIndicator.hide(); 
-                                },
-                                error: function (err) {
-                                    sap.ui.core.BusyIndicator.hide();
-                                    sap.m.MessageBox.error("Solicitud no Liberada.", {
-                                        title: "Error",
-                                        initialFocus: null,
-                                    });
-                                    oTable.clearSelection();
-                                    sap.ui.core.BusyIndicator.hide();
-                                },
-                                async: true,
-                            });
-                        } else {
-                            oTable.clearSelection();
-                        }
-                    }
-                });
-
-            },
+            
 
             onGoToZpv: function () {
                 //var numFact = this.getView().byId("f_numfac").getValue();
