@@ -1926,7 +1926,8 @@ sap.ui.define([
           Yykostl: recogececos,
           Yyaufnr: recogeorden,
           Ykostl: recogececos,
-          Yaufnr: recogeorden
+          Yaufnr: recogeorden,
+          Currency: "EUR"
         }
 
         var oModConfigPos = new JSONModel();
@@ -2564,6 +2565,17 @@ sap.ui.define([
       errorFatal: function (e) {
         MessageBox.error(this.oI18nModel.getProperty("errFat"));
         sap.ui.core.BusyIndicator.hide();
+      },
+      
+      /* FORMATEAR NUMERO IMPORTE */
+      onFormatNumber: function (Netpr) {
+        var numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
+          maxFractionDigits: 2,
+          decimalSeparator: "."
+        });
+        var numeroFormateado = numberFormat.format(Netpr);
+        return numeroFormateado;
+ 
       }
     });
   });

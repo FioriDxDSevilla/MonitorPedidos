@@ -93,9 +93,8 @@
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Importe}" />
-                <table:template>
-                    
-                    <m:Text text="{DisplayPosPed>Netpr}" />
+                <table:template>                    
+                    <m:Text text="{path:'DisplayPosPed>Netpr', formatter: '.onFormatNumber'}" />
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">

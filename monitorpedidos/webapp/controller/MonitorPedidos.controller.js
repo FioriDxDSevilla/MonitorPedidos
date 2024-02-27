@@ -243,6 +243,7 @@ sap.ui.define([
                 if (values[0].results) {
                     var oModelListAreaVentas = new JSONModel();
                     oModelListAreaVentas.setData(values[0].results);
+                    oModelListAreaVentas.setSizeLimit(values[0].results.length);
                     this.oComponent.setModel(oModelListAreaVentas, "AreaVentas");
                 }
             },
@@ -4257,13 +4258,13 @@ sap.ui.define([
             },
 
             onNavAlta: function () {
-                var idArea = this.getView().byId("idArea").getValue();
-                var idCCliente = this.getView().byId("idCCliente").getValue();
-                //var idcontract = this.getView().byId("idcontract").getValue();
-                var idCanal = this.getView().byId("idCanal").getValue();
-                var idSector = this.getView().byId("idSector").getValue();
-                var idzona = this.getView().byId("idzona").getValue();
-                var idCTipoPed = this.getView().byId("idCTipoPed").getValue();
+                var idArea = this.getView().byId("idArea");
+                var idCCliente = this.getView().byId("idCCliente");
+                var idCanal = this.getView().byId("idCanal");
+                var idSector = this.getView().byId("idSector");
+                var idzona = this.getView().byId("idzona");
+                var idCTipoPed = this.getView().byId("idCTipoPed");
+
                 if (numCont) {
                     var that = this;
                     const oI18nModel = this.oComponent.getModel("i18n");
@@ -4525,10 +4526,46 @@ sap.ui.define([
                     /* 
                     VALIDACIÓN SI LOS CAMPOS VAN VACÍOS PARA QUE NO SE REDIRIJA A LA SECCIÓN DE ALTA DE PEDIDO 
                     */
-                    if (idArea != "" && idCCliente != "" && idCanal != "" && idSector != "" && idzona != "" && idCTipoPed != "") {
-
-
-
+                    if (idArea.getValue()) {
+                        idArea.setValueState("None");
+                    } else {                        
+                        idArea.setValueState("Error");
+                    }
+ 
+                    if (idCCliente.getValue()) {
+                        idCCliente.setValueState("None");
+                    } else {
+                        idCCliente.setValueState("Error");
+                    }
+ 
+                    if (idCanal.getValue()) {
+                        idCanal.setValueState("None");                        
+                    } else {
+                        idCanal.setValueState("Error");
+                    }
+ 
+                    if (idSector.getValue()) {
+ 
+                        idSector.setValueState("None");
+                    } else {
+                        idSector.setValueState("Error");
+                    }
+ 
+                    if (idzona.getValue()) {
+ 
+                        idzona.setValueState("None");
+                    } else {
+                        idzona.setValueState("Error");
+                    }
+                   
+                    if (idCTipoPed.getValue()) {
+ 
+                        idCTipoPed.setValueState("None");
+                    } else {
+                        idCTipoPed.setValueState("Error");
+                    }
+ 
+                    if (idArea.getValue() && idCCliente.getValue() && idCanal.getValue() && idSector.getValue() && idzona.getValue() && idCTipoPed.getValue()){
                         /**
                          * Cuando ya navegamos al alta debe de borrar todos los campos de opciones 
                          * para que cuando se entre de nuevo aparezcan vacios para crear una nueva peticion
@@ -4547,6 +4584,14 @@ sap.ui.define([
                         var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
                         oRouter.navTo("RouteAltaPedidos");
                     }
+                }
+            },
+
+            //CAMBIAR ESTADO DROPDOWNS/INPUTS ALTA PEDIDO
+            onChangeValueState: function(oEvent){
+                var value = sap.ui.getCore().byId(oEvent.getSource().sId);
+                if(value.getValue()){
+                    value.setValueState("None");
                 }
             },
 
@@ -5094,8 +5139,8 @@ sap.ui.define([
                 }
 
             },
-            //VERIFICAR SI EL EMAIL TIENE UN FORMATO VALIDO
 
+            //VERIFICAR SI EL EMAIL TIENE UN FORMATO VALIDO
             onVerifyEmail: function () {
                 var inputEmailCliente = this.getView().byId("inputMailContacto");
                 var inputText = inputEmailCliente.getValue();
@@ -5106,9 +5151,16 @@ sap.ui.define([
                 } else {
                     inputEmailCliente.setValueState("Error");
                 }
+            },
 
+            /* FORMATEAR NUMERO IMPORTE */
+            onFormatNumber: function(Netwr){
+                var numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
+                    maxFractionDigits: 2,
+                    decimalSeparator: "."
+                });
+                var numeroFormateado = numberFormat.format(Netwr);
+                return numeroFormateado; 
             }
-
-
         });
     });

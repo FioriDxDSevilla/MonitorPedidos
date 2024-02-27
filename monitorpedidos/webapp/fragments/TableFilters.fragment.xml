@@ -234,7 +234,7 @@
                         tooltip="{i18n>import}">
                         <Label text="{i18n>import}" />
                          <ui:template>
-                            <Text text="{listadoSolicitudes>Netwr}" />
+                            <Text  text="{path:'listadoSolicitudes>Netwr', formatter: '.onFormatNumber'}"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column

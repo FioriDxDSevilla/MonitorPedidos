@@ -104,7 +104,7 @@
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Importe}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>CondValue}" />
+                    <m:Text text="{path:'PedidoPos>CondValue', formatter: '.onFormatNumber'}" />
                     <!--<m:Text text="{DisplayPosPed>Netwr}" />-->
                 </table:template>
             </table:Column>
