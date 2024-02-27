@@ -17,7 +17,7 @@
                 id="a_idTablePEPs"
                 selectionMode="MultiToggle"
                 rows="{
-                            path: 'listadoSolicitudes>/'}"
+                            path: 'listadoSolicitudesAPRB>/'}"
                 visibleRowCountMode="Interactive"
                 width="100%"
                 enableCellFilter="{ui>/cellFilterOn}"
@@ -35,7 +35,7 @@
                         <ui:template>
                             <Text
                                 id="a_idPEP"
-                                text="{listadoSolicitudes>IDSOLICITUD}"
+                                text="{listadoSolicitudesAPRB>IDSOLICITUD}"
                             />
                         </ui:template>
                     </ui:Column>
@@ -49,7 +49,7 @@
                         <Label text="{i18n>fechadocu}" />
                         <ui:template>
                             <Text
-                                text="{path: 'listadoSolicitudes>Fechadoc',  type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd/MM/yyyy'}}"
+                                text="{path: 'listadoSolicitudesAPRB>Fechadoc',  type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd/MM/yyyy'}}"
                             />
                         </ui:template>
                     </ui:Column>
@@ -61,7 +61,7 @@
                     >
                         <Label text="{i18n>creador}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Creador}" />
+                            <Text text="{listadoSolicitudesAPRB>Creador}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -72,7 +72,7 @@
                     >
                         <Label text="{i18n>codcli}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>CLIENTE}" />
+                            <Text text="{listadoSolicitudesAPRB>CLIENTE}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -83,7 +83,7 @@
                     >
                         <Label text="{i18n>nomcli}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Nombrecliente}" />
+                            <Text text="{listadoSolicitudesAPRB>Nombrecliente}" />
                         </ui:template>
                     </ui:Column>
                     
@@ -95,7 +95,7 @@
                     >
                         <Label text="{i18n>imptotal}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>ImpPedido}" />
+                            <Text text="{listadoSolicitudesAPRB>ImpPedido}" />
                         </ui:template>
                     </ui:Column>-->
                      <ui:Column
@@ -105,7 +105,7 @@
                         tooltip="{i18n>import}">
                         <Label text="{i18n>import}" />
                          <ui:template>
-                            <Text text="{listadoSolicitudes>Netwr}" />
+                            <Text text="{listadoSolicitudesAPRB>Netwr}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -115,7 +115,7 @@
                         tooltip="{i18n>Moneda}">
                         <Label text="{i18n>Moneda}" />
                          <ui:template>
-                            <Text text="{listadoSolicitudes>Waerk}" />
+                            <Text text="{listadoSolicitudesAPRB>Waerk}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -126,7 +126,7 @@
                     >
                         <Label text="{i18n>status}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>ESTADO}" />
+                            <Text text="{listadoSolicitudesAPRB>ESTADO}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -137,7 +137,7 @@
                     >
                         <Label text="{i18n>zord}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Zorden}" />
+                            <Text text="{listadoSolicitudesAPRB>Zorden}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -148,7 +148,7 @@
                     >
                         <Label text="{i18n>zcost}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Zcoste}" />
+                            <Text text="{listadoSolicitudesAPRB>Zcoste}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -159,7 +159,7 @@
                     >
                         <Label text="{i18n>nomapprov}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Nombreapr}" />
+                            <Text text="{listadoSolicitudesAPRB>Nombreapr}" />
                         </ui:template>
                     </ui:Column>
                     <!--<ui:Column
@@ -170,7 +170,7 @@
                     >
                         <Label text="{i18n>claseped}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Claseped}" />
+                            <Text text="{listadoSolicitudesAPRB>Claseped}" />
                         </ui:template>
                     </ui:Column>-->
                     <ui:Column
@@ -181,7 +181,7 @@
                     >
                         <Label text="{i18n>orgventas}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Orgventas}" />
+                            <Text text="{listadoSolicitudesAPRB>Orgventas}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -192,10 +192,10 @@
                     >
                         <Label text="{i18n>Numfactura}" />
                         <ui:template>
-                            <!--<Text text="{listadoSolicitudes>Numfactura}" />-->
-                            <!--<Link text="{listadoSolicitudes>Numfactura}" press="handleLinkFact" />-->
+                            <!--<Text text="{listadoSolicitudesAPRB>Numfactura}" />-->
+                            <!--<Link text="{listadoSolicitudesAPRB>Numfactura}" press="handleLinkFact" />-->
                             	<ObjectIdentifier
-                                    title="{listadoSolicitudes>Numfactura}"
+                                    title="{listadoSolicitudesAPRB>Numfactura}"
                                     titleActive = "true"
                                     titlePress="handleLinkFact" />
                         </ui:template>
@@ -208,7 +208,7 @@
                     >
                         <Label text="{i18n>Referenciped}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Referenciped}" />
+                            <Text text="{listadoSolicitudesAPRB>Referenciped}" />
                         </ui:template>
                     </ui:Column>
 
@@ -220,9 +220,9 @@
                     >
                         <Label text="{i18n>Indcontrato}" />
                         <ui:template>
-                            <!--<Text text="{listadoSolicitudes>Indcontrato}" />-->
+                            <!--<Text text="{listadoSolicitudesAPRB>Indcontrato}" />-->
                             <!--<Switch
-                                state="{listadoSolicitudes>Indcontrato}"
+                                state="{listadoSolicitudesAPRB>Indcontrato}"
                                 customTextOn="Yes" customTextOff="No"
                                 enabled="false"
                                 tooltip="{i18n>Indcontrato}">
@@ -230,9 +230,9 @@
                                     <FlexItemData growFactor="1" />
                                 </layoutData>
                             </Switch>-->
-                            <!--<Link text="{listadoSolicitudes>Indcontrato}" press="handleLinkCont" />-->
+                            <!--<Link text="{listadoSolicitudesAPRB>Indcontrato}" press="handleLinkCont" />-->
                             <ObjectIdentifier
-                                    title="{listadoSolicitudes>Indcontrato}"
+                                    title="{listadoSolicitudesAPRB>Indcontrato}"
                                     titleActive = "true"
                                     titlePress="handleLinkCont" />
                         </ui:template>
@@ -243,7 +243,7 @@
         <OverflowToolbar>
 				<ToolbarSpacer/>
 				<Button text="Aprobar" type="Accept" press="onAprobacion" />
-				<Button text="Rechazar" type="Reject" press="OnRechazo"/>
+				<Button text="Rechazar" type="Reject" press="onRechazo"/>
                 <Button text="Cancelar" type="Default" press="oncancelaprobaciones"/>
 			</OverflowToolbar>
     

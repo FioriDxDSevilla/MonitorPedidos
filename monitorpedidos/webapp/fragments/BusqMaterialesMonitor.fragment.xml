@@ -1,0 +1,111 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:l="sap.ui.layout"
+>   
+<Dialog
+      id='matDialMonitor'
+      title="{i18n>TableMateriales}"  
+      resizable="true"
+      >
+
+    <fb:FilterBar
+        search=".onBusqMaterialesMonitor"
+        showClearOnFB="false"
+        showFilterConfiguration="false"
+        filterBarExpanded="false"
+    >
+        <fb:filterGroupItems>
+            <fb:FilterGroupItem
+                groupName="FiltrosMat"
+                name="A"
+                label="{i18n>codMat}"
+                partOfCurrentVariant="true"
+                visibleInFilterBar="true"
+            >
+                <fb:control>
+                    <Input
+                        id="f_codMatMoni"
+                        value='{FiltrosMat>/Stcd1}'
+                    />
+                </fb:control>
+            </fb:FilterGroupItem>
+            <fb:FilterGroupItem
+                groupName="FiltrosMat"
+                name="C"
+                label="{i18n>nomMat}"
+                partOfCurrentVariant="true"
+                visibleInFilterBar="true"
+            >
+                <fb:control>
+                    <Input
+                        id="f_nomMatMoni"
+                        value='{FiltrosMat>/Name1}'
+                    />
+                </fb:control>
+            </fb:FilterGroupItem>
+            <fb:FilterGroupItem
+                groupName="FiltrosMat"
+                name="D"
+                label="{i18n>grArt}"
+                partOfCurrentVariant="true"
+                visibleInFilterBar="true">
+                <fb:control>
+                    <Input
+                        id="f_grArtMoni"
+                        value='{FiltrosMat>/Bukrs}'
+                        editable="true"
+                    />
+                </fb:control>
+            </fb:FilterGroupItem>
+            <!-- <fb:FilterGroupItem groupName="FiltroAcr" name="E" label="{i18n>sociedad}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                    <fb:control>
+                        <Input id="f_socAcr" value='{FiltrosAcr>/Bukrs}' editable="false"/>
+                    </fb:control>
+                </fb:FilterGroupItem> -->
+        </fb:filterGroupItems>
+    </fb:FilterBar>
+    <Table id="idTableMaterialesMonitor" items="{
+            path: 'listadoMateriales>/'}" growing="true" growingThreshold="20">
+        <columns>
+            <Column width="10%">
+                <Text text="{i18n>codMat}" />
+            </Column>
+            <Column width="20%">
+                <Text text="{i18n>creador}" />
+            </Column>
+            <Column width="20%">
+                <Text text="{i18n>nomMat}" />
+            </Column>
+            <Column width="10%">
+                <Text text="{i18n>grArt}"/>
+            </Column>
+            <Column width="25%">
+                <Text text="{i18n>descArt}"/>
+            </Column>
+        </columns>
+        <items>
+            <ColumnListItem type="Active" press=".onPressMaterialMonitor">
+                <cells>
+                    <Text text="{listadoMateriales>Matnr}" />
+                    <Text text="{listadoMateriales>Ernam}" />
+                    <Text text="{listadoMateriales>Maktx}" />
+                    <Text text="{listadoMateriales>Matkl}" />
+                    <Text text="{listadoMateriales>Wgbez}" />
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+            <OverflowToolbar >
+                <ToolbarSpacer/>
+                <Button text="Cancelar" type="Emphasized" press="closeMatDiagMonitor">
+                <layoutData>
+                <OverflowToolbarLayoutData
+                    priority="NeverOverflow"/>
+            </layoutData>
+                </Button>
+            </OverflowToolbar>
+    </Dialog> 
+</core:FragmentDefinition>

@@ -72,7 +72,7 @@
 
             <fb:FilterGroupItem id="id10" groupName="FiltrosCli" name="H" label="{i18n>lineas}" visibleInFilterBar="true">
                 <fb:control>
-                    <ComboBox id="f_line" change=".onChangefLineas" items="{path: 'LineasServicio>/', sorter: {path: 'Bztxt'}}" filterSecondaryValues="true" showSecondaryValues="true">
+                    <ComboBox id="f_line" change=".onChangefLineas" items="{path: 'LineasServicio>/', sorter: { path: 'Bzirk' }}" filterSecondaryValues="true" showSecondaryValues="true">
                          <core:ListItem key="{LineasServicio>Bzirk}" text="{LineasServicio>Bztxt}" additionalText ="{LineasServicio>Bzirk}"/>
                     </ComboBox>
                 </fb:control>

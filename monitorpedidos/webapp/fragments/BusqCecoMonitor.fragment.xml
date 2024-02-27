@@ -4,95 +4,99 @@
     xmlns:f="sap.ui.layout.form"
     xmlns:fb="sap.ui.comp.filterbar"
     xmlns:l="sap.ui.layout"
->   
+>  
 <Dialog
-      id='cliDialMonitor'
-      title="{i18n>TableClientes}"  
+      id="cecoDialMonitor"
+      title="{i18n>TableCecos}"  
       resizable="true"
       >
-
+ 
     <fb:FilterBar
-        search=".onBusqClientesMonitor"
+        search=".onBusqCecosMonitor"
         showClearOnFB="false"
         showFilterConfiguration="false"
         filterBarExpanded="false"
     >
         <fb:filterGroupItems>
             <fb:FilterGroupItem
-                groupName="FiltrosCli"
+                groupName="FiltrosCeco"
                 name="A"
-                label="NIF/CIF"
+                label="{i18n>codCeco}"
                 partOfCurrentVariant="true"
                 visibleInFilterBar="true"
             >
                 <fb:control>
                     <Input
-                        id="f_nameAcrMoni"
-                        value='{FiltrosCli>/Stcd1}'
+                        id="f_codCecoMoni"
+                        value='{FiltrosCeco>/Kostl}'
                     />
                 </fb:control>
             </fb:FilterGroupItem>
             <fb:FilterGroupItem
-                groupName="FiltrosCli"
-                name="B"
-                label="Nombre"
-                partOfCurrentVariant="true"
-                visibleInFilterBar="true"
-            >
-                <fb:control>
-                    <Input
-                        id="f_nifAcrMoni"
-                        value='{FiltrosCli>/Name1}'
-                    />
-                </fb:control>
-            </fb:FilterGroupItem>
-            <fb:FilterGroupItem
-                groupName="FiltrosCli"
+                groupName="FiltrosCeco"
                 name="C"
-                label="Codigo de cliente"
+                label="{i18n>nomCeco}"
                 partOfCurrentVariant="true"
                 visibleInFilterBar="true"
             >
                 <fb:control>
                     <Input
-                        id="f_lifnrAcrMoni"
-                        value='{FiltrosCli>/Kunnr}'
+                        id="f_nomCecoMoni"
+                        value='{FiltrosCeco>/Ltext}'
                     />
                 </fb:control>
-            </fb:FilterGroupItem>            
+            </fb:FilterGroupItem>
+            <fb:FilterGroupItem
+                groupName="FiltrosCeco"
+                name="D"
+                label="{i18n>nomSoc}"
+                partOfCurrentVariant="true"
+                visibleInFilterBar="true">
+                <fb:control>
+                    <Input
+                        id="f_cecoSocMoni"
+                        value='{FiltrosCeco>/Kokrs}'
+                        editable="true"
+                    />
+                </fb:control>
+            </fb:FilterGroupItem>
         </fb:filterGroupItems>
     </fb:FilterBar>
-    <Table items="{
-            path: 'listadoClientes>/'}" growing="true" growingThreshold="10">
+    <Table id="idTableCecosMonitor" items="{
+            path: 'listadoCecos>/'}" growing="true" growingThreshold="20">
         <columns>
             <Column width="10%">
-                <Text text="{i18n>cod}" />
+                <Text text="{i18n>codCeco}" />
             </Column>
             <Column width="20%">
-                <Text text="{i18n>nombre}" />
+                <Text text="{i18n>ktext}" />
             </Column>
             <Column width="20%">
-                <Text text="{i18n>NIF}" />
+                <Text text="{i18n>nomSoc}" />
+            </Column>
+            <Column width="25%">
+                <Text text="{i18n>descSoc}"/>
             </Column>
         </columns>
         <items>
-            <ColumnListItem type="Active" press=".onPressClienteMonitor">
+            <ColumnListItem type="Active" press=".onPressCecosMonitor">
                 <cells>
-                    <Text text="{listadoClientes>Kunnr}" />
-                    <Text text="{listadoClientes>Name1}" />
-                    <Text text="{listadoClientes>Stcd1}" />
+                    <Text text="{listadoCecos>Kostl}" />
+                    <Text text="{listadoCecos>Ltext}" />
+                    <Text text="{listadoCecos>Kokrs}" />
+                    <Text text="{listadoCecos>Butxt}" />
                 </cells>
             </ColumnListItem>
         </items>
     </Table>
             <OverflowToolbar >
                 <ToolbarSpacer/>
-                <Button text="Cancelar" type="Emphasized" press="closeCliDiagMonitor">
+                <Button text="Cancelar" type="Emphasized" press="closeCecoDiagMonitor">
                 <layoutData>
                 <OverflowToolbarLayoutData
                     priority="NeverOverflow"/>
             </layoutData>
                 </Button>
             </OverflowToolbar>
-    </Dialog> 
+    </Dialog>
 </core:FragmentDefinition>

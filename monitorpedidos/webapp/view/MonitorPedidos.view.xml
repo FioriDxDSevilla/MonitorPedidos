@@ -22,7 +22,7 @@
             <!--</ScrollContainer>-->
         </content>
         <footer>
-            <OverflowToolbar id="otbFooter" class="sapUiMediumMarginTop">
+            <OverflowToolbar id="otbFooter">
                 <OverflowToolbarToggleButton tooltip="{i18n>exceldown}" text="{i18n>exceldown}" icon="sap-icon://download" press="onDownExcel"/>
                 <ToolbarSpacer/>
                 <RadioButtonGroup id="rbGroup" columns="2" select="onRadioButtonSelect">
