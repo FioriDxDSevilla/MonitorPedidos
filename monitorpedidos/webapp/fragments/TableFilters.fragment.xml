@@ -134,9 +134,8 @@
         <content>
             <ui:Table
                 id="idTablePEPs"
-                selectionMode="Single"
-                rows="{
-                            path: 'listadoSolicitudes>/'}"
+                selectionMode="None"
+                rows="{path: 'listadoSolicitudes>/'}"
                 visibleRowCountMode="Interactive"
                 width="auto"
                 enableCellFilter="{ui>/cellFilterOn}"
@@ -155,7 +154,7 @@
 				</ui:extension>
                 <ui:columns>
                     <ui:Column
-                        width="9em"
+                        width="8.5em"
                         filterProperty="IDSOLICITUD"
                         sortProperty="IDSOLICITUD"
                         tooltip="{i18n>numped}"
@@ -177,13 +176,11 @@
                     >
                         <Label text="{i18n>fechadocu}" />
                         <ui:template>
-                            <Text
-                                text="{path: 'listadoSolicitudes>Fechadoc',  type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd/MM/yyyy'}}"
-                            />
+                            <Text text="{path: 'listadoSolicitudes>Fechadoc',  formatter: '.onFormatFechaDocVenta'}"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="6em"
+                        width="4.5em"
                         filterProperty="Creador"
                         sortProperty="Creador"
                         tooltip="{i18n>creador}"
@@ -194,7 +191,7 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="8em"
+                        width="7em"
                         filterProperty="CLIENTE"
                         sortProperty="CLIENTE"
                         tooltip="{i18n>codcli}"
@@ -205,7 +202,7 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="10em"
+                        width="11em"
                         filterProperty="Nombrecliente"
                         sortProperty="Nombrecliente"
                         tooltip="{i18n>nomcli}"
@@ -234,7 +231,7 @@
                         tooltip="{i18n>import}">
                         <Label text="{i18n>import}" />
                          <ui:template>
-                            <Text  text="{path:'listadoSolicitudes>Netwr', formatter: '.onFormatNumber'}"/>
+                            <Text  text="{path:'listadoSolicitudes>Netwr', formatter: '.onFormatImporte'}"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -327,7 +324,7 @@
                                     id="f_numfact"
                                     title="{listadoSolicitudes>Numfactura}"
                                     titleActive = "true"
-                                    titlePress="handleLinkFact" />
+                                    titlePress="handleLinkFact(${listadoSolicitudes>Numfactura})" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -365,7 +362,7 @@
                                     id="f_numcont"
                                     title="{listadoSolicitudes>Indcontrato}"
                                     titleActive = "true"
-                                    titlePress="handleLinkCont" />
+                                    titlePress="handleLinkCont(${listadoSolicitudes>Indcontrato})" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column id="colbtnedit" width="2%" visible="false">

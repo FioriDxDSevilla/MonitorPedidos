@@ -28,27 +28,27 @@
             id="sf_PedPos"
             editable="true"
         >
-            <Label text="{i18n>posicion}" />
+            <Label text="{i18n>posicion}" required="true" />
             <Input
                 id="f_tipopedpos"
                 value="{posPedFrag>/Vbelp}"
                 editable="false"
             />
-            <Label text="{i18n>nomMat}" />
+            <Label text="{i18n>nomMat}" required="true" />
            <Input
                 id="f_nommat"
                 value="{posPedFrag>/ShortText}"
                 maxLength="40"
                 editable="true"
             />
-            <Label text="{i18n>mat}" />
+            <Label text="{i18n>mat}" required="true" />
             <Input
                 id="f_material"
                 showValueHelp="true"
                 valueHelpRequest=".onValueHelpRequestServ"
                 value="{posPedFrag>/Material}"
             />
-            <Label text="{i18n>fechaPrecio}" />
+            <Label text="{i18n>fechaPrecio}" required="true" />
             <DatePicker
                 id="DTPdesde"
                 placeholder="{i18n>datesel}"
@@ -64,21 +64,21 @@
                 placeholder="0,00"
                 type="Number"
             />
-            <Label text="{i18n>cant}" />
+            <Label text="{i18n>cant}" required="true" />
             <Input
                 id="f_cantpos"
                 value="{posPedFrag>/ReqQty}"
                 placeholder="0"
                 type="Number"
             />
-             <Label text="{i18n>cantBase}" />
+             <Label text="{i18n>cantBase}" required="true" />
             <Input
                 id="f_cantbasepos"
                 value="{posPedFrag>/Kpein}"
                 placeholder="0"
                 type="Number"
             />
-            <Label text="{i18n>Moneda}" />
+            <Label text="{i18n>Moneda}" required="true" />
             <ComboBox
                 id="f_monedapos"
                 editable="true"
@@ -93,7 +93,7 @@
                     text="{listadoMoneda>Waers}"
                 />
             </ComboBox>
-            <Label text="{i18n>Unit}" />
+            <Label text="{i18n>Unit}" required="true" />
             <Input
                 id="f_unitpos"
                 value="{posPedFrag>/SalesUnit}"

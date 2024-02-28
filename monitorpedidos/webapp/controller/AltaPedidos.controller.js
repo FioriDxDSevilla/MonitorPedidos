@@ -21,6 +21,31 @@ sap.ui.define([
   function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util, MessageBox, ExportTypeCSV, Export, exportLibrary, Dialog, DialogType, Button, ButtonType, Text) {
     "use strict";
     var codmat, nommat, codord, nomord, codceco, nomceco, fechaPos, codordPos, nomordPos, codcecoPos, nomcecoPos, sStatus;
+    
+     // Variables globales para el formateo de los campos 'FECHA DOC. VENTA' e 'IMPORTE'
+     var fechaDocVentaFormat;
+     /*
+     1 -> DD.MM.AAAA
+     2 -> MM/DD/AAAA
+     3 -> MM-DD-AAAA
+     4 -> AAAA.MM.DD
+     5 -> AAAA/MM/DD
+     6 -> AAAA-MM-DD
+     7 -> GAA.MM.DD(fecha japonesa)
+     8 -> GAA/MM/DD(fecha japonesa)
+     9 -> GAA-MM-DD (fecha japonesa)
+     A -> AAAA/MM/DD (fecha islámica 1)
+     B -> AAAA/MM/DD fecha islámica 2)
+     C -> AAAA/MM/DD (fecha iraní)
+     */
+  
+     var importeFormat;
+     /*
+     W -> 1.234.567,89
+     X -> 1,234,567.89
+     Y -> 1 234 567,89
+     */
+    
     return Controller.extend("monitorpedidos.controller.AltaPedidos", {
 
       onInit: function () {
@@ -2568,14 +2593,116 @@ sap.ui.define([
       },
       
       /* FORMATEAR NUMERO IMPORTE */
-      onFormatNumber: function (Netpr) {
-        var numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
-          maxFractionDigits: 2,
-          decimalSeparator: "."
-        });
+      onFormatImporte: function (Netpr) {
+        importeFormat = this.oComponent.getModel("Usuario").getData()[0].Dcpfm;
+        var numberFormat;
+        switch (importeFormat) {
+ 
+          case ""://1.234.567,89
+            numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
+              "maxFractionDigits": 2,
+              "decimalSeparator": ",",
+              "groupingEnabled": true,
+              "groupingSeparator": '.'
+            });
+ 
+            break;
+          case "X"://1,234,567.89
+            numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
+              "maxFractionDigits": 2,
+              "decimalSeparator": ".",
+              "groupingEnabled": true,
+              "groupingSeparator": ','
+            });
+            break;
+          case "Y"://1 234 567,89
+            numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
+              "maxFractionDigits": 2,
+              "decimalSeparator": ",",
+              "groupingEnabled": true,
+              "groupingSeparator": ' '
+            });
+            break;
+        }
         var numeroFormateado = numberFormat.format(Netpr);
         return numeroFormateado;
+      },
  
+      /* FORMATEAR FECHA DOCUMENTO  */
+      onFormatFechaDocVenta: function (Fechadoc) {
+ 
+        fechaDocVentaFormat = this.oComponent.getModel("Usuario").getData()[0].Datfm;
+        var dateFormat = Fechadoc;
+ 
+        switch (fechaDocVentaFormat) {
+          case "1":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "dd.MM.YYYY"
+            });
+ 
+            break;
+          case "2":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "MM/dd/YYYY"
+            });
+            break;
+          case "3":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "MM-dd-YYYY"
+            });
+            break;
+ 
+          case "4":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "YYYY.MM.dd"
+            });
+            break;
+          case "5":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "YYYY/MM/dd"
+            });
+            break;
+          case "6":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "YYYY-MM-dd"
+            });
+            break;
+          case "7":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "GYY.MM.dd"
+            });
+            break;
+          case "8":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "GYY/MM/dd"
+            });
+            break;
+          case "9":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "GYY-MM-dd"
+            });
+            break;
+          case "A":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "YYYY/MM/dd"
+            });
+            break;
+          case "B":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "YYYY/MM/dd"
+            });
+ 
+            break;
+          case "C":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "YYYY/MM/dd"
+            });
+ 
+            break;
+        }
+ 
+        var fechaFormateada = dateFormat.format(Fechadoc);
+        return fechaFormateada;
       }
     });
   });

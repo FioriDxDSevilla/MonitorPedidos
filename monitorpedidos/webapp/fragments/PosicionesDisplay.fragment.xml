@@ -44,7 +44,7 @@
         <!--<table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'DisplayPosPed>/results'}"  visibleRowCountMode="Interactive"-->
                 
 
-             <table:Column hAlign="Center">
+             <table:Column hAlign="Center" visible="{= ${ModoApp>/mode} === 'D' ? false : true ||  ${ModoApp>/mode} === 'M' ? true : false }" >
                 <table:template>
                     <m:Button id="botonMod" icon="sap-icon://edit" tooltip="{i18n>modPos}"  visible="{= ${ModoApp>/mode} === 'D' ? false : true ||  ${ModoApp>/mode} === 'M' ? true : false }"   type="Ghost" press="onModPosPed"/>
                     <!--<m:Text text="{DisplayPosPed>Posnr}"/>-->
@@ -94,7 +94,7 @@
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Importe}" />
                 <table:template>                    
-                    <m:Text text="{path:'DisplayPosPed>Netpr', formatter: '.onFormatNumber'}" />
+                    <m:Text text="{path:'DisplayPosPed>Netpr', formatter: '.onFormatImporte'}" />
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">

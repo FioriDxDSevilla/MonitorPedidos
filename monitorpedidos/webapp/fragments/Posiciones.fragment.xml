@@ -47,9 +47,8 @@
                 />
             </m:OverflowToolbar>
     <m:VBox renderType="Bare">
-        <table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'PedidoPos>/'}"  visibleRowCountMode="Interactive"
-        visibleRowCount="3"
-                width= "100%">
+        <table:Table selectionMode="None" id="TablaPosiciones" rows="{path: 'PedidoPos>/'}"  visibleRowCountMode="Interactive"
+        visibleRowCount="3" width= "100%" selectionBehavior="Row">
         <!--<table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'DisplayPosPed>/results'}"  visibleRowCountMode="Interactive"-->
                 
 
@@ -104,7 +103,7 @@
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Importe}" />
                 <table:template>
-                    <m:Text text="{path:'PedidoPos>CondValue', formatter: '.onFormatNumber'}" />
+                    <m:Text text="{path:'PedidoPos>CondValue', formatter: '.onFormatImporte'}" />
                     <!--<m:Text text="{DisplayPosPed>Netwr}" />-->
                 </table:template>
             </table:Column>

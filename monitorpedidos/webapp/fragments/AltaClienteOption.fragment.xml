@@ -11,7 +11,7 @@
         <f:SimpleForm id="fDatosCabCliente" editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="3" labelSpanM="4" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1" singleContainerFullSize="false">
             <f:content>
                 <Label text="{i18n>sociedad}" />
-                <ComboBox id="idAreaClientes" items="{ path: 'AreaVentas>/', sorter: { path: 'Vtext' } }" change=".onChangeArea" showSecondaryValues="true" width="auto">
+                <ComboBox id="idAreaClientes" items="{ path: 'AreaVentas>/', sorter: { path: 'Vkorg' } }" change=".onChangeArea" showSecondaryValues="true" filterSecondaryValues="true" width="auto">
                     <core:ListItem key="{AreaVentas>Vkorg}" text="{AreaVentas>Vtext}" additionalText ="{AreaVentas>Vkorg}"/>
                 </ComboBox>
                 
