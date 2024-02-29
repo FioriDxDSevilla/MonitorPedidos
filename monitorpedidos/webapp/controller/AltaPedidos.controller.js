@@ -20,7 +20,7 @@ sap.ui.define([
 
   function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util, MessageBox, ExportTypeCSV, Export, exportLibrary, Dialog, DialogType, Button, ButtonType, Text) {
     "use strict";
-    var codmat, nommat, codord, nomord, codceco, nomceco, fechaPos, codordPos, nomordPos, codcecoPos, nomcecoPos, sStatus;
+    var codmat, nommat,unimedmat, codord, nomord, codceco, nomceco, fechaPos, codordPos, nomordPos, codcecoPos, nomcecoPos, sStatus;
     
      // Variables globales para el formateo de los campos 'FECHA DOC. VENTA' e 'IMPORTE'
      var fechaDocVentaFormat;
@@ -1197,6 +1197,7 @@ sap.ui.define([
             var indexPosPed = posPedFrag.index;
             // Modificamos la posición seleccionada
             posiciones[indexPosPed] = posicionN;
+            console.log(posicionN);
           } else {
             posiciones.push(posicionN);
           }
@@ -2125,8 +2126,11 @@ sap.ui.define([
         var mat = this.getSelectMat(oEvent, "listadoServicios");
         codmat = mat.Matnr;
         nommat = mat.Maktx;
+        unimedmat=mat.Meins;
         this.getView().byId("f_material").setValue(codmat);
         this.getView().byId("f_nommat").setValue(nommat);
+        this.getView().byId("f_unitpos").setValue(unimedmat);
+
         this.oComponent.getModel("posPedFrag").setProperty("/Matnr", codmat);
         this.oComponent.getModel("posPedFrag").refresh(true);
         this.byId("matDial").close();
