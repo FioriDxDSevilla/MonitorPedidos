@@ -48,9 +48,7 @@
                     >
                         <Label text="{i18n>fechadocu}" />
                         <ui:template>
-                            <Text
-                                text="{path: 'listadoSolicitudesAPRB>Fechadoc',  type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd/MM/yyyy'}}"
-                            />
+                            <Text text="{path: 'listadoSolicitudesAPRB>Fechadoc',  formatter: '.onFormatFechaDocVenta'}"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -105,7 +103,7 @@
                         tooltip="{i18n>import}">
                         <Label text="{i18n>import}" />
                          <ui:template>
-                            <Text text="{listadoSolicitudesAPRB>Netwr}" />
+                            <Text  text="{path:'listadoSolicitudesAPRB>Netwr', formatter: '.onFormatImporte'}"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -197,7 +195,7 @@
                             	<ObjectIdentifier
                                     title="{listadoSolicitudesAPRB>Numfactura}"
                                     titleActive = "true"
-                                    titlePress="handleLinkFact" />
+                                    titlePress="handleLinkFact(${listadoSolicitudesAPRB>Numfactura})" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -234,7 +232,7 @@
                             <ObjectIdentifier
                                     title="{listadoSolicitudesAPRB>Indcontrato}"
                                     titleActive = "true"
-                                    titlePress="handleLinkCont" />
+                                    titlePress="handleLinkCont(${listadoSolicitudesAPRB>Indcontrato})" />
                         </ui:template>
                     </ui:Column>
                     </ui:columns>

@@ -12,14 +12,14 @@
                 <!-- -->
                 <core:Title text="{i18n>TituloDatosCabeceraPedido}" level="H5" />
 
-                <m:Label text="{i18n>ClasePedido}" required="true" />
+                <m:Label text="{i18n>ClasePedido}" />
                 <m:Input id="f_claseped" editable="{= ${ModoApp>/mode}  === 'C' ?  false : true ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" width="150px" value="{ModoApp>/Clasepedido}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S2" />
                     </m:layoutData>
                 </m:Input>
 
-                <m:Label text="{i18n>AreaVentas}" required="true" />
+                <m:Label text="{i18n>AreaVentas}" />
 
                 <!-- <m:VBox>-->
                 <m:Input id="f_orgventas" editable="{= ${ModoApp>/mode}  === 'C' ?  false : true ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" width="125px" value="{ModoApp>/Vtext}">
@@ -27,13 +27,13 @@
                         <l:GridData span="XL1 L2 M2 S2" indent="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
-                <m:Label text="{i18n>channel}" required="true" />
+                <m:Label text="{i18n>channel}" />
                 <m:Input id="idCanal" editable="{= ${ModoApp>/mode}  === 'C' ?  false : true ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" width="125px" value="{ModoApp>/CvCanal}">
                     <m:layoutData>
                         <l:GridData span="XL1 L1 M1 S1" indent="XL1 L1 M1 S1" />
                     </m:layoutData>
                 </m:Input>
-                <m:Label text="{i18n>sector}" required="true" />
+                <m:Label text="{i18n>sector}" />
                 <m:Input id="idSector" editable="{= ${ModoApp>/mode}  === 'C' ?  false : true ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" width="125px" value="{ModoApp>/CvSector}">
                     <m:layoutData>
                         <l:GridData span="XL1 L1 M1 S1" indent="XL1 L1 M1 S1" />
@@ -48,11 +48,11 @@
                 -->
                 <!-- </m:VBox>-->
 
-                <m:Label text="{i18n>OficinaVentas}" required="true" />
+                <m:Label text="{i18n>OficinaVentas}" required="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" />
                 <m:ComboBox id="idOficinaV" items="{ path: 'OficinaVenta>/', sorter: { path: 'Vkbur' } }" change=".onChangeOficina" showSecondaryValues="true" selectedKey="{DisplayPEP>/Vkbur}" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }">
                     <core:ListItem key="{OficinaVenta>Vkbur}" text="{OficinaVenta>Bezei}" additionalText="{OficinaVenta>Vkbur}" />
                 </m:ComboBox>
-                <m:Label text="{i18n>NumPedidoCliente}" required="true" />
+                <m:Label text="{i18n>NumPedidoCliente}" required="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" />
                 <m:Input id="f_refped" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" value="{DisplayPEP>/Bstnk}" width="300px">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
@@ -86,7 +86,7 @@
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
-                <m:Label text="{i18n>CondicionPago}" required="true" />
+                <m:Label text="{i18n>CondicionPago}" required="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" />
                 <!--<m:ComboBox id="f_campocondicion" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true }" width="200px" items="{ path: 'listadoCondicion>/', sorter: { path: 'Zterm' } }">
                     <core:ListItem key="{listadoCondicion>Zterm}" text="{listadoCondicion>Zterm}" />
                 </m:ComboBox>-->
@@ -95,7 +95,7 @@
                     editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }"
                     width="300px"
                     value="{ModoApp>/Zterm}"/> 
-                <m:Label text="{i18n>NIA}" required="true" />
+                <m:Label text="{i18n>NIA}" required="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" />
                 <!--<m:ComboBox id="f_camponia" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }" width="200px" items="{ path: 'listadoNIA>/', sorter: { path: 'Kunnr' } }" selectedKey="{DisplayPEP>/Zznia}">
                     <core:ListItem key="{listadoNIA>Nia}" text="{listadoNIA>Nia}" additionalText="{listadoNIA>Nia}" />
                 </m:ComboBox>-->

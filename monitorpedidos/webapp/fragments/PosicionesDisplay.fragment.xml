@@ -5,7 +5,6 @@
     xmlns:fb="sap.ui.comp.filterbar"
     xmlns:l="sap.ui.layout"
     xmlns:table="sap.ui.table">
-    <!--    -->
     <m:OverflowToolbar>
                 <m:Title text="" />
                 <m:ToolbarSpacer />
@@ -38,12 +37,11 @@
                 />
             </m:OverflowToolbar>
     <m:VBox renderType="Bare">
-        <table:Table selectionMode="Single" id="TablaPosicionesDisp" rows="{path: 'DisplayPosPed>/'}" visibleRowCountMode="Interactive"
-        visibleRowCount="3"
-                width= "100%">
+        <!-- Añadida "lógica" para que cuando el pedido se abra en modo Visualización, la tabla sea de tipo Selection Mode NONE, para el resto de casos
+            Creación y Modificación, la tabla será de tipo Selection Mode Single, para poder editar un pedido   -->
+        <table:Table selectionMode="{= ${ModoApp>/mode} === 'D' ? 'None' : 'Single' || ${ModoApp>/mode} === 'M' ? 'Single' : 'None'}"
+        id="TablaPosicionesDisp" rows="{path: 'DisplayPosPed>/'}" visibleRowCountMode="Interactive" visibleRowCount="3" width= "100%" selectionBehavior="RowOnly">
         <!--<table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'DisplayPosPed>/results'}"  visibleRowCountMode="Interactive"-->
-                
-
              <table:Column hAlign="Center" visible="{= ${ModoApp>/mode} === 'D' ? false : true ||  ${ModoApp>/mode} === 'M' ? true : false }" >
                 <table:template>
                     <m:Button id="botonMod" icon="sap-icon://edit" tooltip="{i18n>modPos}"  visible="{= ${ModoApp>/mode} === 'D' ? false : true ||  ${ModoApp>/mode} === 'M' ? true : false }"   type="Ghost" press="onModPosPed"/>
