@@ -54,7 +54,7 @@
                                     </m:layoutData>
                                 </m:Input>
                                 <m:Label text="{i18n>Contrato}" />
-                                <m:Input editable="{= ${ModoApp>/mode}  === 'C' ?  false : true ||  ${ModoApp>/mode} === 'M' ? false : true }" value="{ModoApp>/Nomcont}" width="225px">
+                                <m:Input editable="{= ${ModoApp>/mode}  === 'C' ?  false : true ||  ${ModoApp>/mode} === 'M' ? false : true }" value="{DisplayPEP>/contrato}" width="225px">
                                     <m:layoutData>
                                         <l:GridData span="XL1 L2 M2 S4" />
                                     </m:layoutData>
