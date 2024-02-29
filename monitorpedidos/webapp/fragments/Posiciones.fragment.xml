@@ -48,7 +48,7 @@
             </m:OverflowToolbar>
     <m:VBox renderType="Bare">
         <table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'PedidoPos>/'}"  visibleRowCountMode="Interactive"
-        visibleRowCount="3" width= "100%">
+        visibleRowCount="3" width= "100%" selectionBehavior="RowOnly" >
         <!--<table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'DisplayPosPed>/results'}"  visibleRowCountMode="Interactive"-->
                 
 
