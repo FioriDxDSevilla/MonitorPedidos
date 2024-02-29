@@ -1197,7 +1197,6 @@ sap.ui.define([
             var indexPosPed = posPedFrag.index;
             // Modificamos la posición seleccionada
             posiciones[indexPosPed] = posicionN;
-            console.log(posicionN);
           } else {
             posiciones.push(posicionN);
           }
