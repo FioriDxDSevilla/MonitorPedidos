@@ -150,6 +150,13 @@
                             text="Enviar a Liberacion"
                             press="onEnviarLiberacion"
                         />
+                        <Button
+                            id="Filtr11"
+                            visible="false"
+                            type="Accept"
+                            text="Rescatar"
+                            press="onEnviarRescatar"
+                        />
 					</OverflowToolbar>
 				</ui:extension>
                 <ui:columns>

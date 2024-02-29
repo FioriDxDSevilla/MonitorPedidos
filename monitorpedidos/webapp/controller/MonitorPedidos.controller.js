@@ -23,7 +23,7 @@ sap.ui.define([
         var codcli, nomcli, socPed, TipoPed, numCont, vText, nomCont, Bzirk, Bztxt, Cvcan, Cvsector, condPago, vedit, checkMisPed, checkTodos;
         var arrayKeys = [];
 
-        var btnEditar, accionLiberar;
+        var btnEditar, accionLiberar, btnRescatar, accionRescatar;
         // Variables utilizadas en los filtros
         var filtroUsuario, filtroFechaDsd, filtroFechaHst, filtroImporteDsd, filtroImporteHst, filtroEstado, filtroClienteCod, filtroClienteTxt, filtroCeco, filtroOrden, filtroOficionaVentas, filtroLineaServicio, filtroMaterial, filtroClasePed, filtroResponsable;
         var Usuario, Numped, Fechad, Fechah, Imported, Importeh, sStatus, Cliente, codceco, codord, vkbur, LineaServicio, codmat, ClasePed, responsable;
@@ -70,7 +70,7 @@ sap.ui.define([
                 this.oComponent.setModel(oModFiltrosAcr, "FiltrosCli");
 
                 this.oComponent.setModel(oModCab, "PedidoCab");
-                btnEditar = false, accionLiberar = false;
+                btnEditar = false, accionLiberar = false, accionRescatar = false;
                 this.oComponent.getModel("PedidoCab").setProperty("/editPos", btnEditar);
                 this.oComponent.getModel("PedidoCab").refresh(true);
 
@@ -216,24 +216,7 @@ sap.ui.define([
                     this.oComponent.getModel("Usuario").refresh(true);
                 }
 
-                this.ListadoSolicitudes(
-                    filtroUsuario,
-                    //Numped,
-                    filtroFechaDsd,
-                    filtroFechaHst,
-                    filtroImporteDsd,
-                    filtroImporteHst,
-                    filtroEstado,
-                    filtroClienteCod,
-                    filtroCeco,
-                    filtroOrden,
-                    filtroOficionaVentas,
-                    filtroLineaServicio,
-                    filtroMaterial,
-                    filtroResponsable,
-                    filtroClasePed);
-
-                this.calcularTotalEstados();
+                this.refrescarMonitor();
             },
 
             AreasVenta: function () {
@@ -301,43 +284,7 @@ sap.ui.define([
                 filtroLineaServicio = this.getView().byId("f_line").getSelectedKey();
                 filtroClasePed = arrayKeys;
 
-                this.ListadoSolicitudes(
-                    filtroUsuario,
-                    //Numped,
-                    filtroFechaDsd,
-                    filtroFechaHst,
-                    filtroImporteDsd,
-                    filtroImporteHst,
-                    filtroEstado,
-                    filtroClienteCod,
-                    filtroCeco,
-                    filtroOrden,
-                    filtroOficionaVentas,
-                    filtroLineaServicio,
-                    filtroMaterial,
-                    filtroResponsable,
-                    filtroClasePed);
-
-                this.calcularTotalEstados();
-                
-                /*this.ListadoSolicitudes(
-                    Usuario,
-                    //Numped,
-                    Fechad,
-                    Fechah,
-                    Imported,
-                    Importeh,
-                    sStatus,
-                    Cliente,
-                    ceco,
-                    orden,
-                    orgventas,
-                    LineaServicio,
-                    codmat,
-                    responsable,
-                    ClasePed
-                )*/
-
+                this.refrescarMonitor();
             },
 
             // FUNCIONES DEL DIÁLOGO DE BÚSQUEDA DE CLIENTES EN LOS FILTROS PRINCIPALES
@@ -807,6 +754,7 @@ sap.ui.define([
                 addFilter("USUARIO", filtroUsuario);
                 addFilter("FECHAD", Date.parse(filtroFechaDsd));
                 addFilter("FECHAH", Date.parse(filtroFechaHst));
+                addFilter("IMPORTED", filtroImporteDsd);
                 addFilter("IMPORTEH", filtroImporteHst);
                 addFilter("ESTADO", filtroEstado);
                 addFilter("CLIENTE", filtroClienteCod);
@@ -834,6 +782,8 @@ sap.ui.define([
                         this.oComponent.setModel(oModelSolicitudes, "listadoSolicitudesAPRB");
                     if (accionLiberar)
                         this.oComponent.setModel(oModelSolicitudes, "listadoSolicitudesLiberar");
+                    else if (accionRescatar)
+                        this.oComponent.setModel(oModelSolicitudes, "listadoSolicitudesRescatar");
                     else
                         this.oComponent.setModel(oModelSolicitudes, "listadoSolicitudes");
                 } else {
@@ -843,12 +793,15 @@ sap.ui.define([
                         this.oComponent.setModel(new JSONModel(), "listadoSolicitudesAPRB");
                     if (accionLiberar)
                         this.oComponent.setModel(new JSONModel(), "listadoSolicitudesLiberar");
+                    else if (accionRescatar)
+                        this.oComponent.setModel(new JSONModel(), "listadoSolicitudesRescatar");
                     else
                         this.oComponent.setModel(new JSONModel(), "listadoSolicitudes");                        
                 }
                 sap.ui.core.BusyIndicator.hide();
             },
             
+            // FUNCIÓN PARA ESTABLECER EL NÚMERO TOTAL DE CADA PESTAÑA ESTADO
             calcularTotalEstados: function() {
 
                 // -- ELIMINAR LOS FILTROS DE LA TABLA --
@@ -942,11 +895,37 @@ sap.ui.define([
                 }
             },
 
+            // FUNCIÓN PARA REFRESCAR LOS DATOS DEL MONITOR
+            refrescarMonitor: function() {
+                this.ListadoSolicitudes(
+                    filtroUsuario,
+                    //Numped,
+                    filtroFechaDsd,
+                    filtroFechaHst,
+                    filtroImporteDsd,
+                    filtroImporteHst,
+                    filtroEstado,
+                    filtroClienteCod,
+                    filtroCeco,
+                    filtroOrden,
+                    filtroOficionaVentas,
+                    filtroLineaServicio,
+                    filtroMaterial,
+                    filtroResponsable,
+                    filtroClasePed);
+
+                if (this.oComponent.getModel("listadoSolicitudes")) {
+                    this.oComponent.getModel("listadoSolicitudes").refresh(true);   
+                }
+                this.calcularTotalEstados();
+            },
+
             //MÉTODO PARA EL CAMBIO DE ESTADO (ICON TAB FILTERS)
             onFilterSelect: function(oEvent) {
                 var skey = oEvent.getParameter("key");
                 filtroEstado = "";
                 btnEditar = false;
+                btnRescatar = false;
                 
                 switch (skey) {
                     case "Free":
@@ -958,12 +937,14 @@ sap.ui.define([
                         break;
                     case "Heavy":
                         filtroEstado = "APRB";
+                        btnRescatar = true;
                         break;
                     case "Overweight":
                         filtroEstado = "FINA";
                         break;
                     case "Money":
                         filtroEstado = "FACT";
+                        btnRescatar = true;
                         break;
                     case "Payment":
                         filtroEstado = "PDTE";
@@ -1003,9 +984,47 @@ sap.ui.define([
                 this.calcularTotalEstados();
                 this.getView().byId("Filtr10").setVisible(btnEditar);
                 this.getView().byId("colbtnedit").setVisible(btnEditar);
+                this.getView().byId("Filtr11").setVisible(btnRescatar);
                 this.oComponent.getModel("PedidoCab").setProperty("/editPos", btnEditar);
                 this.oComponent.getModel("PedidoCab").refresh(true);  
             }, 
+
+            // DIÁLOGO DE APROBACIONES
+            _getDialogAprobaciones: function (sInputValue) {
+
+                this.ListadoSolicitudes(
+                    "", //filtroUsuario
+                    //Numped,
+                    "", //filtroFechaDsd
+                    "",// filtroFechaHst
+                    "",// filtroImporteDsd
+                    "",// filtroImporteHst
+                    filtroEstado,
+                    "",// filtroClienteCod
+                    "",// filtroCeco
+                    "",// filtroOrden
+                    "",// filtroOficionaVentas
+                    "",// filtroLineaServicio
+                    "",// filtroMaterial
+                    usuario, // filtroResponsable
+                    ""); // filtroClasePed
+
+                var oView = this.getView();
+                if (!this.pDialogAprobaciones) {
+                    this.pDialogAprobaciones = Fragment.load({
+                        id: oView.getId(),
+                        name: "monitorpedidos.fragments.Aprobacion",
+                        controller: this,
+                    }).then(function (oDialogAprobaciones) {
+                        // connect dialog to the root view of this component (models, lifecycle)
+                        oView.addDependent(oDialogAprobaciones);
+                        return oDialogAprobaciones;
+                    });
+                }
+                this.pDialogAprobaciones.then(function (oDialogAprobaciones) {
+                    oDialogAprobaciones.open(sInputValue);
+                });
+            },
             
             // DIÁLOGO DE LIBERACIONES
             onEnviarLiberacion: function () {
@@ -1049,101 +1068,208 @@ sap.ui.define([
                 });                     
             },
 
-            onLiberacion: function (oEvent) {
-                const oI18nModel = this.oComponent.getModel("i18n");
+            onLiberacion: function (oEvent) {                
                 var oTable = this.getView().byId("b_idTablePEPs");
-                var t_indices = oTable.getBinding().aIndices;
+                
+                var aSelectedIndices = oTable.getSelectedIndices();
 
-                var aContexts = oTable.getSelectedIndices();
-                var items = aContexts.map(function (c) {
-                    //return c.getObject();
-                    return this.oComponent.getModel("listadoSolicitudesLiberar").getProperty("/" + t_indices[c]);
-                }.bind(this));
+                if (aSelectedIndices.length > 0) {                
+                    var soliciLiberar = this.oComponent.getModel("listadoSolicitudesLiberar").getData();
+                    var soliciLiberar_Aux = JSON.parse(JSON.stringify(soliciLiberar)); // Copy data model without references
+                    var DatosLiberaciones = [];
+                    var accion = "L";
 
-                var results_array = items;
-                var DatosLiberaciones = [];
-                var obj = {};
-                var accion = "L";
-
-                var that = this;
-                for (var i = 0; i < results_array.length; i++) {
-                    obj = {
-                        Accion: accion,
-                        Solicitud: results_array[i].IDSOLICITUD
-                    };
-                    DatosLiberaciones.push(obj);
-                    obj = {};
-                }
-
-                var msg = oI18nModel.getProperty("SolLiber");
-                var msgLog = "";
-
-                MessageBox.warning(msg, {
-                    actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
-                    emphasizedAction: MessageBox.Action.OK,
-                    onClose: function (sAction) {
-                        if (sAction == 'OK') {
-                            var json1 = {
-                                Accion: accion,
-                                LiberarSet: DatosLiberaciones,
-                                LiberacionRespuesta: []
-                            }
-                            sap.ui.core.BusyIndicator.show();
-                            that.mainService.create("/LiberarSet", json1, {
-                                success: function (result) {
-                                    if (result.LiberarSet.results[0].Solicitud) {                                                                                
-                                        if (result.LiberacionRespuesta.results.length > 1) {
-                                            for (var i = 0; i < result.LiberacionRespuesta.results.length; i++) {
-                                                msgLog += result.LiberacionRespuesta.results[i].TextoLog + "\r\n";
-                                            }
-                                            sap.m.MessageToast.show(msgLog);
-                                        } else {
-                                            MessageBox.show(result.LiberacionRespuesta.results[0].TextoLog);                                            
-                                        }
-                                        oTable.clearSelection();
-                                        accionLiberar = false;
-                                        // Refrescamos los filtros
-                                        that.ListadoSolicitudes(
-                                            filtroUsuario,
-                                            //Numped,
-                                            filtroFechaDsd,
-                                            filtroFechaHst,
-                                            filtroImporteDsd,
-                                            filtroImporteHst,
-                                            filtroEstado,
-                                            filtroClienteCod,
-                                            filtroCeco,
-                                            filtroOrden,
-                                            filtroOficionaVentas,
-                                            filtroLineaServicio,
-                                            filtroMaterial,
-                                            filtroResponsable,
-                                            filtroClasePed);                                         
-                                        that.calcularTotalEstados();
-                                        that.byId("LiberacionDial").close();
-                                    }
-                                    sap.ui.core.BusyIndicator.hide();
-                                },
-                                error: function (err) {
-                                    sap.m.MessageBox.error("Solicitud no Liberada.", {
-                                        title: "Error",
-                                        initialFocus: null,
-                                    });                                                                        
-                                    oTable.clearSelection();
-                                    sap.ui.core.BusyIndicator.hide();
-                                },
-                                async: true,
-                            });
-                        } else {
-                            oTable.clearSelection();
-                        }
+                    for (var i = 0; i < aSelectedIndices.length; i++) {
+                        var indice = aSelectedIndices[i];
+                        var solicitud = soliciLiberar_Aux[indice];
+                        var obj = {
+                            Accion: accion,
+                            Solicitud: solicitud.IDSOLICITUD
+                        };
+                        DatosLiberaciones.push(obj);
                     }
-                });                
+
+                    const oI18nModel = this.oComponent.getModel("i18n");
+                    var msg = oI18nModel.getProperty("SolLiber");
+                    var msgLog = "";
+                    var that = this;
+
+                    MessageBox.warning(msg, {
+                        actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+                        emphasizedAction: MessageBox.Action.OK,
+                        onClose: function (sAction) {
+                            if (sAction == 'OK') {
+                                var json1 = {
+                                    Accion: accion,
+                                    LiberarSet: DatosLiberaciones,
+                                    LiberacionRespuesta: []
+                                }
+                                sap.ui.core.BusyIndicator.show();
+                                that.mainService.create("/LiberarSet", json1, {
+                                    success: function (result) {
+                                        if (result.LiberarSet.results && result.LiberarSet.results[0].Solicitud) {                                                                                
+                                            if (result.LiberacionRespuesta.results.length > 1) {
+                                                for (var i = 0; i < result.LiberacionRespuesta.results.length; i++) {
+                                                    msgLog += result.LiberacionRespuesta.results[i].TextoLog + "\r\n";
+                                                }
+                                                sap.m.MessageToast.show(msgLog);
+                                            } else {
+                                                MessageBox.show(result.LiberacionRespuesta.results[0].TextoLog);                                            
+                                            }
+                                            oTable.clearSelection();
+                                            accionLiberar = false;
+                                            // Refrescamos los filtros
+                                            that.refrescarMonitor();
+                                            that.byId("LiberacionDial").close();
+                                        }
+                                        sap.ui.core.BusyIndicator.hide();
+                                    },
+                                    error: function (err) {
+                                        sap.m.MessageBox.error("Solicitud no Liberada.", {
+                                            title: "Error",
+                                            initialFocus: null,
+                                        });                                                                        
+                                        oTable.clearSelection();
+                                        sap.ui.core.BusyIndicator.hide();
+                                    },
+                                    async: true,
+                                });
+                            } else {
+                                oTable.clearSelection();
+                            }
+                        }
+                    });   
+                }else{
+                    MessageBox.warning(this.oI18nModel.getProperty("noSoli"));
+                }               
             },
 
             onCancelliberacion: function () {
                 accionLiberar = false;
                 this.byId("LiberacionDial").close();
+            },
+
+            // DIÁLOGO DE RESCATAR
+            onEnviarRescatar: function () {
+                accionRescatar = true;
+                this._getDialogRescatar();                
+            },
+
+            _getDialogRescatar: function (sInputValue) {
+                
+                this.ListadoSolicitudes(
+                    usuario, //filtroUsuario
+                    //Numped,
+                    "", // filtroFechaDsd,
+                    "", // filtroFechaHst,
+                    "", // filtroImporteDsd,
+                    "", // filtroImporteHst,
+                    filtroEstado,
+                    "", // filtroClienteCod,
+                    "", // filtroCeco
+                    "", // filtroOrden
+                    "", // filtroOficionaVentas
+                    "", // filtroLineaServicio,
+                    "", // filtroMaterial,
+                    "", // filtroResponsable,
+                    ""); // filtroClasePed                
+
+                var oView = this.getView();                
+                if (!this.pDialogRescatar) {
+                    this.pDialogRescatar = Fragment.load({
+                        id: oView.getId(),
+                        name: "monitorpedidos.fragments.Rescatar",
+                        controller: this,
+                    }).then(function (oDialogRescatar) {
+                        // connect dialog to the root view of this component (models, lifecycle)
+                        oView.addDependent(oDialogRescatar);
+                        return oDialogRescatar;
+                    });
+                }
+                this.pDialogRescatar.then(function (oDialogRescatar) {
+                    oDialogRescatar.open(sInputValue);
+                });                     
+            },
+
+            onRescatar: function (oEvent) {                
+                var oTable = this.getView().byId("b_idTablePEPsResc");
+                
+                var aSelectedIndices = oTable.getSelectedIndices();
+                
+                if (aSelectedIndices.length > 0) {
+                    var soliciRescatar = this.oComponent.getModel("listadoSolicitudesRescatar").getData();
+                    var soliciRescatar_Aux = JSON.parse(JSON.stringify(soliciRescatar)); // Copy data model without references
+                    var DatosRescate = [];
+                    var accion = "R";
+
+                    for (var i = 0; i < aSelectedIndices.length; i++) {
+                        var indice = aSelectedIndices[i];
+                        var solicitud = soliciRescatar_Aux[indice];
+                        var obj = {
+                            Accion: accion,
+                            Solicitud: solicitud.IDSOLICITUD
+                        };
+                        DatosRescate.push(obj);
+                    }
+
+                    const oI18nModel = this.oComponent.getModel("i18n");
+                    var msg = oI18nModel.getProperty("SolResca");
+                    var msgLog = "";
+                    var that = this;
+
+                    MessageBox.warning(msg, {
+                        actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+                        emphasizedAction: MessageBox.Action.OK,
+                        onClose: function (sAction) {
+                            if (sAction == 'OK') {
+                                var json1 = {
+                                    Accion: accion,
+                                    RescatarSet: DatosRescate,
+                                    RescateRespuesta: []
+                                }
+                                sap.ui.core.BusyIndicator.show();
+                                that.mainService.create("/RescatarSet", json1, {
+                                    success: function (result) {
+                                        if (result.RescatarSet.results && result.RescatarSet.results[0].Solicitud) {
+                                            if (result.RescateRespuesta.results.length > 1) {
+                                                for (var i = 0; i < result.RescateRespuesta.results.length; i++) {
+                                                    msgLog += result.RescateRespuesta.results[i].TextoLog + "\r\n";
+                                                }
+                                                sap.m.MessageToast.show(msgLog);
+                                            } else {
+                                                MessageBox.show(result.RescateRespuesta.results[0].TextoLog);                                            
+                                            }
+                                            oTable.clearSelection();
+                                            accionRescatar = false;
+                                            // Refrescamos los filtros
+                                            that.refrescarMonitor();
+                                            that.byId("RescatarDial").close();
+                                        }
+                                        sap.ui.core.BusyIndicator.hide();
+                                    },
+                                    error: function (err) {
+                                        sap.m.MessageBox.error("Solicitud no Rescatada.", {
+                                            title: "Error",
+                                            initialFocus: null,
+                                        });                                                                        
+                                        oTable.clearSelection();
+                                        sap.ui.core.BusyIndicator.hide();
+                                    },
+                                    async: true,
+                                });
+                            } else {
+                                oTable.clearSelection();
+                            }
+                        }
+                    });
+                }else{
+                    MessageBox.warning(this.oI18nModel.getProperty("noSoli"));
+                }                               
+            },
+
+            onCancelRescatar: function () {
+                accionRescatar = false;
+                this.byId("RescatarDial").close();
             },
             
             // FUNCIÓN PARA SELECCIONAR EL RADIO BUTTON (Mis pedidos / Todos)
@@ -1157,25 +1283,49 @@ sap.ui.define([
                     filtroUsuario = "";
                 };
 
-                this.ListadoSolicitudes(
-                    filtroUsuario,
-                    //Numped,
-                    filtroFechaDsd,
-                    filtroFechaHst,
-                    filtroImporteDsd,
-                    filtroImporteHst,
-                    filtroEstado,
-                    filtroClienteCod,
-                    filtroCeco,
-                    filtroOrden,
-                    filtroOficionaVentas,
-                    filtroLineaServicio,
-                    filtroMaterial,
-                    filtroResponsable,
-                    filtroClasePed);
-                this.calcularTotalEstados();
+                this.refrescarMonitor();
             },
 
+            // -------------------------------------- FUNCIONES DE ENLACES --------------------------------------
+            // FUNCIÓN DE ENLACE A LA FACTURA
+            handleLinkFact: function (numFact) {
+                var oCrossAppNavigator = sap.ushell.Container.getService("CrossApplicationNavigation");
+                var hashUrl = (oCrossAppNavigator && oCrossAppNavigator.hrefForExternal({
+                    target: {
+                        semanticObject: "ZPV",
+                        action: "invoiceView"
+                    },
+                    params: {
+                        "VBRK-VBELN": numFact
+                    }
+                }));
+                oCrossAppNavigator.toExternal({
+                    target: {
+                        shellHash: hashUrl
+                    }
+                });
+            },
+ 
+            // FUNCIÓN DE ENLACE AL CONTRATO
+            handleLinkCont: function (numCont) {
+                var oCrossAppNavigator = sap.ushell.Container.getService("CrossApplicationNavigation");
+                var hashUrl = (oCrossAppNavigator && oCrossAppNavigator.hrefForExternal({
+                    target: {
+                        semanticObject: "ZPV",
+                        action: "contractView"
+                    },
+                    params: {
+                        "VBAK-VBELN": numCont
+                    }
+                }));
+                oCrossAppNavigator.toExternal({
+                    target: {
+                        shellHash: hashUrl
+                    }
+                });
+            },
+
+            // -------------------------------------- FUNCIONES DEL ALTA DE PEDIDOS --------------------------------------
 
 
 
@@ -1243,43 +1393,7 @@ sap.ui.define([
                 }
             },
             
-            handleLinkFact: function (numFact) {
-                //                MessageBox.alert("Link was clicked!");
-                var oCrossAppNavigator = sap.ushell.Container.getService("CrossApplicationNavigation");
-                var hashUrl = (oCrossAppNavigator && oCrossAppNavigator.hrefForExternal({
-                    target: {
-                        semanticObject: "ZPV",
-                        action: "invoiceView"
-                    },
-                    params: {
-                        "VBRK-VBELN": numFact
-                    }
-                }));
-                oCrossAppNavigator.toExternal({
-                    target: {
-                        shellHash: hashUrl
-                    }
-                });
-            },
- 
-            handleLinkCont: function (numCont) {
-                //MessageBox.alert("Link was clicked!");
-                var oCrossAppNavigator = sap.ushell.Container.getService("CrossApplicationNavigation");
-                var hashUrl = (oCrossAppNavigator && oCrossAppNavigator.hrefForExternal({
-                    target: {
-                        semanticObject: "ZPV",
-                        action: "contractView"
-                    },
-                    params: {
-                        "VBAK-VBELN": numCont
-                    }
-                }));
-                oCrossAppNavigator.toExternal({
-                    target: {
-                        shellHash: hashUrl
-                    }
-                });
-            },
+            
 
 
 
@@ -3713,42 +3827,7 @@ sap.ui.define([
                 this.oComponent.setModel(new JSONModel([]), "PedidoPos");
             },
 
-            // DIÁLOGO DE APROBACIONES
-            _getDialogAprobaciones: function (sInputValue) {
-
-                this.ListadoSolicitudes(
-                    "", //filtroUsuario
-                    //Numped,
-                    "", //filtroFechaDsd
-                    "",// filtroFechaHst
-                    "",// filtroImporteDsd
-                    "",// filtroImporteHst
-                    filtroEstado,
-                    "",// filtroClienteCod
-                    "",// filtroCeco
-                    "",// filtroOrden
-                    "",// filtroOficionaVentas
-                    "",// filtroLineaServicio
-                    "",// filtroMaterial
-                    usuario, // filtroResponsable
-                    ""); // filtroClasePed
-
-                var oView = this.getView();
-                if (!this.pDialogAprobaciones) {
-                    this.pDialogAprobaciones = Fragment.load({
-                        id: oView.getId(),
-                        name: "monitorpedidos.fragments.Aprobacion",
-                        controller: this,
-                    }).then(function (oDialogAprobaciones) {
-                        // connect dialog to the root view of this component (models, lifecycle)
-                        oView.addDependent(oDialogAprobaciones);
-                        return oDialogAprobaciones;
-                    });
-                }
-                this.pDialogAprobaciones.then(function (oDialogAprobaciones) {
-                    oDialogAprobaciones.open(sInputValue);
-                });
-            },
+            
 
             
 
@@ -3829,23 +3908,54 @@ sap.ui.define([
 
             onChangeArea: function () {
 
-                this.oComponent.getModel("ModoApp").setProperty("/cclient", true);
+                
+                var inputSociedad = this.getView().byId("idArea");
+                var sociedad = inputSociedad.getValue().trim();
+
+                var sociedades = this.oComponent.getModel("AreaVentas").getData();
+                var validation = false;
+                for (let i = 0; i < sociedades.length; i++) {
+                    if (sociedad === sociedades[i].Vkorg || sociedad === sociedades[i].Vtext) {
+                        validation = true;
+                        break;
+                    }
+                }
+
+                if (validation) {
+                    inputSociedad.setValueState("None");
+
+                    vkbur = inputSociedad.getSelectedKey();
+                    vText = inputSociedad._getSelectedItemText();
+
+                    var aFilterIds,
+                        aFilterValues,
+                        aFilters;
+
+                    aFilterIds = ["Vkorg"];
+                    aFilterValues = [vkbur];
+                    aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                    Promise.all([this.readDataEntity(this.mainService, "/ZonaVentasSet", "")]).then(
+                        this.buildListZonaVentas.bind(this), this.errorFatal.bind(this));
+                }else {
+                    inputSociedad.setValueState("Error");
+                }            
+
+                this.oComponent.getModel("ModoApp").setProperty("/cclient", validation);
+                this.oComponent.getModel("ModoApp").setProperty("/ccont", false);
+                this.oComponent.getModel("ModoApp").setProperty("/cvcan", false);
+                this.oComponent.getModel("ModoApp").setProperty("/cvsector", false);
+                this.oComponent.getModel("ModoApp").setProperty("/czona", false);
+                this.oComponent.getModel("ModoApp").setProperty("/cped", false);
                 this.oComponent.getModel("ModoApp").refresh(true);
+            },
 
-                vkbur = this.getView().byId("idArea").getSelectedKey();
-                vText = this.getView().byId("idArea")._getSelectedItemText();
-
-                var aFilterIds,
-                    aFilterValues,
-                    aFilters;
-
-                aFilterIds = ["Vkorg"];
-                aFilterValues = [vkbur];
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                Promise.all([this.readDataEntity(this.mainService, "/ZonaVentasSet", "")]).then(
-                    this.buildListZonaVentas.bind(this), this.errorFatal.bind(this));
-
+            buildListZonaVentas: function (values) {
+                var oModelListZonaVentas = new JSONModel();
+                if (values[0].results) {                    
+                    oModelListZonaVentas.setData(values[0].results);
+                }
+                this.oComponent.setModel(oModelListZonaVentas, "ZonaVentas");
             },
 
 
@@ -4220,16 +4330,7 @@ sap.ui.define([
 
             
 
-            buildListZonaVentas: function (values) {
-                if (values[0].results) {
-                    var oModelListZonaVentas = new JSONModel();
-                    oModelListZonaVentas.setData(values[0].results);
-                    this.oComponent.setModel(oModelListZonaVentas, "ZonaVentas");
-                    //this.motivopedido(TipoPed, vkbur);
-                }
-                //this.CanalVentas();
-
-            },
+            
 
             CanalVentas: function () {
                 var aFilters = [],
@@ -4668,7 +4769,14 @@ sap.ui.define([
                         idCTipoPed.setValueState("Error");
                     }
  
-                    if (idArea.getValue() && idCCliente.getValue() && idCanal.getValue() && idSector.getValue() && idzona.getValue() && idCTipoPed.getValue()){
+                    //VALIDACIÓN SI CONTIENE UN VALOR Y SI EL ESTADO DEL COMPONENTE NO ES ERROR 
+                    if (idArea.getValue() && idArea.getValueState() !="Error"
+                        && idCCliente.getValue() && idCCliente.getValueState() !="Error"
+                        && idCanal.getValue()  && idCanal.getValueState() !="Error"
+                        && idSector.getValue() && idSector.getValueState() !="Error"
+                        && idzona.getValue() && idzona.getValueState() !="Error"
+                        && idCTipoPed.getValue() && idCTipoPed.getValueState() !="Error"){
+                            
                         /**
                          * Cuando ya navegamos al alta debe de borrar todos los campos de opciones 
                          * para que cuando se entre de nuevo aparezcan vacios para crear una nueva peticion
@@ -4693,9 +4801,33 @@ sap.ui.define([
             //CAMBIAR ESTADO DROPDOWNS/INPUTS ALTA PEDIDO
             onChangeValueState: function(oEvent){
                 var value = sap.ui.getCore().byId(oEvent.getSource().sId);
+                /*
                 if(value.getValue()){
                     value.setValueState("None");
                 }
+                */
+               
+                var response = value.getValue().toLowerCase();
+                console.log(response);
+                var aItems = value.getItems();
+                var bValidInput = false;
+ 
+                for (var i = 0; i < aItems.length; i++) {
+                    var sItemText = aItems[i].getText().toLowerCase();
+                    if (response === sItemText) {
+                        bValidInput = true;
+                        break;
+                    }
+ 
+                }
+                //console.log(sItemText);
+                if (bValidInput) {
+                    value.setValueState("None");  
+                } else {
+                    value.setValueState("Error");              
+               
+                }
+ 
             },
 
             motivopedido: function (TipoPed, AreaVenta) {
@@ -4865,78 +4997,8 @@ sap.ui.define([
 
                 var that = this;
 
-                /*for (var i = 0; i < results_array.length; i++) {
- 
-                    obj = {
-                        Accion: accion,
-                        Solicitud: results_array[i].IDSOLICITUD
-                    };
-                    Datosrechazo.push(obj);
-                    obj = {};
-                }*/
-
-
-
-                //sap.ui.core.BusyIndicator.show();
-
                 var msg = oI18nModel.getProperty("SolRechz");
                 var msgRechz = "";
-
-                /*this.mainService.create("/AccionRechazarSet", json1, {
-                    success: function (result) {
-                        if (result.FicheroAprobacion) {
-                            sap.ui.core.BusyIndicator.hide(); 
-                            MessageBox.show(LogAprobacion.TextoLog);  
-                        }
-                    },
-                    error: function (err) {
-                        sap.m.MessageBox.error("Solicitud no Rechazada.", {
-                            title: "Error",
-                            initialFocus: null,
-                        });
-                        oTable.clearSelection();
-                        sap.ui.core.BusyIndicator.hide();
-                    },
-                    async: true,
-                });*/
-                /*MessageBox.warning(msg, {
-                    actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
-                        emphasizedAction: MessageBox.Action.OK,
-                    onClose: function (sAction) {
-                        if (sAction == 'OK') {
-                            var json1 = {
-                                Accion: accion,
-                                AccionAprobarSet: DatosAprobaciones,
-                                FicheroAprobacion: []
-                            }
-                            //sap.ui.core.BusyIndicator.show();
-                            that.mainService.create("/AccionRechazarSet", json1, {
-                                success: function (result) {
-                                    if (result.LiberarSet.results[0].Solicitud) {
-                                       // sap.ui.core.BusyIndicator.hide(); 
-                                        //MessageBox.show(result.LiberacionRespuesta.TextoLog);  
-                                        oTable.clearSelection();
-                                    }
-                                    //oTable.clearSelection();
-                                    //sap.ui.core.BusyIndicator.hide(); 
-                                },
-                                error: function (err) {
-                                    sap.ui.core.BusyIndicator.hide(); 
-                                    sap.m.MessageBox.error("Solicitud no Rechazada.", {
-                                        title: "Error",
-                                        initialFocus: null,
-                                    });
-                                    oTable.clearSelection();
-                                    //sap.ui.core.BusyIndicator.hide();
-                                },
-                                async: true,
-                            });
-                            oTable.clearSelection();
-                        } else {
-                            oTable.clearSelection();
-                        }
-                    }
-                });*/
 
                 if (!this.oConfirmDialog) {
                     this.oConfirmDialog = new sap.m.Dialog({

@@ -7,16 +7,16 @@
     xmlns:ui="sap.ui.table"
 >   
 <Dialog
-      id='LiberacionDial'
-      title="{i18n>TableLiberaciones}"  
+      id='RescatarDial'
+      title="{i18n>TableRescatar}"  
       resizable="true"
       
       >
       
     <ui:Table
-                id="b_idTablePEPs"
+                id="b_idTablePEPsResc"
                 selectionMode="MultiToggle"
-                rows="{path: 'listadoSolicitudesLiberar>/'}"
+                rows="{path: 'listadoSolicitudesRescatar>/'}"
                 visibleRowCountMode="Interactive"
                 width="100%"
                 enableCellFilter="{ui>/cellFilterOn}"
@@ -33,8 +33,8 @@
                         <Label text="{i18n>numped}" />
                         <ui:template>
                             <Text
-                                id="b_idPEP"
-                                text="{listadoSolicitudesLiberar>IDSOLICITUD}"
+                                id="b_idPEPResc"
+                                text="{listadoSolicitudesRescatar>IDSOLICITUD}"
                             />
                         </ui:template>
                     </ui:Column>
@@ -48,7 +48,7 @@
                         <Label text="{i18n>fechadocu}" />
                         <ui:template>
                             <Text
-                                text="{path: 'listadoSolicitudesLiberar>Fechadoc',  type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd/MM/yyyy'}}"
+                                text="{path: 'listadoSolicitudesRescatar>Fechadoc',  type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd/MM/yyyy'}}"
                             />
                         </ui:template>
                     </ui:Column>
@@ -60,7 +60,7 @@
                     >
                         <Label text="{i18n>creador}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudesLiberar>Creador}" />
+                            <Text text="{listadoSolicitudesRescatar>Creador}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -71,7 +71,7 @@
                     >
                         <Label text="{i18n>codcli}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudesLiberar>CLIENTE}" />
+                            <Text text="{listadoSolicitudesRescatar>CLIENTE}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -82,7 +82,7 @@
                     >
                         <Label text="{i18n>nomcli}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudesLiberar>Nombrecliente}" />
+                            <Text text="{listadoSolicitudesRescatar>Nombrecliente}" />
                         </ui:template>
                     </ui:Column>
                     
@@ -94,7 +94,7 @@
                     >
                         <Label text="{i18n>imptotal}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudesLiberar>ImpPedido}" />
+                            <Text text="{listadoSolicitudesRescatar>ImpPedido}" />
                         </ui:template>
                     </ui:Column>-->
                      <ui:Column
@@ -104,7 +104,7 @@
                         tooltip="{i18n>import}">
                         <Label text="{i18n>import}" />
                          <ui:template>
-                            <Text text="{listadoSolicitudesLiberar>Netwr}" />
+                            <Text text="{listadoSolicitudesRescatar>Netwr}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -114,7 +114,7 @@
                         tooltip="{i18n>Moneda}">
                         <Label text="{i18n>Moneda}" />
                          <ui:template>
-                            <Text text="{listadoSolicitudesLiberar>Waerk}" />
+                            <Text text="{listadoSolicitudesRescatar>Waerk}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -125,7 +125,7 @@
                     >
                         <Label text="{i18n>status}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudesLiberar>ESTADO}" />
+                            <Text text="{listadoSolicitudesRescatar>ESTADO}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -136,7 +136,7 @@
                     >
                         <Label text="{i18n>zord}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudesLiberar>Zorden}" />
+                            <Text text="{listadoSolicitudesRescatar>Zorden}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -147,7 +147,7 @@
                     >
                         <Label text="{i18n>zcost}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudesLiberar>Zcoste}" />
+                            <Text text="{listadoSolicitudesRescatar>Zcoste}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -158,7 +158,7 @@
                     >
                         <Label text="{i18n>nomapprov}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudesLiberar>Nombreapr}" />
+                            <Text text="{listadoSolicitudesRescatar>Nombreapr}" />
                         </ui:template>
                     </ui:Column>
                     <!--<ui:Column
@@ -169,7 +169,7 @@
                     >
                         <Label text="{i18n>claseped}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudesLiberar>Claseped}" />
+                            <Text text="{listadoSolicitudesRescatar>Claseped}" />
                         </ui:template>
                     </ui:Column>-->
                     <ui:Column
@@ -180,7 +180,7 @@
                     >
                         <Label text="{i18n>orgventas}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudesLiberar>Orgventas}" />
+                            <Text text="{listadoSolicitudesRescatar>Orgventas}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -191,10 +191,10 @@
                     >
                         <Label text="{i18n>Numfactura}" />
                         <ui:template>
-                            <!--<Text text="{listadoSolicitudesLiberar>Numfactura}" />-->
-                            <!--<Link text="{listadoSolicitudesLiberar>Numfactura}" press="handleLinkFact" />-->
+                            <!--<Text text="{listadoSolicitudesRescatar>Numfactura}" />-->
+                            <!--<Link text="{listadoSolicitudesRescatar>Numfactura}" press="handleLinkFact" />-->
                             	<ObjectIdentifier
-                                    title="{listadoSolicitudesLiberar>Numfactura}"
+                                    title="{listadoSolicitudesRescatar>Numfactura}"
                                     titleActive = "true"
                                     titlePress="handleLinkFact" />
                         </ui:template>
@@ -207,7 +207,7 @@
                     >
                         <Label text="{i18n>Referenciped}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudesLiberar>Referenciped}" />
+                            <Text text="{listadoSolicitudesRescatar>Referenciped}" />
                         </ui:template>
                     </ui:Column>
 
@@ -219,9 +219,9 @@
                     >
                         <Label text="{i18n>Indcontrato}" />
                         <ui:template>
-                            <!--<Text text="{listadoSolicitudesLiberar>Indcontrato}" />-->
+                            <!--<Text text="{listadoSolicitudesRescatar>Indcontrato}" />-->
                             <!--<Switch
-                                state="{listadoSolicitudesLiberar>Indcontrato}"
+                                state="{listadoSolicitudesRescatar>Indcontrato}"
                                 customTextOn="Yes" customTextOff="No"
                                 enabled="false"
                                 tooltip="{i18n>Indcontrato}">
@@ -229,9 +229,9 @@
                                     <FlexItemData growFactor="1" />
                                 </layoutData>
                             </Switch>-->
-                            <!--<Link text="{listadoSolicitudesLiberar>Indcontrato}" press="handleLinkCont" />-->
+                            <!--<Link text="{listadoSolicitudesRescatar>Indcontrato}" press="handleLinkCont" />-->
                             <ObjectIdentifier
-                                    title="{listadoSolicitudesLiberar>Indcontrato}"
+                                    title="{listadoSolicitudesRescatar>Indcontrato}"
                                     titleActive = "true"
                                     titlePress="handleLinkCont" />
                         </ui:template>
@@ -241,8 +241,8 @@
 
         <OverflowToolbar>
 				<ToolbarSpacer/>
-				<Button text="Liberar" type="Accept" press="onLiberacion" />
-                <Button text="Cancelar" type="Default" press="onCancelliberacion"/>
+				<Button text="Rescatar" type="Accept" press="onRescatar" />
+                <Button text="Cancelar" type="Default" press="onCancelRescatar"/>
 			</OverflowToolbar>
     
     </Dialog> 
