@@ -787,7 +787,7 @@ sap.ui.define([
                     else
                         this.oComponent.setModel(oModelSolicitudes, "listadoSolicitudes");
                 } else {
-                    MessageBox.warning(this.oI18nModel.getProperty("noSol"));
+                    //MessageBox.warning(this.oI18nModel.getProperty("noSol"));
                     //Si no hay solicitudes, se borra el listado
                     if(filtroEstado === "APRB")
                         this.oComponent.setModel(new JSONModel(), "listadoSolicitudesAPRB");
@@ -1140,7 +1140,7 @@ sap.ui.define([
                         }
                     });   
                 }else{
-                    MessageBox.warning(this.oI18nModel.getProperty("noSoli"));
+                    //MessageBox.warning(this.oI18nModel.getProperty("noSoli"));
                 }               
             },
 
@@ -1263,7 +1263,7 @@ sap.ui.define([
                         }
                     });
                 }else{
-                    MessageBox.warning(this.oI18nModel.getProperty("noSoli"));
+                    //MessageBox.warning(this.oI18nModel.getProperty("noSoli"));
                 }                               
             },
 
@@ -5177,6 +5177,92 @@ sap.ui.define([
             CloseClientDialog: function () {
 
                 this.byId("OptionDialogCliente").close();
+            },
+
+            onEnviarMailAltaCliente: function () {
+                // Se recuperan los valores del formulario
+                var inputCIF = this.getView().byId("inputNifCliente").getValue();
+                var inputNombre = this.getView().byId("inputNombreCliente").getValue();
+                var inputTelefono = this.getView().byId("inputTelefonoCliente").getValue();
+                var inputMailContacto = this.getView().byId("inputMailContacto").getValue();
+                var inputCalle =  this.getView().byId("inputCalleCliente").getValue();
+                var inputCodPostal = this.getView().byId("inputCodPostalCliente").getValue();
+                var inputPoblacion = this.getView().byId("inputPoblacionCliente").getValue();
+                var inputPais = this.getView().byId("inputPaisCliente").getValue();
+                var inputRegion = this.getView().byId("inputRegionCliente").getValue();
+                var inputPlataforma = this.getView().byId("inputPlataformaCliente").getValue();
+                var inputOrganoGestor = this.getView().byId("inputOrganoGestorCliente").getValue();
+                var inputUnidadTramitadora = this.getView().byId("inputUnidadTramitadoraCliente").getValue();
+                var inputOficinaContable = this.getView().byId("inputOficinaContableCliente").getValue();
+                var inputAdministracion = this.getView().byId("inputAdministracionCliente").getValue();
+                var inputCondicionPago = this.getView().byId("inputCondicionPagoCliente").getValue();
+                var idSociedad = this.getView().byId("idAreaClientes").getSelectedKey();
+                var nombreSociedad = this.getView().byId("idAreaClientes").getValue();
+
+                var jsonAltaCliente = {
+                    Vkorg: idSociedad,
+                    Vtext: nombreSociedad,
+                    Cif: inputCIF,
+                    Nombre: inputNombre,
+                    DirCalle: inputCalle,
+                    DirCp: inputCodPostal,
+                    DirPoblacion: inputPoblacion,
+                    DirPais: inputPais,
+                    DirRegion: inputRegion,
+                    Mail: inputMailContacto,
+                    Telefono: inputTelefono,
+                    CondPago: inputCondicionPago,
+                    Plataforma: inputPlataforma,
+                    Centges: inputOrganoGestor,
+                    Centuni: inputUnidadTramitadora,
+                    Centpro: inputOficinaContable,
+                    Codadm: inputAdministracion
+                }
+
+                this.getView().byId("inputNifCliente").setValue("");
+                this.getView().byId("inputNombreCliente").setValue("");
+                this.getView().byId("inputTelefonoCliente").setValue("");
+                this.getView().byId("inputMailContacto").setValue("");
+                this.getView().byId("inputCalleCliente").setValue("");
+                this.getView().byId("inputCodPostalCliente").setValue("");
+                this.getView().byId("inputPoblacionCliente").setValue("");
+                this.getView().byId("inputPaisCliente").setValue("");
+                this.getView().byId("inputRegionCliente").setValue("");
+                this.getView().byId("inputPlataformaCliente").setValue("");
+                this.getView().byId("inputOrganoGestorCliente").setValue("");
+                this.getView().byId("inputUnidadTramitadoraCliente").setValue("");
+                this.getView().byId("inputOficinaContableCliente").setValue("");
+                this.getView().byId("inputAdministracionCliente").setValue("");
+                this.getView().byId("inputCondicionPagoCliente").setValue("");
+                this.getView().byId("idAreaClientes").setSelectedKey(null);
+
+                sap.ui.core.BusyIndicator.show();
+                
+                this.mainService.create("/AltaClienteSet", jsonAltaCliente, {
+                    success: function (result) {
+                        if (result.Coderror == 0) {
+                            sap.m.MessageBox.success(result.Message, {
+                                title: "Mail enviado",
+                                initialFocus: null,
+                            });            
+                        } else {
+                            sap.m.MessageBox.error(result.Message, {
+                                title: "Error",
+                                initialFocus: null,
+                            });                                                                            
+                        }                                                                        
+                        sap.ui.core.BusyIndicator.hide();
+                    },
+                    error: function (err) {
+                        sap.m.MessageBox.error("Error, no se ha podido enviar el mail para el alta del cliente.", {
+                            title: "Error",
+                            initialFocus: null,
+                        });                                                                        
+                        sap.ui.core.BusyIndicator.hide();
+                    },
+                    async: true,
+                });
+
             },
 
             //VERIFICAR SI EL DNI TIENE UN FORMATO VALIDO

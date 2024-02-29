@@ -64,7 +64,7 @@
             </f:content>
         </f:SimpleForm>
         <OverflowToolbar>
-            <Button text="Crear" type="Emphasized">
+            <Button text="Crear" type="Emphasized" press="onEnviarMailAltaCliente">
                 <layoutData>
                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                 </layoutData>
