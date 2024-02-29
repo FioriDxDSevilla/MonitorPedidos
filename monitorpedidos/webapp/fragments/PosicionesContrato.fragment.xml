@@ -68,7 +68,7 @@
                 <Label text="{i18n>Importe}" />
                 <table:template>
                     <!--<Text text="{PedidoPosContrato>CondValue}" />-->
-                    <Text text="{path:'PedidoPosContrato>Netwr', formatter: '.onFormatNumber'}" />
+                    <Text text="{path:'PedidoPosContrato>Netwr', formatter: '.onFormatImporte'}" />
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
