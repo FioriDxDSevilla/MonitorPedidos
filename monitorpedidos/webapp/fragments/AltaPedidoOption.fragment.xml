@@ -24,12 +24,12 @@
                 
                 <!--Segunda Opción escogible-->
                 <Label text="{i18n>client}" required="true"/>
-                <Input id="idCCliente" value="{PedidoCab>/Kunnr}" valueHelpRequest=".onValHelpReqCliente"  submit="onReqCli" showValueHelp="true" editable="{ModoApp>/cclient}" required="true" liveChange=".onChangeValueState">
+                <Input id="idCCliente" value="{ModoApp>/Kunnr}" valueHelpRequest=".onValueHelpRequestClienteAlta"  submit="onSubmitCliente" showValueHelp="true" editable="{ModoApp>/cclient}" required="true">
                     <layoutData>
                         <l:GridData span="XL2 L3 M4 S6"/>
                     </layoutData>
                 </Input>
-                <Input value="{PedidoCab>/Name1}" id="descrProv" editable="false">
+                <Input value="{ModoApp>/Nombre}" id="descrProv" editable="false">
                     <layoutData>
                         <l:GridData span="XL6 L5 M6 S12"/>
                     </layoutData>
@@ -69,11 +69,14 @@
                 
                 <!--octava opción escogible-->
                 <Label text="{i18n>tipoPed}" required="true"/>
-                <ComboBox id="idCTipoPed" change="onChangeTipoPed" showSecondaryValues="true" items="{path: 'TipospedidoAlta>/', sorter: {path: 'Bezei'}}" editable="{ModoApp>/cped}" required="true" selectionChange=".onChangeValueState">
-                    <!--<core:Item key="{TipospedidoAlta>Auart}" text="{TipospedidoAlta>Bezei}" /> -->
+                <!--<ComboBox id="idCTipoPed" change="onChangeTipoPed" showSecondaryValues="true" items="{path: 'TipospedidoAlta>/', sorter: {path: 'Bezei'}}" editable="{ModoApp>/cped}" required="true" selectionChange=".onChangeValueState">
                     <core:ListItem key="{TipospedidoAlta>Auart}"  text="{TipospedidoAlta>Bezei}" additionalText ="{TipospedidoAlta>Auart}" />
-                </ComboBox>
-                            
+                </ComboBox>-->
+                <Input value="{TipospedidoAlta>/Auart}" id="idCTipoPed" editable="false">
+                    <layoutData>
+                        <l:GridData span="XL6 L5 M6 S12"/>
+                    </layoutData>
+                </Input>
             </f:content>
         </f:SimpleForm>
 

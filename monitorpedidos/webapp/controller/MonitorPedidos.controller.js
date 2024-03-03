@@ -20,16 +20,22 @@ sap.ui.define([
 
        // var EdmType = exportLibrary.EdmType;
 
-        var codcli, nomcli, socPed, TipoPed, numCont, vText, nomCont, Bzirk, Bztxt, Cvcan, Cvsector, condPago, vedit, checkMisPed, checkTodos;
+        var socPed, TipoPed, Bzirk, Bztxt, Cvcan, Cvsector, condPago, vedit, checkMisPed, checkTodos;
         var arrayKeys = [];
 
         var btnEditar, accionLiberar, btnRescatar, accionRescatar;
         // Variables utilizadas en los filtros
         var filtroUsuario, filtroFechaDsd, filtroFechaHst, filtroImporteDsd, filtroImporteHst, filtroEstado, filtroClienteCod, filtroClienteTxt, filtroCeco, filtroOrden, filtroOficionaVentas, filtroLineaServicio, filtroMaterial, filtroClasePed, filtroResponsable;
-        var Usuario, Numped, Fechad, Fechah, Imported, Importeh, sStatus, Cliente, codceco, codord, vkbur, LineaServicio, codmat, ClasePed, responsable;
+        var Usuario, Numped, Fechad, Fechah, Imported, Importeh, sStatus, Cliente, codceco, codord, LineaServicio, codmat, ClasePed, responsable;
         var usuario;
         // Variables no utilizadas ???
         var nomceco, nomord, nommat, sumTotal, nomSoc, Posped, Centges, Centuni, Centpro, Codadm, Plataforma, sAprob;
+
+        // variables utilizadas para los inputs del diálogo de alta
+        var vkbur, vText, codcli, nomcli, numCont, nomCont; Cvcan, Cvsector, Bzirk, TipoPed;
+
+        // Variable global
+        var modoapp;
 
         // Variables globales para el formateo de los campos 'FECHA DOC. VENTA' e 'IMPORTE'
         
@@ -84,7 +90,7 @@ sap.ui.define([
                 // De primeras mostrará las solicitudes de Mi usuario
                 this.getUser();
                 this.AreasVenta();
-                this.modoapp = "";
+                modoapp = "";
             },
 
             // -------------------------------------- FUNCIÓN PARA LEER LAS ENTIDADES DEL OData --------------------------------------
@@ -154,32 +160,6 @@ sap.ui.define([
                     oModelOgranizacion.setData(values[0].results);
                     oModelOgranizacion.setSizeLimit(300);
                     this.oComponent.setModel(oModelOgranizacion, "Organizaciones");
-                }
-
-            },
-
-            TiposPedidoAlta: function (TipoPed) {
-
-                var aFilters = [],
-                    aFilterIds = [],
-                    aFilterValues = [];
-
-                aFilterIds.push("Auart");
-                aFilterValues.push(TipoPed);
-
-
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/TipoPedidoSet", aFilters),
-                ]).then(this.buildTiposPed.bind(this), this.errorFatal.bind(this));
-            },
-
-            buildTiposPed: function (values) {
-                if (values[0].results) {
-                    var oModelTiposPed = new JSONModel();
-                    oModelTiposPed.setData(values[0].results);
-                    this.oComponent.setModel(oModelTiposPed, "TipospedidoAlta");
                 }
 
             },*/
@@ -367,7 +347,7 @@ sap.ui.define([
                 filtroClienteCod = codcli;
                 filtroClienteTxt = nomcli;
                 this.getView().byId("f_client").setValue(filtroClienteTxt);
-                this.CloseCliDiagMonitor();
+                this.closeCliDiagMonitor();
             },
 
             getSelectClie: function (oEvent, oModel) {
@@ -1326,36 +1306,354 @@ sap.ui.define([
             },
 
             // -------------------------------------- FUNCIONES DEL ALTA DE PEDIDOS --------------------------------------
+            // METODOS Y FUNCIONES PARA EL ALTA DE PEDIDOS
+            onNavToAltaPedidos: function (oEvent) {
+                // Resetear Sociedad
+                vkbur = "";
+                vText = "";
+                if (this.getView().byId("idArea")) {
+                    this.getView().byId("idArea").setValue(null);
+                }           
 
+                // Resetear Cliente
+                codcli = "";
+                nomcli = "";
+                this.oComponent.setModel(new JSONModel([]), "listadoClientesAlta");
+                if (this.pDialogClienteAlta) {
+                    this.getView().byId("f_lifnrAcr").setValue(null);
+                    this.getView().byId("f_nameAcr").setValue(null);
+                    this.getView().byId("f_nifAcr").setValue(null);
+                    this.getView().byId("f_nifcAcr").setValue(null);
+                }
+                
 
+                this.modoapp = 'C';
+                modoapp = 'C';
 
+                var config = {
+                    mode: modoapp,        
+                    
+                    // Marcar como editables los input de pedido
+                    cclient: false,
+                    ccont: false,
+                    cvcan: false,
+                    cvsector: false,
+                    czona: false,
+                    //cped: false,
 
+                    // Habilitar Ordenes cuando se selecciona el CECO (**revisar**)
+                    cordenes: false,
+                    Title: this.oI18nModel.getProperty("visPed"),
 
+                    // Limpiar variables
+                    ItmNumber: 10,
+                    Nomcont: "",
+                    Numcont: "",                    
+                }
 
+                var oModConfig = new JSONModel();
+                oModConfig.setData(config);
+                this.oComponent.setModel(oModConfig, "ModoApp");
+                this.oComponent.setModel(new JSONModel([]), "posPedFrag");
+                this.oComponent.setModel(new JSONModel([]), "PedidoCab");
+                this.oComponent.setModel(new JSONModel([]), "PedidoPos");                
 
+                this._getDialogAltaPed();
+            },
 
+            _getDialogAltaPed: function (sInputValue) {
+                var oView = this.getView();
 
+                if (!this.pDialogOptions) {
+                    this.pDialogOptions = Fragment.load({
+                        id: oView.getId(),
+                        name: "monitorpedidos.fragments.AltaPedidoOption",
+                        controller: this,
+                    }).then(function (oDialogOptions) {
+                        // connect dialog to the root view of this component (models, lifecycle)
+                        oView.addDependent(oDialogOptions);
+                        return oDialogOptions;
+                    });
+                }
+                this.pDialogOptions.then(function (oDialogOptions) {
+                    oDialogOptions.open(sInputValue);
+                });                
+            },
 
+            //CAMBIAR ESTADO DROPDOWNS/INPUTS ALTA PEDIDO
+            onChangeValueState: function(oEvent){
+                var value = sap.ui.getCore().byId(oEvent.getSource().sId);
+               
+                var response = value.getValue().toLowerCase();
+                //console.log(response);
+                var aItems = value.getItems();
+                var bValidInput = false;
+ 
+                for (var i = 0; i < aItems.length; i++) {
+                    var sItemText = aItems[i].getText().toLowerCase();
+                    if (response === sItemText) {
+                        bValidInput = true;
+                        break;
+                    }
+ 
+                }
+                
+                if (bValidInput) {
+                    value.setValueState("None");  
+                } else {
+                    value.setValueState("Error");               
+                } 
+            },
 
-            
-            
+            // FUNCIONES DEL DESPLEGABLE DE SOCIEDAD
+            onChangeArea: function () {
+                var inputSociedad = this.getView().byId("idArea");
+                var sociedad = inputSociedad.getValue().trim();
 
-            
+                var sociedades = new Set(this.oComponent.getModel("AreaVentas").getData().map(item => item.Vtext));
+                
+                var validation;
+                if (validation = sociedades.has(sociedad)) {
+                    
+                    inputSociedad.setValueState("None");
 
-            
+                    vkbur = inputSociedad.getSelectedKey();
+                    vText = inputSociedad._getSelectedItemText();
 
+                    /* **tiene sentido? **
+                    var aFilterIds,
+                        aFilterValues,
+                        aFilters;
 
-            
+                    aFilterIds = ["Vkorg"];
+                    aFilterValues = [vkbur];
+                    aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
 
-            
+                    Promise.all([this.readDataEntity(this.mainService, "/ZonaVentasSet", "")]).then(
+                        this.buildListZonaVentas.bind(this), this.errorFatal.bind(this));                    
+                    */
 
-            
+                    // Hacemos una búsqueda a los clientes de la sociedad para validarlos en onSubmitCliente
+                    this.onBusqClientes();   
+                }else {
+                    inputSociedad.setValueState("Error");
+                }           
 
-            
+                this.oComponent.getModel("ModoApp").setProperty("/cclient", validation);
+                this.oComponent.getModel("ModoApp").setProperty("/ccont", false);
+                this.oComponent.getModel("ModoApp").setProperty("/cvcan", false);
+                this.oComponent.getModel("ModoApp").setProperty("/cvsector", false);
+                this.oComponent.getModel("ModoApp").setProperty("/czona", false);
+                //this.oComponent.getModel("ModoApp").setProperty("/cped", false);
+                this.oComponent.getModel("ModoApp").refresh(true);
+            },
+
+            // FUNCIONES DEL DIÁLOGO DE BÚSQUEDA DE CLIENTES EN EL ALTA
+            // ***borrar la función***
+            onValHelpReqCliente: function (oEvent) {
+                var sInputValue = oEvent.getSource().getValue(),
+                    oView = this.getView();
+
+                if (vkbur) {
+                    this.oComponent.setModel(new JSONModel(), "acrList");
+                    this.oComponent.getModel("FiltrosCli").setProperty("/Bukrs", vkbur);
+                    this.oComponent.getModel("FiltrosCli").setProperty("/Kunnr", sInputValue);
+
+                    if (!this._pValueHelpDialog) {
+                        this._pValueHelpDialog = Fragment.load({
+                            id: oView.getId(),
+                            name: "monitorpedidos.fragments.BusqClientes",
+                            controller: this
+                        }).then(function (oDialog) {
+                            oView.addDependent(oDialog);
+                            return oDialog;
+                        });
+                    }
+                    this._pValueHelpDialog.then(function (oDialog) {
+                        oDialog.open(sInputValue);
+                    });
+                } else {
+                    MessageBox.error(this.oI18nModel.getProperty("noCli"));
+                }
+            },
+
+            onValueHelpRequestClienteAlta: function (oEvent) {
+                var sInputValue = oEvent.getSource().getValue(),
+                    oView = this.getView();
+
+                if (vkbur) {
+                    this.oComponent.getModel("FiltrosCli").setProperty("/Bukrs", vkbur);
+                    this.oComponent.getModel("FiltrosCli").setProperty("/Kunnr", sInputValue);                    
+
+                    if (!this.pDialogClienteAlta) {
+                        this.pDialogClienteAlta = Fragment.load({
+                            id: oView.getId(),
+                            name: "monitorpedidos.fragments.BusqClientesAlta",
+                            controller: this
+                        }).then(function (oDialog) {
+                            oView.addDependent(oDialog);
+                            return oDialog;
+                        });
+                    }
+                    this.pDialogClienteAlta.then(function (oDialog) {
+                        oDialog.open(sInputValue);
+                    });
+                } else {
+                    MessageBox.error(this.oI18nModel.getProperty("noCli"));
+                }
+            },
+
+            closeCliDiag: function () {
+                this.byId("cliDial").close();
+            },
+
+            onBusqClientes: function () {
+                var Kunnr = this.getView().byId("f_lifnrAcr") ? this.getView().byId("f_lifnrAcr").getValue() : "";
+                var Name1 = this.getView().byId("f_nifAcr") ? this.getView().byId("f_nifAcr").getValue() : "";
+                var Stcd1 = this.getView().byId("f_nameAcr") ? this.getView().byId("f_nameAcr").getValue() : "";
+                var Bukrs = this.getView().byId("f_nifcAcr") ? this.getView().byId("f_nifcAcr").getValue() : vkbur;
+
+                var aFilterIds = [], aFilterValues = [];
+
+                var addFilter = function (id, value) {
+                    if (value !== "") {
+                        aFilterIds.push(id);
+                        aFilterValues.push(value);
+                    }
+                };
+
+                addFilter("Stcd1", Stcd1);
+                addFilter("Kunnr", Kunnr);
+                addFilter("Name1", Name1);                
+                addFilter("Bukrs", Bukrs);
+
+                var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                sap.ui.core.BusyIndicator.show();
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/DameClientesSet", aFilters),
+                ]).then(this.buildClientesModel.bind(this), this.errorFatal.bind(this));
+
+            },
+
+            buildClientesModel: function (values) {
+                var oModelClientes = new JSONModel();                
+                if (values[0].results) {                    
+                    oModelClientes.setData(values[0].results);                    
+                }
+                this.oComponent.setModel(oModelClientes, "listadoClientesAlta");
+                this.oComponent.getModel("listadoClientesAlta").refresh(true);
+                sap.ui.core.BusyIndicator.hide();
+            },
+
+            onSubmitCliente: function (oEvent) {
+                codcli = oEvent.getParameter("value");
+                
+                var clientes = new Set(this.oComponent.getModel("listadoClientesAlta").getData().map(item => item.Kunnr));
+                
+                var validation;
+                if (validation = clientes.has(codcli)) {
+                    this.onReqCli();
+                }else {
+                    this.getView().byId("idCCliente").setValueState("Error");
+                    this.oComponent.getModel("ModoApp").setProperty("/ccont", false);
+                    this.oComponent.getModel("ModoApp").setProperty("/cvcan", false);
+                }
+            },
+
+            onPressCliente: function (oEvent) {
+                var acr = this.getSelectClie(oEvent, "listadoClientesAlta");
+                codcli = acr.Kunnr;
+                nomcli = acr.Name1;
+                this.onReqCli();
+            },
+
+            onReqCli: function () {
+                sap.ui.core.BusyIndicator.show();
+
+                /* **
+                var aFilters = [],
+                    aFilterIds = [],
+                    aFilterValues = [];
+
+                aFilterIds.push("Kunnr");
+                aFilterValues.push(codcli);
+
+                aFilterIds.push("Bukrs");
+                aFilterValues.push(vkbur);
+
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                revisar si tiene sentido**
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/DameClientesSet", aFilters),
+                ]).then(this.buildCliente.bind(this), this.errorFatal.bind(this));*/
+                // en su lugar, usamos:
+                this.DatosCliente(codcli, vkbur);
+
+                // Establecer el nombre cuando no se ha utilizado la búsqueda
+                if (!nomcli) {
+                    nomcli = this.oComponent.getModel("ModoApp").getData().Nombre;
+                }
+
+                //this.getView().byId("f_client").setValue(nomcli);
+                this.getView().byId("idCCliente").setValueState("None");
+                this.getView().byId("idCCliente").setValue(codcli);
+                this.getView().byId("descrProv").setValue(nomcli);
+
+                // Habilitar input de contratos
+                this.oComponent.getModel("ModoApp").setProperty("/ccont", true);
+                this.DameContratosCliente();
+
+                // Habilitar input de canal
+                this.oComponent.getModel("ModoApp").setProperty("/cvcan", true);
+                this.CanalVentas();
+                //this.ObtenerZonas();
+
+                sap.ui.core.BusyIndicator.hide();
+                this.oComponent.getModel("ModoApp").refresh(true);
+                if (this.byId("cliDial")) {
+                    this.byId("cliDial").close();   
+                }                
+            },
+
+            /*buildCliente: function (values) {
+
+                var error = false;
+
+                if (values[0].results) {
+                    //nomcli
+                    if (values[0].results.length == 0) {
+                        MessageBox.error(this.oI18nModel.getProperty("noCli"));
+                        error = true;
+                    } else if (values[0].results.length > 1) {
+                        //univCli
+                        MessageBox.warning(this.oI18nModel.getProperty("univCli"));
+                        this.oComponent.getModel("PedidoCab").setProperty("/Name1", "");
+                        this.oComponent.getModel("PedidoCab").refresh(true);
+                    } else if (values[0].results.length == 1) {
+                        this.oComponent.getModel("PedidoCab").setProperty("/Name1", values[0].results[0].Name1);
+                        this.oComponent.getModel("PedidoCab").setProperty("/Kunnr", values[0].results[0].Kunnr);
+                        codcli = values[0].results[0].Kunnr;
+                        nomcli = values[0].results[0].Name1;
+                        this.oComponent.getModel("PedidoCab").refresh(true);
+
+                        //this.oComponent.getModel("ModoApp").setProperty("/ccont", true);
+                        //this.oComponent.getModel("ModoApp").refresh(true);
+                        this.DatosCliente(codcli, vkbur);
+                        //this.motivopedido(TipoPed, vkbur);-->Cambiaremos el punto donde se llama al mot.
+
+                    }
+                }
+
+                sap.ui.core.BusyIndicator.hide();
+
+                this.DameContratosCliente();
+
+            },*/
+
             DatosCliente: function (codcli, vkbur) {
-                //var kunnr = codcli;
-                //var Bukrs = vkbur
-
                 var aFilters = [],
                     aFilterIds = [],
                     aFilterValues = [];
@@ -1392,7 +1690,326 @@ sap.ui.define([
                     this.oComponent.getModel("ModoApp").refresh(true);
                 }
             },
-            
+
+            // FUNCIONES DEL DESPLEGABLE DE CONTRATO
+            DameContratosCliente: function () {
+                var aFilters = [],
+                    aFilterIds = [],
+                    aFilterValues = [];
+
+                aFilterIds.push("Vkorg");
+                aFilterValues.push(vkbur);
+
+                aFilterIds.push("Kunnr");
+                aFilterValues.push(codcli);
+
+                //En SAP no se utiliza
+                // aFilterIds.push("Auart");
+                // aFilterValues.push(TipoPed);
+
+
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/DameContratosSet", aFilters),
+                ]).then(this.buildContratos.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildContratos: function (values) {
+                var oModelContratos = new JSONModel();
+                if (values[0].results) {                    
+                    oModelContratos.setData(values[0].results);                    
+                }
+                this.oComponent.setModel(oModelContratos, "ContratoCliente");
+                this.oComponent.getModel("ContratoCliente").refresh(true);
+                //this.DatosCliente(codcli, vkbur);
+            },
+
+            onChangeContrato: function () {
+                var inputContrato = this.getView().byId("idcontract");
+                var contrato = inputContrato.getValue().trim();
+
+                var contratos = new Set(this.oComponent.getModel("ContratoCliente").getData().map(item => item.Ktext));
+                
+                var validation;
+                if (!contrato) {
+                    inputContrato.setValueState("None");
+                    this.oComponent.getModel("ModoApp").setProperty("/cvcan", true);
+                    this.oComponent.getModel("ModoApp").setProperty("/cvsector", false);
+                    this.oComponent.getModel("ModoApp").setProperty("/czona", false);
+                    this.getView().byId("idCanal").setSelectedKey(null);
+                    this.getView().byId("idSector").setSelectedKey(null);
+                    this.getView().byId("idzona").setSelectedKey(null);
+                    this.getView().byId("idCTipoPed").setSelectedKey(null);
+                }else if (validation = contratos.has(contrato)) {
+                    
+                    inputContrato.setValueState("None");
+
+                    numCont = inputContrato.getSelectedKey();
+                    nomCont = inputContrato._getSelectedItemText();
+
+                    var soli = this.oComponent.getModel("ContratoCliente").getData();
+                    for (var i = 0; i < soli.length; i++) {
+                        if (soli[i].Vbeln === numCont) {
+                            Cvcan = soli[i].Vtweg;
+                            Cvsector = soli[i].Spart;
+                            Bzirk = soli[i].Bzirk;
+                            TipoPed = soli[i].Auart;
+                            break;
+                        }
+                    }
+
+                   this.condicionPago(codcli, vkbur, Cvcan, Cvsector);
+                    //this.CanalVentas();
+                    //this.SectorVentas();
+                    //this.ObtenerZonas();
+                    //this.OficinaVenta(vkbur, Cvcan, Cvsector);
+                    this.TiposPedidoAlta(TipoPed);
+
+                    this.oComponent.getModel("ModoApp").setProperty("/cvcan", false);
+                    this.oComponent.getModel("ModoApp").setProperty("/cvsector", false);
+                    this.oComponent.getModel("ModoApp").setProperty("/czona", false);
+
+                    //this.getView().byId("idCanal").setSelectedKey(Cvcan);
+                    //this.getView().byId("idSector").setSelectedKey(Cvsector);
+                    //this.getView().byId("idzona").setSelectedKey(Bzirk);
+
+                    this.getView().byId("idCanal").setValue(Cvcan);
+                    this.getView().byId("idSector").setValue(Cvsector);
+                    this.getView().byId("idzona").setValue(Bzirk);
+                }else {
+                    inputContrato.setValueState("Error");
+                } 
+            },
+
+            // FUNCIONES DEL DESPLEGABLE DE CANAL
+            CanalVentas: function () {
+                var aFilters = [],
+                    aFilterIds = [],
+                    aFilterValues = [];
+
+                aFilterIds.push("Vkorg");
+                aFilterValues.push(vkbur);
+
+
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/CanalVentasSet", aFilters),
+                ]).then(this.buildCanales.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildCanales: function (values) {
+                var oModelListCanalVentas = new JSONModel();
+                if (values[0].results) {                    
+                    oModelListCanalVentas.setData(values[0].results);                    
+                }
+                this.oComponent.setModel(oModelListCanalVentas, "CanalVentas");
+            },
+
+            onChangeCanal: function () {
+                var inputCanal = this.getView().byId("idCanal");
+                var canal = inputCanal.getValue().trim();
+
+                var canales = new Set(this.oComponent.getModel("CanalVentas").getData().map(item => item.Vtweg));
+                
+                var validation;
+                if (validation = canales.has(canal)) {                    
+                    inputCanal.setValueState("None");
+                    Cvcan = inputCanal.getSelectedKey();
+                    this.SectorVentas();
+                }else {
+                    inputCanal.setValueState("Error");
+                }
+                this.oComponent.getModel("ModoApp").setProperty("/cvsector", validation);                
+            },
+
+            // FUNCIONES DEL DESPLEGABLE DE SECTOR
+            SectorVentas: function () {
+                var aFilters = [],
+                    aFilterIds = [],
+                    aFilterValues = [];
+
+                aFilterIds.push("Vkorg");
+                aFilterValues.push(vkbur);
+                aFilterIds.push("Vtweg");
+                aFilterValues.push(Cvcan);
+
+
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/SectorVentasSet", aFilters),
+                ]).then(this.buildSectores.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildSectores: function (values) {
+                var oModelListSectorVentas = new JSONModel();
+                if (values[0].results) {
+                    oModelListSectorVentas.setData(values[0].results);                    
+                }
+                this.oComponent.setModel(oModelListSectorVentas, "SectorVentas");
+            },
+
+            onChangeSector: function () {
+                var inputSector = this.getView().byId("idSector");
+                var sector = inputSector.getValue().trim();
+
+                var sectores = new Set(this.oComponent.getModel("SectorVentas").getData().map(item => item.Spart));
+                
+                var validation;
+                if (validation = sectores.has(sector)) {                    
+                    inputSector.setValueState("None");
+                    Cvsector = inputSector.getSelectedKey();
+                    this.ObtenerZonas();
+                }else {
+                    inputSector.setValueState("Error");
+                }
+                this.oComponent.getModel("ModoApp").setProperty("/czona", validation);                
+            },
+
+            // FUNCIONES DEL DESPLEGABLE DE LÍNEA DE SERVICIO
+            ObtenerZonas: function (vkbur) {
+                this.oComponent.getModel("ModoApp").setProperty("/cvcan", true);
+                
+                // ** eliminar filtros?**
+                var aFilterIds,
+                    aFilterValues,
+                    aFilters;
+
+                aFilterIds = ["Vkorg"];
+                aFilterValues = [vkbur];
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                Promise.all([this.readDataEntity(this.mainService, "/ZonaVentasSet", "")]).then(
+                    this.buildListZonaVentas.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildListZonaVentas: function (values) {
+                var oModelListZonaVentas = new JSONModel();
+                if (values[0].results) {                    
+                    oModelListZonaVentas.setData(values[0].results);
+                }
+                this.oComponent.setModel(oModelListZonaVentas, "ZonaVentas");
+            },
+
+            onChangeZona: function () {
+                var inputZona = this.getView().byId("idzona");
+                var zona = inputZona.getValue().trim();
+
+                var zonas = new Set(this.oComponent.getModel("ZonaVentas").getData().map(item => item.Bzirk));
+                
+                var validation;
+                if (validation = zonas.has(zona)) {                    
+                    inputZona.setValueState("None");
+                    Bzirk = inputZona.getSelectedKey();
+                    Bztxt = inputZona._getSelectedItemText();
+                    this.TiposPedidoAlta(TipoPed);
+                    this.OficinaVenta(vkbur, Cvcan, Cvsector);
+                }else {
+                    inputZona.setValueState("Error");
+                }                
+            },
+
+            // FUNCIONES PARA OBTENER EL TIPO DE PEDIDO
+            TiposPedidoAlta: function (TipoPed) {
+
+                var aFilters = [],
+                    aFilterIds = [],
+                    aFilterValues = [];
+
+                aFilterIds.push("Auart");
+                aFilterValues.push(TipoPed);
+
+
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/TipoPedidoSet", aFilters),
+                ]).then(this.buildTiposPed.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildTiposPed: function (values) {
+                var oModelTiposPed = new JSONModel();
+                if (values[0].results) {                    
+                    oModelTiposPed.setData(values[0].results[0]);                    
+                }
+                this.oComponent.setModel(oModelTiposPed, "TipospedidoAlta");
+                this.oComponent.getModel("TipospedidoAlta").refresh(true);
+            },
+
+            // FUNCIONES PARA OBTENER LA OFICINA DE VENTA
+            OficinaVenta: function (vkbur, Cvcan, Cvsector) {
+                var aFilters = [],
+                    aFilterIds = [],
+                    aFilterValues = [];
+
+                aFilterIds.push("Vkorg");
+                aFilterValues.push(vkbur);
+
+                aFilterIds.push("Vtweg");
+                aFilterValues.push(Cvcan);
+
+                aFilterIds.push("Spart");
+                aFilterValues.push(Cvsector);
+
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/DameOficinasSet", aFilters),
+                ]).then(this.buildModelOfVentas.bind(this), this.errorFatal.bind(this));
+            },
+
+            buildModelOfVentas: function (values) {
+                var oModelOfVentas = new JSONModel();
+                if (values[0].results) {                    
+                    oModelOfVentas.setData(values[0].results);                    
+                }
+                this.oComponent.setModel(oModelOfVentas, "OficinaVenta");
+                this.oComponent.getModel("OficinaVenta").refresh(true);
+            },
+
+            // FUNCIONES PARA OBTENER LA CONDICIÓN DE PAGO
+            condicionPago: function (codcli, vkbur, Cvcan, Cvsector) {
+                var aFilters = [],
+                    aFilterIds = [],
+                    aFilterValues = [];
+
+                aFilterIds.push("Kunnr");
+                aFilterValues.push(codcli);
+
+                aFilterIds.push("Vkorg");
+                aFilterValues.push(vkbur);
+
+                aFilterIds.push("Vtweg");
+                aFilterValues.push(Cvcan);
+
+                aFilterIds.push("Spart");
+                aFilterValues.push(Cvsector);
+
+                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+                Promise.all([
+                    this.readDataEntity(this.mainService, "/CondicionPagoSet", aFilters),
+                ]).then(this.buildCondiciones.bind(this), this.errorFatal.bind(this));
+
+            },
+
+            buildCondiciones: function (values) {
+                if (values[0].results) {
+                    if (!values[0].results[0].Zterm) {
+                        MessageBox.warning(this.oI18nModel.getProperty("ErrCond"));
+                    } else {
+                        this.oComponent.getModel("ModoApp").setProperty("/Zterm", values[0].results[0].Zterm);
+                        this.oComponent.getModel("ModoApp").refresh(true);
+                        /*var oModelCondicion = new JSONModel();
+                        oModelCondicion.setData(values[0].results);
+                        condPago = values[0].results[0].Zterm;
+                        this.oComponent.setModel(oModelCondicion, "CondicionPago");*/
+                        //this.oComponent.getModel("ContratoCliente").refresh(true);
+                    }
+                }
+            },
             
 
 
@@ -2517,7 +3134,7 @@ sap.ui.define([
 
                 var aFilterIds, aFilterValues, aFilters;
                 var numsol = soli.IDSOLICITUD;
-                var modApp;
+var modApp;
 
                 //aFilterIds = ["Vbeln"];
                 //aFilterValues = [numsol.IDSOLICITUD];
@@ -2761,8 +3378,8 @@ sap.ui.define([
                 var aFilterIds, aFilterValues, aFilters;
 
                 var numsol = soli.IDSOLICITUD;
-                var modApp;
-
+var modApp;
+                
                 this.modoapp = "M";
 
                 //aFilterIds = ["Vbeln"];
@@ -3561,133 +4178,13 @@ sap.ui.define([
                 });
             },
 
-            CloseCliDiag: function () {
-                this.getView().byId("f_lifnrAcr").setValue(null);
-                this.getView().byId("f_nameAcr").setValue(null);
-                this.getView().byId("f_nifAcr").setValue(null);
-                this.getView().byId("f_nifcAcr").setValue(null);
-                this.byId("cliDial").close();
-                this.oComponent.setModel(new JSONModel(), "listadoClientes");
-                this.oComponent.getModel("listadoClientes").refresh(true);
-            },
+            
 
-            onBusqClientes: function () {
-                var Stcd1 = this.getView().byId("f_nameAcr").getValue();
-                var Kunnr = this.getView().byId("f_lifnrAcr").getValue();
-                var Name1 = this.getView().byId("f_nifAcr").getValue();
-                var Bukrs = this.getView().byId("f_nifcAcr").getValue();
+            
 
-                var aFilterIds = [], aFilterValues = [];
+            
 
-                var addFilter = function (id, value) {
-                    if (value !== "") {
-                        aFilterIds.push(id);
-                        aFilterValues.push(value);
-                    }
-                };
-
-                addFilter("Stcd1", Stcd1);
-                addFilter("Kunnr", Kunnr);
-                addFilter("Name1", Name1);                
-                addFilter("Bukrs", Bukrs);
-
-                var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                sap.ui.core.BusyIndicator.show();
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/DameClientesSet", aFilters),
-                ]).then(this.buildClientesModel.bind(this), this.errorFatal.bind(this));
-
-            },
-
-            buildClientesModel: function (values) {
-                var oModelClientes = new JSONModel();                
-                if (values[0].results) {                    
-                    oModelClientes.setData(values[0].results);                    
-                }
-                this.oComponent.setModel(oModelClientes, "listadoClientes");
-                this.oComponent.getModel("listadoClientes").refresh(true);
-                sap.ui.core.BusyIndicator.hide();
-            },
-
-            onPressCliente: function (oEvent) {
-                var acr = this.getSelectClie(oEvent, "listadoClientes");
-                codcli = acr.Kunnr;
-                nomcli = acr.Name1;
-                this.getView().byId("f_client").setValue(nomcli);
-                this.getView().byId("idCCliente").setValueState("None");
-                //this.getView().byId("idCCliente").setValue(codcli);
-                //this.getView().byId("descrProv").setValue(nomcli);
-
-                sap.ui.core.BusyIndicator.show();
-
-                if (vkbur) {
-                    var aFilters = [],
-                        aFilterIds = [],
-                        aFilterValues = [];
-
-                    aFilterIds.push("Kunnr");
-                    aFilterValues.push(codcli);
-
-                    aFilterIds.push("Bukrs");
-                    aFilterValues.push(vkbur);
-
-                    aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                    Promise.all([
-                        this.readDataEntity(this.mainService, "/DameClientesSet", aFilters),
-                    ]).then(this.buildCliente.bind(this), this.errorFatal.bind(this));
-
-
-                } else {
-                    MessageBox.error(this.oI18nModel.getProperty("noCli"));
-                }
-
-                this.CanalVentas();
-                this.ObtenerZonas();
-
-                this.oComponent.getModel("ModoApp").setProperty("/ccont", true);
-                this.oComponent.getModel("ModoApp").setProperty("/cvcan", true);
-                this.oComponent.getModel("ModoApp").refresh(true);
-
-                this.byId("cliDial").close();
-            },
-
-            buildCliente: function (values) {
-
-                var error = false;
-
-                if (values[0].results) {
-                    //nomcli
-                    if (values[0].results.length == 0) {
-                        MessageBox.error(this.oI18nModel.getProperty("noCli"));
-                        error = true;
-                    } else if (values[0].results.length > 1) {
-                        //univCli
-                        MessageBox.warning(this.oI18nModel.getProperty("univCli"));
-                        this.oComponent.getModel("PedidoCab").setProperty("/Name1", "");
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                    } else if (values[0].results.length == 1) {
-                        this.oComponent.getModel("PedidoCab").setProperty("/Name1", values[0].results[0].Name1);
-                        this.oComponent.getModel("PedidoCab").setProperty("/Kunnr", values[0].results[0].Kunnr);
-                        codcli = values[0].results[0].Kunnr;
-                        nomcli = values[0].results[0].Name1;
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-
-                        //this.oComponent.getModel("ModoApp").setProperty("/ccont", true);
-                        //this.oComponent.getModel("ModoApp").refresh(true);
-                        this.DatosCliente(codcli, vkbur);
-                        //this.motivopedido(TipoPed, vkbur);-->Cambiaremos el punto donde se llama al mot.
-
-                    }
-                }
-
-                sap.ui.core.BusyIndicator.hide();
-
-                this.DameContratosCliente();
-
-            },
+            
 
             filterOption: function (oEvent) {
                 var oColumn = oEvent.getParameter("column");
@@ -3739,94 +4236,7 @@ sap.ui.define([
                 }
             },
 
-            // METODOS Y FUNCIONES PARA EL ALTA DE PEDIDOS
-            onNavToAltaPedidos: function (oEvent) {
-                if (this.oComponent.getModel("ModoApp")) {
-                    this.oComponent.getModel("ModoApp").setProperty("/Nomcont", "");
-                    this.oComponent.getModel("ModoApp").setProperty("/Numcont", "");
-                }
-                numCont = "";
-                nomCont = "";
-                this._getDialogOptions();
-                this.modoapp = 'C';
-            },
-
-            _getDialogOptions: function (sInputValue) {
-                var oView = this.getView();
-
-                if (!this.pDialogOptions) {
-                    this.pDialogOptions = Fragment.load({
-                        id: oView.getId(),
-                        name: "monitorpedidos.fragments.AltaPedidoOption",
-                        controller: this,
-                    }).then(function (oDialogOptions) {
-                        // connect dialog to the root view of this component (models, lifecycle)
-                        oView.addDependent(oDialogOptions);
-                        return oDialogOptions;
-                    });
-                }
-                this.pDialogOptions.then(function (oDialogOptions) {
-                    oDialogOptions.open(sInputValue);
-                    //this._configDialogCliente(oDialog)
-                });
-
-                var vcped,
-                    vcvent,
-                    vzona,
-                    vclient,
-                    vcont,
-                    vcreation,
-                    vtitle,
-                    modApp,
-                    boton,
-                    secuModi,
-                    vccan,
-                    vcsect,
-                    vordenes;
-
-                this.modoapp = 'C';
-
-                if (this.modoapp == "C") {
-                    vcped = false;
-                    vcvent = false;
-                    vzona = false;
-                    vccan = false;
-                    vcsect = false;
-                    vclient = false;
-                    vcont = false;
-                    vcreation = false;
-                    vordenes = false;
-                    vtitle = this.oI18nModel.getProperty("visPed");
-                    boton,
-                        modApp = this.modoapp;
-                }
-
-                var config = {
-                    ItmNumber: 10,
-                    creation: vcreation,
-                    mode: modApp,
-                    modeAlta: "A",
-                    cped: vcped,
-                    cvent: vcvent,
-                    czona: vzona,
-                    cvcan: vccan,
-                    cordenes: vordenes,
-                    cvsector: vcsect,
-                    ccont: vcont,
-                    cclient: vclient,
-                    buttCRUD: boton,
-                    Title: vtitle,
-                    secuModi: secuModi
-                }
-
-                var oModConfig = new JSONModel();
-                oModConfig.setData(config);
-                this.oComponent.setModel(oModConfig, "ModoApp");
-                this.oComponent.setModel(new JSONModel([]), "posPedFrag");
-                this.oComponent.setModel(new JSONModel([]), "PedidoCab");
-                this.oComponent.setModel(new JSONModel([]), "PedidoPos");
-            },
-
+            
             
 
             
@@ -3851,8 +4261,8 @@ sap.ui.define([
                 filtroClasePed = this.getView().byId("idCTipoPed")._getSelectedItemText();
                 //mode.cped = true;
                 //this.oComponent.getModel("ModoApp").refresh(true);
-                this.oComponent.getModel("ModoApp").setProperty("/cped", true);
-                this.oComponent.getModel("ModoApp").refresh(true);
+                //this.oComponent.getModel("ModoApp").setProperty("/cped", true);
+                //this.oComponent.getModel("ModoApp").refresh(true);
                 this.motivopedido(TipoPed, vkbur);
                 //                this.oComponent.getModel("ModoApp").refresh(true);
             },
@@ -3887,90 +4297,16 @@ sap.ui.define([
 
             },*/
 
-            ObtenerZonas: function (vkbur) {
-                //this.oComponent.getModel("ModoApp").setProperty("/cvcan", true);
-                //this.oComponent.getModel("ModoApp").refresh(true);
+            
 
-                //vkbur = this.getView().byId("idArea").getSelectedKey();
-                //vText = this.getView().byId("idArea")._getSelectedItemText();
+            
 
-                var aFilterIds,
-                    aFilterValues,
-                    aFilters;
-
-                aFilterIds = ["Vkorg"];
-                aFilterValues = [vkbur];
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                Promise.all([this.readDataEntity(this.mainService, "/ZonaVentasSet", "")]).then(
-                    this.buildListZonaVentas.bind(this), this.errorFatal.bind(this));
-            },
-
-            onChangeArea: function () {
-
-                
-                var inputSociedad = this.getView().byId("idArea");
-                var sociedad = inputSociedad.getValue().trim();
-
-                var sociedades = this.oComponent.getModel("AreaVentas").getData();
-                var validation = false;
-                for (let i = 0; i < sociedades.length; i++) {
-                    if (sociedad === sociedades[i].Vkorg || sociedad === sociedades[i].Vtext) {
-                        validation = true;
-                        break;
-                    }
-                }
-
-                if (validation) {
-                    inputSociedad.setValueState("None");
-
-                    vkbur = inputSociedad.getSelectedKey();
-                    vText = inputSociedad._getSelectedItemText();
-
-                    var aFilterIds,
-                        aFilterValues,
-                        aFilters;
-
-                    aFilterIds = ["Vkorg"];
-                    aFilterValues = [vkbur];
-                    aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                    Promise.all([this.readDataEntity(this.mainService, "/ZonaVentasSet", "")]).then(
-                        this.buildListZonaVentas.bind(this), this.errorFatal.bind(this));
-                }else {
-                    inputSociedad.setValueState("Error");
-                }            
-
-                this.oComponent.getModel("ModoApp").setProperty("/cclient", validation);
-                this.oComponent.getModel("ModoApp").setProperty("/ccont", false);
-                this.oComponent.getModel("ModoApp").setProperty("/cvcan", false);
-                this.oComponent.getModel("ModoApp").setProperty("/cvsector", false);
-                this.oComponent.getModel("ModoApp").setProperty("/czona", false);
-                this.oComponent.getModel("ModoApp").setProperty("/cped", false);
-                this.oComponent.getModel("ModoApp").refresh(true);
-            },
-
-            buildListZonaVentas: function (values) {
-                var oModelListZonaVentas = new JSONModel();
-                if (values[0].results) {                    
-                    oModelListZonaVentas.setData(values[0].results);
-                }
-                this.oComponent.setModel(oModelListZonaVentas, "ZonaVentas");
-            },
+            
 
 
-            onChangeZona: function () {
-                /*var mode = this.oComponent.getModel("ModoApp").getValue();
-                mode.cclient = true;
-                this.oComponent.getModel("ModoApp").refresh(true);*/
-                this.oComponent.getModel("ModoApp").setProperty("/cped", true);
-                this.oComponent.getModel("ModoApp").refresh(true);
-                Bzirk = this.getView().byId("idzona").getSelectedKey();
-                Bztxt = this.getView().byId("idzona")._getSelectedItemText();
-                this.TiposPedidoAlta(TipoPed);
-                this.OficinaVenta(vkbur, Cvcan, Cvsector);
+            
 
-            },
+            
 
             onReqProv: function () {
                 /*var mode = this.oComponent.getModel("ModoApp").getValue();
@@ -3980,206 +4316,17 @@ sap.ui.define([
                 this.oComponent.getModel("ModoApp").refresh(true);
             },
 
-            onValHelpReqCliente: function (oEvent) {
-                var sInputValue = oEvent.getSource().getValue(),
-                    oView = this.getView();
-
-                if (vkbur) {
-                    this.oComponent.setModel(new JSONModel(), "acrList");
-                    this.oComponent.getModel("FiltrosCli").setProperty("/Bukrs", vkbur);
-                    this.oComponent.getModel("FiltrosCli").setProperty("/Kunnr", sInputValue);
-
-                    if (!this._pValueHelpDialog) {
-                        this._pValueHelpDialog = Fragment.load({
-                            id: oView.getId(),
-                            name: "monitorpedidos.fragments.BusqClientes",
-                            controller: this
-                        }).then(function (oDialog) {
-                            oView.addDependent(oDialog);
-                            return oDialog;
-                        });
-                    }
-                    this._pValueHelpDialog.then(function (oDialog) {
-                        oDialog.open(sInputValue);
-                    });
-                } else {
-                    MessageBox.error(this.oI18nModel.getProperty("noCli"));
-                }
-            },
-
-            onReqCli: function (oEvent) {
-                var cli = oEvent.getParameter("value");
-
-                sap.ui.core.BusyIndicator.show();
-
-                if (vkbur) {
-                    var aFilters = [],
-                        aFilterIds = [],
-                        aFilterValues = [];
-
-                    aFilterIds.push("Kunnr");
-                    aFilterValues.push(cli);
-
-                    aFilterIds.push("Bukrs");
-                    aFilterValues.push(vkbur);
-
-                    aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                    Promise.all([
-                        this.readDataEntity(this.mainService, "/DameClientesSet", aFilters),
-                    ]).then(this.buildCliente.bind(this), this.errorFatal.bind(this));
-
-
-                } else {
-                    MessageBox.error(this.oI18nModel.getProperty("noCli"));
-                }
-
-                //this.oComponent.getModel("ModoApp").setProperty("/ccontr", true);
-                /*var recogetipoped = this.getView().byId("idCTipoPed").getSelectedKey();
-                if (recogetipoped == 'ZSER') {
-                    this.oComponent.getModel("ModoApp").setProperty("/ccontr", false);
-                    this.getView().byId("idcontract").setVisible(true);
- 
-                }else{
-                    this.oComponent.getModel("ModoApp").setProperty("/ccontr", true);
-                    this.getView().byId("idcontract").setVisible(true);
-                }*/
-
-                this.CanalVentas();
-                this.ObtenerZonas();
-
-                //this.oComponent.getModel("ModoApp").setProperty("/cvent", true);
-                this.oComponent.getModel("ModoApp").setProperty("/ccont", true);
-                this.oComponent.getModel("ModoApp").setProperty("/cvcan", true);
-
-                this.oComponent.getModel("ModoApp").refresh(true);
-
-            },
+            
 
             
 
-            condicionPago: function (codcli, vkbur, Cvcan, Cvsector) {
-                var aFilters = [],
-                    aFilterIds = [],
-                    aFilterValues = [];
+            
 
-                aFilterIds.push("Kunnr");
-                aFilterValues.push(codcli);
+            
 
-                aFilterIds.push("Vkorg");
-                aFilterValues.push(vkbur);
+            
 
-                aFilterIds.push("Vtweg");
-                aFilterValues.push(Cvcan);
-
-                aFilterIds.push("Spart");
-                aFilterValues.push(Cvsector);
-
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/CondicionPagoSet", aFilters),
-                ]).then(this.buildCondiciones.bind(this), this.errorFatal.bind(this));
-
-            },
-
-            buildCondiciones: function (values) {
-                if (values[0].results) {
-                    if (!values[0].results[0].Zterm) {
-                        MessageBox.warning(this.oI18nModel.getProperty("ErrCond"));
-                    } else {
-                        this.oComponent.getModel("ModoApp").setProperty("/Zterm", values[0].results[0].Zterm);
-                        this.oComponent.getModel("ModoApp").refresh(true);
-                        /*var oModelCondicion = new JSONModel();
-                        oModelCondicion.setData(values[0].results);
-                        condPago = values[0].results[0].Zterm;
-                        this.oComponent.setModel(oModelCondicion, "CondicionPago");*/
-                        //this.oComponent.getModel("ContratoCliente").refresh(true);
-                    }
-                }
-            },
-
-            DameContratosCliente: function () {
-                var aFilters = [],
-                    aFilterIds = [],
-                    aFilterValues = [];
-
-                aFilterIds.push("Vkorg");
-                aFilterValues.push(vkbur);
-
-                aFilterIds.push("Kunnr");
-                aFilterValues.push(codcli);
-
-                aFilterIds.push("Auart");
-                aFilterValues.push(TipoPed);
-
-
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/DameContratosSet", aFilters),
-                ]).then(this.buildContratos.bind(this), this.errorFatal.bind(this));
-            },
-
-            buildContratos: function (values) {
-                if (values[0].results) {
-                    var oModelContratos = new JSONModel();
-                    oModelContratos.setData(values[0].results);
-                    this.oComponent.setModel(oModelContratos, "ContratoCliente");
-                    this.oComponent.getModel("ContratoCliente").refresh(true);
-                }
-
-                //this.DatosCliente(codcli, vkbur);
-            },
-
-            onChangeContrato: function (oEvent) {
-
-                numCont = this.getView().byId("idcontract").getSelectedKey();
-                nomCont = this.getView().byId("idcontract")._getSelectedItemText();
-
-
-                this.oComponent.getModel("ModoApp").setProperty("/cped", true);
-                this.oComponent.getModel("ModoApp").refresh(true);
-
-                if (!numCont || numCont == undefined) {
-                    MessageBox.warning(this.oI18nModel.getProperty("noCont"));
-
-                    this.oComponent.getModel("ModoApp").setProperty("/cvcan", true);
-                    this.oComponent.getModel("ModoApp").setProperty("/cvsector", false);
-                    this.oComponent.getModel("ModoApp").setProperty("/czona", false);
-                    this.oComponent.getModel("ModoApp").setProperty("/cped", false);
-                    this.getView().byId("idCanal").setSelectedKey(null);
-                    this.getView().byId("idSector").setSelectedKey(null);
-                    this.getView().byId("idzona").setSelectedKey(null);
-                    this.getView().byId("idCTipoPed").setSelectedKey(null);
-                } else {
-                    var soli = this.oComponent.getModel("ContratoCliente").getData();
-                    for (var i = 0; i < soli.length; i++) {
-                        if (soli[i].Vbeln === numCont) {
-                            Cvcan = soli[i].Vtweg;
-                            Cvsector = soli[i].Spart;
-                            Bzirk = soli[i].Bzirk;
-                            TipoPed = soli[i].Auart;
-                        }
-
-                    }
-
-                    this.condicionPago(codcli, vkbur, Cvcan, Cvsector);
-                    this.CanalVentas();
-                    this.SectorVentas();
-                    this.ObtenerZonas();
-                    this.OficinaVenta(vkbur, Cvcan, Cvsector);
-                    this.TiposPedidoAlta(TipoPed);
-
-                    this.oComponent.getModel("ModoApp").setProperty("/cvcan", false);
-                    this.oComponent.getModel("ModoApp").setProperty("/cvsector", false);
-                    this.oComponent.getModel("ModoApp").setProperty("/czona", false);
-
-                    this.getView().byId("idCanal").setSelectedKey(Cvcan);
-                    this.getView().byId("idSector").setSelectedKey(Cvsector);
-                    this.getView().byId("idzona").setSelectedKey(Bzirk);
-                }
-            },
+            
 
             _getDialogPedContrato: function (sInputValue) {
                 var oView = this.getView();
@@ -4332,133 +4479,13 @@ sap.ui.define([
 
             
 
-            CanalVentas: function () {
-                var aFilters = [],
-                    aFilterIds = [],
-                    aFilterValues = [];
+            
 
-                aFilterIds.push("Vkorg");
-                aFilterValues.push(vkbur);
+            
 
+            
 
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/CanalVentasSet", aFilters),
-                ]).then(this.buildCanales.bind(this), this.errorFatal.bind(this));
-            },
-
-            buildCanales: function (values) {
-                if (values[0].results) {
-                    var oModelListCanalVentas = new JSONModel();
-                    oModelListCanalVentas.setData(values[0].results);
-                    this.oComponent.setModel(oModelListCanalVentas, "CanalVentas");
-                }
-            },
-
-            onChangeCanal: function () {
-                this.oComponent.getModel("ModoApp").setProperty("/cvsector", true);
-                this.oComponent.getModel("ModoApp").refresh(true);
-                Cvcan = this.getView().byId("idCanal").getSelectedKey();
-                this.SectorVentas();
-            },
-
-            SectorVentas: function () {
-                var aFilters = [],
-                    aFilterIds = [],
-                    aFilterValues = [];
-
-                aFilterIds.push("Vkorg");
-                aFilterValues.push(vkbur);
-                aFilterIds.push("Vtweg");
-                aFilterValues.push(Cvcan);
-
-
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/SectorVentasSet", aFilters),
-                ]).then(this.buildSectores.bind(this), this.errorFatal.bind(this));
-            },
-
-            buildSectores: function (values) {
-                if (values[0].results) {
-                    var oModelListSectorVentas = new JSONModel();
-                    oModelListSectorVentas.setData(values[0].results);
-                    this.oComponent.setModel(oModelListSectorVentas, "SectorVentas");
-                }
-                //this.oComponent.getModel("ModoApp").setProperty("/cvcan", true);
-                //this.oComponent.getModel("ModoApp").refresh(true);
-
-            },
-
-            onChangeSector: function () {
-                this.oComponent.getModel("ModoApp").setProperty("/czona", true);
-                this.oComponent.getModel("ModoApp").refresh(true);
-                Cvsector = this.getView().byId("idSector").getSelectedKey();
-                //this.OficinaVenta(vkbur, Cvcan, Cvsector);
-                //this.ObtenerZonas(vkbur);
-            },
-
-            OficinaVenta: function (vkbur, Cvcan, Cvsector) {
-
-                var aFilterIds, aFilterValues, aFilters;
-
-                //FILTRADO DE OFICINAS////////////////////////////////////////////////////////////////////////////////////////////
-
-                aFilterIds = [
-                    "Vkorg",
-                    "Vtweg",
-                    "Spart"
-                ];
-                aFilterValues = [
-                    vkbur,
-                    Cvcan,
-                    Cvsector
-                ];
-
-                if (vkbur == "") {
-                    var i = aFilterIds.indexOf("Vkorg");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-
-                if (Cvcan == "") {
-                    var i = aFilterIds.indexOf("Vtweg");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-
-                if (Cvsector == "") {
-                    var i = aFilterIds.indexOf("Spart");
-
-                    if (i !== -1) {
-                        aFilterIds.splice(i, 1);
-                        aFilterValues.splice(i, 1);
-                    }
-                }
-
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/DameOficinasSet", aFilters),
-                ]).then(this.buildModelOfVentas.bind(this), this.errorFatal.bind(this));
-            },
-
-            buildModelOfVentas: function (values) {
-                if (values[0].results) {
-                    var oModelOfVentas = new JSONModel();
-                    oModelOfVentas.setData(values[0].results);
-                    this.oComponent.setModel(oModelOfVentas, "OficinaVenta");
-                    this.oComponent.getModel("OficinaVenta").refresh(true);
-                }
-            },
+            
 
             onNavAlta: function () {
                 var idArea = this.getView().byId("idArea");
@@ -4798,37 +4825,7 @@ sap.ui.define([
                 }
             },
 
-            //CAMBIAR ESTADO DROPDOWNS/INPUTS ALTA PEDIDO
-            onChangeValueState: function(oEvent){
-                var value = sap.ui.getCore().byId(oEvent.getSource().sId);
-                /*
-                if(value.getValue()){
-                    value.setValueState("None");
-                }
-                */
-               
-                var response = value.getValue().toLowerCase();
-                console.log(response);
-                var aItems = value.getItems();
-                var bValidInput = false;
- 
-                for (var i = 0; i < aItems.length; i++) {
-                    var sItemText = aItems[i].getText().toLowerCase();
-                    if (response === sItemText) {
-                        bValidInput = true;
-                        break;
-                    }
- 
-                }
-                //console.log(sItemText);
-                if (bValidInput) {
-                    value.setValueState("None");  
-                } else {
-                    value.setValueState("Error");              
-               
-                }
- 
-            },
+            
 
             motivopedido: function (TipoPed, AreaVenta) {
                 //var Auart = this.getOwnerComponent().getModel("ModoApp").getData().Tipopedido;

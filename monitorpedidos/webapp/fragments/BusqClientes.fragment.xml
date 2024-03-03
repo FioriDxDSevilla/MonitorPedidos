@@ -65,7 +65,8 @@
                 name="D"
                 label=""
                 partOfCurrentVariant="true"
-                visibleInFilterBar="true">
+                visibleInFilterBar="true"
+                hiddenFilter="true">
                 <fb:control>
                     <Input
                         id="f_nifcAcr"
@@ -114,7 +115,7 @@
     </Table>
             <OverflowToolbar >
                 <ToolbarSpacer/>
-                <Button text="Cancelar" type="Emphasized" press="CloseCliDiag">
+                <Button text="Cancelar" type="Emphasized" press="closeCliDiag">
                 <layoutData>
                 <OverflowToolbarLayoutData
                     priority="NeverOverflow"/>

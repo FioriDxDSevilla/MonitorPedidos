@@ -6,34 +6,34 @@
     xmlns:l="sap.ui.layout"
 >   
 <Dialog
-      id='cliDialMonitor'
+      id='cliDial'
       title="{i18n>TableClientes}"  
       resizable="true"
       >
 
     <fb:FilterBar
-        search=".onBusqClientesMonitor"
+        search=".onBusqClientes"
         showClearOnFB="false"
         showFilterConfiguration="false"
         filterBarExpanded="false"
     >
         <fb:filterGroupItems>
             <fb:FilterGroupItem
-                groupName="FiltrosCliMoni"
+                groupName="FiltrosCli"
                 name="A"
-                label="NIF/CIF"
+                label="Codigo de cliente"
                 partOfCurrentVariant="true"
                 visibleInFilterBar="true"
             >
                 <fb:control>
                     <Input
-                        id="f_nameAcrMoni"
-                        value='{FiltrosCliMoni>/Stcd1}'
+                        id="f_lifnrAcr"
+                        value='{FiltrosCli>/Kunnr}'
                     />
                 </fb:control>
             </fb:FilterGroupItem>
             <fb:FilterGroupItem
-                groupName="FiltrosCliMoni"
+                groupName="FiltrosCli"
                 name="B"
                 label="Nombre"
                 partOfCurrentVariant="true"
@@ -41,29 +41,43 @@
             >
                 <fb:control>
                     <Input
-                        id="f_nifAcrMoni"
+                        id="f_nifAcr"
                         value='{FiltrosCli>/Name1}'
-/>
+                    />
                 </fb:control>
             </fb:FilterGroupItem>
             <fb:FilterGroupItem
                 groupName="FiltrosCli"
                 name="C"
-                label="Codigo de cliente"
+                label="NIF/CIF"
                 partOfCurrentVariant="true"
                 visibleInFilterBar="true"
             >
                 <fb:control>
                     <Input
-                        id="f_lifnrAcrMoni"
-                        value='{FiltrosCli>/Kunnr}'
+                        id="f_nameAcr"
+                        value='{FiltrosCli>/Stcd1}'
+                    />
+                </fb:control>
+            </fb:FilterGroupItem>
+            <fb:FilterGroupItem
+                groupName="FiltrosCli"
+                name="D"
+                partOfCurrentVariant="true"
+                visibleInFilterBar="true"
+                hiddenFilter="true">
+                <fb:control>
+                    <Input
+                        id="f_nifcAcr"
+                        value='{FiltrosCli>/Bukrs}'
+                        visible="false"
                     />
                 </fb:control>
             </fb:FilterGroupItem>
         </fb:filterGroupItems>
     </fb:FilterBar>
-    <Table items="{
-            path: 'listadoClientes>/'}" growing="true" growingThreshold="10">
+    <Table id="idTableClientes" items="{
+            path: 'listadoClientesAlta>/'}" growing="true" growingThreshold="10">
         <columns>
             <Column width="10%">
                 <Text text="{i18n>cod}" />
@@ -74,20 +88,28 @@
             <Column width="20%">
                 <Text text="{i18n>NIF}" />
             </Column>
+            <Column width="10%">
+                <Text text="{i18n>sociedad}"/>
+            </Column>
+            <Column width="25%">
+                <Text text="{i18n>desc}"/>
+            </Column>
         </columns>
         <items>
-            <ColumnListItem type="Active" press=".onPressClienteMonitor">
+            <ColumnListItem type="Active" press=".onPressCliente">
                 <cells>
-                    <Text text="{listadoClientes>Kunnr}" />
-                    <Text text="{listadoClientes>Name1}" />
-                    <Text text="{listadoClientes>Stcd1}" />
+                    <Text text="{listadoClientesAlta>Kunnr}" />
+                    <Text text="{listadoClientesAlta>Name1}" />
+                    <Text text="{listadoClientesAlta>Stcd1}" />
+                    <Text text="{listadoClientesAlta>Bukrs}" />
+                    <Text text="{listadoClientesAlta>Butxt}" />
                 </cells>
             </ColumnListItem>
         </items>
     </Table>
             <OverflowToolbar >
                 <ToolbarSpacer/>
-                <Button text="Cancelar" type="Emphasized" press="closeCliDiagMonitor">
+                <Button text="Cancelar" type="Emphasized" press="closeCliDiag">
                 <layoutData>
                 <OverflowToolbarLayoutData
                     priority="NeverOverflow"/>
