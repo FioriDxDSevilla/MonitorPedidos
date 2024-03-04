@@ -62,6 +62,12 @@ sap.ui.define([
         Y -> 1 234 567,89
         */
 
+        /**
+         * FRAMUMO - 04.03.24 - Seteamos la variable oModel para los adjuntos  de los clientes
+         */
+        var oModel;
+
+
         return Controller.extend("monitorpedidos.controller.MonitorPedidos", {
             onInit: function () {
                 this.mainService = this.getOwnerComponent().getModel("mainService");
@@ -74,6 +80,22 @@ sap.ui.define([
 
                 this.oComponent.setModel(oModFiltr, "Filtros");
                 this.oComponent.setModel(oModFiltrosAcr, "FiltrosCli");
+
+                /**
+                 * FRAMUMO - INI 04.03.24 - Modelo JSON para Alta Clientes
+                 */
+                var oModClientes = new JSONModel();
+                oModel = this.getOwnerComponent().getModel();
+                //this.oModel = this.
+                oModel = this._createViewModel();
+
+                this.oComponent.setModel(oModClientes, "AltaClientes");
+                this.adjuntos = [];
+                this.oComponent.setModel(new JSONModel([]), "Adjuntos");
+                this.oComponent.setModel(new JSONModel(), "datosAdj");
+                /**
+                 * FRAMUMO - FIN 04.03.24 - Modelo JSON para Alta Clientes
+                 */
 
                 this.oComponent.setModel(oModCab, "PedidoCab");
                 btnEditar = false, accionLiberar = false, accionRescatar = false;
@@ -92,6 +114,21 @@ sap.ui.define([
                 this.AreasVenta();
                 modoapp = "";
             },
+
+            
+                /**
+                 * FRAMUMO - INI 04.03.24 - función para crear modelos en el component
+                 */
+            _createViewModel: function() {
+                return new JSONModel({
+                    Adjuntos: [],
+                    datosAdj: []
+                });
+            },
+
+                /**
+                 * FRAMUMO - FIN 04.03.24 - función para crear modelos en el component
+                 */
 
             // -------------------------------------- FUNCIÓN PARA LEER LAS ENTIDADES DEL OData --------------------------------------
             readDataEntity: function (oModel, path, aFilters) {
@@ -5176,9 +5213,15 @@ var modApp;
                 this.byId("OptionDialogCliente").close();
             },
 
+            
+            
+                /**
+                 * FRAMUMO - INI 04.03.24 - Modificamos la función de envio Mail 
+                 * para que mande la info desde el modelo de clientes
+                 */
             onEnviarMailAltaCliente: function () {
                 // Se recuperan los valores del formulario
-                var inputCIF = this.getView().byId("inputNifCliente").getValue();
+                /*var inputCIF = this.getView().byId("inputNifCliente").getValue();
                 var inputNombre = this.getView().byId("inputNombreCliente").getValue();
                 var inputTelefono = this.getView().byId("inputTelefonoCliente").getValue();
                 var inputMailContacto = this.getView().byId("inputMailContacto").getValue();
@@ -5194,9 +5237,41 @@ var modApp;
                 var inputAdministracion = this.getView().byId("inputAdministracionCliente").getValue();
                 var inputCondicionPago = this.getView().byId("inputCondicionPagoCliente").getValue();
                 var idSociedad = this.getView().byId("idAreaClientes").getSelectedKey();
-                var nombreSociedad = this.getView().byId("idAreaClientes").getValue();
+                var nombreSociedad = this.getView().byId("idAreaClientes").getValue();*/
 
-                var jsonAltaCliente = {
+                var altaClientes = this.oComponent.getModel("AltaClientes").getData();
+                var that = this;
+                var sUploadedFileName;
+
+                //Tratamos los adjuntos que se envían en el alta de un cliente
+                var oModAdj = this.oComponent.getModel("Adjuntos").getData();
+                var oModAdj2 = [],
+                    numdoc = 0;
+
+                    oModAdj.forEach(function(el){
+                        var adj;
+                        numdoc = numdoc +1;
+
+                        if (el.URL) {
+                            adj = {
+                                Numdoc: numdoc.toString(),
+                                Filename: el.Filename,
+                                Descripcion: el.Descripcion
+                            }
+                        } else {
+                            adj = {
+                                Numdoc: numdoc.toString(),
+                                Mimetype: el.Mimetype,
+                                Filename: el.Filename,
+                                Descripcion: el.Filename,
+                                Content: el.Content
+                            }
+                        }
+                        oModAdj2.push(adj);
+                    });
+                
+                                
+                /*var jsonAltaCliente = {
                     Vkorg: idSociedad,
                     Vtext: nombreSociedad,
                     Cif: inputCIF,
@@ -5214,9 +5289,31 @@ var modApp;
                     Centuni: inputUnidadTramitadora,
                     Centpro: inputOficinaContable,
                     Codadm: inputAdministracion
-                }
+                }*/
 
-                this.getView().byId("inputNifCliente").setValue("");
+                var jsonAltaCliente = {
+                    Vkorg: this.getView().byId("idAreaClientes").getSelectedKey(),
+                    Vtext: this.getView().byId("idAreaClientes").getValue(),
+                    Cif: altaClientes.Cif,
+                    Nombre: altaClientes.Nombre,
+                    DirCalle: altaClientes.DirCalle,
+                    DirCp: altaClientes.DirCp,
+                    DirPoblacion: altaClientes.DirPoblacion,
+                    DirPais: altaClientes.DirPais,
+                    DirRegion: altaClientes.DirRegion,
+                    Mail: altaClientes.Mail,
+                    Telefono: altaClientes.Telefono,
+                    CondPago: altaClientes.CondPago,
+                    Plataforma: altaClientes.Plataforma,
+                    Centges: altaClientes.Centges,
+                    Centuni: altaClientes.Centuni,
+                    Centpro: altaClientes.Centpro,
+                    Codadm: altaClientes.Codadm,
+                    FicheroClienteSet: oModAdj2,
+                    RespEnvioSet: {}
+                };
+
+                /*this.getView().byId("inputNifCliente").setValue("");
                 this.getView().byId("inputNombreCliente").setValue("");
                 this.getView().byId("inputTelefonoCliente").setValue("");
                 this.getView().byId("inputMailContacto").setValue("");
@@ -5231,16 +5328,40 @@ var modApp;
                 this.getView().byId("inputOficinaContableCliente").setValue("");
                 this.getView().byId("inputAdministracionCliente").setValue("");
                 this.getView().byId("inputCondicionPagoCliente").setValue("");
-                this.getView().byId("idAreaClientes").setSelectedKey(null);
+                this.getView().byId("idAreaClientes").setSelectedKey(null);*/
 
                 sap.ui.core.BusyIndicator.show();
                 
                 this.mainService.create("/AltaClienteSet", jsonAltaCliente, {
                     success: function (result) {
                         if (result.Coderror == 0) {
-                            sap.m.MessageBox.success(result.Message, {
+                            MessageBox.show(result.RespEnvioSet.Textolog, {
+                                icon: sap.m.MessageBox.Icon.SUCCESS,
                                 title: "Mail enviado",
                                 initialFocus: null,
+                                onClose: function(oAction) {
+                                    that.getView().byId("idAreaClientes").setSelectedKey(null);
+                                    that.oComponent.setModel(new JSONModel(), "AltaClientes");
+                                    that.oComponent.setModel(new JSONModel([]), "Adjuntos");
+                                    for (var i = 0; i < oModAdj2.length; i++) {
+                                        sUploadedFileName = oModAdj2[i].Filename;
+                                        setTimeout(function () {
+                                            var oUploadCollection = that.getView().byId("UploadCollection");
+                                            console.log("Entra");
+                                            for (var i = 0; i < oUploadCollection.getItems().length; i++) {
+                                                console.log("Entra2");
+                                                if (oUploadCollection.getItems()[i].getFileName() === sUploadedFileName) {
+                                                    oUploadCollection.removeItem(oUploadCollection.getItems()[i]);
+                                                    break;
+                                                }
+                                            }
+                        
+                                            // delay the success message in order to see other messages before
+                                            //MessageToast.show("Event uploadComplete triggered");
+                                        }.bind(this), 8000);
+                                    }
+                                    that.byId("OptionDialogCliente").close();
+                                }
                             });            
                         } else {
                             sap.m.MessageBox.error(result.Message, {
@@ -5257,9 +5378,216 @@ var modApp;
                         });                                                                        
                         sap.ui.core.BusyIndicator.hide();
                     },
-                    async: true,
+                    //async: true,
                 });
 
+            },
+
+            UploadComplete: function(oEvent) {
+                //this.getView().getModel().refresh();
+                var sUploadedFileName = oEvent.getParameter("files")[0].fileName;
+                setTimeout(function () {
+                    var oUploadCollection = this.getView().byId("UploadCollection");
+                    console.log("Entra");
+                    for (var i = 0; i < oUploadCollection.getItems().length; i++) {
+                        console.log("Entra2");
+                        if (oUploadCollection.getItems()[i].getFileName() === sUploadedFileName) {
+                            oUploadCollection.removeItem(oUploadCollection.getItems()[i]);
+                            break;
+                        }
+                    }
+
+                    // delay the success message in order to see other messages before
+                    //MessageToast.show("Event uploadComplete triggered");
+                }.bind(this), 8000);
+
+            },
+
+            /**
+             * FRAMUMO - FIN 04.03.24 - Modificamos la función de envio Mail 
+             * para que mande la info desde el modelo de clientes
+            */
+
+            /**
+                FRAMUMO - INI 04.03.24 - Creamos funciones nuevas para
+                la subida de ficheros adjuntos en Alta Clientes 
+             */
+
+            onChange: function(oEvt) {
+                var fileDetails = oEvt.getParameters("file").files[0];
+                sap.ui.getCore().fileUploaderArr = [];
+
+                if (fileDetails) {
+                    var mimeDet = fileDetails.type,
+                            fileName = fileDetails.name;
+                        var adjuntos = this.oComponent.getModel("Adjuntos").getData();
+                        var nadj = adjuntos.length;
+
+                        this.base64conversionMethod(mimeDet, fileName, fileDetails, nadj, adjuntos);
+                } else {
+                    sap.ui.getCore().fileUploaderArr = []  
+                }
+
+                /*for (var i = 0; i < fileDetails.length; i++) {
+                    if (fileDetails[i]) {
+                        var mimeDet = fileDetails[i].type,
+                            fileName = fileDetails[i].name;
+                        var adjuntos = oModel.oData.Adjuntos;
+                        var nadj = adjuntos.length;
+
+                        this.base64conversionMethod(mimeDet, fileName, fileDetails[i], nadj, adjuntos);
+                    }
+                    
+                }*/
+            },
+
+            base64conversionMethod: function (fileMime, fileName, fileDetails, DocNum, adjuntos) {
+                var that = this;
+
+                FileReader.prototype.readAsBinaryString = function (fileData) {
+                    var binary = "";
+                    var reader = new FileReader();
+
+                    // eslint-disable-next-line no-unused-vars
+                    reader.onload = function (e) {
+                        var bytes = new Uint8Array(reader.result);
+                        var length = bytes.byteLength;
+                        for (var i = 0; i < length; i++) {
+                            binary += String.fromCharCode(bytes[i]);
+                        }
+                        that.base64conversionRes = btoa(binary);
+
+                        var numdoc = (DocNum + 1).toString();
+                        adjuntos.push({
+                            "Numdoc": numdoc,
+                            "Mimetype": fileMime,
+                            "Filename": fileName,
+                            "Content": that.base64conversionRes
+                        });
+
+                        oModel.oData.Adjuntos = adjuntos;
+                        //that.getView().byId("fileUploader").setValue("");
+                    };
+                    reader.readAsArrayBuffer(fileData);
+                };
+                var reader = new FileReader();
+                reader.onload = function (readerEvt) {
+                    var binaryString = readerEvt.target.result;
+                    that.base64conversionRes = btoa(binaryString);
+                    var numdoc = (DocNum + 1).toString();
+                    adjuntos.push({
+                        "Numdoc": numdoc,
+                        "Mimetype": fileMime,
+                        "Content": that.base64conversionRes
+                    });
+
+                    oModel.oData.Adjuntos = adjuntos;
+                    that.getView().byId("fileUploader").setValue("");
+                };
+                reader.readAsBinaryString(fileDetails);
+
+            },
+
+            onStartUpload: function() {
+                var oModAdj = new JSONModel();
+                //Creamos el modelo con los Adjuntos para realizar la subida
+                oModAdj = oModel.oData.Adjuntos;
+                this.uploadFicheros(oModAdj);
+            },
+
+            onUploadComplete: function (oEvent) {
+                this.getView().getModel().refresh();
+                var sUploadedFileName = oEvent.getParameter("files")[0].fileName;
+                setTimeout(function () {
+                    var oUploadCollection = this.getView().byId("UploadCollection");
+                    console.log("Entra");
+                    for (var i = 0; i < oUploadCollection.getItems().length; i++) {
+                        console.log("Entra2");
+                        if (oUploadCollection.getItems()[i].getFileName() === sUploadedFileName) {
+                            oUploadCollection.removeItem(oUploadCollection.getItems()[i]);
+                            break;
+                        }
+                    }
+
+                    // delay the success message in order to see other messages before
+                    MessageToast.show("Event uploadComplete triggered");
+                }.bind(this), 8000);
+
+            },
+
+            onBeforeUploadStarts: function (oEvent) {
+                var oCustomerHeaderSlug = new sap.m.UploadCollectionParameter({
+                    name: "slug",
+                    value: oEvent.getParameter("fileName")
+                });
+
+                oEvent.getParameters().addHeaderParameter(oCustomerHeaderSlug);
+                oModel.getView().getModel();
+                oModel.refreshSecurityToken();
+                var oHeaders = oModel.oHeaders;
+                var sToken = oHeaders['x-csrf-token'];
+                var oCustomerHeaderToken = new sap.m.UploadCollectionParameter({
+                    name: "x-csrf-token",
+                    value: sToken
+                });
+                oEvent.getParameters().addHeaderParameter(oCustomerHeaderToken);
+            },
+
+            uploadFicheros: function (jsonAdjuntos) {
+                let tasks = [];
+                var oJson = {};
+                var oModelAdj = this.getView().getModel();
+                //var crear = "Han sido adjuntado correctamente el documento.";
+
+                oModelAdj.setUseBatch(false);
+
+                for (let i = 0; i < jsonAdjuntos.length; i++) {
+                    // eslint-disable-next-line no-unused-vars
+                    const delay = 10 * i;
+                    oJson = {
+                        //Ntrransporte: ntransporte,
+                        Value: jsonAdjuntos[i].Content,
+                        Filename: jsonAdjuntos[i].Filename,
+                        Mimetype: jsonAdjuntos[i].Mimetype
+                    };
+
+                    //tasks.push(this.uploadFile(oModelAdj, oJson));
+                }
+
+                // eslint-disable-next-line no-unused-vars
+                let results = Promise.all(tasks).then(results => {
+                    //const itemsLength = oUploadCollection.getItems().length;
+                    const itemsLength = results;
+
+                    setTimeout(function () {
+                        var oUploadCollection = this.byId("UploadCollection");
+                        for (var i = 0; i < itemsLength.length; i++) {
+                            var sUploadedFileName = itemsLength[i].Filename;
+                            for (var j = 0; j < oUploadCollection.getItems().length; j++) {
+                                if (oUploadCollection.getItems()[j].getFileName() === sUploadedFileName) {
+                                    oUploadCollection.removeItem(oUploadCollection.getItems()[j]);
+                                    oModel.oData.Adjuntos = [];
+                                    sap.ui.core.BusyIndicator.hide();
+                                    break;
+                                }
+                            }
+                        }
+                    }.bind(this), 2000);
+
+                    /*for (var i = 0; i < itemsLength.length; i++) {
+                        if (itemsLength[i].Filename) {
+                            oUploadCollection.removeItem(oUploadCollection.getItems()[0]);
+                            oModel.oData.Adjuntos = [];
+                            sap.ui.core.BusyIndicator.hide();
+                        }
+
+                    }*/
+                    sap.m.MessageBox.show(this.oI18nModel.getProperty("crear"), {
+                        icon: sap.m.MessageBox.Icon.SUCCESS,
+                        // eslint-disable-next-line no-unused-vars
+                        onClose: function (oAction) {}
+                    });
+                });
             },
 
             //VERIFICAR SI EL DNI TIENE UN FORMATO VALIDO
