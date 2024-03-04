@@ -1895,7 +1895,7 @@ sap.ui.define([
 
             onChangeZona: function () {
                 var inputZona = this.getView().byId("idzona");
-                var zona = inputZona.getValue().trim();
+                var zona = inputZona.getSelectedKey().trim();
 
                 var zonas = new Set(this.oComponent.getModel("ZonaVentas").getData().map(item => item.Bzirk));
                 
