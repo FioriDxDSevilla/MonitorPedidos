@@ -150,6 +150,9 @@ sap.ui.define([
              * FRAMUMO - INI 04.03.24 - función para crear modelos en el component
              */
             readDataExcel: function (oModel, path, aFilters) {
+
+                var sRuta = oModel.sServiceUrl + path + "/?$format=xlsx";
+                window.open(sRuta, '_blank');
                 
 /*                var excelModel = new JSONModel();
                 
@@ -1799,7 +1802,9 @@ sap.ui.define([
                     var oModelDatosCliente = new JSONModel();
                     oModelDatosCliente.setData(values[0].results);
                     this.oComponent.getModel("ModoApp").setProperty("/Kunnr", values[0].results[0].Kunnr);
+                    this.oComponent.getModel("ModoApp").setProperty("/Codcli", values[0].results[0].Kunnr);
                     this.oComponent.getModel("ModoApp").setProperty("/Nombre", values[0].results[0].Nombre);
+                    this.oComponent.getModel("ModoApp").setProperty("/Nomcli", values[0].results[0].Nombre);
                     this.oComponent.getModel("ModoApp").setProperty("/Stcd1", values[0].results[0].Stcd1);
                     this.oComponent.getModel("ModoApp").setProperty("/Stras", values[0].results[0].Stras);
                     this.oComponent.getModel("ModoApp").setProperty("/SmtpAddr", values[0].results[0].SmtpAddr);
@@ -4888,9 +4893,20 @@ sap.ui.define([
                 } else {
 
                     var modeApp = this.oComponent.getModel("ModoApp").getData().mode; //RECOGEMOS EL MODO EN QUE VIENE
-                    this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
+                    //this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
+                    if (TipoPed == "" || TipoPed == undefined)  {
+                        this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", this.getView().byId("idCTipoPed").getValue());
+                    } else {
+                        this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
+                    }
                     TipoPed = "";
-                    this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", filtroClasePed);
+
+                    if (filtroClasePed === "" || filtroClasePed === undefined) {
+                        this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", this.getView().byId("idCTipoPed").getValue()); 
+                    } else {
+                        this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", filtroClasePed);
+                    }
+                    //this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", filtroClasePed);
                     filtroClasePed = "";
                     this.oComponent.getModel("ModoApp").setProperty("/SocPed", socPed);
                     this.oComponent.getModel("ModoApp").setProperty("/NomSoc", vText);
@@ -4901,6 +4917,7 @@ sap.ui.define([
                     this.oComponent.getModel("ModoApp").setProperty("/Bzirk", Bzirk);
                     this.oComponent.getModel("ModoApp").setProperty("/Bztxt", Bztxt);
                     this.oComponent.getModel("ModoApp").setProperty("/Codcli", codcli);
+                    this.oComponent.getModel("ModoApp").setProperty("/Nombre", nomcli);
                     this.oComponent.getModel("ModoApp").setProperty("/Nomcli", nomcli);
                     this.oComponent.getModel("ModoApp").setProperty("/Numcont", numCont);
                     this.oComponent.getModel("ModoApp").setProperty("/Nomcont", nomCont);
