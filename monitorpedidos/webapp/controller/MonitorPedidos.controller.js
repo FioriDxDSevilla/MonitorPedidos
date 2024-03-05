@@ -1380,9 +1380,9 @@ sap.ui.define([
                 var oRbGroup = this.getView().byId("rbGroup"); // Get the RadioButtonGroup control
                 var oSelectedButton = oRbGroup.getSelectedButton(); // Get the selected radio button
 
-                if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbTrue" || oSelectedButton.getId() === "application-ZPV-monitor-component---MonitorPedidos--rbTrue") {
+                if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbTrue" || oSelectedButton.getId() === "application-ZPV-display-component---MonitorPedidos--rbTrue") {
                     filtroUsuario = this.oComponent.getModel("Usuario").getData()[0].Bname;
-                } else if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbFalse" || oSelectedButton.getId() === "application-ZPV-monitor-component---MonitorPedidos--rbFalse") {
+                } else if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbFalse" || oSelectedButton.getId() === "application-ZPV-display-component---MonitorPedidos--rbFalse") {
                     filtroUsuario = "";
                 };
 
@@ -1803,7 +1803,8 @@ sap.ui.define([
                     oModelDatosCliente.setData(values[0].results);
                     this.oComponent.getModel("ModoApp").setProperty("/Kunnr", values[0].results[0].Kunnr);
                     this.oComponent.getModel("ModoApp").setProperty("/Codcli", values[0].results[0].Kunnr);
-                    this.oComponent.getModel("ModoApp").setProperty("/Nombre", values[0].results[0].Nombre);
+                    //this.oComponent.getModel("ModoApp").setProperty("/Codcli", values[0].results[0].Kunnr);
+                    //this.oComponent.getModel("ModoApp").setProperty("/Nombre", values[0].results[0].Nombre);
                     this.oComponent.getModel("ModoApp").setProperty("/Nomcli", values[0].results[0].Nombre);
                     this.oComponent.getModel("ModoApp").setProperty("/Stcd1", values[0].results[0].Stcd1);
                     this.oComponent.getModel("ModoApp").setProperty("/Stras", values[0].results[0].Stras);
@@ -4535,10 +4536,33 @@ sap.ui.define([
 
             onNavAltaContrato: function () {
 
-                this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
+                /*this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
                 TipoPed = "";
                 this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", filtroClasePed);
+                filtroClasePed = "";*/
+
+                /**
+                     * FRAMUMO - 05.03.24 - Recogemos el tipoPedido del input ya que las variables van vacias
+                     */
+                if (TipoPed == "" || TipoPed == undefined)  {
+                    this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", this.getView().byId("idCTipoPed").getValue());
+                } else {
+                    this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
+                }
+                TipoPed = "";
+
+                if (filtroClasePed === "" || filtroClasePed === undefined) {
+                    this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", this.getView().byId("idCTipoPed").getValue()); 
+                } else {
+                    this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", filtroClasePed);
+                }
+                //this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", filtroClasePed);
                 filtroClasePed = "";
+                /**
+                 *  FRAMUMO - FIN 05.03.24
+                 */
+
+
                 this.oComponent.getModel("ModoApp").setProperty("/SocPed", socPed);
                 //this.oComponent.getModel("ModoApp").setProperty("/NomSoc", nomSoc);
                 this.oComponent.getModel("ModoApp").setProperty("/NomSoc", vText);
@@ -4894,6 +4918,9 @@ sap.ui.define([
 
                     var modeApp = this.oComponent.getModel("ModoApp").getData().mode; //RECOGEMOS EL MODO EN QUE VIENE
                     //this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", TipoPed);
+                    /**
+                     * FRAMUMO - 05.03.24 - Recogemos el tipoPedido del input ya que las variables van vacias
+                     */
                     if (TipoPed == "" || TipoPed == undefined)  {
                         this.oComponent.getModel("ModoApp").setProperty("/Tipopedido", this.getView().byId("idCTipoPed").getValue());
                     } else {
@@ -4908,6 +4935,9 @@ sap.ui.define([
                     }
                     //this.oComponent.getModel("ModoApp").setProperty("/Clasepedido", filtroClasePed);
                     filtroClasePed = "";
+                    /**
+                     *  FRAMUMO - FIN 05.03.24
+                     */
                     this.oComponent.getModel("ModoApp").setProperty("/SocPed", socPed);
                     this.oComponent.getModel("ModoApp").setProperty("/NomSoc", vText);
                     this.oComponent.getModel("ModoApp").setProperty("/Vkbur", vkbur);
@@ -5601,6 +5631,11 @@ sap.ui.define([
                 }*/
             },
 
+            onSelectionChange: function(oEvent) {
+                var aSelectedFiles = oEvent.getParameter("files");
+                console.log("Selected files:", aSelectedFiles);
+            },
+
             base64conversionMethod: function (fileMime, fileName, fileDetails, DocNum, adjuntos) {
                 var that = this;
 
@@ -5642,7 +5677,7 @@ sap.ui.define([
                     });
 
                     oModel.oData.Adjuntos = adjuntos;
-                    that.getView().byId("fileUploader").setValue("");
+                    //that.getView().byId("fileUploader").setValue("");
                 };
                 reader.readAsBinaryString(fileDetails);
 

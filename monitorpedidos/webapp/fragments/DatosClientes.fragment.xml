@@ -33,13 +33,37 @@
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
                 </m:Input>
-                <m:Label text="{i18n>NombreCliente}" />
+                <!--
                 <m:Input
+                    id="f_cod"
+                    enabled="false"
+                    editable="false"
+                    visible="{= ${ModoApp>/mode}  === 'C' ?  true: false ||  ${ModoApp>/mode} === 'M' ? false : true }"
+                    width="180px"
+                    value="{ModoApp>/Codcli}"
+                >
+                    <m:layoutData>
+                        <l:GridData span="XL1 L2 M2 S4" />
+                    </m:layoutData>
+                </m:Input> -->
+                <m:Label text="{i18n>NombreCliente}" />
+                <!--<m:Input
                     id="f_nomcli"
                     enabled="false"
                     editable="false"
                     width="280px"
                     value="{ModoApp>/Nombre}"
+                >
+                    <m:layoutData>
+                        <l:GridData span="XL1 L2 M2 S4" />
+                    </m:layoutData>
+                </m:Input>-->
+                <m:Input
+                    id="f_nomcli"
+                    enabled="false"
+                    editable="false"
+                    width="280px"
+                    value="{ModoApp>/Nomcli}"
                 >
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />

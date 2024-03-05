@@ -7,7 +7,7 @@
     xmlns:upload="sap.m.upload">
     <Dialog id="OptionDialogCliente" title="{i18n>AltaCliente}" resizable="true">
 
-        <f:SimpleForm id="fDatosCabCliente" editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="3" labelSpanM="4" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1" singleContainerFullSize="false">
+        <f:SimpleForm id="fDatosCabCliente" width="50%" editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="3" labelSpanM="4" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1" singleContainerFullSize="false">
             <f:content>
                 <Label text="{i18n>sociedad}" />
                 <!--<ComboBox id="idAreaClientes" items="{ path: 'AreaVentas>/', sorter: { path: 'Vkorg' } }" change=".onChangeArea" showSecondaryValues="true" filterSecondaryValues="true" width="auto">
@@ -58,10 +58,11 @@
                 <Label text="{i18n>CondicionPago}"/>
                 <Input id="inputCondicionPagoCliente" maxLength="4" value="{AltaClientes>/CondPago}"/>
 
-                <Text text=" "/>
-                <!--<Title text="{i18n>AdjuntarDocumentacion}"/>
+                <!--<Text text=" "/>
+                <Title text="{i18n>AdjuntarDocumentacion}"/>
                 <Label id="inputAdjuntarDocumentacionCliente" text=""/>
-                <upload:UploadSet id="uploadSetDNI" fileTypes="pdf" instantUpload="true" />-->
+                <upload:UploadSet id="uploadSetDNI" fileTypes="pdf" instantUpload="true" uploadEnabled= "true" selectionChanged="onSelectionChange"/>-->
+                <!--<UploadCollection id="UploadCollection" multiple="true" fileType="pdf" sameFilenameAllowed="true" instantUpload="false" noDataText="{i18n>NoDataText}" noDataDescription="{i18n>noDataDesc}" change=".onChange" fileDeleted="onFileDeleted" filenameLengthExceed="onFilenameLengthExceed" fileSizeExceed="onFileSizeExceed" typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete" beforeUploadStarts="onBeforeUploadStarts"/>-->
                 <UploadCollection id="UploadCollection" multiple="true" fileType="pdf" sameFilenameAllowed="true" instantUpload="false" noDataText="{i18n>NoDataText}" noDataDescription="{i18n>noDataDesc}" change=".onChange" fileDeleted="onFileDeleted" filenameLengthExceed="onFilenameLengthExceed" fileSizeExceed="onFileSizeExceed" typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete" beforeUploadStarts="onBeforeUploadStarts"/>
             </f:content>
         </f:SimpleForm>
