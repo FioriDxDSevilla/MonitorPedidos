@@ -54,7 +54,7 @@
                 placeholder="{i18n>datesel}"
                 change="handleChange"
                 valueFormat="yyyy-MM-dd"
-                value="{posPedFrag>/BillDate}"
+                value="{posPedFrag>/PriceDate}"
                 displayFormat="medium"
             />
             <Label text="{i18n>import}" />

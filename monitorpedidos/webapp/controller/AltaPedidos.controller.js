@@ -652,7 +652,7 @@ sap.ui.define([
             PurchDate: "\/Date(" + PurchDate + ")\/",
             PoDatS: "\/Date(" + PoDatS + ")\/",
             FixValDy: "\/Date(" + FixValDy + ")\/",
-            PriceDate: "\/Date(" + PriceDate + ")\/",
+            PriceDate: "\/Date(" + Date.parse(Posiciones[i].PriceDate) + ")\/",
             ServDate: "\/Date(" + ServDate + ")\/",
             //Importe: results_array[i].Importe.toString(),
             SalesUnit: results_array[i].SalesUnit,
@@ -1149,7 +1149,7 @@ sap.ui.define([
           //Mapeamos las posiciones
           posicionN = {
             CondType: "PR00",
-            BillDate: fechaposicion,
+            PriceDate: fechaposicion,
             Posnr: posactual,
             Matnr: matactual,
             Arktx: descactual,
@@ -1178,7 +1178,7 @@ sap.ui.define([
           //Mapeamos las posiciones
           posicionN = {
             CondType: "PR00",
-            BillDate: fechaposicion,
+            PriceDate: fechaposicion,
             ItmNumber: posactual,
             Material: matactual,
             ShortText: descactual,
@@ -1455,7 +1455,7 @@ sap.ui.define([
             //Obtenemos la fecha de la linea seleccionada
 
             if (items[0].BillDate) {
-              fechaPos = items[0].BillDate
+              fechaPos = items[0].PriceDate
             } else {
               fechaPos = items[0].Erdat;
               var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({ pattern: "YYYY-MM-dd" });
@@ -1941,6 +1941,7 @@ sap.ui.define([
 
         var recogececos = this.getView().byId("f_cecos").getValue();
         var recogeorden = this.getView().byId("f_ordenes").getValue();
+        var fecPrecio = this.onFormatFechaDocVenta(new Date());
 
         var configPos = {
           mode: "A",
@@ -1952,7 +1953,8 @@ sap.ui.define([
           Yyaufnr: recogeorden,
           Ykostl: recogececos,
           Yaufnr: recogeorden,
-          Currency: "EUR"
+          Currency: "EUR",
+          PriceDate: fecPrecio
         }
 
         var oModConfigPos = new JSONModel();

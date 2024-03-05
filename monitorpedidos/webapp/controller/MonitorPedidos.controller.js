@@ -4905,6 +4905,7 @@ sap.ui.define([
                     this.oComponent.getModel("ModoApp").setProperty("/Numcont", numCont);
                     this.oComponent.getModel("ModoApp").setProperty("/Nomcont", nomCont);
                     this.oComponent.getModel("ModoApp").setProperty("/CondPago", condPago);
+                    this.oComponent.getModel("ModoApp").setProperty("/PriceDate", new Date());
                     this.oComponent.setModel(new JSONModel([]), "Adjuntos");
                     this.oComponent.setModel(new JSONModel(), "datosAdj");
                     if (modeApp === 'C') {
