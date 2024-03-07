@@ -30,7 +30,7 @@
                                 <core:Title text="" />
                                 
                                 <m:Label text="{i18n>Denominacion}" />
-                                <m:Input id="f_denoped" width="300px" editable="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" value="{DisplayPEP>/Ktext}">
+                                <m:Input id="f_denoped" width="300px" editable="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" value="{DisplayPEP>/Bstnk}">
                                     <m:layoutData>
                                         <l:GridData span="XL1 L2 M2 S4" />
                                     </m:layoutData>
@@ -63,7 +63,7 @@
                         
                                 <core:Title text="" />
                                 <m:Label/>
-                                <m:Text id="txtPrice" text="{PedidoCab>/ImpPedido} EUR" textAlign="End"/>
+                                <m:Text id="txtPrice" text="{ModoApp>/ImpPedido} {ModoApp>/Moneda}" textAlign="End"/>
                                 <!--<m:Text id="idMoneda" text="{PedidoCab>/Moneda}" textAlign="End"/>-->
                                 <!--<core:Title text="" />
                                 <m:Label/>

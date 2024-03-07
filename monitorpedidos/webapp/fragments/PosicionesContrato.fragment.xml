@@ -94,7 +94,7 @@
             <Button
                 text="Cancelar"
                 type="Emphasized"
-                press="CloseOptionsDiagContrato"
+                press="closeOptionsDiagContrato"
             >
                 <layoutData>
                     <OverflowToolbarLayoutData priority="NeverOverflow" />

@@ -12,7 +12,8 @@
         id="idIconTabBar"
         select=".onFilterSelect"
         class="sapUiResponsiveContentPadding"
-        expanded="{device>/isNoPhone}">
+        expanded="{device>/isNoPhone}"
+        expandable="false">
         <items>
             <IconTabFilter
                 id="Filtro1"
@@ -381,7 +382,7 @@
                                 tooltip="{i18n>modPos}"
                                 type="Ghost"
                                 press="onEditOrder"
-                                enabled="{= ${listadoSolicitudes>Creador} === ${Usuario>/user} &amp;&amp; ${PedidoCab>editPos}}"
+                                enabled="{= ${listadoSolicitudes>Creador} === ${Usuario>/user} &amp;&amp; ${Usuario>editPos}}"
                                 visible="true"
                             />
                         </ui:template>

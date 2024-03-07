@@ -73,9 +73,14 @@
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Descripcion}" />
-                <table:template>
-                    
+                <table:template>                    
                     <m:Text text="{DisplayPosPed>Arktx}"/>
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>fechaPrecio}" />
+                <table:template>
+                    <m:Text text="{DisplayPosPed>Prsdt}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
@@ -93,8 +98,7 @@
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Unidades}" />
-                <table:template>
-                   
+                <table:template>                   
                     <m:Text text="{DisplayPosPed>Meins}"/>
                 </table:template>
             </table:Column>
@@ -106,8 +110,7 @@
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Moneda}" />
-                <table:template>
-                    
+                <table:template>                    
                     <m:Text text="{DisplayPosPed>Waerk}" />
                 </table:template>
             </table:Column>

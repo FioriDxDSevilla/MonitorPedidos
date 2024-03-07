@@ -6,13 +6,13 @@
     xmlns:l="sap.ui.layout"
 >  
 <Dialog
-      id="ofiDial"
+      id="ofiDialMonitor"
       title="{i18n>TableOficinas}"  
       resizable="true"
       >
  
     <fb:FilterBar
-        search=".onBusqOficina"
+        search=".onBusqOficinaMonitor"
         showClearOnFB="false"
         showFilterConfiguration="false"
         filterBarExpanded="false"
@@ -27,7 +27,7 @@
             >
                 <fb:control>
                     <Input
-                        id="f_VkorgOfi"
+                        id="f_VkorgOfiMoni"
                         value='{FiltrosOficina>/Vkorg}'
                     />
                 </fb:control>
@@ -41,7 +41,7 @@
             >
                 <fb:control>
                     <Input
-                        id="f_VtwegOfi"
+                        id="f_VtwegOfiMoni"
                         value='{FiltrosOficina>/Vtweg}'
                     />
                 </fb:control>
@@ -54,7 +54,7 @@
                 visibleInFilterBar="true">
                 <fb:control>
                     <Input
-                        id="f_SpartOfi"
+                        id="f_SpartOfiMoni"
                         value='{FiltrosOficina>/Spart}'
                         editable="true"
                     />
@@ -73,7 +73,7 @@
             </Column>
         </columns>
         <items>
-            <ColumnListItem type="Active" press=".onPressOficinas">
+            <ColumnListItem type="Active" press=".onPressOficinasMonitor">
                 <cells>
                     <Text text="{listadoOficinas>Vkbur}" />
                     <Text text="{listadoOficinas>Bezei}" />
@@ -83,7 +83,7 @@
     </Table>
             <OverflowToolbar >
                 <ToolbarSpacer/>
-                <Button text="Cancelar" type="Emphasized" press="CloseOficinasDiag">
+                <Button text="Cancelar" type="Emphasized" press="closeOficinasDiagMonitor">
                 <layoutData>
                 <OverflowToolbarLayoutData
                     priority="NeverOverflow"/>

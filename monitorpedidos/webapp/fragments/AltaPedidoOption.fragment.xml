@@ -29,7 +29,7 @@
                         <l:GridData span="XL2 L3 M4 S6"/>
                     </layoutData>
                 </Input>
-                <Input value="{ModoApp>/Nombre}" id="descrProv" editable="false">
+                <Input value="{ModoApp>/Nomcli}" id="descrProv" editable="false">
                     <layoutData>
                         <l:GridData span="XL6 L5 M6 S12"/>
                     </layoutData>

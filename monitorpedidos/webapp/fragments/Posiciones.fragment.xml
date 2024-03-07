@@ -80,6 +80,12 @@
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
+                <m:Label text="{i18n>fechaPrecio}" />
+                <table:template>
+                    <m:Text text="{PedidoPos>Prsdt}"/>
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
                 <m:Label text="{i18n>Cantidad}" />
                 <table:template>
                     <m:Text text="{PedidoPos>ReqQty}"/>

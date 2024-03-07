@@ -73,5 +73,9 @@ monitorpedidos.model.Util = {
 
         return timeOut;
 
-    }  
+    },
+    formatDate: function (date){
+        var resultDate = date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2);
+        return resultDate;
+    }
 }
