@@ -368,7 +368,8 @@ sap.ui.define([
         cabecera.BillBlock = "ZR";
         cabecera.Currency = this.getView().byId("idMoneda").getText();*/
 
-
+        console.log(this.oComponent.getModel("DisplayPEP").getData());
+        
         if (this.oComponent.getModel("ModoApp").getProperty("/mode") == 'M') {
           var Vbeln = this.oComponent.getModel("DisplayPEP").getData().Vbeln
           var DocType = this.oComponent.getModel("ModoApp").getData().Tipopedido;
@@ -1437,30 +1438,27 @@ sap.ui.define([
         }
       },
 
-      onModPosPed: function () {
+      onModPosPed: function (oEvent) {
 
         var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
         var oTable, aContexts, items;
         //MODO DE MODIFICACION DE PEDIDOS
         if (modeApp == 'M') {
           oTable = this.getView().byId("TablaPosicionesDisp");
-          aContexts = oTable.getSelectedIndices();
+          var index = oEvent.getSource().getBindingContext("DisplayPosPed").getPath().split("/").slice(-1).pop();
+          aContexts = [index];
           items = aContexts.map(function (c) {
             return this.oComponent.getModel("DisplayPosPed").getProperty("/" + c);
           }.bind(this));
-          if (items.length == 0) {
-            //Mostramos un error porque no se ha seleccionado una linea
-            MessageBox.warning(this.oI18nModel.getProperty("errModPos"));
-          } else {
-            //Obtenemos la fecha de la linea seleccionada
+          //Obtenemos la fecha de la linea seleccionada
 
-            if (items[0].BillDate) {
-              fechaPos = items[0].PriceDate
-            } else {
-              fechaPos = items[0].Erdat;
-              var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({ pattern: "YYYY-MM-dd" });
-              fechaPos = dateFormat.format(fechaPos);
-            }
+          if (items[0].BillDate) {
+            fechaPos = items[0].PriceDate
+          } else {
+            fechaPos = items[0].Erdat;
+            var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({ pattern: "YYYY-MM-dd" });
+            fechaPos = dateFormat.format(fechaPos);
+          }
 
             ///////ABRIR DIALOGO
             var oView = this.getView();
@@ -1517,79 +1515,73 @@ sap.ui.define([
               oDialogPosiciones.open();
             });
 
-          }
 
           ///MODO DE CREACION DE PEDIDOS
         } else if (modeApp == 'C') {
           oTable = this.getView().byId("TablaPosiciones");
-          aContexts = oTable.getSelectedIndices();
+          var index = oEvent.getSource().getBindingContext("PedidoPos").getPath().split("/").slice(-1).pop();
+          aContexts = [index];          
           items = aContexts.map(function (c) {
             return this.oComponent.getModel("PedidoPos").getProperty("/" + c);
           }.bind(this));
-          if (items.length == 0) {
-            //Mostramos un error porque no se ha seleccionado una linea
-            MessageBox.warning(this.oI18nModel.getProperty("errModPos"));
-          } else {
-            //Obtenemos la fecha de la linea seleccionada
-            fechaPos = items[0].Erdat;
+          //Obtenemos la fecha de la linea seleccionada
+          fechaPos = items[0].Erdat;
 
-            ///////ABRIR DIALOGO
-            var oView = this.getView();
-            var configPos = {
-              mode: "M",
-              type: "P",
-              index: aContexts[0],
-              Vbelp: items[0].ItmNumber,
-              ShortText: items[0].ShortText,
-              Material: items[0].Material,
-              BillDate: items[0].BillDate,
-              CondValue: items[0].CondValue,
-              ReqQty: items[0].ReqQty,
-              Kpein: items[0].Kpein,
-              Currency: items[0].Currency,
-              SalesUnit: items[0].SalesUnit,
-              Yykostl: items[0].Yykostl,
-              Yyaufnr: items[0].Yyaufnr,
-              Ykostl: items[0].Ykostl,
-              Yaufnr: items[0].Yaufnr
-            }
-
-
-            var oModConfigPos = new JSONModel();
-            oModConfigPos.setData(configPos);
-            this.oComponent.setModel(oModConfigPos, "posPedFrag");
-            this.oComponent.getModel("posPedFrag").refresh(true);
-
-            if (!this.pDialogPosiciones) {
-              this.pDialogPosiciones = Fragment.load({
-                id: oView.getId(),
-                name: "monitorpedidos.fragments.AddPosicionesPed",
-                controller: this,
-              }).then(function (oDialogPosiciones) {
-                // connect dialog to the root view of this component (models, lifecycle)
-                oView.addDependent(oDialogPosiciones);
-                return oDialogPosiciones;
-              });
-              ///DESHABILITAR SCROLL EN LOS INPUT NUMERICOS
-              var oInput = this.byId("f_importpos");
-              oInput.attachBrowserEvent("mousewheel", function (oEvent) {
-                oEvent.preventDefault();
-              });
-              var oInput = this.byId("f_cantpos");
-              oInput.attachBrowserEvent("mousewheel", function (oEvent) {
-                oEvent.preventDefault();
-              });
-              var oInput = this.byId("f_cantbasepos");
-              oInput.attachBrowserEvent("mousewheel", function (oEvent) {
-                oEvent.preventDefault();
-              });
-            }
-
-            this.pDialogPosiciones.then(function (oDialogPosiciones) {
-              oDialogPosiciones.open();
-            });
-
+          ///////ABRIR DIALOGO
+          var oView = this.getView();
+          var configPos = {
+            mode: "M",
+            type: "P",
+            index: aContexts[0],
+            Vbelp: items[0].ItmNumber,
+            ShortText: items[0].ShortText,
+            Material: items[0].Material,
+            BillDate: items[0].BillDate,
+            CondValue: items[0].CondValue,
+            ReqQty: items[0].ReqQty,
+            Kpein: items[0].Kpein,
+            Currency: items[0].Currency,
+            SalesUnit: items[0].SalesUnit,
+            Yykostl: items[0].Yykostl,
+            Yyaufnr: items[0].Yyaufnr,
+            Ykostl: items[0].Ykostl,
+            Yaufnr: items[0].Yaufnr
           }
+
+
+          var oModConfigPos = new JSONModel();
+          oModConfigPos.setData(configPos);
+          this.oComponent.setModel(oModConfigPos, "posPedFrag");
+          this.oComponent.getModel("posPedFrag").refresh(true);
+
+          if (!this.pDialogPosiciones) {
+            this.pDialogPosiciones = Fragment.load({
+              id: oView.getId(),
+              name: "monitorpedidos.fragments.AddPosicionesPed",
+              controller: this,
+            }).then(function (oDialogPosiciones) {
+              // connect dialog to the root view of this component (models, lifecycle)
+              oView.addDependent(oDialogPosiciones);
+              return oDialogPosiciones;
+            });
+            ///DESHABILITAR SCROLL EN LOS INPUT NUMERICOS
+            var oInput = this.byId("f_importpos");
+            oInput.attachBrowserEvent("mousewheel", function (oEvent) {
+              oEvent.preventDefault();
+            });
+            var oInput = this.byId("f_cantpos");
+            oInput.attachBrowserEvent("mousewheel", function (oEvent) {
+              oEvent.preventDefault();
+            });
+            var oInput = this.byId("f_cantbasepos");
+            oInput.attachBrowserEvent("mousewheel", function (oEvent) {
+              oEvent.preventDefault();
+            });
+          }
+
+          this.pDialogPosiciones.then(function (oDialogPosiciones) {
+            oDialogPosiciones.open();
+          });
         }
       },
 
@@ -2599,6 +2591,10 @@ sap.ui.define([
       
       /* FORMATEAR NUMERO IMPORTE */
       onFormatImporte: function (Netpr) {
+        //var expression = /[.,]/;
+        if (Netpr) {
+          Netpr = Number(Netpr).toFixed(2);
+        }
         importeFormat = this.oComponent.getModel("Usuario").getData()[0].Dcpfm;
         var numberFormat;
         switch (importeFormat) {
