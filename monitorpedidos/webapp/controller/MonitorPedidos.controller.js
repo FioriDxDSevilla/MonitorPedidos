@@ -2791,10 +2791,8 @@ sap.ui.define([
                 }
                 this.oComponent.setModel(new JSONModel([]), "PedidoPos");
                 this.oComponent.getModel("PedidoPos").setData(results_array);
-                this.resetearInputsDialogoAlta("All");
-
+                
                 this.closeOptionsDiagContrato();
-
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
                 oRouter.navTo("RouteAltaPedidos");
             },
