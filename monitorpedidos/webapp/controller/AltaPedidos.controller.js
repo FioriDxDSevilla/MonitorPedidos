@@ -53,27 +53,290 @@ sap.ui.define([
         this.oComponent = this.getOwnerComponent();
         this.oI18nModel = this.oComponent.getModel("i18n");
 
-
-        var oModAdj = new JSONModel();
-        var oModAdjSHP = new JSONModel();
-        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-        /*if (modeApp == 'M' || modeApp == 'D') {
-          const myRoute = this.getOwnerComponent().getRouter().getRoute("RouteAltaPedidos");
-        myRoute.attachPatternMatched(this.onMyRoutePatternMatched, this);
-        }*/
-        
-
+        // var oModAdj = new JSONModel();
+        // var oModAdjSHP = new JSONModel();
+        // var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
+        this.oComponent.setModel(new JSONModel([]), "posPedFrag");
       },
 
-      /*onMyRoutePatternMatched(event) {
-        // your code when the view is about to be displayed ..
-        this.actualizaimp();
-      },*/
-
+      // -------------------------------------- FUNCIÓN PARA LEER LAS ENTIDADES DEL OData --------------------------------------
       onNavBack : function(){
         this.onCancelar();
       },
+      
+      // -------------------------------------- FUNCIÓN PARA LEER LAS ENTIDADES DEL OData --------------------------------------
+      readDataEntity: function (oModel, path, aFilters) {
+        return new Promise(function (resolve, reject) {
+          oModel.read(path, {
+            filters: [aFilters],
+            success: function (oData) {
+              resolve(oData);
+            },
+            error: function (oResult) {
+              reject(oResult);
+            },
+          });
+        });
+      },
 
+      // -------------------------------------- EXCEPCIONES (ERROR FATAL) --------------------------------------
+      errorFatal: function (e) {
+        MessageBox.error(this.oI18nModel.getProperty("errFat"));
+        sap.ui.core.BusyIndicator.hide();
+      },
+      
+      // -------------------------------------- FUNCIONES FORMATEO DE CAMPOS --------------------------------------
+      // FUNCION PARA FORMATEAR NUMERO IMPORTE
+      onFormatImporte: function (Netpr) {
+        //var expression = /[.,]/;
+        if (Netpr) {
+          Netpr = Number(Netpr).toFixed(2);
+        }
+        importeFormat = this.oComponent.getModel("Usuario").getData()[0].Dcpfm;
+        var numberFormat;
+        switch (importeFormat) {
+ 
+          case ""://1.234.567,89
+            numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
+              "maxFractionDigits": 2,
+              "decimalSeparator": ",",
+              "groupingEnabled": true,
+              "groupingSeparator": '.'
+            });
+ 
+            break;
+          case "X"://1,234,567.89
+            numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
+              "maxFractionDigits": 2,
+              "decimalSeparator": ".",
+              "groupingEnabled": true,
+              "groupingSeparator": ','
+            });
+            break;
+          case "Y"://1 234 567,89
+            numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
+              "maxFractionDigits": 2,
+              "decimalSeparator": ",",
+              "groupingEnabled": true,
+              "groupingSeparator": ' '
+            });
+            break;
+        }
+        var numeroFormateado = numberFormat.format(Netpr);
+        return numeroFormateado;
+      },
+ 
+      // FUNCION PARA FORMATEAR LA FECHA DOCUMENTO
+      onFormatFechaDocVenta: function (Fechadoc) {
+ 
+        fechaDocVentaFormat = this.oComponent.getModel("Usuario").getData()[0].Datfm;
+        var dateFormat = Fechadoc;
+ 
+        switch (fechaDocVentaFormat) {
+          case "1":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "dd.MM.YYYY"
+            });
+ 
+            break;
+          case "2":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "MM/dd/YYYY"
+            });
+            break;
+          case "3":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "MM-dd-YYYY"
+            });
+            break;
+ 
+          case "4":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "YYYY.MM.dd"
+            });
+            break;
+          case "5":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "YYYY/MM/dd"
+            });
+            break;
+          case "6":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "YYYY-MM-dd"
+            });
+            break;
+          case "7":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "GYY.MM.dd"
+            });
+            break;
+          case "8":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "GYY/MM/dd"
+            });
+            break;
+          case "9":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "GYY-MM-dd"
+            });
+            break;
+          case "A":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "YYYY/MM/dd"
+            });
+            break;
+          case "B":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "YYYY/MM/dd"
+            });
+ 
+            break;
+          case "C":
+            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+              pattern: "YYYY/MM/dd"
+            });
+ 
+            break;
+        }
+ 
+        var fechaFormateada = dateFormat.format(Fechadoc);
+        return fechaFormateada;
+      },
+
+      onValueHelpCecosCabecera: function (oEvent) {
+        this._getDialogCecosCabecera();
+      },
+
+      _getDialogCecosCabecera: function (sInputValue) {
+        var oView = this.getView();
+
+        if (!this.pDialogCecosCabecera) {
+          this.pDialogCecosCabecera = Fragment.load({
+            id: oView.getId(),
+            name: "monitorpedidos.fragments.BusqCecoPedCabecera",
+            controller: this,
+          }).then(function (oDialogCecosCabecera) {
+            // connect dialog to the root view of this component (models, lifecycle)
+            oView.addDependent(oDialogCecosCabecera);
+            return oDialogCecosCabecera;
+          });
+        }
+        this.pDialogCecosCabecera.then(function (oDialogCecosCabecera) {
+          oDialogCecosCabecera.open(sInputValue);
+        });
+      },
+
+      closeCecoDiagCabecera: function () {
+        this.byId("cecoDialCabecera").close();
+      },
+
+      onBusqCecosCabecera: function () {
+        var Kostl = this.getView().byId("f_codCecoCabecera").getValue();
+        var Ltext = this.getView().byId("f_nomCecoCabecera").getValue();
+        this.onBusqCecos(Kostl, Ltext)
+      },
+
+      onBusqCecos: function (Kostl, Ltext) {
+        /*
+        var Kostl = this.getView().byId("f_codCeco").getValue();
+        var Ltext = this.getView().byId("f_nomCeco").getValue();
+        */
+
+        //var Bukrs = this.getView().byId("f_cecoSoc").getValue();
+        //var Bukrs = this.getOwnerComponent().getModel("ModoApp").getProperty("/Vkbur");
+        //var Bukrs = this.getView().byId("f_nifcAcr").getValue();
+        if (this.getOwnerComponent().getModel("ModoApp").getProperty("/mode") == 'M') {
+          var Bukrs = this.getOwnerComponent().getModel("DisplayPEP").getProperty("/Vkorg");
+        } else {
+          var Bukrs = this.getOwnerComponent().getModel("ModoApp").getProperty("/Vkbur");
+        }
+
+        var aFilterIds, aFilterValues, aFilters;
+
+        //FILTRADO DE CLIENTES////////////////////////////////////////////////////////////////////////////////////////////
+
+        aFilterIds = [
+          "Kostl",
+          "Ltext",
+          "Kokrs"
+        ];
+        aFilterValues = [
+          Kostl,
+          Ltext,
+          Bukrs
+        ];
+
+        if (Kostl == "") {
+          var i = aFilterIds.indexOf("Kostl");
+
+          if (i !== -1) {
+            aFilterIds.splice(i, 1);
+            aFilterValues.splice(i, 1);
+          }
+        }
+
+        if (Ltext == "") {
+          var i = aFilterIds.indexOf("Ltext");
+
+          if (i !== -1) {
+            aFilterIds.splice(i, 1);
+            aFilterValues.splice(i, 1);
+          }
+        }
+
+        /*if (Bukrs == "") {
+            var i = aFilterIds.indexOf("Bukrs");
+
+            if (i !== -1) {
+                aFilterIds.splice(i, 1);
+                aFilterValues.splice(i, 1);
+            }
+        }*/
+        if (Bukrs == "") {
+          var i = aFilterIds.indexOf("Kokrs");
+
+          if (i !== -1) {
+            aFilterIds.splice(i, 1);
+            aFilterValues.splice(i, 1);
+          }
+        }
+
+        aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+        sap.ui.core.BusyIndicator.show();
+
+        Promise.all([
+          this.readDataEntity(this.mainService, "/CecoIngresoSet", aFilters),
+        ]).then(this.buildCecosModel.bind(this), this.errorFatal.bind(this));
+      },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      // -------------------------------------- FUNCIÓN BOTÓN CANCELAR --------------------------------------
       onCancelar: function () {
         this.getView().byId("textAreaCabFact").setValue(null);
         this.getView().byId("textAreaCabInfRech").setValue(null);
@@ -99,233 +362,7 @@ sap.ui.define([
         oRouter.navTo("RouteMonitorPedidos");
       },
 
-      actualizaimp: function () {
-        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-        //this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", '0');
-        //this.oComponent.getModel("PedidoCab").setProperty("/Moneda", 'EUR');
-        var calculo = 0;
-        var sumCalculo = 0;
-        //MODO DE MODIFICACION Y VISUALIZACION DE PEDIDOS
-        if (modeApp == 'M'|| modeApp == 'D') {
-          var datos = this.oComponent.getModel("DisplayPosPed").getData();
-          var sumCant = 0;
-          var sumImp = 0;
-          var sumCantBase = 0;
-          var moneda = "EUR";
-          for (var i = 0; i < datos.length; i++) {
-            var cantidades = datos[i].Kwmeng;
-            var cantbases = datos[i].Kpein;
-            var moneda = datos[i].Waerk;
-            var importes = datos[i].Netpr;
-             calculo = Number((importes / cantbases) * cantidades).toFixed(2);
-             sumCalculo = Number(Number(sumCalculo)+Number(calculo)).toFixed(2);
-    
-          }
-          //MODO DE CREACION DE PEDIDOS
-        } else if (modeApp == 'C') {
-          var datos = this.oComponent.getModel("PedidoPos").getData();
-          var sumCant = 0;
-          var sumImp = 0;
-          var sumCantBase = 0;
-          var moneda = "EUR";
-          for (var i = 0; i < datos.length; i++) {
-            var cantidades = datos[i].ReqQty;
-            var cantbases = datos[i].Kpein;
-            var moneda = datos[i].Waerk;
-            var importes = datos[i].CondValue;
-            calculo = Number((importes / cantbases) * cantidades).toFixed(2);
-             sumCalculo = Number(Number(sumCalculo)+Number(calculo)).toFixed(2);
-          }
-        }
-        this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", sumCalculo);
-        this.oComponent.getModel("PedidoCab").setProperty("/Moneda", moneda);
-        this.oComponent.getModel("PedidoCab").refresh(true);
-      },
-
-      fechahoy: function () {
-        var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getMonth() + 1; //January is 0!
-        var yyyy = today.getFullYear();
-        var today1 = (dd + ' ' + mm + ', ' + yyyy);
-        //var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "YYYY/MM/DD" });   
-        //var todayFormatted = dateFormat.format(today1);
-
-        this.getView().byId("DTPdesde").setValue(today1);
-      },
-      /*ABRIR GESTOR DE ARCHIVOS*/
-
-      handleUploadPress: function (oEvent) {
-        //Inicializamos el modelo de adjunto 
-        //this.act_adj = null;
-
-        //var oMdesc = this.oComponent.getModel("datosAdj").getData();
-        //var desc = oMdesc.Desc;
-
-        /*if (!desc || desc == undefined) {
-          desc = this.getView().byId("descAdjunto").getValue();
-        }*/
-
-        /*if (!desc) {
-            MessageBox.error(this.oI18nModel.getProperty("errDesArch"));
-            this.getView().byId("fileUploader").setValue("");
-            return;
-        }*/
-
-        /*var fileDetails = oEvent.getParameters("file").files[0];
-        sap.ui.getCore().fileUploaderArr = [];
-
-        if (fileDetails) {
-          var mimeDet = fileDetails.type,
-            fileName = fileDetails.name;
-          //Calling method....
-          var adjuntos = this.oComponent.getModel("Adjuntos").getData();
-          var nadj = adjuntos.length;
-
-          this.base64conversionMethod(
-            C,
-            fileName,
-            fileDetails,
-            nadj,
-            adjuntos,
-            "");
-        } else {
-          sap.ui.getCore().fileUploaderArr = [];
-        }*/
-
-
-        this.act_adj = null;
-        var oMdesc = this.oComponent.getModel("datosAdj").getData();
-        var desc = oMdesc.Desc;
-        var fileDetails = oEvent.getParameters("file").files[0];
-        sap.ui.getCore().fileUploaderArr = [];
-        if (fileDetails) {
-          var mimeDet = fileDetails.type,
-            fileName = fileDetails.name;
-          var adjuntos = this.oComponent.getModel("Adjuntos").getData();
-          var nadj = adjuntos.length;
-          this.base64conversionMethod(mimeDet, fileName, fileDetails, nadj, adjuntos, "")
-        } else {
-          sap.ui.getCore().fileUploaderArr = []
-        }
-
-
-
-
-      },
-
-      /*CONVERTIR FICHEROS A BASE64 */
-      base64conversionMethod: function (fileMime, fileName, fileDetails, DocNum, adjuntos, desc) {
-        var that = this;
-        var oModAdj = new JSONModel();
-
-        FileReader.prototype.readAsBinaryString = function (fileData) {
-          var binary = "";
-          var reader = new FileReader();
-          reader.onload = function (e) {
-            var bytes = new Uint8Array(reader.result);
-            var length = bytes.byteLength;
-            for (var i = 0; i < length; i++) {
-              binary += String.fromCharCode(bytes[i]);
-            }
-            that.base64conversionRes = btoa(binary);
-
-            var numdoc = (DocNum + 1).toString();
-            that.act_adj = {
-              "Numdoc": numdoc,
-              "Mimetype": fileMime,
-              "Filename": fileName,
-              //"Descripcion": desc,
-              "Content": that.base64conversionRes,
-            };
-            /*that.oComponent.getModel("Adjuntos").refresh(true);
-            that.getView().byId("descAdjunto").setValue("");
-            that.getView().byId("fileUploader").setValue("");*/
-          };
-          reader.readAsArrayBuffer(fileData);
-        };
-        var reader = new FileReader();
-        reader.onload = function (readerEvt) {
-          var binaryString = readerEvt.target.result;
-          that.base64conversionRes = btoa(binaryString);
-          var numdoc = (DocNum + 1).toString();
-
-          that.act_adj = {
-            "Numdoc": numdoc,
-            "Mimetype": fileMime,
-            "Filename": fileName,
-            //"Descripcion": desc,
-            "Content": that.base64conversionRes,
-          };
-
-          /*that.oComponent.getModel("Adjuntos").refresh(true);
-           that.getView().byId("descAdjunto").setValue("");
-           that.getView().byId("fileUploader").setValue("");*/
-        };
-        reader.readAsBinaryString(fileDetails);
-      },
-
-      /* Botón para la funcionalidad de meterlo en la tabla de los adjuntos*/
-
-      onAttFile: function () {
-
-
-        /*var adjuntos = this.oComponent.getModel("Adjuntos").getData();
-        var oMdesc = this.oComponent.getModel("datosAdj").getData();
-        var desc = oMdesc.Desc;
-
-        if (!desc) {
-          MessageBox.error(this.oI18nModel.getProperty("errDesArch"));
-          return;
-        } else if (!this.act_adj) {
-          MessageBox.error(this.oI18nModel.getProperty("errNoArch"));
-          return;
-        } else {
-
-          this.act_adj.Descripcion = desc;
-          adjuntos.push(this.act_adj);
-          this.oComponent.getModel("Adjuntos").refresh(true);
-          this.getView().byId("descPresAdjunto").setValue("");
-          this.getView().byId("fileUploader").setValue("");
-          this.act_adj = null;
-        }*/
-
-
-        var adjuntos = this.oComponent.getModel("Adjuntos").getData();
-        var oMdesc = this.oComponent.getModel("datosAdj").getData();
-        var desc = oMdesc.Desc;
-        if (!desc) {
-          MessageBox.error(this.oI18nModel.getProperty("errDesArch"));
-          return
-        } else if (!this.act_adj) {
-          MessageBox.error(this.oI18nModel.getProperty("errNoArch"));
-          return
-        } else {
-          this.act_adj.Descripcion = desc;
-          adjuntos.push(this.act_adj);
-          this.oComponent.getModel("Adjuntos").refresh(true);
-          this.getView().byId("descAdjunto").setValue("");
-          this.getView().byId("fileUploader").setValue("");
-          this.act_adj = null;
-        }
-
-      },
-
-      /* Función para eliminar un adjunto de la tabla */
-
-      onDeleteAdj: function (oEvent) {
-        var oModAdj = this.oComponent.getModel("Adjuntos");
-        var adjs = oModAdj.getData();
-        const sOperationPath = oEvent
-          .getSource()
-          .getBindingContext("Adjuntos")
-          .getPath();
-        const sOperation = sOperationPath.split("/").slice(-1).pop;
-
-        adjs.splice(sOperation, 1);
-        this.oComponent.setModel(new JSONModel(adjs), "Adjuntos");
-      },
-
+      // -------------------------------------- FUNCIÓN BOTÓN GRABAR --------------------------------------
       onCrear: function () {
 
         var oJson;
@@ -653,7 +690,9 @@ sap.ui.define([
             PurchDate: "\/Date(" + PurchDate + ")\/",
             PoDatS: "\/Date(" + PoDatS + ")\/",
             FixValDy: "\/Date(" + FixValDy + ")\/",
-            PriceDate: "\/Date(" + Date.parse(Posiciones[i].PriceDate) + ")\/",
+            // **Revisar**
+            //PriceDate: "\/Date(" + Date.parse(Posiciones[i].PriceDate) + ")\/",
+            PriceDate: "\/Date(" + PriceDate + ")\/",
             ServDate: "\/Date(" + ServDate + ")\/",
             //Importe: results_array[i].Importe.toString(),
             SalesUnit: results_array[i].SalesUnit,
@@ -911,6 +950,10 @@ sap.ui.define([
 
         } else {
 
+          var contrato = "";
+          if(this.oComponent.getModel("DisplayPEP")){
+            contrato = this.oComponent.getModel("DisplayPEP").getData().contrato;
+          }
           oJson = {
             DocType: DocType,
             SalesOrg: SalesOrg,
@@ -939,6 +982,7 @@ sap.ui.define([
             PsmPstngDate: "\/Date(" + PsmPstngDate + ")\/",
             PoDatS: "\/Date(" + PoDatS + ")\/",
             DunDate: "\/Date(" + DunDate + ")\/",
+            Ref1: contrato,
             PedidoClienteSet: {
               PartnNumb: PartnNumb,
               PartnRole: PartnRole
@@ -962,9 +1006,7 @@ sap.ui.define([
 
         }
         sap.ui.core.BusyIndicator.show();
-        /*Promise.all([this.createDataEntity(this.mainService, "/PedidoCabSet", oJson)]).then(
-          this.resolveCreatePed.bind(this), this.errorFatal.bind(this));*/
-
+        
         if (this.oComponent.getModel("ModoApp").getProperty("/mode") == 'M') {
 
           that.mainService.create("/PedidoModSet", oJson, {
@@ -1092,37 +1134,51 @@ sap.ui.define([
         }
       },
 
-      resolveCreatePed: function (result) {
-
-        var message;
-        var crear = this.oI18nModel.getProperty("txtCrea");
-        var that = this;
-
-        sap.ui.core.BusyIndicator.hide();
-        if (result[0].PedidoRespuesta.Mensaje == "" && result[0].PedidoRespuesta.Vbeln != "") {
-
-          message = (result[0].PedidoRespuesta.Mensaje + "\n" + crear + result[0].PedidoRespuesta.Vbeln);
-          MessageBox.show(message, {
-            icon: sap.m.MessageBox.Icon.SUCCESS,
-            onClose: function (oAction) {
-              that.oComponent.setModel(new JSONModel(), "ModoApp");
-              that.oComponent.setModel(new JSONModel(), "Adjuntos");
-              that.oComponent.setModel(new JSONModel(), "listadoCecos");
-              that.oComponent.setModel(new JSONModel(), "listadoOrdenes");
-              that.oComponent.setModel(new JSONModel(), "listadoServicios");
-              that.getView().byId("textAreaCabFact").setValue(null);
-              that.getView().byId("textAreaCabInfRech").setValue(null);
-              that.getView().byId("textAreaCabAcl").setValue(null);
-              var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-              oRouter.navTo("RouteView1");
-            }
-          });
-        } else {
-          message = (result[0].PedidoRespuesta.Mensaje);
-          MessageBox.error(message);
+      // -------------------------------------- FUNCIÓN ACTUALIZAR EL IMPORTE --------------------------------------
+      actualizaimp: function () {
+        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
+        //this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", '0');
+        //this.oComponent.getModel("PedidoCab").setProperty("/Moneda", 'EUR');
+        var calculo = 0;
+        var sumCalculo = 0;
+        //MODO DE MODIFICACION Y VISUALIZACION DE PEDIDOS
+        if (modeApp == 'M'|| modeApp == 'D') {
+          var datos = this.oComponent.getModel("DisplayPosPed").getData();
+          var sumCant = 0;
+          var sumImp = 0;
+          var sumCantBase = 0;
+          var moneda = "EUR";
+          for (var i = 0; i < datos.length; i++) {
+            var cantidades = datos[i].Kwmeng;
+            var cantbases = datos[i].Kpein;
+            var moneda = datos[i].Waerk;
+            var importes = datos[i].Netpr;
+             calculo = Number((importes / cantbases) * cantidades).toFixed(2);
+             sumCalculo = Number(Number(sumCalculo)+Number(calculo)).toFixed(2);
+    
+          }
+          //MODO DE CREACION DE PEDIDOS
+        } else if (modeApp == 'C') {
+          var datos = this.oComponent.getModel("PedidoPos").getData();
+          var sumCant = 0;
+          var sumImp = 0;
+          var sumCantBase = 0;
+          var moneda = "EUR";
+          for (var i = 0; i < datos.length; i++) {
+            var cantidades = datos[i].ReqQty;
+            var cantbases = datos[i].Kpein;
+            var moneda = datos[i].Waerk;
+            var importes = datos[i].CondValue;
+            calculo = Number((importes / cantbases) * cantidades).toFixed(2);
+             sumCalculo = Number(Number(sumCalculo)+Number(calculo)).toFixed(2);
+          }
         }
+        this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", sumCalculo);
+        this.oComponent.getModel("PedidoCab").setProperty("/Moneda", moneda);
+        this.oComponent.getModel("PedidoCab").refresh(true);
       },
 
+      // -------------------------------------- FUNCIONES BOTONES POSICIONES --------------------------------------
       addPedPos: function () {
         var posiciones = [];
         var posicionN;
@@ -1206,24 +1262,6 @@ sap.ui.define([
 
         this.ordenaPedPos(true);
       },
-
-      validaForm: function (formulario) {
-        var oForm = this.getView().byId(formulario).getContent();
-        var error = "";
-
-        oForm.forEach(function (Field) {
-          if (typeof Field.getValue === "function") {
-            if (!Field.getValue() || Field.getValue().length < 1) {
-              Field.setValueState("Error");
-              error = "X"
-            } else {
-              Field.setValueState("None");
-            }
-          }
-        });
-        return error;
-      },
-
       
       ordenaPedPos: function (actualiza) {
 
@@ -1391,7 +1429,7 @@ sap.ui.define([
         this.byId("OptionDialContrato").close();
       },
 
-      CloseOptionsDiagContrato: function () {
+      closeOptionsDiagContrato: function () {
         this.byId("OptionDialContrato").close();
       },
 
@@ -1826,6 +1864,171 @@ sap.ui.define([
 
       },
 
+      _getDialogServicios: function (sInputValue) {
+
+        var oView = this.getView();
+        //var ItmNumber = this.oComponent.getModel("ModoApp").getData().ItmNumber;
+        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
+        var pedidosPos;
+        var posicion = 10;
+
+
+        if (modeApp == 'M') {
+          pedidosPos = this.oComponent.getModel("DisplayPosPed").getData();
+          if (pedidosPos.length > 0) {
+            posicion = Number(pedidosPos[pedidosPos.length - 1].Posnr) + 10;
+          }
+        } else {
+          pedidosPos = this.oComponent.getModel("PedidoPos").getData();
+          if (pedidosPos.length > 0) {
+            posicion = Number(pedidosPos[pedidosPos.length - 1].ItmNumber) + 10;
+          }
+        }
+
+
+        var recogececos = this.getView().byId("f_cecos").getValue();
+        var recogeorden = this.getView().byId("f_ordenes").getValue();
+        var fecPrecio = this.onFormatFechaDocVenta(new Date());
+
+        var configPos = {
+          mode: "A",
+          type: "P",
+          index: null,
+          Vbelp: posicion,
+          // Los CECOS / OT se recogen de cabecera de manera predeterminada
+          Yykostl: recogececos,
+          Yyaufnr: recogeorden,
+          Ykostl: recogececos,
+          Yaufnr: recogeorden,
+          Currency: "EUR",
+          PriceDate: fecPrecio
+        }
+
+        var oModConfigPos = new JSONModel();
+        oModConfigPos.setData(configPos);
+        this.oComponent.setModel(oModConfigPos, "posPedFrag");
+        this.oComponent.getModel("posPedFrag").refresh(true);
+
+        if (!this.pDialogPosiciones) {
+          this.pDialogPosiciones = Fragment.load({
+            id: oView.getId(),
+            name: "monitorpedidos.fragments.AddPosicionesPed",
+            controller: this,
+          }).then(function (oDialogPosiciones) {
+            // connect dialog to the root view of this component (models, lifecycle)
+            oView.addDependent(oDialogPosiciones);
+            return oDialogPosiciones;
+          });
+          ///DESHABILITAR SCROLL EN LOS INPUT NUMERICOS
+          var oInput = this.byId("f_importpos");
+          oInput.attachBrowserEvent("mousewheel", function (oEvent) {
+            oEvent.preventDefault();
+          });
+          var oInput = this.byId("f_cantpos");
+          oInput.attachBrowserEvent("mousewheel", function (oEvent) {
+            oEvent.preventDefault();
+          });
+          var oInput = this.byId("f_cantbasepos");
+          oInput.attachBrowserEvent("mousewheel", function (oEvent) {
+            oEvent.preventDefault();
+          });
+        }
+        this.pDialogPosiciones.then(function (oDialogPosiciones) {
+          oDialogPosiciones.open(sInputValue);
+        });
+
+      },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      /*fechahoy: function () {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
+        var today1 = (dd + ' ' + mm + ', ' + yyyy);
+        //var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "YYYY/MM/DD" });   
+        //var todayFormatted = dateFormat.format(today1);
+
+        this.getView().byId("DTPdesde").setValue(today1);
+      },*/
+
+      /*resolveCreatePed: function (result) {
+
+        var message;
+        var crear = this.oI18nModel.getProperty("txtCrea");
+        var that = this;
+
+        sap.ui.core.BusyIndicator.hide();
+        if (result[0].PedidoRespuesta.Mensaje == "" && result[0].PedidoRespuesta.Vbeln != "") {
+
+          message = (result[0].PedidoRespuesta.Mensaje + "\n" + crear + result[0].PedidoRespuesta.Vbeln);
+          MessageBox.show(message, {
+            icon: sap.m.MessageBox.Icon.SUCCESS,
+            onClose: function (oAction) {
+              that.oComponent.setModel(new JSONModel(), "ModoApp");
+              that.oComponent.setModel(new JSONModel(), "Adjuntos");
+              that.oComponent.setModel(new JSONModel(), "listadoCecos");
+              that.oComponent.setModel(new JSONModel(), "listadoOrdenes");
+              that.oComponent.setModel(new JSONModel(), "listadoServicios");
+              that.getView().byId("textAreaCabFact").setValue(null);
+              that.getView().byId("textAreaCabInfRech").setValue(null);
+              that.getView().byId("textAreaCabAcl").setValue(null);
+              var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+              oRouter.navTo("RouteView1");
+            }
+          });
+        } else {
+          message = (result[0].PedidoRespuesta.Mensaje);
+          MessageBox.error(message);
+        }
+      },*/
+
+      
+      /*validaForm: function (formulario) {
+        var oForm = this.getView().byId(formulario).getContent();
+        var error = "";
+
+        oForm.forEach(function (Field) {
+          if (typeof Field.getValue === "function") {
+            if (!Field.getValue() || Field.getValue().length < 1) {
+              Field.setValueState("Error");
+              error = "X"
+            } else {
+              Field.setValueState("None");
+            }
+          }
+        });
+        return error;
+      },*/
+
+      
+      
+
 
       /*_getDialogServicios: function (sInputValue) {
 
@@ -1909,80 +2112,7 @@ sap.ui.define([
         });
       },*/
 
-      _getDialogServicios: function (sInputValue) {
-
-        var oView = this.getView();
-        //var ItmNumber = this.oComponent.getModel("ModoApp").getData().ItmNumber;
-        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-        var pedidosPos;
-        var posicion = 10;
-
-
-        if (modeApp == 'M') {
-          pedidosPos = this.oComponent.getModel("DisplayPosPed").getData();
-          if (pedidosPos.length > 0) {
-            posicion = Number(pedidosPos[pedidosPos.length - 1].Posnr) + 10;
-          }
-        } else {
-          pedidosPos = this.oComponent.getModel("PedidoPos").getData();
-          if (pedidosPos.length > 0) {
-            posicion = Number(pedidosPos[pedidosPos.length - 1].ItmNumber) + 10;
-          }
-        }
-
-
-        var recogececos = this.getView().byId("f_cecos").getValue();
-        var recogeorden = this.getView().byId("f_ordenes").getValue();
-        var fecPrecio = this.onFormatFechaDocVenta(new Date());
-
-        var configPos = {
-          mode: "A",
-          type: "P",
-          index: null,
-          Vbelp: posicion,
-          // Los CECOS / OT se recogen de cabecera de manera predeterminada
-          Yykostl: recogececos,
-          Yyaufnr: recogeorden,
-          Ykostl: recogececos,
-          Yaufnr: recogeorden,
-          Currency: "EUR",
-          PriceDate: fecPrecio
-        }
-
-        var oModConfigPos = new JSONModel();
-        oModConfigPos.setData(configPos);
-        this.oComponent.setModel(oModConfigPos, "posPedFrag");
-        this.oComponent.getModel("posPedFrag").refresh(true);
-
-        if (!this.pDialogPosiciones) {
-          this.pDialogPosiciones = Fragment.load({
-            id: oView.getId(),
-            name: "monitorpedidos.fragments.AddPosicionesPed",
-            controller: this,
-          }).then(function (oDialogPosiciones) {
-            // connect dialog to the root view of this component (models, lifecycle)
-            oView.addDependent(oDialogPosiciones);
-            return oDialogPosiciones;
-          });
-          ///DESHABILITAR SCROLL EN LOS INPUT NUMERICOS
-          var oInput = this.byId("f_importpos");
-          oInput.attachBrowserEvent("mousewheel", function (oEvent) {
-            oEvent.preventDefault();
-          });
-          var oInput = this.byId("f_cantpos");
-          oInput.attachBrowserEvent("mousewheel", function (oEvent) {
-            oEvent.preventDefault();
-          });
-          var oInput = this.byId("f_cantbasepos");
-          oInput.attachBrowserEvent("mousewheel", function (oEvent) {
-            oEvent.preventDefault();
-          });
-        }
-        this.pDialogPosiciones.then(function (oDialogPosiciones) {
-          oDialogPosiciones.open(sInputValue);
-        });
-
-      },
+      
 
       onBusqMateriales: function () {
         this.dameMateriales();
@@ -2086,34 +2216,7 @@ sap.ui.define([
           oDialogMaterial.open(sInputValue);
         });
       },
-      readDataEntity: function (oModel, path, aFilters) {
-        return new Promise(function (resolve, reject) {
-          oModel.read(path, {
-            filters: [aFilters],
-            success: function (oData) {
-              resolve(oData);
-            },
-            error: function (oResult) {
-              reject(oResult);
-            },
-          });
-        });
-      },
-
-      createDataEntity: function (oModel, path, json) {
-
-        return new Promise(function (resolve, reject) {
-          oModel.create(path, json, {
-            success: function (oData, that) {
-              resolve(oData);
-            },
-            error: function (oResult) {
-              reject(oResult);
-            }
-          });
-        });
-
-      },
+      
 
       onPressServicio: function (oEvent) {
         var mat = this.getSelectMat(oEvent, "listadoServicios");
@@ -2154,11 +2257,7 @@ sap.ui.define([
         this._getDialogOrdenesPosicion();
       },
 
-      onValueHelpCecosCabecera: function (oEvent) {
-        //this.Dialog = sap.ui.xmlfragment("aguasdevalencia.fragment.ClienteMonitorPedidos", this);
-        //this.Dialog.open();
-        this._getDialogCecosCabecera();
-      },
+      
       onValueHelpCecosPosicion: function (oEvent) {
         //this.Dialog = sap.ui.xmlfragment("aguasdevalencia.fragment.ClienteMonitorPedidos", this);
         //this.Dialog.open();
@@ -2202,24 +2301,7 @@ sap.ui.define([
         });
       },
 
-      _getDialogCecosCabecera: function (sInputValue) {
-        var oView = this.getView();
-
-        if (!this.pDialogCecosCabecera) {
-          this.pDialogCecosCabecera = Fragment.load({
-            id: oView.getId(),
-            name: "monitorpedidos.fragments.CecoPedIngreso",
-            controller: this,
-          }).then(function (oDialogCecosCabecera) {
-            // connect dialog to the root view of this component (models, lifecycle)
-            oView.addDependent(oDialogCecosCabecera);
-            return oDialogCecosCabecera;
-          });
-        }
-        this.pDialogCecosCabecera.then(function (oDialogCecosCabecera) {
-          oDialogCecosCabecera.open(sInputValue);
-        });
-      },
+      
 
       _getDialogCecosPosicion: function (sInputValue) {
         var oView = this.getView();
@@ -2240,11 +2322,7 @@ sap.ui.define([
         });
       },
 
-      onBusqCecosCabecera: function () {
-        var Kostl = this.getView().byId("f_codCecoCabecera").getValue();
-        var Ltext = this.getView().byId("f_nomCecoCabecera").getValue();
-        this.onBusqCecos(Kostl, Ltext)
-      },
+      
 
       onBusqCecosPosicion: function () {
         var Kostl = this.getView().byId("f_codCecoPosicion").getValue();
@@ -2252,79 +2330,7 @@ sap.ui.define([
         this.onBusqCecos(Kostl, Ltext)
       },
 
-      onBusqCecos: function (Kostl, Ltext) {
-        /*
-        var Kostl = this.getView().byId("f_codCeco").getValue();
-        var Ltext = this.getView().byId("f_nomCeco").getValue();
-        */
-
-        //var Bukrs = this.getView().byId("f_cecoSoc").getValue();
-        //var Bukrs = this.getOwnerComponent().getModel("ModoApp").getProperty("/Vkbur");
-        //var Bukrs = this.getView().byId("f_nifcAcr").getValue();
-        if (this.getOwnerComponent().getModel("ModoApp").getProperty("/mode") == 'M') {
-          var Bukrs = this.getOwnerComponent().getModel("DisplayPEP").getProperty("/Vkorg");
-        } else {
-          var Bukrs = this.getOwnerComponent().getModel("ModoApp").getProperty("/Vkbur");
-        }
-
-        var aFilterIds, aFilterValues, aFilters;
-
-        //FILTRADO DE CLIENTES////////////////////////////////////////////////////////////////////////////////////////////
-
-        aFilterIds = [
-          "Kostl",
-          "Ltext",
-          "Kokrs"
-        ];
-        aFilterValues = [
-          Kostl,
-          Ltext,
-          Bukrs
-        ];
-
-        if (Kostl == "") {
-          var i = aFilterIds.indexOf("Kostl");
-
-          if (i !== -1) {
-            aFilterIds.splice(i, 1);
-            aFilterValues.splice(i, 1);
-          }
-        }
-
-        if (Ltext == "") {
-          var i = aFilterIds.indexOf("Ltext");
-
-          if (i !== -1) {
-            aFilterIds.splice(i, 1);
-            aFilterValues.splice(i, 1);
-          }
-        }
-
-        /*if (Bukrs == "") {
-            var i = aFilterIds.indexOf("Bukrs");
-
-            if (i !== -1) {
-                aFilterIds.splice(i, 1);
-                aFilterValues.splice(i, 1);
-            }
-        }*/
-        if (Bukrs == "") {
-          var i = aFilterIds.indexOf("Kokrs");
-
-          if (i !== -1) {
-            aFilterIds.splice(i, 1);
-            aFilterValues.splice(i, 1);
-          }
-        }
-
-        aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-        sap.ui.core.BusyIndicator.show();
-
-        Promise.all([
-          this.readDataEntity(this.mainService, "/CecoIngresoSet", aFilters),
-        ]).then(this.buildCecosModel.bind(this), this.errorFatal.bind(this));
-      },
+      
 
       onBusqOrdenesCabecera: function () {
         var Aufnr = this.getView().byId("f_codOrdCabecera").getValue();
@@ -2578,132 +2584,182 @@ sap.ui.define([
         this.byId("ordDialPosicion").close();
       },
 
-      CloseCecoDiagCabecera: function () {
-        this.byId("cecoDialCabecera").close();
-      },
+      
       CloseCecoDiagPosicion: function () {
         this.byId("cecoDialPosicion").close();
       },
-      errorFatal: function (e) {
-        MessageBox.error(this.oI18nModel.getProperty("errFat"));
-        sap.ui.core.BusyIndicator.hide();
+
+      /*ABRIR GESTOR DE ARCHIVOS*/
+      handleUploadPress: function (oEvent) {
+        //Inicializamos el modelo de adjunto 
+        //this.act_adj = null;
+
+        //var oMdesc = this.oComponent.getModel("datosAdj").getData();
+        //var desc = oMdesc.Desc;
+
+        /*if (!desc || desc == undefined) {
+          desc = this.getView().byId("descAdjunto").getValue();
+        }*/
+
+        /*if (!desc) {
+            MessageBox.error(this.oI18nModel.getProperty("errDesArch"));
+            this.getView().byId("fileUploader").setValue("");
+            return;
+        }*/
+
+        /*var fileDetails = oEvent.getParameters("file").files[0];
+        sap.ui.getCore().fileUploaderArr = [];
+
+        if (fileDetails) {
+          var mimeDet = fileDetails.type,
+            fileName = fileDetails.name;
+          //Calling method....
+          var adjuntos = this.oComponent.getModel("Adjuntos").getData();
+          var nadj = adjuntos.length;
+
+          this.base64conversionMethod(
+            C,
+            fileName,
+            fileDetails,
+            nadj,
+            adjuntos,
+            "");
+        } else {
+          sap.ui.getCore().fileUploaderArr = [];
+        }*/
+
+
+        this.act_adj = null;
+        var oMdesc = this.oComponent.getModel("datosAdj").getData();
+        var desc = oMdesc.Desc;
+        var fileDetails = oEvent.getParameters("file").files[0];
+        sap.ui.getCore().fileUploaderArr = [];
+        if (fileDetails) {
+          var mimeDet = fileDetails.type,
+            fileName = fileDetails.name;
+          var adjuntos = this.oComponent.getModel("Adjuntos").getData();
+          var nadj = adjuntos.length;
+          this.base64conversionMethod(mimeDet, fileName, fileDetails, nadj, adjuntos, "")
+        } else {
+          sap.ui.getCore().fileUploaderArr = []
+        }
+
+
+
+
       },
-      
-      /* FORMATEAR NUMERO IMPORTE */
-      onFormatImporte: function (Netpr) {
-        //var expression = /[.,]/;
-        if (Netpr) {
-          Netpr = Number(Netpr).toFixed(2);
-        }
-        importeFormat = this.oComponent.getModel("Usuario").getData()[0].Dcpfm;
-        var numberFormat;
-        switch (importeFormat) {
- 
-          case ""://1.234.567,89
-            numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
-              "maxFractionDigits": 2,
-              "decimalSeparator": ",",
-              "groupingEnabled": true,
-              "groupingSeparator": '.'
-            });
- 
-            break;
-          case "X"://1,234,567.89
-            numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
-              "maxFractionDigits": 2,
-              "decimalSeparator": ".",
-              "groupingEnabled": true,
-              "groupingSeparator": ','
-            });
-            break;
-          case "Y"://1 234 567,89
-            numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
-              "maxFractionDigits": 2,
-              "decimalSeparator": ",",
-              "groupingEnabled": true,
-              "groupingSeparator": ' '
-            });
-            break;
-        }
-        var numeroFormateado = numberFormat.format(Netpr);
-        return numeroFormateado;
+
+      /*CONVERTIR FICHEROS A BASE64 */
+      base64conversionMethod: function (fileMime, fileName, fileDetails, DocNum, adjuntos, desc) {
+        var that = this;
+        var oModAdj = new JSONModel();
+
+        FileReader.prototype.readAsBinaryString = function (fileData) {
+          var binary = "";
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            var bytes = new Uint8Array(reader.result);
+            var length = bytes.byteLength;
+            for (var i = 0; i < length; i++) {
+              binary += String.fromCharCode(bytes[i]);
+            }
+            that.base64conversionRes = btoa(binary);
+
+            var numdoc = (DocNum + 1).toString();
+            that.act_adj = {
+              "Numdoc": numdoc,
+              "Mimetype": fileMime,
+              "Filename": fileName,
+              //"Descripcion": desc,
+              "Content": that.base64conversionRes,
+            };
+            /*that.oComponent.getModel("Adjuntos").refresh(true);
+            that.getView().byId("descAdjunto").setValue("");
+            that.getView().byId("fileUploader").setValue("");*/
+          };
+          reader.readAsArrayBuffer(fileData);
+        };
+        var reader = new FileReader();
+        reader.onload = function (readerEvt) {
+          var binaryString = readerEvt.target.result;
+          that.base64conversionRes = btoa(binaryString);
+          var numdoc = (DocNum + 1).toString();
+
+          that.act_adj = {
+            "Numdoc": numdoc,
+            "Mimetype": fileMime,
+            "Filename": fileName,
+            //"Descripcion": desc,
+            "Content": that.base64conversionRes,
+          };
+
+          /*that.oComponent.getModel("Adjuntos").refresh(true);
+           that.getView().byId("descAdjunto").setValue("");
+           that.getView().byId("fileUploader").setValue("");*/
+        };
+        reader.readAsBinaryString(fileDetails);
       },
- 
-      /* FORMATEAR FECHA DOCUMENTO  */
-      onFormatFechaDocVenta: function (Fechadoc) {
- 
-        fechaDocVentaFormat = this.oComponent.getModel("Usuario").getData()[0].Datfm;
-        var dateFormat = Fechadoc;
- 
-        switch (fechaDocVentaFormat) {
-          case "1":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "dd.MM.YYYY"
-            });
- 
-            break;
-          case "2":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "MM/dd/YYYY"
-            });
-            break;
-          case "3":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "MM-dd-YYYY"
-            });
-            break;
- 
-          case "4":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "YYYY.MM.dd"
-            });
-            break;
-          case "5":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "YYYY/MM/dd"
-            });
-            break;
-          case "6":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "YYYY-MM-dd"
-            });
-            break;
-          case "7":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "GYY.MM.dd"
-            });
-            break;
-          case "8":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "GYY/MM/dd"
-            });
-            break;
-          case "9":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "GYY-MM-dd"
-            });
-            break;
-          case "A":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "YYYY/MM/dd"
-            });
-            break;
-          case "B":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "YYYY/MM/dd"
-            });
- 
-            break;
-          case "C":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "YYYY/MM/dd"
-            });
- 
-            break;
+
+      /* Botón para la funcionalidad de meterlo en la tabla de los adjuntos*/
+
+      onAttFile: function () {
+
+
+        /*var adjuntos = this.oComponent.getModel("Adjuntos").getData();
+        var oMdesc = this.oComponent.getModel("datosAdj").getData();
+        var desc = oMdesc.Desc;
+
+        if (!desc) {
+          MessageBox.error(this.oI18nModel.getProperty("errDesArch"));
+          return;
+        } else if (!this.act_adj) {
+          MessageBox.error(this.oI18nModel.getProperty("errNoArch"));
+          return;
+        } else {
+
+          this.act_adj.Descripcion = desc;
+          adjuntos.push(this.act_adj);
+          this.oComponent.getModel("Adjuntos").refresh(true);
+          this.getView().byId("descPresAdjunto").setValue("");
+          this.getView().byId("fileUploader").setValue("");
+          this.act_adj = null;
+        }*/
+
+
+        var adjuntos = this.oComponent.getModel("Adjuntos").getData();
+        var oMdesc = this.oComponent.getModel("datosAdj").getData();
+        var desc = oMdesc.Desc;
+        if (!desc) {
+          MessageBox.error(this.oI18nModel.getProperty("errDesArch"));
+          return
+        } else if (!this.act_adj) {
+          MessageBox.error(this.oI18nModel.getProperty("errNoArch"));
+          return
+        } else {
+          this.act_adj.Descripcion = desc;
+          adjuntos.push(this.act_adj);
+          this.oComponent.getModel("Adjuntos").refresh(true);
+          this.getView().byId("descAdjunto").setValue("");
+          this.getView().byId("fileUploader").setValue("");
+          this.act_adj = null;
         }
- 
-        var fechaFormateada = dateFormat.format(Fechadoc);
-        return fechaFormateada;
+
+      },
+
+      /* Función para eliminar un adjunto de la tabla */
+
+      onDeleteAdj: function (oEvent) {
+        var oModAdj = this.oComponent.getModel("Adjuntos");
+        var adjs = oModAdj.getData();
+        const sOperationPath = oEvent
+          .getSource()
+          .getBindingContext("Adjuntos")
+          .getPath();
+        const sOperation = sOperationPath.split("/").slice(-1).pop;
+
+        adjs.splice(sOperation, 1);
+        this.oComponent.setModel(new JSONModel(adjs), "Adjuntos");
       }
+      
     });
   });

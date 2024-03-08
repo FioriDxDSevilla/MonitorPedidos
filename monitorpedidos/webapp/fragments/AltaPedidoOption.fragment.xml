@@ -87,7 +87,7 @@
                 </layoutData>
             </Button>
             <ToolbarSpacer />
-            <Button text="Cancelar" type="Emphasized" press="CloseOptionsDiag">
+            <Button text="Cancelar" type="Emphasized" press="closeOptionsDiag">
                 <layoutData>
                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                 </layoutData>

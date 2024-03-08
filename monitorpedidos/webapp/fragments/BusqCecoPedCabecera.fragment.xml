@@ -35,7 +35,7 @@
             <fb:FilterGroupItem
                 groupName="FiltrosCeco"
                 name="C"
-                label="{i18n>nomCeco}"
+                label="{i18n>ktext}"
                 partOfCurrentVariant="true"
                 visibleInFilterBar="true"
             >
@@ -51,12 +51,13 @@
                 name="D"
                 label="{i18n>nomSoc}"
                 partOfCurrentVariant="true"
-                visibleInFilterBar="true">
+                visibleInFilterBar="true"
+                hiddenFilter="true">
                 <fb:control>
                     <Input
                         id="f_cecoSocCabecera"
                         value='{FiltrosCeco>/Kokrs}'
-                        editable="true"
+                        visible="false"
                     />
                 </fb:control>
             </fb:FilterGroupItem>
@@ -91,7 +92,7 @@
     </Table>
             <OverflowToolbar >
                 <ToolbarSpacer/>
-                <Button text="Cancelar" type="Emphasized" press="CloseCecoDiagCabecera">
+                <Button text="Cancelar" type="Emphasized" press="closeCecoDiagCabecera">
                 <layoutData>
                 <OverflowToolbarLayoutData
                     priority="NeverOverflow"/>

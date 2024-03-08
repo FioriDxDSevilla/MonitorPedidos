@@ -1731,6 +1731,7 @@ sap.ui.define([
                         vText = "";                
                         if (this.getView().byId("idArea")) {
                             this.getView().byId("idArea").setValue(null);
+                            this.getView().byId("idArea").setSelectedKey(null);
                         }
 
                     case "Sociedad":
@@ -1907,8 +1908,7 @@ sap.ui.define([
                 var oModConfig = new JSONModel();
                 oModConfig.setData(config);
                 this.oComponent.setModel(oModConfig, "ModoApp");
-                this.oComponent.setModel(new JSONModel([]), "posPedFrag");
-                this.oComponent.setModel(new JSONModel([]), "PedidoCab");
+                //this.oComponent.setModel(new JSONModel([]), "PedidoCab");
                 this.oComponent.setModel(new JSONModel([]), "PedidoPos");
 
                 this.resetearInputsDialogoAlta("All");
@@ -1932,6 +1932,11 @@ sap.ui.define([
                 this.pDialogOptions.then(function (oDialogOptions) {
                     oDialogOptions.open(sInputValue);
                 });
+            },
+
+            closeOptionsDiag: function () {
+                this.resetearInputsDialogoAlta("All");
+                this.byId("OptionDial").close();
             },
 
             // FUNCIONES DEL DESPLEGABLE DE SOCIEDAD
@@ -2027,7 +2032,7 @@ sap.ui.define([
                 var Kunnr = this.getView().byId("f_lifnrAcr") ? this.getView().byId("f_lifnrAcr").getValue() : "";
                 var Name1 = this.getView().byId("f_nifAcr") ? this.getView().byId("f_nifAcr").getValue() : "";
                 var Stcd1 = this.getView().byId("f_nameAcr") ? this.getView().byId("f_nameAcr").getValue() : "";
-                var Bukrs = this.getView().byId("f_nifcAcr") ? this.getView().byId("f_nifcAcr").getValue() : vkbur;
+                var Bukrs = vkbur;
 
                 var aFilterIds = [],
                     aFilterValues = [];
@@ -2112,11 +2117,6 @@ sap.ui.define([
                 ]).then(this.buildCliente.bind(this), this.errorFatal.bind(this));*/
                 // en su lugar, usamos:
                 this.DatosCliente(codcli, vkbur);
-
-                // Establecer el nombre cuando no se ha utilizado la búsqueda
-                if (!nomcli) {
-                    nomcli = this.oComponent.getModel("ModoApp").getData().Nomcli;
-                }
 
                 //this.getView().byId("f_client").setValue(nomcli);
                 this.getView().byId("idCCliente").setValueState("None");
@@ -2212,6 +2212,14 @@ sap.ui.define([
                     this.oComponent.getModel("ModoApp").setProperty("/Zwels", values[0].results[0].Zwels);
                     //this.oComponent.getModel("ModoApp").setProperty("/Zterm", values[0].results[0].Zterm);
                     this.oComponent.getModel("ModoApp").refresh(true);
+
+                    // Establecer el nombre cuando no se ha utilizado la búsqueda del Alta de pedidos
+                    if (this.modoapp === "C" && !nomcli) {
+                        nomcli = values[0].results[0].Nombre;
+                        // if (this.getView().byId("idCCliente") && !this.getView().byId("idCCliente").getValue()) {
+                        //     this.getView().byId("idCCliente").setValue(nomcli);
+                        // }
+                    }
                 }
             },
 
@@ -2585,6 +2593,10 @@ sap.ui.define([
                                     data.results[0].Erdat = Util.formatDate(data.results[0].Erdat);                                        
                                 }
 
+                                // Set contrato en el modelo DisplayPEP
+                                if (that.modoapp === "C") {
+                                    data.results[0].contrato = numCont;
+                                }                                
                                 oModelDisplay.setData(data.results[0]);
                                 that.oComponent.setModel(oModelDisplay, "DisplayPEP");
 
@@ -2735,6 +2747,7 @@ sap.ui.define([
                         var title = this.oI18nModel.getProperty("detSolP");
                         this.oComponent.setModel(new JSONModel(), "DisplayPEP")
                         this.oComponent.getModel("DisplayPEP").setProperty("/Title", title);
+                        this.oComponent.getModel("DisplayPEP").setProperty("/contrato", "");
                         this.oComponent.getModel("DisplayPEP").refresh(true);
     
                         this.condicionPago(codcli, vkbur, Cvcan, Cvsector);
@@ -2753,7 +2766,7 @@ sap.ui.define([
                          * Cuando ya navegamos al alta debe de borrar todos los campos de opciones 
                          * para que cuando se entre de nuevo aparezcan vacios para crear una nueva peticion
                          */
-                        this.resetearInputsDialogoAlta("All");
+                        //this.resetearInputsDialogoAlta("All");
                         var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
                         oRouter.navTo("RouteAltaPedidos");
                     }                    
@@ -5438,20 +5451,6 @@ sap.ui.define([
                 this.oComponent.getModel("ModoApp").refresh(true);*/
                 /*this.oComponent.getModel("ModoApp").setProperty("/ccontr", true);
                 this.oComponent.getModel("ModoApp").refresh(true);
-            },*/
-
-
-            /*CloseOptionsDiag: function () {
-                this.getView().byId("idCTipoPed").setSelectedKey(null);
-                //this.getView().byId("idCSociedad").setSelectedKey(null);
-                this.getView().byId("idArea").setSelectedKey(null);
-                this.getView().byId("idCanal").setSelectedKey(null);
-                this.getView().byId("idSector").setSelectedKey(null);
-                this.getView().byId("idzona").setSelectedKey(null);
-                this.getView().byId("idCCliente").setValue(null);
-                this.getView().byId("idcontract").setSelectedKey(null);
-                this.getView().byId("idcontract").setVisible(true);
-                this.byId("OptionDial").close();
             },*/
         
             //METODO PARA DESCARGA EXCEL
