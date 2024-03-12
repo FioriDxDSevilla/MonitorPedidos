@@ -21,7 +21,7 @@
                 icon="sap-icon://cancel"
                 text="{i18n>cancel}"
                 type="Emphasized"
-                press=".cancelPedPos"
+                press=".closePedPos"
             />
         </buttons>
         <f:SimpleForm
@@ -45,7 +45,7 @@
             <Input
                 id="f_material"
                 showValueHelp="true"
-                valueHelpRequest=".onValueHelpRequestServ"
+                valueHelpRequest=".onValueHelpRequestMatAlta"
                 value="{posPedFrag>/Material}"
             />
             <Label text="{i18n>fechaPrecio}" required="true" />
@@ -100,24 +100,51 @@
                 placeholder="UN"
                 type="Text"
             />
-           <Label text="{i18n>ceco}" />
+            <Label text="{i18n>ceco}" />
             <Input
-                id="f_cecosPOS"
+                id="f_cecosIngPos"
                 showValueHelp="true"
                 editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
-                valueHelpRequest=".onValueHelpCecosPosicion"
-                value="{posPedFrag>/Ykostl}"
+                valueHelpRequest=".onValueHelpCecosIngresoPosicion"
+                value="{posPedFrag>/Yykostkl}"
                 visible="true"
             />
             <Label text="{i18n>ord}" />
             <Input
-                id="f_ordenesPOS"
+                id="f_ordenesIngPos"
+                showValueHelp="true"
+                editable="{= (${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false) &amp;&amp; (!!${posPedFrag>/Yykostkl}) }"
+                valueHelpRequest=".onValueHelpOrdIngresoPosicion"
+                value="{posPedFrag>/Yyaufnr}"
+                visible="true"
+            />
+            <Label text="{i18n>cecoInterco}" />
+            <Input
+                id="f_cecosIntPos"
+                showValueHelp="true"
+                editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
+                valueHelpRequest=".onValueHelpCecosIntercoPosicion"
+                value="{posPedFrag>/Zzkostl}"
+                visible="true"
+            />
+            <Label text="{i18n>ordInterco}" />
+            <Input
+                id="f_ordenesIntPos"
+                showValueHelp="true"
+                editable="{= (${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false) &amp;&amp; (!!${posPedFrag>/Zzkostl}) }"
+                valueHelpRequest=".onValueHelpOrdIntercoPosicion"
+                value="{posPedFrag>/Zzaufnr}"
+                visible="true"
+            />
+            <Label text="{i18n>libroMayorInterco}" />
+            <Input
+                id="f_libroMayorIntPOS"
                 showValueHelp="true"
                 editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
                 valueHelpRequest=".onValueHelpOrdPosicion"
-                value="{posPedFrag>/Yaufnr}"
+                value="{posPedFrag>/Kstar}"
                 visible="true"
-            />           
+            />         
             <!--<ComboBox
                 value="{posPedFrag>/Waers}"
                 placeholder="EUR"

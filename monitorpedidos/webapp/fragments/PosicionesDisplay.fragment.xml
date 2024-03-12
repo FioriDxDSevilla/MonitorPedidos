@@ -13,8 +13,8 @@
                     icon="sap-icon://sys-add"
                     text="{i18n>addPosCon}"
                     type="Emphasized"
-                    press="onaddPosPedCon"
-                    visible="{= (${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false) &amp;&amp; (!!${DisplayPEP>/contrato})}"
+                    press="onAddPosPedCon"
+                    visible="{= (${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false) &amp;&amp; (!!${ModoApp>/Numcont})}"
                     enabled="true"
                 />
                 <m:Button
@@ -31,8 +31,8 @@
                     icon="sap-icon://sys-add"
                     text="{i18n>addPos}"
                     type="Emphasized"
-                    press="onaddPosPed"
-                    visible="{= (${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false) &amp;&amp; (${DisplayPEP>/contrato} === '' )}"
+                    press="onAddPosPed"
+                    visible="{= (${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false) &amp;&amp; (${ModoApp>/Numcont} === '' )}"
                     enabled="true"
                 />
                 <m:Button
@@ -41,7 +41,7 @@
                     text="{i18n>copyPos}"
                     type="Emphasized"
                     press="onCopyPosPed"
-                    visible="{= (${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false) &amp;&amp; (${DisplayPEP>/contrato}  === '' )}"
+                    visible="{= (${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false) &amp;&amp; (${ModoApp>/Numcont}  === '' )}"
                     enabled="true"
                 />
             </m:OverflowToolbar>
@@ -80,7 +80,7 @@
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>fechaPrecio}" />
                 <table:template>
-                    <m:Text text="{DisplayPosPed>Prsdt}"/>
+                    <m:Text text="{DisplayPosPed>Zzprsdt}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
@@ -93,7 +93,6 @@
                 <m:Label text="{i18n>cantBase}" />
                 <table:template>
                     <m:Text text="{DisplayPosPed>Kpein}"/>
-                    <!--<m:Text text="{DisplayPosPed>Kpein}"/>-->
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
@@ -114,16 +113,34 @@
                     <m:Text text="{DisplayPosPed>Waerk}" />
                 </table:template>
             </table:Column>
-             <table:Column hAlign="Center">
-                <m:Label text="{i18n>zcost}" />
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>ceco}" />
                 <table:template>
-                    <m:Text text="{DisplayPosPed>Ykostl}" />
+                    <m:Text text="{DisplayPosPed>Yykostkl}" />
                 </table:template>
             </table:Column>
-             <table:Column hAlign="Center">
-                <m:Label text="{i18n>zord}" />
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>ord}" />
                 <table:template>
-                    <m:Text text="{DisplayPosPed>Yaufnr}" />
+                    <m:Text text="{DisplayPosPed>Yyaufnr}" />
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>cecoInterco}" />
+                <table:template>
+                    <m:Text text="{DisplayPosPed>Zzkostl}" />
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>ordInterco}" />
+                <table:template>
+                    <m:Text text="{DisplayPosPed>Zzaufnr}" />
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>libroMayorInterco}" />
+                <table:template>
+                    <m:Text text="{DisplayPosPed>Kstar}" />
                 </table:template>
             </table:Column>
         </table:Table>

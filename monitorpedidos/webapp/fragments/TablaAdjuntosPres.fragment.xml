@@ -20,6 +20,9 @@
         </headerToolbar>
         <columns>
             <Column >
+                <Text text="" />
+            </Column>
+            <Column >
                 <Text text="{i18n>NombreArchivo}" />
             </Column>
             <Column >
@@ -36,7 +39,10 @@
             <ColumnListItem>
                <cells>
                     <!--<Text id="nArchProv" text="{Adjuntos>Filename}" />-->
-                    <Link text="{Adjuntos>Filename}" target="_blank" href="{Adjuntos>URL}" />
+                    <!--<Link text="{Adjuntos>Filename}" target="_blank" href="{Adjuntos>URL}" />-->
+                    <!--<Link text="{Adjuntos>Filename}" target="_blank" href="onAbrirAdjunto" />-->
+                    <core:Icon src="{Adjuntos>Icono}" color="{Adjuntos>Color}" press="onPressIcono"/>
+                    <Text id="dArchFilename" text="{Adjuntos>Filename}" />
                     <Text id="dArchProv" text="{Adjuntos>Descripcion}" />
                     <Button icon="sap-icon://delete" press=".onDeleteAdj" tooltip="{i18n>Eliminar}" visible="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true }"/>
                     <Button icon="sap-icon://edit" press=".onChangeAdj" tooltip="{i18n>ModificarAdjunto}" visible="false"/>

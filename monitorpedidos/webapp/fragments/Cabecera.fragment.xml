@@ -60,20 +60,42 @@
                 </m:Input>
                 <m:Label text="{i18n>ceco}" />
                  <m:Input
-                    id="f_cecosCab"
+                    id="f_cecosIngresoCab"
                     showValueHelp="true"
                     editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }"
-                    valueHelpRequest=".onValueHelpCecosCabecera"
+                    valueHelpRequest=".onValueHelpCecosIngresoCabecera"
                     value="{DisplayPEP>/Yykostkl}"
                 />
                 <m:Label text="{i18n>ord}" />
                 <m:Input
-                    id="f_ordenesCab"
+                    id="f_ordenesIngresoCab"
                     showValueHelp="true"
-                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }"
-                    valueHelpRequest=".onValueHelpOrdCabecera"
+                    editable="{= (${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true) &amp;&amp; (!!${DisplayPEP>/Yykostkl}) }"
+                    valueHelpRequest=".onValueHelpOrdIngresoCabecera"
                     value="{DisplayPEP>/Yyaufnr}"
                 />
+                <m:Label text="{i18n>cecoInterco}" />
+                 <m:Input
+                    id="f_cecosIntercoCab"
+                    showValueHelp="true"
+                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }"
+                    valueHelpRequest=".onValueHelpCecosIntercoCabecera"
+                    value="{DisplayPEP>/Zzkostl}"
+                />
+                <m:Label text="{i18n>ordInterco}" />
+                <m:Input
+                    id="f_ordenesIntercoCab"
+                    showValueHelp="true"
+                    editable="{= (${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true) &amp;&amp; (!!${DisplayPEP>/Zzkostl}) }"
+                    valueHelpRequest=".onValueHelpOrdIntercoCabecera"
+                    value="{DisplayPEP>/Zzaufnr}"
+                />
+                <m:Label text="{i18n>libroMayorInterco}" />
+                <m:Input
+                    id="f_libroMayorInterco"
+                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }"
+                    width="300px"
+                    value="{DisplayPEP>/Kstar}"/>
 
                 <core:Title text="" />
                 <m:Label text="{i18n>MotivoPedido}" />
@@ -81,7 +103,7 @@
                     <core:ListItem key="{listadoMotivo>Augru}" text="{listadoMotivo>Bezei}" additionalText="{listadoMotivo>Bezei}" />
                 </m:ComboBox>
                 <m:Label text="{i18n>BloqueoFactura}" />
-                <m:Input id="f_blockfact" editable="{= ${ModoApp>/mode}  === 'C' ?  false : true ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" width="300px">
+                <m:Input id="f_blockfact" editable="{= ${ModoApp>/mode}  === 'C' ?  false : true ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" width="300px" value="{DisplayPEP>/Faksk}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>

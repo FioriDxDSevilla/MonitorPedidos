@@ -6,96 +6,93 @@
     xmlns:l="sap.ui.layout"
 >  
 <Dialog
-      id="ordDialPosicion"
-      title="{i18n>TableOrdenes}"  
-      resizable="true">
+      id="cecoDialAlta"
+      title="{i18n>TableCecos}"  
+      resizable="true"
+      >
  
     <fb:FilterBar
-        search=".onBusqOrdenesPosicion"
+        search=".onBusqCecosAlta"
         showClearOnFB="false"
         showFilterConfiguration="false"
         filterBarExpanded="false"
     >
         <fb:filterGroupItems>
             <fb:FilterGroupItem
-                groupName="FiltrosOrd"
+                groupName="FiltrosCeco"
                 name="A"
-                label="{i18n>codOrd}"
+                label="{i18n>codCeco}"
                 partOfCurrentVariant="true"
                 visibleInFilterBar="true"
             >
                 <fb:control>
                     <Input
-                        id="f_codOrdPosicion"
-                        value='{FiltrosOrd>/Aufnr}'
+                        id="f_codCecoAlta"
+                        value='{FiltrosCeco>/Kostl}'
                     />
                 </fb:control>
             </fb:FilterGroupItem>
             <fb:FilterGroupItem
-                groupName="FiltrosOrd"
+                groupName="FiltrosCeco"
                 name="C"
-                label="{i18n>nomOrd}"
+                label="{i18n>ktext}"
                 partOfCurrentVariant="true"
                 visibleInFilterBar="true"
             >
                 <fb:control>
                     <Input
-                        id="f_nomOrdPosicion"
-                        value='{FiltrosOrd>/Ktext}'
+                        id="f_nomCecoAlta"
+                        value='{FiltrosCeco>/Ltext}'
                     />
                 </fb:control>
             </fb:FilterGroupItem>
             <fb:FilterGroupItem
-                groupName="FiltrosOrd"
+                groupName="FiltrosCeco"
                 name="D"
-                label="{i18n>orgventas}"
+                label="{i18n>nomSoc}"
                 partOfCurrentVariant="true"
-                visibleInFilterBar="true">
+                visibleInFilterBar="true"
+                hiddenFilter="true">
                 <fb:control>
                     <Input
-                        id="f_ordbukrsPosicion"
-                        value='{FiltrosOrd>/Bukrs}'
-                        editable="true"
+                        id="f_cecoSocAlta"
+                        value='{FiltrosCeco>/Kokrs}'
+                        visible="false"
                     />
                 </fb:control>
             </fb:FilterGroupItem>
-            <!-- <fb:FilterGroupItem groupName="FiltroAcr" name="E" label="{i18n>sociedad}" partOfCurrentVariant="true" visibleInFilterBar="true">
-                    <fb:control>
-                        <Input id="f_socAcr" value='{FiltrosAcr>/Bukrs}' editable="false"/>
-                    </fb:control>
-                </fb:FilterGroupItem> -->
         </fb:filterGroupItems>
     </fb:FilterBar>
-    <Table id="idTableOrdenesPosicion" items="{
-            path: 'listadoOrdenes>/'}" growing="true" growingThreshold="20">
+    <Table id="idTableCecosAlta" items="{
+            path: 'listadoCecos>/'}" growing="true" growingThreshold="20">
         <columns>
             <Column width="10%">
-                <Text text="{i18n>codOrd}" />
+                <Text text="{i18n>codCeco}" />
             </Column>
             <Column width="20%">
                 <Text text="{i18n>ktext}" />
             </Column>
             <Column width="20%">
-                <Text text="{i18n>orgventas}" />
+                <Text text="{i18n>nomSoc}" />
             </Column>
             <Column width="25%">
                 <Text text="{i18n>descSoc}"/>
             </Column>
         </columns>
         <items>
-            <ColumnListItem type="Active" press=".onPressOrdenesPosicion">
+            <ColumnListItem type="Active" press=".onPressCecosAlta">
                 <cells>
-                    <Text text="{listadoOrdenes>Aufnr}" />
-                    <Text text="{listadoOrdenes>Ktext}" />
-                    <Text text="{listadoOrdenes>Bukrs}" />
-                    <Text text="{listadoOrdenes>Butxt}" />
+                    <Text text="{listadoCecos>Kostl}" />
+                    <Text text="{listadoCecos>Ltext}" />
+                    <Text text="{listadoCecos>Kokrs}" />
+                    <Text text="{listadoCecos>Butxt}" />
                 </cells>
             </ColumnListItem>
         </items>
     </Table>
             <OverflowToolbar >
                 <ToolbarSpacer/>
-                <Button text="Cancelar" type="Emphasized" press="CloseOrdDiagPosicion">
+                <Button text="Cancelar" type="Emphasized" press="closeCecoDiagAlta">
                 <layoutData>
                 <OverflowToolbarLayoutData
                     priority="NeverOverflow"/>

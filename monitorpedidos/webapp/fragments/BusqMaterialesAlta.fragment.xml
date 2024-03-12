@@ -4,99 +4,108 @@
     xmlns:f="sap.ui.layout.form"
     xmlns:fb="sap.ui.comp.filterbar"
     xmlns:l="sap.ui.layout"
->  
+>   
 <Dialog
-      id="cecoDialPosicion"
-      title="{i18n>TableCecos}"  
+      id='matDialAlta'
+      title="{i18n>TableMateriales}"  
       resizable="true"
       >
- 
+
     <fb:FilterBar
-        search=".onBusqCecosPosicion"
+        search=".onBusqMaterialesAlta"
         showClearOnFB="false"
         showFilterConfiguration="false"
         filterBarExpanded="false"
     >
         <fb:filterGroupItems>
             <fb:FilterGroupItem
-                groupName="FiltrosCeco"
+                groupName="FiltrosMat"
                 name="A"
-                label="{i18n>codCeco}"
+                label="{i18n>codMat}"
                 partOfCurrentVariant="true"
                 visibleInFilterBar="true"
             >
                 <fb:control>
                     <Input
-                        id="f_codCecoPosicion"
-                        value='{FiltrosCeco>/Kostl}'
+                        id="f_codMatAlta"
+                        value='{FiltrosMat>/Stcd1}'
                     />
                 </fb:control>
             </fb:FilterGroupItem>
             <fb:FilterGroupItem
-                groupName="FiltrosCeco"
+                groupName="FiltrosMat"
                 name="C"
-                label="{i18n>nomCeco}"
+                label="{i18n>nomMat}"
                 partOfCurrentVariant="true"
                 visibleInFilterBar="true"
             >
                 <fb:control>
                     <Input
-                        id="f_nomCecoPosicion"
-                        value='{FiltrosCeco>/Ltext}'
+                        id="f_nomMatAlta"
+                        value='{FiltrosMat>/Name1}'
                     />
                 </fb:control>
             </fb:FilterGroupItem>
             <fb:FilterGroupItem
-                groupName="FiltrosCeco"
+                groupName="FiltrosMat"
                 name="D"
-                label="{i18n>nomSoc}"
+                label="{i18n>grArt}"
                 partOfCurrentVariant="true"
                 visibleInFilterBar="true">
                 <fb:control>
                     <Input
-                        id="f_cecoSocPosicion"
-                        value='{FiltrosCeco>/Kokrs}'
+                        id="f_grArtAlta"
+                        value='{FiltrosMat>/Bukrs}'
                         editable="true"
                     />
                 </fb:control>
             </fb:FilterGroupItem>
+            <!-- <fb:FilterGroupItem groupName="FiltroAcr" name="E" label="{i18n>sociedad}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                    <fb:control>
+                        <Input id="f_socAcrAlta" value='{FiltrosAcr>/Bukrs}' editable="false"/>
+                    </fb:control>
+                </fb:FilterGroupItem> -->
         </fb:filterGroupItems>
     </fb:FilterBar>
-    <Table id="idTableCecosPosicion" items="{
-            path: 'listadoCecos>/'}" growing="true" growingThreshold="20">
+    <Table id="idTableMaterialesAlta" items="{
+            path: 'listadoMaterialesAlta>/'}" growing="true" growingThreshold="20">
         <columns>
             <Column width="10%">
-                <Text text="{i18n>codCeco}" />
+                <Text text="{i18n>codMat}" />
             </Column>
             <Column width="20%">
-                <Text text="{i18n>ktext}" />
+                <Text text="{i18n>creador}" />
             </Column>
             <Column width="20%">
-                <Text text="{i18n>nomSoc}" />
+                <Text text="{i18n>nomMat}" />
+            </Column>
+            <Column width="10%">
+                <Text text="{i18n>grArt}"/>
             </Column>
             <Column width="25%">
-                <Text text="{i18n>descSoc}"/>
+                <Text text="{i18n>descArt}"/>
             </Column>
         </columns>
         <items>
-            <ColumnListItem type="Active" press=".onPressCecosPosicion">
+            <ColumnListItem type="Active" press=".onPressMaterialAlta">
                 <cells>
-                    <Text text="{listadoCecos>Kostl}" />
-                    <Text text="{listadoCecos>Ltext}" />
-                    <Text text="{listadoCecos>Kokrs}" />
-                    <Text text="{listadoCecos>Butxt}" />
+                    <Text text="{listadoMaterialesAlta>Matnr}" />
+                    <Text text="{listadoMaterialesAlta>Ernam}" />
+                    <Text text="{listadoMaterialesAlta>Maktx}" />
+                    <Text text="{listadoMaterialesAlta>Matkl}" />
+                    <Text text="{listadoMaterialesAlta>Wgbez}" />
                 </cells>
             </ColumnListItem>
         </items>
     </Table>
             <OverflowToolbar >
                 <ToolbarSpacer/>
-                <Button text="Cancelar" type="Emphasized" press="CloseCecoDiagPosicion">
+                <Button text="Cancelar" type="Emphasized" press="closeMatDiagAlta">
                 <layoutData>
                 <OverflowToolbarLayoutData
                     priority="NeverOverflow"/>
             </layoutData>
                 </Button>
             </OverflowToolbar>
-    </Dialog>
+    </Dialog> 
 </core:FragmentDefinition>

@@ -30,7 +30,7 @@
                                 <core:Title text="" />
                                 
                                 <m:Label text="{i18n>Denominacion}" />
-                                <m:Input id="f_denoped" width="300px" editable="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" value="{DisplayPEP>/Bstnk}">
+                                <m:Input id="f_denoped" width="300px" editable="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" value="{DisplayPEP>/Ktext}">
                                     <m:layoutData>
                                         <l:GridData span="XL1 L2 M2 S4" />
                                     </m:layoutData>
@@ -54,7 +54,7 @@
                                     </m:layoutData>
                                 </m:Input>
                                 <m:Label text="{i18n>Contrato}" />
-                                <m:Input editable="{= ${ModoApp>/mode}  === 'C' ?  false : true ||  ${ModoApp>/mode} === 'M' ? false : true }" value="{DisplayPEP>/contrato}" width="225px">
+                                <m:Input editable="{= ${ModoApp>/mode}  === 'C' ?  false : true ||  ${ModoApp>/mode} === 'M' ? false : true }" value="{ModoApp>/Numcont}" width="225px">
                                     <m:layoutData>
                                         <l:GridData span="XL1 L2 M2 S4" />
                                     </m:layoutData>
