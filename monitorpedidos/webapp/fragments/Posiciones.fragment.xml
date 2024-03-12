@@ -82,7 +82,7 @@
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>fechaPrecio}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>PriceDate}"/>
+                    <m:Text text="{path: 'PedidoPos>PriceDate',  formatter: '.onFormatFechaDocVenta'}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
@@ -120,16 +120,34 @@
                     <!--<m:Text text="{DisplayPosPed>Waerk}" />-->
                 </table:template>
             </table:Column>
-             <table:Column hAlign="Center">
-                <m:Label text="{i18n>zcost}" />
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>ceco}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>Ykostl}" />
+                    <m:Text text="{PedidoPos>Yykostl}" />
                 </table:template>
             </table:Column>
-             <table:Column hAlign="Center">
-                <m:Label text="{i18n>zord}" />
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>ord}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>Yaufnr}" />
+                    <m:Text text="{PedidoPos>Yyaufnr}" />
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>cecoInterco}" />
+                <table:template>
+                    <m:Text text="{PedidoPos>Zzkostl}" />
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>ordInterco}" />
+                <table:template>
+                    <m:Text text="{PedidoPos>Zzaufnr}" />
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>libroMayorInterco}"/>
+                <table:template>
+                    <m:Text text="{PedidoPos>Kstar}"/>
                 </table:template>
             </table:Column>
         </table:Table>

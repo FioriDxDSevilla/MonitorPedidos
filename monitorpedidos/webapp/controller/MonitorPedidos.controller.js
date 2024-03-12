@@ -140,84 +140,6 @@ sap.ui.define([
                 });
             },
 
-            /**
-             * FRAMUMO - INI 04.03.24 - función para crear modelos en el component
-             */
-            readDataExcel: function (oModel, path, aFilters) {
-
-                var sRuta = oModel.sServiceUrl + path + "/?$format=xlsx";
-                window.open(sRuta, '_blank');
-                
-/*                var excelModel = new JSONModel();
-                
-                
-                excelModel.loadData("/sap/opu/odata/sap/ZUI5_MONITOR_PEDIDOS_SRV/DamePedidosSet/?$format=xlsx",undefined,true, "GET", undefined, true, undefined);
-
-                excelModel.attachRequestCompleted(function() {
-                    var fName = "excelPruenas";
-                    var fType = "":
-                    var fContent = this.getData().properties.Content;
-
-                    var fContentDecoded = atob(fContent)
-                    //var fContentDecoded = new Buffer.from(fContent, 'base64');
-
-                    //File.save(fContentDecoded, fName, "pdf", fType);
-
-                    var byteNumbers = new Array(fContentDecoded.length);
-                    for (var i = 0; i < fContentDecoded.length; i++) {
-                        byteNumbers[i] = fContentDecoded.charCodeAt(i);
-                    }
-                    var byteArray = new Uint8Array(byteNumbers);
-                    var blob = new Blob([byteArray], {
-                        type: fType
-                    });
-
-                    File.save(byteArray, fName, "xlsx", fType);
-                });*/
-
-                /*downloadDocModel.attachRequestCompleted(function () {
-                    console.log(this)
-
-                    var fName = this.getData().properties.DocumentTitle;
-                    var fType = this.getData().properties.MimeType;
-                    var fContent = this.getData().properties.Content;
-
-                    var fContentDecoded = atob(fContent)
-                    //var fContentDecoded = new Buffer.from(fContent, 'base64');
-
-                    //File.save(fContentDecoded, fName, "pdf", fType);
-
-                    var byteNumbers = new Array(fContentDecoded.length);
-                    for (var i = 0; i < fContentDecoded.length; i++) {
-                        byteNumbers[i] = fContentDecoded.charCodeAt(i);
-                    }
-                    var byteArray = new Uint8Array(byteNumbers);
-                    var blob = new Blob([byteArray], {
-                        type: fType
-                    });
-                    var url = URL.createObjectURL(blob);
-                    window.open(url, '_blank');
-
-                    File.save(byteArray, fName, "pdf", fType);
-
-                });*/
-
-/*                
-                return new Promise(function (resolve, reject) {
-                    oModel.read(path, {
-                        filters: [aFilters],
-                        urlParameters: "$format=xlsx",
-                        success: function (oData) {
-                            resolve(oData);
-                        },
-                        error: function (oResult) {
-                            reject(oResult);
-                        },
-                    });
-                });
-*/
-            },
-
             // -------------------------------------- EXCEPCIONES (ERROR FATAL) --------------------------------------
             errorFatal: function (e) {
                 MessageBox.error(this.oI18nModel.getProperty("errFat"));
@@ -2796,7 +2718,7 @@ sap.ui.define([
                                     //SolicitudPed_A.results[i].Yaufnr = SolicitudPed_A.results[i].Yyaufnr;
                                     
                                     SolicitudPed_A.results[i].Posnr = parseInt(SolicitudPed_A.results[i].Posnr);
-                                    SolicitudPed_A.results[i].Zzprsdt = Util.formatDate(SolicitudPed_A.results[i].Zzprsdt);
+                                    //SolicitudPed_A.results[i].Zzprsdt = Util.formatDate(SolicitudPed_A.results[i].Zzprsdt);
 
                                     if (that.modoapp === "C") { // Si es creación por contrato 'C'
                                         SolicitudPed_A.results[i].ItmNumber = SolicitudPed_A.results[i].Posnr;                                        
@@ -2819,7 +2741,8 @@ sap.ui.define([
 
                                 if (that.modoapp === "C") { // Si es creación por contrato 'C'
                                     var title = that.oI18nModel.getProperty("detSolPCon") + " " + ('0000000000' + that.oComponent.getModel("DisplayPEP").getData().Vbeln).slice(-10);
-                                    that.oComponent.getModel("DisplayPEP").setProperty("/Title", title);                                    
+                                    that.oComponent.getModel("DisplayPEP").setProperty("/Title", title);
+                                    this.oComponent.getModel("DisplayPEP").setProperty("/Faksk", "ZR");
 
                                 }else{ // Si es visualización 'D' o modificación 'M'
                                     that.oComponent.setModel(new JSONModel([]), "DisplayPosPed");
@@ -2912,6 +2835,7 @@ sap.ui.define([
                         this.oComponent.setModel(new JSONModel(), "DisplayPEP")
                         this.oComponent.getModel("DisplayPEP").setProperty("/Title", title);
                         this.oComponent.getModel("DisplayPEP").setProperty("/contrato", "");
+                        this.oComponent.getModel("DisplayPEP").setProperty("/Faksk", "ZR");
                         this.oComponent.getModel("DisplayPEP").refresh(true);
     
                         this.condicionPago(codcli, vkbur, Cvcan, Cvsector);
@@ -3362,52 +3286,8 @@ sap.ui.define([
                 this.oComponent.setModel(oModelMoneda, "listadoMoneda");
             },
 
-            
-
-
-
-
-
-
-
-
-
-
-
-            //METODO PARA DESCARGA EXCEL
+            // -------------------------------------- FUNCIONES DESCARGA EXCEL --------------------------------------
             onDownExcel: function (oEvent) {
-                /*var aCols, oRowBinding, oSettings, oSheet, oTable;
-
-                this._oTable = this.byId('idTablePEPs');
-
-                oTable = this._oTable;
-                oRowBinding = oTable.getBinding().oList;
-
-                if (oRowBinding.length > 0) {
-                    var today1 = new Date();
-                    var fechai = today1.getFullYear() + ("0" + (today1.getMonth() + 1)).slice(-2) + ("0" + today1.getDate()).slice(-2);
-                    var time = Util.formatTime(today1);
-                    var fName = this.oI18nModel.getProperty("solVentas") + fechai + time;
-
-                    aCols = this.createColumnConfig(oTable);
-
-                    oSettings = {
-                        workbook: {
-                            columns: aCols,
-                            hierarcyLevel: 'Level'
-                        },
-                        dataSource: oRowBinding,
-                        fileName: fName,
-                        worker: false
-                    };
-
-                    oSheet = new sap.ui.export.Spreadsheet(oSettings);
-                    oSheet.build().finally(function () {
-                        oSheet.destroy();
-                    });
-                } else {
-                    MessageBox.warning(this.oI18nModel.getProperty("errExcV"));
-                }*/
                 this.DownLoadExcell(
                     filtroUsuario,
                     //Numped,
@@ -3454,14 +3334,29 @@ sap.ui.define([
 
                 var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
 
-                //sap.ui.core.BusyIndicator.show();
-
-
                 Promise.all([
                     this.readDataExcel(this.mainService, "/excelPedidosSet", aFilters)
                 ]);
             },
 
+            readDataExcel: function (oModel, path, aFilters) {
+                var sRuta = oModel.sServiceUrl + path + "/?$format=xlsx";
+                window.open(sRuta, '_blank');
+            },
+
+            
+
+
+
+
+
+
+
+
+
+
+
+            
 
             onGoToZpv: function () {
                 //var numFact = this.getView().byId("f_numfac").getValue();

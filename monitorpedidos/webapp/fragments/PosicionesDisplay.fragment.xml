@@ -59,15 +59,13 @@
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>posicion}"/>
-                <table:template>
-                    
+                <table:template>                    
                     <m:Text text="{DisplayPosPed>Posnr}"/>
                 </table:template>
             </table:Column>    
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Material}"/>
-                <table:template>
-                    
+                <table:template>                    
                     <m:Text text="{DisplayPosPed>Matnr}"/>
                 </table:template>
             </table:Column>
@@ -80,7 +78,7 @@
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>fechaPrecio}" />
                 <table:template>
-                    <m:Text text="{DisplayPosPed>Zzprsdt}"/>
+                    <m:Text text="{path: 'DisplayPosPed>Zzprsdt',  formatter: '.onFormatFechaDocVenta'}"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
@@ -138,9 +136,9 @@
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
-                <m:Label text="{i18n>libroMayorInterco}" />
-                <table:template>
-                    <m:Text text="{DisplayPosPed>Kstar}" />
+                <m:Label text="{i18n>libroMayorInterco}"/>
+                <table:template>                    
+                    <m:Text text="{DisplayPosPed>Kstar}"/>
                 </table:template>
             </table:Column>
         </table:Table>

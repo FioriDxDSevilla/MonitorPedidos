@@ -905,7 +905,7 @@ sap.ui.define([
             Posnr: posPedFrag.Vbelp,
             Matnr: posPedFrag.Material,
             Arktx: posPedFrag.ShortText,
-            Zzprsdt: posPedFrag.PriceDate,
+            Zzprsdt: new Date(posPedFrag.PriceDate),
             Kwmeng: posPedFrag.ReqQty,
             Kpein: posPedFrag.Kpein,
             Meins: posPedFrag.SalesUnit,
@@ -935,7 +935,7 @@ sap.ui.define([
             ItmNumber: posPedFrag.Vbelp,
             Material: posPedFrag.Material,
             ShortText: posPedFrag.ShortText,
-            PriceDate: posPedFrag.PriceDate,
+            PriceDate: new Date(posPedFrag.PriceDate),
             ReqQty: posPedFrag.ReqQty,
             Kpein: posPedFrag.Kpein,
             SalesUnit: posPedFrag.SalesUnit,
@@ -957,6 +957,7 @@ sap.ui.define([
           }
           this.oComponent.getModel("PedidoPos").refresh(true);
         }
+        this.actualizaimp();
         this.closePedPos();
       },
 
@@ -966,7 +967,7 @@ sap.ui.define([
         var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
 
         if (modeApp == 'M') {
-          oTable = this.getView().byId("TablaPosicionesDisp");
+          var oTable = this.getView().byId("TablaPosicionesDisp");
           var aContexts = oTable.getSelectedIndices();
 
           if (aContexts.length == 0) {
@@ -976,7 +977,7 @@ sap.ui.define([
             var posiciones = this.oComponent.getModel("DisplayPosPed").getData();
             var posiciones_Aux = JSON.parse(JSON.stringify(posiciones)); // Copy data model without references
             var pedidoCopy = posiciones_Aux[aContexts[0]];
-            var itmNumberCopy = Number(posiciones_Aux[posiciones_Aux.length - 1].Posnr) + 10;
+            pedidoCopy.Posnr = Number(posiciones_Aux[posiciones_Aux.length - 1].Posnr) + 10;
             //pedidoCopy.Posnr = ('000000' + itmNumberCopy).slice(-6);
 
             posiciones.push(pedidoCopy);
@@ -984,7 +985,7 @@ sap.ui.define([
           }
 
         } else {
-          oTable = this.getView().byId("TablaPosiciones");
+          var oTable = this.getView().byId("TablaPosiciones");
           var aContexts = oTable.getSelectedIndices();
 
           if (aContexts.length == 0) {
@@ -994,13 +995,14 @@ sap.ui.define([
             var posiciones = this.oComponent.getModel("PedidoPos").getData();
             var posiciones_Aux = JSON.parse(JSON.stringify(posiciones)); // Copy data model without references
             var pedidoCopy = posiciones_Aux[aContexts[0]];
-            var itmNumberCopy = Number(posiciones_Aux[posiciones_Aux.length - 1].ItmNumber) + 10;
+            pedidoCopy.ItmNumber = Number(posiciones_Aux[posiciones_Aux.length - 1].ItmNumber) + 10;
             //pedidoCopy.ItmNumber = ('000000' + itmNumberCopy).slice(-6);
 
             posiciones.push(pedidoCopy);
             this.oComponent.getModel("PedidoPos").refresh(true);
           }
         }
+        this.actualizaimp();
       },
 
       // ------------------ FUNCIONES BOTÓN AGREGAR CON REFERENCIA A CONTRATO ------------------
@@ -1084,6 +1086,7 @@ sap.ui.define([
         aSelectedIndices.forEach(function (oItem) {
           oTable.setSelectedIndex(-1);
         });
+        this.actualizaimp();
         this.closeOptionsDiagContrato();
       },
 
@@ -1323,6 +1326,470 @@ sap.ui.define([
         }
 
 
+      },
+
+      // -------------------------------------- FUNCIÓN BOTÓN GRABAR --------------------------------------
+      onCrear: function () {
+        sap.ui.core.BusyIndicator.show();
+
+        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
+
+        var message;
+        var crear = "Se ha creado la solicitud de Venta: ";
+        var modificar = "Se ha modificado la solicitud de Venta: "
+
+        //Fechas de Cabecera
+        var ReqDate = Date.parse(new Date());
+        var PurchDate = Date.parse(new Date());
+        var BillDate = Date.parse(new Date());
+        var DocDate = Date.parse(new Date());
+        var PriceDate = Date.parse(new Date());
+        var QtValidF = Date.parse(new Date());
+        var QtValidT = Date.parse(new Date());
+        var CtValidF = Date.parse(new Date());
+        var CtValidT = Date.parse(new Date());
+        var WarDate = Date.parse(new Date());
+        var FixValDy = Date.parse(new Date());
+        var ServDate = Date.parse(new Date());
+        var CmlqtyDat = Date.parse(new Date());
+        var PsmPstngDate = Date.parse(new Date());
+        var PoDatS = Date.parse(new Date());
+        var DunDate = Date.parse(new Date());
+        
+        // Fechas de Posición
+        var TpDate = Date.parse(new Date());
+        var GiDate = Date.parse(new Date());        
+        var MsDate = Date.parse(new Date());
+        var LoadDate = Date.parse(new Date());        
+        var DlvDate = Date.parse(new Date());
+        var Conpricdat = Date.parse(new Date());
+
+        var Vbeln = this.oComponent.getModel("DisplayPEP").getData().Vbeln
+        var DocType = this.oComponent.getModel("ModoApp").getData().Clasepedido;
+        var SalesOrg = this.oComponent.getModel("ModoApp").getData().Vkbur; // Organización de Ventas
+        var SalesDist = this.oComponent.getModel("ModoApp").getData().Bzirk; // Línea Servicio
+        var DistrChan = this.oComponent.getModel("ModoApp").getData().CvCanal;
+        var Division = this.oComponent.getModel("ModoApp").getData().CvSector;
+        var SalesOff = this.oComponent.getModel("DisplayPEP").getData().Vkbur; // Oficina de Ventas
+        var PpSearch = this.oComponent.getModel("DisplayPEP").getData().Ktext; // Denominación
+        var PurchNoC = this.oComponent.getModel("DisplayPEP").getData().Bstnk; // Nº de Pedido de Cliente
+        var BillBlock = this.oComponent.getModel("DisplayPEP").getData().Faksk; // Bloqueo de Factura
+        var Currency = this.oComponent.getModel("DisplayPEP").getData().Currency;
+        //var Currency = this.oComponent.getModel("PedidoCab").getData().Moneda;
+        var OrdReason = this.oComponent.getModel("DisplayPEP").getData().Augru; // Motivo de Pedido
+        var Ref1 = this.oComponent.getModel("ModoApp").getData().Numcont; // Contrato
+        var Zzkostl = this.oComponent.getModel("DisplayPEP").getData().Zzkostl; // Ceco Interco
+        var Zzaufnr = this.oComponent.getModel("DisplayPEP").getData().Zzaufnr; // Orden Interco
+        var Kstar = this.oComponent.getModel("DisplayPEP").getData().Kstar; // Libro Mayor Interco
+
+        // Entidad PedidoClienteModSet
+        var PartnNumb = this.oComponent.getModel("DisplayPEP").getData().Kunnr;
+        var PartnRole = "AG";
+
+        // Entidad PedidoExtensionModSet
+        var Zznia = this.oComponent.getModel("ModoApp").getData().Nia;
+        var Zzresponsable = "";
+        var Yykostkl = this.oComponent.getModel("DisplayPEP").getData().Yykostkl; // Ceco Ingreso
+        var Yyaufnr = this.oComponent.getModel("DisplayPEP").getData().Yyaufnr; // Orden Ingreso
+
+        // Entidad PedidoTextosModSet
+        var TxtCabecera = this.oComponent.getModel("DisplayPEP").getData().Tdlinecab;
+        //var TxtInfRechazo = this.getView().byId("textAreaCabInfRech").getValue();
+        var TxtAclaraciones = this.oComponent.getModel("DisplayPEP").getData().Tdlineacl;
+      
+        // -------------------- MODO MODIFICACIÓN --------------------
+        if (modeApp === 'M') {
+          
+          // --ADJUNTOS (FicheroModSet)
+          var oModAdj = this.oComponent.getModel("Adjuntos").getData();
+          var oModAdj2 = [], numdoc = 0;
+          
+          oModAdj.forEach(function (el) {
+            numdoc++;
+
+            var adj = {
+              Numdoc: numdoc.toString(),
+              Filename: el.Filename,
+              Descripcion: el.Descripcion
+            }
+
+            if (!el.URL) {
+              adj.Mimetype = el.Mimetype;
+              adj.Content = el.Content;
+            }
+
+            oModAdj2.push(adj);
+          });
+
+          // --POSCIONES (SolicitudPepCrSet, SolicitudPedCondSet, SolicitudPedQtySet, PedidoTextosModSet)
+          var posiciones = this.getView().getModel("DisplayPosPed").getData();
+
+          var SolicitudPepCrSet = [];
+          var SolicitudPedCondSet = [];
+          var SolicitudPedQtySet = [];
+          var PedidoTextosModSet_Aux = [];
+          for (var i = 0; i < posiciones.length; i++) {
+
+            // Entidad SolicitudPepCrSet
+            let objSolicitudPepCrSet = {
+              ItmNumber: posiciones[i].Posnr.toString(),
+              Material: posiciones[i].Matnr,
+              BillDate: "\/Date(" + BillDate + ")\/",
+              PurchDate: "\/Date(" + PurchDate + ")\/",
+              PoDatS: "\/Date(" + PoDatS + ")\/",
+              FixValDy: "\/Date(" + FixValDy + ")\/",
+              PriceDate: "\/Date(" + Date.parse(posiciones[i].Zzprsdt) + ")\/",
+              ServDate: "\/Date(" + ServDate + ")\/",
+              SalesUnit: posiciones[i].Meins,
+              Plant: this.oComponent.getModel("ModoApp").getData().Vkbur,              
+              Yykostkl: posiciones[i].Yykostkl,
+              Yyaufnr: posiciones[i].Yyaufnr,
+              Zzkostl: posiciones[i].Zzkostl,
+              Zzaufnr: posiciones[i].Zzaufnr,
+              Kstar: posiciones[i].Kstar
+            };
+            SolicitudPepCrSet.push(objSolicitudPepCrSet);
+
+            // Entidad SolicitudPedCondSet
+            let objSolicitudPedCondSet = {
+              ItmNumber: posiciones[i].Posnr.toString(),
+              CondValue: posiciones[i].Netpr,
+              CondType: 'PR00',
+              CondPUnt: posiciones[i].Kpein,
+              CondUnit: posiciones[i].Meins,
+              Currency: 'EUR',
+              Conpricdat: "\/Date(" + Conpricdat + ")\/",
+            };
+            SolicitudPedCondSet.push(objSolicitudPedCondSet);
+
+            // Entidad SolicitudPedQtySet
+            let objSolicitudPedQtySet = {
+              //Secu: (i + 1).toString(),
+              ItmNumber: posiciones[i].Posnr.toString(),
+              ReqQty: posiciones[i].Kpein,
+              ReqDate: "\/Date(" + ReqDate + ")\/",
+              TpDate: "\/Date(" + TpDate + ")\/",
+              GiDate: "\/Date(" + GiDate + ")\/",
+              MsDate: "\/Date(" + MsDate + ")\/",
+              LoadDate: "\/Date(" + LoadDate + ")\/",
+              DlvDate: "\/Date(" + DlvDate + ")\/",
+            };
+            SolicitudPedQtySet.push(objSolicitudPedQtySet);
+
+            // Entidad PedidoTextosModSet
+            let objPedidoTextosModSet;
+            if (TxtCabecera != null && TxtAclaraciones == null) {
+              objPedidoTextosModSet = {
+                Textid: '001',
+                Langu: 'ES',
+                Textline: TxtCabecera
+              };
+              PedidoTextosModSet_Aux.push(objPedidoTextosModSet);
+            } else if (TxtCabecera == null && TxtAclaraciones != null) {
+              objPedidoTextosModSet = {
+                Textid: 'Z003',
+                Langu: 'ES',
+                Textline: TxtAclaraciones
+              };
+              PedidoTextosModSet_Aux.push(objPedidoTextosModSet);
+            } else if (TxtCabecera != null && TxtAclaraciones != null) {
+              if (TxtCabecera) {
+                objPedidoTextosModSet = {
+                  Textid: '0001',
+                  Langu: 'ES',
+                  Textline: TxtCabecera
+                };
+                PedidoTextosModSet_Aux.push(objPedidoTextosModSet);
+              }
+              if (TxtAclaraciones) {
+                objPedidoTextosModSet = {
+                  Textid: 'Z003',
+                  Langu: 'ES',
+                  Textline: TxtAclaraciones
+                };
+                PedidoTextosModSet_Aux.push(objPedidoTextosModSet);
+              }
+            }
+          }
+
+          // Entidad PedidoTextosModSet
+          let PedidoTextosModSet = [];
+          let uniqueObject = {};
+
+          for (let i in PedidoTextosModSet_Aux) {
+            var objTextId = PedidoTextosModSet_Aux[i]['Textid'];
+            uniqueObject[objTextId] = PedidoTextosModSet_Aux[i];
+          }
+
+          for (i in uniqueObject) {
+            PedidoTextosModSet.push(uniqueObject[i]);
+          }
+
+          var oJson = {
+            Vbeln: Vbeln,
+            DocType: DocType,
+            SalesOrg: SalesOrg,
+            SalesDist: SalesDist,
+            DistrChan: DistrChan,
+            Division: Division,
+            SalesOff: SalesOff,
+            PpSearch: PpSearch,
+            PurchNoC: PurchNoC,
+            BillBlock: BillBlock,
+            Currency: Currency,
+            OrdReason: OrdReason,
+            Ref1: Ref1,
+            Zzkostl: Zzkostl,
+            Zzaufnr: Zzaufnr,
+            Kstar: Kstar,
+            ReqDateH: "\/Date(" + ReqDate + ")\/",
+            PurchDate: "\/Date(" + PurchDate + ")\/",
+            BillDate: "\/Date(" + BillDate + ")\/",
+            DocDate: "\/Date(" + DocDate + ")\/",
+            PriceDate: "\/Date(" + PriceDate + ")\/",
+            QtValidF: "\/Date(" + QtValidF + ")\/",
+            QtValidT: "\/Date(" + QtValidT + ")\/",
+            CtValidF: "\/Date(" + CtValidF + ")\/",
+            CtValidT: "\/Date(" + CtValidT + ")\/",
+            WarDate: "\/Date(" + WarDate + ")\/",
+            FixValDy: "\/Date(" + FixValDy + ")\/",
+            ServDate: "\/Date(" + ServDate + ")\/",
+            CmlqtyDat: "\/Date(" + CmlqtyDat + ")\/",
+            PsmPstngDate: "\/Date(" + PsmPstngDate + ")\/",
+            PoDatS: "\/Date(" + PoDatS + ")\/",
+            DunDate: "\/Date(" + DunDate + ")\/",
+            PedidoClienteModSet: {
+              PartnNumb: PartnNumb,
+              PartnRole: PartnRole
+            },
+            PedidoExtensionModSet: {
+              Zznia: Zznia,
+              Zzresponsable: Zzresponsable,
+              Yykostkl: Yykostkl,
+              Yyaufnr: Yyaufnr
+            },
+            FicheroModSet: oModAdj2,
+            PedidoPosicionModSet: SolicitudPepCrSet,
+            PedidoCondicionModSet: SolicitudPedCondSet,
+            PedidoCantidadModSet: SolicitudPedQtySet,
+            PedidoTextosModSet: PedidoTextosModSet,            
+            PedidoRespuestaModSet: {
+              //Idsolc: Idsolc,
+            }
+          };
+
+          this.mainService.create("/PedidoModSet", oJson, {
+            success: function (result) {
+              sap.ui.core.BusyIndicator.hide();
+              if (result.Vbeln && result.Vbeln !== "0") {                
+                message = modificar + result.Vbeln;
+                MessageBox.show(message, {
+                  icon: sap.m.MessageBox.Icon.SUCCESS,
+                  onClose: function (oAction) {
+                    var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+                    oRouter.navTo("RouteMonitorPedidos");
+                  }
+                });
+              } else if (result.PedidoRespuestaModSet.Mensaje) {
+                MessageBox.error(result.PedidoRespuestaModSet.Mensaje);
+              }
+            },
+            error: function (err) {
+              sap.m.MessageBox.error("Solicitud no Modificada.", {
+                title: "Error",
+                initialFocus: null,
+              });
+              sap.ui.core.BusyIndicator.hide();
+            },
+            async: true,
+          });
+
+          // -------------------- MODO CREACIÓN --------------------
+        }else{
+
+          // --POSCIONES (SolicitudPepCrSet, SolicitudPedCondSet, SolicitudPedQtySet, PedidoTextosModSet)
+          var posiciones = this.getView().getModel("PedidoPos").getData();
+
+          var PedidoPosicionSet = [];
+          var PedidoCondicionSet = [];
+          var PedidoCantidadSet = [];
+          var PedidoTextosSet_Aux = [];
+          for (var i = 0; i < posiciones.length; i++) {
+
+            // Entidad PedidoPosicionSet
+            let objPedidoPosicionSet = {
+              ItmNumber: posiciones[i].ItmNumber.toString(),
+              Material: posiciones[i].Material,
+              BillDate: "\/Date(" + BillDate + ")\/",
+              PurchDate: "\/Date(" + PurchDate + ")\/",
+              PoDatS: "\/Date(" + PoDatS + ")\/",
+              FixValDy: "\/Date(" + FixValDy + ")\/",
+              PriceDate: "\/Date(" + Date.parse(posiciones[i].PriceDate) + ")\/",
+              ServDate: "\/Date(" + ServDate + ")\/",
+              SalesUnit: posiciones[i].SalesUnit,
+              Plant: this.oComponent.getModel("ModoApp").getData().Vkbur,
+              Yykostkl: posiciones[i].Yykostkl,
+              Yyaufnr: posiciones[i].Yyaufnr,
+              Zzkostl: posiciones[i].Zzkostl,
+              Zzaufnr: posiciones[i].Zzaufnr,
+              Kstar: posiciones[i].Kstar
+            };
+            PedidoPosicionSet.push(objPedidoPosicionSet);
+
+            // Entidad PedidoCondicionSet
+            let objPedidoCondicionSet = {
+              ItmNumber: posiciones[i].ItmNumber.toString(),
+              CondValue: posiciones[i].CondValue,
+              CondType: 'PR00',
+              CondPUnt: posiciones[i].Kpein,
+              CondUnit: posiciones[i].SalesUnit,
+              Currency: 'EUR',
+              Conpricdat: "\/Date(" + Conpricdat + ")\/",
+            };
+            PedidoCondicionSet.push(objPedidoCondicionSet);
+
+            // Entidad PedidoCantidadSet
+            let objPedidoCantidadSet = {
+              //Secu: (i + 1).toString(),
+              ItmNumber: posiciones[i].ItmNumber.toString(),
+              ReqQty: posiciones[i].ReqQty,
+              ReqDate: "\/Date(" + ReqDate + ")\/",
+              TpDate: "\/Date(" + TpDate + ")\/",
+              GiDate: "\/Date(" + GiDate + ")\/",
+              MsDate: "\/Date(" + MsDate + ")\/",
+              LoadDate: "\/Date(" + LoadDate + ")\/",
+              DlvDate: "\/Date(" + DlvDate + ")\/",
+            };
+            PedidoCantidadSet.push(objPedidoCantidadSet);
+
+            // Entidad PedidoTextosSet
+            let objPedidoTextosSet;
+            if (TxtCabecera != null && TxtAclaraciones == null) {
+              objPedidoTextosSet = {
+                Textid: '001',
+                Langu: 'ES',
+                Textline: TxtCabecera
+              };
+              PedidoTextosSet_Aux.push(objPedidoTextosSet);
+            } else if (TxtCabecera == null && TxtAclaraciones != null) {
+              objPedidoTextosSet = {
+                Textid: 'Z003',
+                Langu: 'ES',
+                Textline: TxtAclaraciones
+              };
+              PedidoTextosSet_Aux.push(objPedidoTextosSet);
+            } else if (TxtCabecera != null && TxtAclaraciones != null) {
+              if (TxtCabecera) {
+                objPedidoTextosSet = {
+                  Textid: '0001',
+                  Langu: 'ES',
+                  Textline: TxtCabecera
+                };
+                PedidoTextosSet_Aux.push(objPedidoTextosSet);
+              }
+              if (TxtAclaraciones) {
+                objPedidoTextosSet = {
+                  Textid: 'Z003',
+                  Langu: 'ES',
+                  Textline: TxtAclaraciones
+                };
+                PedidoTextosSet_Aux.push(objPedidoTextosSet);
+              }
+            }
+          }
+
+          // Entidad PedidoTextosSet
+          let PedidoTextosSet = [];
+          let uniqueObject = {};
+
+          for (let i in PedidoTextosSet_Aux) {
+            var objTextId = PedidoTextosSet_Aux[i]['Textid'];
+            uniqueObject[objTextId] = PedidoTextosSet_Aux[i];
+          }
+
+          for (i in uniqueObject) {
+            PedidoTextosSet.push(uniqueObject[i]);
+          }
+
+          var oJson = {
+            DocType: DocType,
+            SalesOrg: SalesOrg,
+            SalesDist: SalesDist,
+            DistrChan: DistrChan,
+            Division: Division,
+            SalesOff: SalesOff,
+            PpSearch: PpSearch,
+            PurchNoC: PurchNoC,
+            BillBlock: BillBlock,
+            Currency: Currency,
+            OrdReason: OrdReason,
+            Ref1: Ref1,
+            Zzkostl: Zzkostl,
+            Zzaufnr: Zzaufnr,
+            Kstar: Kstar,
+            ReqDateH: "\/Date(" + ReqDate + ")\/",
+            PurchDate: "\/Date(" + PurchDate + ")\/",
+            BillDate: "\/Date(" + BillDate + ")\/",
+            DocDate: "\/Date(" + DocDate + ")\/",
+            PriceDate: "\/Date(" + PriceDate + ")\/",
+            QtValidF: "\/Date(" + QtValidF + ")\/",
+            QtValidT: "\/Date(" + QtValidT + ")\/",
+            CtValidF: "\/Date(" + CtValidF + ")\/",
+            CtValidT: "\/Date(" + CtValidT + ")\/",
+            WarDate: "\/Date(" + WarDate + ")\/",
+            FixValDy: "\/Date(" + FixValDy + ")\/",
+            ServDate: "\/Date(" + ServDate + ")\/",
+            CmlqtyDat: "\/Date(" + CmlqtyDat + ")\/",
+            PsmPstngDate: "\/Date(" + PsmPstngDate + ")\/",
+            PoDatS: "\/Date(" + PoDatS + ")\/",
+            DunDate: "\/Date(" + DunDate + ")\/",
+            PedidoClienteSet: {
+              PartnNumb: PartnNumb,
+              PartnRole: PartnRole
+            },
+            PedidoExtensionSet: {
+              Zznia: Zznia,
+              Zzresponsable: Zzresponsable,
+              Yykostkl: Yykostkl,
+              Yyaufnr: Yyaufnr
+            },
+            FicheroSet: oModAdj2,
+            PedidoPosicionSet: PedidoPosicionSet,
+            PedidoCondicionSet: PedidoCondicionSet,
+            PedidoCantidadSet: PedidoCantidadSet,
+            PedidoTextosSet: PedidoTextosSet,            
+            PedidoRespuestaSet: {
+              //Idsolc: Idsolc,
+            }
+          };
+
+          this.mainService.create("/PedidoCabSet", oJson, {
+            success: function (result) {
+              sap.ui.core.BusyIndicator.hide();
+              if (result.Vbeln && result.Vbeln !== "0") {
+                message = crear + result.Vbeln;
+
+                MessageBox.show(message, {
+                  icon: sap.m.MessageBox.Icon.SUCCESS,
+                  onClose: function (oAction) {
+                    var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+                    oRouter.navTo("RouteMonitorPedidos");
+                  }
+                });
+              } else if (result.PedidoRespuestaSet.Mensaje) {
+                MessageBox.error(result.PedidoRespuestaSet.Mensaje);
+              }              
+            },
+            error: function (err) {
+              sap.m.MessageBox.error("Solicitud no creada.", {
+                title: "Error",
+                initialFocus: null,
+              });
+              sap.ui.core.BusyIndicator.hide();              
+            },
+            async: true
+          });
+        }        
       },
       
       
@@ -1914,236 +2381,7 @@ sap.ui.define([
 
       },
 
-      
-
-
-      // -------------------------------------- FUNCIÓN BOTÓN GRABAR --------------------------------------
-      onCrear_new: function () {
-        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-
-        var message;
-        var crear = "Se ha creado la solicitud de Venta: ";
-        var modificar = "Se ha modificado la solicitud de Venta: "
-
-        if (modeApp === 'M') {
-          var PosicionesMod = this.getView().getModel("DisplayPosPed").getData();
-          var results_arrayMod = PosicionesMod;
-
-          //
-          var PpSearch = this.getView().byId("f_denoped").getValue();
-          var PurchNoC = this.getView().byId("f_refped").getValue();
-          var Yykostkl = this.oComponent.getModel("DisplayPEP").getData().Yykostkl;
-          var Yyaufnr = this.oComponent.getModel("DisplayPEP").getData().Yyaufnr;
-
-
-
-          var Vbeln = this.oComponent.getModel("DisplayPEP").getData().Vbeln
-          var DocType = this.oComponent.getModel("ModoApp").getData().Tipopedido;
-          var SalesOrg = this.oComponent.getModel("DisplayPEP").getData().Vkbur;
-          var DistrChan = this.oComponent.getModel("ModoApp").getData().CvCanal;
-          var Division = this.oComponent.getModel("ModoApp").getData().CvSector;
-          var SalesOff = this.oComponent.getModel("DisplayPEP").getData().Vkbur;
-          
-          
-          var SalesDist = this.oComponent.getModel("ModoApp").getData().Bzirk;
-          var BillBlock = "ZR";
-          var Currency = this.oComponent.getModel("DisplayPEP").getData().Currency;
-          //var Currency = this.oComponent.getModel("PedidoCab").getData().Moneda;
-          var TxtCabecera = this.getView().byId("textAreaCabFact").getValue();
-          //var TxtInfRechazo = this.getView().byId("textAreaCabInfRech").getValue();
-          var TxtAclaraciones = this.getView().byId("textAreaCabAcl").getValue();
-          var Zznia = this.oComponent.getModel("DisplayPEP").getData().Zznia;
-          var Zzresponsable = "";
-          
-
-          var PartnRole = "AG";
-          var PartnNumb = this.oComponent.getModel("DisplayPEP").getData().Kunnr;
-
-          //Fechas de Cabecera
-          var ReqDate = Date.parse(new Date());
-          var DocDate = Date.parse(new Date());
-          var BillDate = Date.parse(new Date());
-          var PurchDate = Date.parse(new Date());
-          var PriceDate = Date.parse(new Date());
-          var QtValidF = Date.parse(new Date());
-          var QtValidT = Date.parse(new Date());
-          var CtValidF = Date.parse(new Date());
-          var CtValidT = Date.parse(new Date());
-          var WarDate = Date.parse(new Date());
-          var FixValDy = Date.parse(new Date());
-          var ServDate = Date.parse(new Date());
-          var CmlqtyDat = Date.parse(new Date());
-          var PsmPstngDate = Date.parse(new Date());
-          var PoDatS = Date.parse(new Date());
-          var DunDate = Date.parse(new Date());
-          var ReqDate = Date.parse(new Date());
-          var TpDate = Date.parse(new Date());
-          var MsDate = Date.parse(new Date());
-          var LoadDate = Date.parse(new Date());
-          var GiDate = Date.parse(new Date());
-          var DlvDate = Date.parse(new Date());
-          var Conpricdat = Date.parse(new Date());
-
-
-          oJson = {
-            PpSearch: PpSearch, // Denominación
-            PurchNoC: PurchNoC, // Nº de Pedido de Cliente
-            
-            Vbeln: Vbeln,
-            DocType: DocType,
-            SalesOrg: SalesOrg,
-            SalesDist: SalesDist,
-            DistrChan: DistrChan,
-            Division: Division,
-            SalesOff: SalesOff,
-            
-            
-            BillBlock: BillBlock,
-            Currency: Currency,
-            ReqDateH: "\/Date(" + ReqDate + ")\/",
-            PurchDate: "\/Date(" + PurchDate + ")\/",
-            BillDate: "\/Date(" + BillDate + ")\/",
-            DocDate: "\/Date(" + DocDate + ")\/",
-            PriceDate: "\/Date(" + PriceDate + ")\/",
-            QtValidF: "\/Date(" + QtValidF + ")\/",
-            QtValidT: "\/Date(" + QtValidT + ")\/",
-            CtValidF: "\/Date(" + CtValidF + ")\/",
-            CtValidT: "\/Date(" + CtValidT + ")\/",
-            WarDate: "\/Date(" + WarDate + ")\/",
-            FixValDy: "\/Date(" + FixValDy + ")\/",
-            ServDate: "\/Date(" + ServDate + ")\/",
-            CmlqtyDat: "\/Date(" + CmlqtyDat + ")\/",
-            PsmPstngDate: "\/Date(" + PsmPstngDate + ")\/",
-            PoDatS: "\/Date(" + PoDatS + ")\/",
-            DunDate: "\/Date(" + DunDate + ")\/",
-            PedidoClienteModSet: {
-              PartnNumb: PartnNumb,
-              PartnRole: PartnRole
-            },
-            PedidoExtensionModSet: {
-              Zznia: Zznia,
-              Zzresponsable: Zzresponsable,
-              Yykostkl: Yykostkl,
-              Yyaufnr: Yyaufnr
-            },
-            //          PedidoTextosSet: [TextId:'0001' , TextLine: TxtCabecera], Z002 Rechazo, Z003 Aclaraciones
-            PedidoTextosModSet: newArray,
-            PedidoPosicionModSet: SolicitudPepCrSet,
-            PedidoCondicionModSet: SolicitudPedCondSet,
-            PedidoCantidadModSet: SolicitudPedQtySet,
-            FicheroModSet: oModAdj2, //oModAdj,
-            PedidoRespuestaModSet: {
-              //Idsolc: Idsolc,
-            }
-          };
-
-
-        }
-
-        for (var i = 0; i < PosicionesMod.length; i++) {
-          obj = {
-            //Secu: (i + 1).toString(),
-            ItmNumber: results_arrayMod[i].Posnr.toString(),
-            Material: results_arrayMod[i].Matnr,
-            BillDate: "\/Date(" + BillDate + ")\/",
-            PurchDate: "\/Date(" + PurchDate + ")\/",
-            PoDatS: "\/Date(" + PoDatS + ")\/",
-            FixValDy: "\/Date(" + FixValDy + ")\/",
-            PriceDate: "\/Date(" + PriceDate + ")\/",
-            ServDate: "\/Date(" + ServDate + ")\/",
-            //Importe: results_array[i].Importe.toString(),
-            SalesUnit: results_arrayMod[i].Meins,
-            Plant: this.oComponent.getModel("ModoApp").getData().Vkbur,
-          };
-          SolicitudPepCrSet.push(obj);
-          obj = {};
-        }
-
-        //Fechas de Condiciones
-        for (var i = 0; i < PosicionesMod.length; i++) {
-          objCond = {
-            //Secu: (i + 1).toString(),
-            ItmNumber: results_arrayMod[i].Posnr.toString(),
-            CondValue: results_arrayMod[i].Netpr,
-            CondType: 'PR00',
-            CondPUnt: results_arrayMod[i].Kpein,
-            CondUnit: results_arrayMod[i].Meins,
-            Currency: 'EUR',
-            Conpricdat: "\/Date(" + Conpricdat + ")\/",
-          };
-          SolicitudPedCondSet.push(objCond);
-          objCond = {};
-        }
-
-        //Fechas de Cantidades
-        for (var i = 0; i < PosicionesMod.length; i++) {
-          objQty = {
-            //Secu: (i + 1).toString(),
-            ItmNumber: results_arrayMod[i].Posnr.toString(),
-            ReqQty: results_arrayMod[i].Kpein,
-            ReqDate: "\/Date(" + ReqDate + ")\/",
-            TpDate: "\/Date(" + TpDate + ")\/",
-            GiDate: "\/Date(" + GiDate + ")\/",
-            MsDate: "\/Date(" + MsDate + ")\/",
-            LoadDate: "\/Date(" + LoadDate + ")\/",
-            DlvDate: "\/Date(" + DlvDate + ")\/",
-          };
-          SolicitudPedQtySet.push(objQty);
-          objQty = {};
-        }
-
-        oJson = {
-            Vbeln: Vbeln,
-            DocType: DocType,
-            SalesOrg: SalesOrg,
-            SalesDist: SalesDist,
-            DistrChan: DistrChan,
-            Division: Division,
-            SalesOff: SalesOff,
-            PpSearch: PpSearch,
-            PurchNoC: PurchNoC,
-            BillBlock: BillBlock,
-            Currency: Currency,
-            ReqDateH: "\/Date(" + ReqDate + ")\/",
-            PurchDate: "\/Date(" + PurchDate + ")\/",
-            BillDate: "\/Date(" + BillDate + ")\/",
-            DocDate: "\/Date(" + DocDate + ")\/",
-            PriceDate: "\/Date(" + PriceDate + ")\/",
-            QtValidF: "\/Date(" + QtValidF + ")\/",
-            QtValidT: "\/Date(" + QtValidT + ")\/",
-            CtValidF: "\/Date(" + CtValidF + ")\/",
-            CtValidT: "\/Date(" + CtValidT + ")\/",
-            WarDate: "\/Date(" + WarDate + ")\/",
-            FixValDy: "\/Date(" + FixValDy + ")\/",
-            ServDate: "\/Date(" + ServDate + ")\/",
-            CmlqtyDat: "\/Date(" + CmlqtyDat + ")\/",
-            PsmPstngDate: "\/Date(" + PsmPstngDate + ")\/",
-            PoDatS: "\/Date(" + PoDatS + ")\/",
-            DunDate: "\/Date(" + DunDate + ")\/",
-            PedidoClienteModSet: {
-              PartnNumb: PartnNumb,
-              PartnRole: PartnRole
-            },
-            PedidoExtensionModSet: {
-              Zznia: Zznia,
-              Zzresponsable: Zzresponsable,
-              Yykostkl: Yykostkl,
-              Yyaufnr: Yyaufnr
-            },
-            //          PedidoTextosSet: [TextId:'0001' , TextLine: TxtCabecera], Z002 Rechazo, Z003 Aclaraciones
-            PedidoTextosModSet: newArray,
-            PedidoPosicionModSet: SolicitudPepCrSet,
-            PedidoCondicionModSet: SolicitudPedCondSet,
-            PedidoCantidadModSet: SolicitudPedQtySet,
-            FicheroModSet: oModAdj2, //oModAdj,
-            PedidoRespuestaModSet: {
-              //Idsolc: Idsolc,
-            }
-          };
-        
-      },
-
-      onCrear: function () {
+      onCrear_OLD: function () {
 
         var oJson;
         var SolicitudPepCrSet = [];
@@ -2916,34 +3154,6 @@ sap.ui.define([
           that.getView().byId("f_ordenesPOS").setValue(null);
         }
       },
-
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       /*fechahoy: function () {
         var today = new Date();

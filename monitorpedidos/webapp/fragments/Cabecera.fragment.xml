@@ -93,7 +93,7 @@
                 <m:Label text="{i18n>libroMayorInterco}" />
                 <m:Input
                     id="f_libroMayorInterco"
-                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }"
+                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }"
                     width="300px"
                     value="{DisplayPEP>/Kstar}"/>
 

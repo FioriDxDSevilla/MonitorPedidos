@@ -407,6 +407,7 @@
                                 icon="sap-icon://pdf-attachment"
                                 tooltip="{i18n>down}"
                                 type="Ghost"
+                                enabled="false"
                             />
                         </ui:template>
                     </ui:Column>
@@ -418,6 +419,7 @@
                                 icon="sap-icon://documents"
                                 tooltip="{i18n>copy}"
                                 type="Ghost"
+                                enabled="false"
                             />
                         </ui:template>
                     </ui:Column>

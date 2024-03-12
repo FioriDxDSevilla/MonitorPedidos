@@ -135,16 +135,13 @@
                 valueHelpRequest=".onValueHelpOrdIntercoPosicion"
                 value="{posPedFrag>/Zzaufnr}"
                 visible="true"
-            />
+            /> 
             <Label text="{i18n>libroMayorInterco}" />
-            <Input
+           <Input
                 id="f_libroMayorIntPOS"
-                showValueHelp="true"
-                editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
-                valueHelpRequest=".onValueHelpOrdPosicion"
                 value="{posPedFrag>/Kstar}"
-                visible="true"
-            />         
+                editable="true"
+            />
             <!--<ComboBox
                 value="{posPedFrag>/Waers}"
                 placeholder="EUR"
