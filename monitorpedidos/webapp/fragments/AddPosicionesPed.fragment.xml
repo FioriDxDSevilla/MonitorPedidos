@@ -137,10 +137,13 @@
                 visible="true"
             /> 
             <Label text="{i18n>libroMayorInterco}" />
-           <Input
+            <Input
                 id="f_libroMayorIntPOS"
+                showValueHelp="true"
+                editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
+                valueHelpRequest=".onValueHelpLibroMayorPosicion"
                 value="{posPedFrag>/Kstar}"
-                editable="true"
+                visible="true"
             />
             <!--<ComboBox
                 value="{posPedFrag>/Waers}"

@@ -23,7 +23,7 @@ sap.ui.define([
     var codmat, nommat,unimedmat, fechaPos, codordPos, nomordPos, codcecoPos, nomcecoPos, sStatus;
     
     // Variables inputs
-    var tipoInputCeco, tipoInputOrden;
+    var tipoInputCeco, tipoInputOrden, tipoInputLibroMayor;
      // Variables globales para el formateo de los campos 'FECHA DOC. VENTA' e 'IMPORTE'
      var fechaDocVentaFormat;
      /*
@@ -68,6 +68,7 @@ sap.ui.define([
       handleRouteMatched: function (evt) {
         if (evt.getParameter("name") !== "AltaPedidos") {
           this.actualizaimp();
+          this.oComponent.setModel(new JSONModel(), "listadoLibroMayor");
         }
       },
 
@@ -608,7 +609,114 @@ sap.ui.define([
         }
         
         this.closeCecoDiagAlta();
-      },  
+      },
+
+      // --------------------------------- FUNCIONES LIBRO MAYOR ---------------------------------
+      // FUNCIONES DE LIBRO MAYOR
+      onBusqLibroMayor: function (Saknr, Txt50) {        
+        var Bukrs = this.oComponent.getModel("ModoApp").getProperty("/Vkbur").toString();
+
+        var aFilterIds = [],
+            aFilterValues = [];
+
+        var addFilter = function (id, value) {
+            if (value) {
+                aFilterIds.push(id);
+                aFilterValues.push(value);
+            }
+        };
+
+        addFilter("Saknr", Saknr);
+        addFilter("Txt50", Txt50);
+        addFilter("Kokrs", Bukrs);
+
+        var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+        sap.ui.core.BusyIndicator.show();
+
+        Promise.all([
+          this.readDataEntity(this.mainService, "/LibroMayorSet", aFilters),
+        ]).then(this.buildLibroMayorModel.bind(this), this.errorFatal.bind(this));
+      },
+
+      buildLibroMayorModel: function (values) {
+        var oModelLibroMayor = new JSONModel();
+        if (values[0].results) {
+          oModelLibroMayor.setData(values[0].results);
+        }
+        this.oComponent.setModel(oModelLibroMayor, "listadoLibroMayor");
+        this.oComponent.getModel("listadoLibroMayor").refresh(true);    
+        sap.ui.core.BusyIndicator.hide();
+      },
+
+      getSelectLibroMayor: function (oEvent, oModel) {
+        var oModLibroMayor = this.oComponent.getModel(oModel).getData();
+        const sOperationPath = oEvent.getSource().getBindingContext(oModel).getPath();
+        const sOperation = sOperationPath.split("/").slice(-1).pop();
+        var idLibroMayor = oModLibroMayor[sOperation];
+        return idLibroMayor;
+      },
+
+      // FUNCIONES DEL DIÁLOGO DE BÚSQUEDA DE CECOS
+      onValueHelpLibroMayorCabecera: function (oEvent) {
+        tipoInputLibroMayor = "LibroMayorCabecera";
+        this._getDialogLibroMayorAlta();
+      },
+
+      onValueHelpLibroMayorPosicion: function (oEvent) {
+        tipoInputLibroMayor = "LibroMayorPosicion";
+        this._getDialogLibroMayorAlta();
+      },
+
+      _getDialogLibroMayorAlta: function (sInputValue) {
+        
+        var oView = this.getView();
+
+        if (!this.pDialogLibroMayorAlta) {
+          this.pDialogLibroMayorAlta = Fragment.load({
+            id: oView.getId(),
+            name: "monitorpedidos.fragments.BusqLibroMayorAlta",
+            controller: this,
+          }).then(function (oDialogLibroMayorAlta) {
+            // connect dialog to the root view of this component (models, lifecycle)
+            oView.addDependent(oDialogLibroMayorAlta);
+            return oDialogLibroMayorAlta;
+          });
+        }
+        this.pDialogLibroMayorAlta.then(function (oDialogLibroMayorAlta) {
+          oDialogLibroMayorAlta.open(sInputValue);
+        });
+      },
+
+      closeLibroMayorDiagAlta: function () {
+        this.byId("libroMayorDialAlta").close();
+      },
+
+      onBusqLibroMayorAlta: function () {
+        var Saknr = this.getView().byId("f_ctaLibroMayorAlta").getValue();
+        var Txt50 = this.getView().byId("f_descLibroMayorAlta").getValue();
+        this.onBusqLibroMayor(Saknr, Txt50)
+      },
+
+      onPressLibroMayorAlta: function (oEvent) {
+        var libroMayor = this.getSelectLibroMayor(oEvent, "listadoLibroMayor");
+        
+        var ctaLibroMayor = libroMayor.Saknr;
+        // Actualizamos el input de libro mayor
+        switch (tipoInputLibroMayor) {
+          case "LibroMayorCabecera":
+            this.oComponent.getModel("DisplayPEP").setProperty("/Kstar", ctaLibroMayor);
+            break;
+
+          case "LibroMayorPosicion":
+            this.oComponent.getModel("posPedFrag").setProperty("/Kstar", ctaLibroMayor);
+            break;
+        
+          default:
+            break;
+        }
+        this.closeLibroMayorDiagAlta();
+      },
 
       // -------------------------------------- FUNCIONES MATERIALES --------------------------------------
       // FUNCIONES DEL DIÁLOGO DE BÚSQUEDA DE MATERIALES POSICIÓN
@@ -713,7 +821,7 @@ sap.ui.define([
         var idMaterial = oModMat[sOperation];
         return idMaterial;
       },
-      
+
       // -------------------------------------- FUNCIONES BOTONES POSICIONES --------------------------------------
       // FUNCIÓN BOTÓN AGREGAR LÍNEA
       onAddPosPed: function () {
@@ -742,7 +850,7 @@ sap.ui.define([
           // Moneda EUR por defecto
           Currency: "EUR",
           // Fecha de hoy por defecto
-          PriceDate: this.onFormatFechaDocVenta(new Date()),
+          PriceDate: Util.formatDate(new Date()),
           // Los CECOS / OT se recogen de cabecera de manera predeterminada
           Yykostkl: this.oComponent.getModel("DisplayPEP").getData().Yykostkl,
           Yyaufnr: this.oComponent.getModel("DisplayPEP").getData().Yyaufnr,
@@ -788,7 +896,7 @@ sap.ui.define([
             Vbelp: posicion.Posnr,
             Material: posicion.Matnr,
             ShortText: posicion.Arktx,
-            PriceDate: this.onFormatFechaDocVenta(new Date(posicion.Zzprsdt)),
+            PriceDate: Util.formatDate(new Date(posicion.Zzprsdt)),
             ReqQty: posicion.Kwmeng,
             Kpein: posicion.Kpein,
             SalesUnit: posicion.Meins,
@@ -824,7 +932,7 @@ sap.ui.define([
             Vbelp: posicion.ItmNumber,            
             Material: posicion.Material,
             ShortText: posicion.ShortText,
-            PriceDate: this.onFormatFechaDocVenta(new Date(posicion.PriceDate)),
+            PriceDate: Util.formatDate(new Date(posicion.PriceDate)),
             ReqQty: posicion.ReqQty,
             Kpein: posicion.Kpein,
             SalesUnit: posicion.SalesUnit,
@@ -1329,7 +1437,11 @@ sap.ui.define([
       },
 
       // -------------------------------------- FUNCIÓN BOTÓN GRABAR --------------------------------------
-      onCrear: function () {
+      validarDatosGrabar: function () {
+
+      },
+
+      onGrabar: function () {
         sap.ui.core.BusyIndicator.show();
 
         var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
@@ -1364,38 +1476,36 @@ sap.ui.define([
         var DlvDate = Date.parse(new Date());
         var Conpricdat = Date.parse(new Date());
 
-        var Vbeln = this.oComponent.getModel("DisplayPEP").getData().Vbeln
-        var DocType = this.oComponent.getModel("ModoApp").getData().Clasepedido;
-        var SalesOrg = this.oComponent.getModel("ModoApp").getData().Vkbur; // Organización de Ventas
-        var SalesDist = this.oComponent.getModel("ModoApp").getData().Bzirk; // Línea Servicio
-        var DistrChan = this.oComponent.getModel("ModoApp").getData().CvCanal;
-        var Division = this.oComponent.getModel("ModoApp").getData().CvSector;
-        var SalesOff = this.oComponent.getModel("DisplayPEP").getData().Vkbur; // Oficina de Ventas
+        // Datos Alta Pedidos
+        var Vbeln = this.oComponent.getModel("DisplayPEP").getData().Vbeln; // Número de pedido (solo al modificar)
+
         var PpSearch = this.oComponent.getModel("DisplayPEP").getData().Ktext; // Denominación
-        var PurchNoC = this.oComponent.getModel("DisplayPEP").getData().Bstnk; // Nº de Pedido de Cliente
-        var BillBlock = this.oComponent.getModel("DisplayPEP").getData().Faksk; // Bloqueo de Factura
-        var Currency = this.oComponent.getModel("DisplayPEP").getData().Currency;
-        //var Currency = this.oComponent.getModel("PedidoCab").getData().Moneda;
-        var OrdReason = this.oComponent.getModel("DisplayPEP").getData().Augru; // Motivo de Pedido
+        var PartnNumb = this.oComponent.getModel("ModoApp").getData().Codcli; // Código de cliente
         var Ref1 = this.oComponent.getModel("ModoApp").getData().Numcont; // Contrato
+
+        var DocType = this.oComponent.getModel("ModoApp").getData().Clasepedido; // Clase de Pedido
+        var SalesOrg = this.oComponent.getModel("ModoApp").getData().Vkbur; // Organización de Ventas / Sociedad
+        var SalesDist = this.oComponent.getModel("ModoApp").getData().Bzirk; // Línea Servicio
+        var DistrChan = this.oComponent.getModel("ModoApp").getData().CvCanal; // Canal
+        var Division = this.oComponent.getModel("ModoApp").getData().CvSector; // Sector
+        var SalesOff = this.oComponent.getModel("DisplayPEP").getData().Vkbur; // Oficina de Ventas
+        var PurchNoC = this.oComponent.getModel("DisplayPEP").getData().Bstnk; // Nº de Pedido de Cliente
+        var Yykostkl = this.oComponent.getModel("DisplayPEP").getData().Yykostkl; // Ceco Ingreso
+        var Yyaufnr = this.oComponent.getModel("DisplayPEP").getData().Yyaufnr; // Orden Ingreso
         var Zzkostl = this.oComponent.getModel("DisplayPEP").getData().Zzkostl; // Ceco Interco
         var Zzaufnr = this.oComponent.getModel("DisplayPEP").getData().Zzaufnr; // Orden Interco
         var Kstar = this.oComponent.getModel("DisplayPEP").getData().Kstar; // Libro Mayor Interco
+        var OrdReason = this.oComponent.getModel("DisplayPEP").getData().Augru; // Motivo de Pedido
+        var BillBlock = this.oComponent.getModel("DisplayPEP").getData().Faksk; // Bloqueo de Factura
+        var TxtCabecera = this.oComponent.getModel("DisplayPEP").getData().Tdlinecab; // Texto de Cabecera
+        //var TxtInfRechazo = this.getView().byId("textAreaCabInfRech").getValue(); // Información de rechazo
+        var TxtAclaraciones = this.oComponent.getModel("DisplayPEP").getData().Tdlineacl; // Texto de aclaraciones
 
-        // Entidad PedidoClienteModSet
-        var PartnNumb = this.oComponent.getModel("ModoApp").getData().Codcli; // Código de cliente
-        var PartnRole = "AG";
-
-        // Entidad PedidoExtensionModSet
+        // Otros
+        var Currency = this.oComponent.getModel("DisplayPEP").getData().Currency; // Moneda *****solo
         var Zznia = this.oComponent.getModel("ModoApp").getData().Nia;
         var Zzresponsable = "";
-        var Yykostkl = this.oComponent.getModel("DisplayPEP").getData().Yykostkl; // Ceco Ingreso
-        var Yyaufnr = this.oComponent.getModel("DisplayPEP").getData().Yyaufnr; // Orden Ingreso
-
-        // Entidad PedidoTextosModSet
-        var TxtCabecera = this.oComponent.getModel("DisplayPEP").getData().Tdlinecab;
-        //var TxtInfRechazo = this.getView().byId("textAreaCabInfRech").getValue();
-        var TxtAclaraciones = this.oComponent.getModel("DisplayPEP").getData().Tdlineacl;
+        var PartnRole = "AG";
       
         // -------------------- MODO MODIFICACIÓN --------------------
         if (modeApp === 'M') {
