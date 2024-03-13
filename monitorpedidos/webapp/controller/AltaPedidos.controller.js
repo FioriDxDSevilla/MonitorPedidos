@@ -788,7 +788,7 @@ sap.ui.define([
             Vbelp: posicion.Posnr,
             Material: posicion.Matnr,
             ShortText: posicion.Arktx,
-            PriceDate: posicion.Zzprsdt,
+            PriceDate: this.onFormatFechaDocVenta(new Date(posicion.Zzprsdt)),
             ReqQty: posicion.Kwmeng,
             Kpein: posicion.Kpein,
             SalesUnit: posicion.Meins,
@@ -824,7 +824,7 @@ sap.ui.define([
             Vbelp: posicion.ItmNumber,            
             Material: posicion.Material,
             ShortText: posicion.ShortText,
-            PriceDate: posicion.PriceDate,
+            PriceDate: this.onFormatFechaDocVenta(new Date(posicion.PriceDate)),
             ReqQty: posicion.ReqQty,
             Kpein: posicion.Kpein,
             SalesUnit: posicion.SalesUnit,
@@ -1383,7 +1383,7 @@ sap.ui.define([
         var Kstar = this.oComponent.getModel("DisplayPEP").getData().Kstar; // Libro Mayor Interco
 
         // Entidad PedidoClienteModSet
-        var PartnNumb = this.oComponent.getModel("DisplayPEP").getData().Kunnr;
+        var PartnNumb = this.oComponent.getModel("ModoApp").getData().Codcli; // Código de cliente
         var PartnRole = "AG";
 
         // Entidad PedidoExtensionModSet
@@ -1433,6 +1433,7 @@ sap.ui.define([
             // Entidad SolicitudPepCrSet
             let objSolicitudPepCrSet = {
               ItmNumber: posiciones[i].Posnr.toString(),
+              ShortText: posiciones[i].Arktx,
               Material: posiciones[i].Matnr,
               BillDate: "\/Date(" + BillDate + ")\/",
               PurchDate: "\/Date(" + PurchDate + ")\/",
@@ -1619,6 +1620,7 @@ sap.ui.define([
             // Entidad PedidoPosicionSet
             let objPedidoPosicionSet = {
               ItmNumber: posiciones[i].ItmNumber.toString(),
+              ShortText: posiciones[i].ShortText,
               Material: posiciones[i].Material,
               BillDate: "\/Date(" + BillDate + ")\/",
               PurchDate: "\/Date(" + PurchDate + ")\/",
