@@ -2053,7 +2053,8 @@ sap.ui.define([
 
             // Entidad PedidoPosicionSet
             let objPedidoPosicionSet = {
-              ItmNumber: posiciones[i].ItmNumber.toString(), // Posición
+              PoItmNo: posiciones[i].PoItmNo.toString(), // Posición Real en el contrato
+              ItmNumber: posiciones[i].ItmNumber.toString(), // Posición Nueva
               Material: posiciones[i].Material, // Material
               ShortText: posiciones[i].ShortText, // Descripción Material
               BillDate: "\/Date(" + BillDate + ")\/",

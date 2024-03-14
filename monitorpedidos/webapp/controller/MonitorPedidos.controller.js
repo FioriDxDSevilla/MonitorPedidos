@@ -2721,6 +2721,7 @@ sap.ui.define([
                                     //SolicitudPed_A.results[i].Zzprsdt = Util.formatDate(SolicitudPed_A.results[i].Zzprsdt);
 
                                     if (that.modoapp === "C") { // Si es creación por contrato 'C'
+                                        SolicitudPed_A.results[i].PoItmNo = SolicitudPed_A.results[i].Posnr;
                                         SolicitudPed_A.results[i].ItmNumber = SolicitudPed_A.results[i].Posnr;                                        
                                         SolicitudPed_A.results[i].Material = SolicitudPed_A.results[i].Matnr;
                                         SolicitudPed_A.results[i].ShortText = SolicitudPed_A.results[i].Arktx;
