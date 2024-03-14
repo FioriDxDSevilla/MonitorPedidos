@@ -61,91 +61,91 @@
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>posicion}"/>
                 <table:template>
-                    <m:Text text="{PedidoPos>ItmNumber}"/>
+                    <m:Text text="{PedidoPos>ItmNumber}" wrapping="false"/>
                     <!--<m:Text text="{DisplayPosPed>Posnr}"/>-->
                 </table:template>
             </table:Column>    
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Material}"/>
                 <table:template>
-                    <m:Text text="{PedidoPos>Material}"/>
+                    <m:Text text="{PedidoPos>Material}" wrapping="false"/>
                     <!--<m:Text text="{DisplayPosPed>Matnr}"/>-->
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Descripcion}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>ShortText}"/>
+                    <m:Text text="{PedidoPos>ShortText}" wrapping="false"/>
                     <!--<m:Text text="{DisplayPosPed>Arktx}"/>-->
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>fechaPrecio}" />
                 <table:template>
-                    <m:Text text="{path: 'PedidoPos>PriceDate',  formatter: '.onFormatFechaDocVenta'}"/>
+                    <m:Text text="{path: 'PedidoPos>PriceDate',  formatter: '.onFormatFechaDocVenta'}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Cantidad}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>ReqQty}"/>
+                    <m:Text text="{PedidoPos>ReqQty}" wrapping="false"/>
                     <!--<m:Text text="{DisplayPosPed>Kpein}"/>-->
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>cantBase}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>Kpein}"/>
+                    <m:Text text="{PedidoPos>Kpein}" wrapping="false"/>
                     <!--<m:Text text="{DisplayPosPed>Kpein}"/>-->
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Unidades}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>SalesUnit}"/>
+                    <m:Text text="{PedidoPos>SalesUnit}" wrapping="false"/>
                     <!--<m:Text text="{DisplayPosPed>Meins}"/>-->
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Importe}" />
                 <table:template>
-                    <m:Text text="{path:'PedidoPos>CondValue', formatter: '.onFormatImporte'}" />
+                    <m:Text text="{path:'PedidoPos>CondValue', formatter: '.onFormatImporte'}" wrapping="false" />
                     <!--<m:Text text="{DisplayPosPed>Netwr}" />-->
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Moneda}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>Currency}" />
+                    <m:Text text="{PedidoPos>Currency}" wrapping="false"/>
                     <!--<m:Text text="{DisplayPosPed>Waerk}" />-->
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>ceco}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>Yykostl}" />
+                    <m:Text text="{PedidoPos>Yykostl}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>ord}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>Yyaufnr}" />
+                    <m:Text text="{PedidoPos>Yyaufnr}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>cecoInterco}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>Zzkostl}" />
+                    <m:Text text="{PedidoPos>Zzkostl}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>ordInterco}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>Zzaufnr}" />
+                    <m:Text text="{PedidoPos>Zzaufnr}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
-                <m:Label text="{i18n>libroMayorInterco}"/>
+                <m:Label text="{i18n>libroMayorInterco}" wrapping="false"/>
                 <table:template>
                     <m:Text text="{PedidoPos>Kstar}"/>
                 </table:template>

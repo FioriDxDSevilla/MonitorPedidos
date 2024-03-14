@@ -2724,7 +2724,7 @@ sap.ui.define([
                                         SolicitudPed_A.results[i].ItmNumber = SolicitudPed_A.results[i].Posnr;                                        
                                         SolicitudPed_A.results[i].Material = SolicitudPed_A.results[i].Matnr;
                                         SolicitudPed_A.results[i].ShortText = SolicitudPed_A.results[i].Arktx;
-                                        SolicitudPed_A.results[i].PriceDate = SolicitudPed_A.results[i].Zzprsdt
+                                        SolicitudPed_A.results[i].PriceDate = SolicitudPed_A.results[i].Zzprsdt;
                                         SolicitudPed_A.results[i].ReqQty = SolicitudPed_A.results[i].Kwmeng;
                                         SolicitudPed_A.results[i].SalesUnit = SolicitudPed_A.results[i].Meins;
                                         SolicitudPed_A.results[i].CondValue = SolicitudPed_A.results[i].Netpr;
@@ -2742,7 +2742,7 @@ sap.ui.define([
                                 if (that.modoapp === "C") { // Si es creación por contrato 'C'
                                     var title = that.oI18nModel.getProperty("detSolPCon") + " " + ('0000000000' + that.oComponent.getModel("DisplayPEP").getData().Vbeln).slice(-10);
                                     that.oComponent.getModel("DisplayPEP").setProperty("/Title", title);
-                                    this.oComponent.getModel("DisplayPEP").setProperty("/Faksk", "ZR");
+                                    that.oComponent.getModel("DisplayPEP").setProperty("/Faksk", "ZR");
 
                                 }else{ // Si es visualización 'D' o modificación 'M'
                                     that.oComponent.setModel(new JSONModel([]), "DisplayPosPed");
@@ -2875,10 +2875,13 @@ sap.ui.define([
                     var posicionPed = pedidosContrato_Aux[indice];
                     posnr_ItmNumber = (i + 1) * 10;
                     posicionPed.ItmNumber = posnr_ItmNumber;
+                    posicionPed.Zzprsdt = new Date(posicionPed.Zzprsdt);
+                    posicionPed.PriceDate = new Date(posicionPed.PriceDate);
                     results_array.push(posicionPed);
                 }
                 this.oComponent.setModel(new JSONModel([]), "PedidoPos");
                 this.oComponent.getModel("PedidoPos").setData(results_array);
+                this.oComponent.getModel("PedidoPos").refresh(true);
                 
                 this.closeOptionsDiagContrato();
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(this);

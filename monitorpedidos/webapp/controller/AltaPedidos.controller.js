@@ -24,6 +24,7 @@ sap.ui.define([
     
     // Variables inputs
     var tipoInputCeco, tipoInputOrden, tipoInputLibroMayor;
+    var listadoValidarCeco, listadoValidarLibroMayor, listadoValidarMateriales;
      // Variables globales para el formateo de los campos 'FECHA DOC. VENTA' e 'IMPORTE'
      var fechaDocVentaFormat;
      /*
@@ -66,10 +67,19 @@ sap.ui.define([
       
       /* Metodo para que cada vez que se abra la vista AltaPedidos, se realice la actualización del importe */
       handleRouteMatched: function (evt) {
+        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
         if (evt.getParameter("name") !== "AltaPedidos") {
+          if (modeApp === 'C' || modeApp === 'M') {
+            listadoValidarCeco = true;
+            this.onBusqCecos("", "");
+            listadoValidarLibroMayor = true;
+            this.onBusqLibroMayor("", "");                    
+          }
           this.actualizaimp();
           this.oComponent.setModel(new JSONModel(), "listadoLibroMayor");
-        }
+        }//else if (evt.getParameter("name") !== "MonitorPedidos") {
+          //this.refrescarMonitor();
+        //}
       },
 
       // -------------------------------------- FUNCIONES PARA EL BOTÓN DE CANCELAR Y VOLVER --------------------------------------
@@ -330,9 +340,14 @@ sap.ui.define([
         var oModelCecos = new JSONModel();
         if (values[0].results) {
           oModelCecos.setData(values[0].results);
-        }
+        }        
         this.oComponent.setModel(oModelCecos, "listadoCecos");
-        this.oComponent.getModel("listadoCecos").refresh(true);    
+        this.oComponent.getModel("listadoCecos").refresh(true);
+        if (listadoValidarCeco) {
+          this.oComponent.setModel(oModelCecos, "listadoValidarCeco");
+          this.oComponent.getModel("listadoValidarCeco").refresh(true);
+          listadoValidarCeco = false;
+        }
         sap.ui.core.BusyIndicator.hide();
       },
 
@@ -645,7 +660,12 @@ sap.ui.define([
           oModelLibroMayor.setData(values[0].results);
         }
         this.oComponent.setModel(oModelLibroMayor, "listadoLibroMayor");
-        this.oComponent.getModel("listadoLibroMayor").refresh(true);    
+        this.oComponent.getModel("listadoLibroMayor").refresh(true);
+        if (listadoValidarLibroMayor) {
+          this.oComponent.setModel(oModelLibroMayor, "listadoValidarLibroMayor");
+          this.oComponent.getModel("listadoValidarLibroMayor").refresh(true);
+          listadoValidarLibroMayor = false;
+        }
         sap.ui.core.BusyIndicator.hide();
       },
 
@@ -719,6 +739,57 @@ sap.ui.define([
       },
 
       // -------------------------------------- FUNCIONES MATERIALES --------------------------------------
+      // FUNCIONES DE MATERIALES
+      onBusqMateriales: function (Matnr, Maktx, Matkl) {
+        var Bzirk = this.oComponent.getModel("ModoApp").getData().Bzirk;
+
+        var aFilterIds = [],
+            aFilterValues = [];
+
+        var addFilter = function (id, value) {
+            if (value) {
+                aFilterIds.push(id);
+                aFilterValues.push(value);
+            }
+        };
+
+        addFilter("Matnr", Matnr);
+        addFilter("Maktx", Maktx);
+        addFilter("Matkl", Matkl);
+        addFilter("Bzirk", Bzirk);
+
+        var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+        sap.ui.core.BusyIndicator.show();
+
+        Promise.all([
+          this.readDataEntity(this.mainService, "/DameMaterialSet", aFilters),
+        ]).then(this.buildMaterialesModel.bind(this), this.errorFatal.bind(this));
+      },
+
+      buildMaterialesModel: function (values) {
+        var oModelMateriales = new JSONModel();
+        if(values[0].results) {
+          oModelMateriales.setData(values[0].results);          
+        }
+        this.oComponent.setModel(oModelMateriales, "listadoMaterialesAlta");
+        this.oComponent.getModel("listadoMaterialesAlta").refresh(true);
+        if (listadoValidarMateriales) {
+          this.oComponent.setModel(oModelMateriales, "listadoValidarMateriales");
+          this.oComponent.getModel("listadoValidarMateriales").refresh(true);
+          listadoValidarMateriales = false;
+        }        
+        sap.ui.core.BusyIndicator.hide();
+      },
+
+      getSelectMat: function (oEvent, oModel) {
+        var oModMat = this.oComponent.getModel(oModel).getData();
+        const sOperationPath = oEvent.getSource().getBindingContext(oModel).getPath();
+        const sOperation = sOperationPath.split("/").slice(-1).pop();
+        var idMaterial = oModMat[sOperation];
+        return idMaterial;
+      },
+
       // FUNCIONES DEL DIÁLOGO DE BÚSQUEDA DE MATERIALES POSICIÓN
       onValueHelpRequestMatAlta: function () {
         this._getDialogMaterialAlta();
@@ -752,44 +823,10 @@ sap.ui.define([
       onBusqMaterialesAlta: function () {
         var Matnr = this.getView().byId("f_codMatAlta").getValue();
         var Maktx = this.getView().byId("f_nomMatAlta").getValue();
-        var Matkl = this.getView().byId("f_grArtAlta").getValue();
-        var Bzirk = this.oComponent.getModel("ModoApp").getData().Bzirk;
-
-        var aFilterIds = [],
-            aFilterValues = [];
-
-        var addFilter = function (id, value) {
-            if (value) {
-                aFilterIds.push(id);
-                aFilterValues.push(value);
-            }
-        };
-
-        addFilter("Matnr", Matnr);
-        addFilter("Maktx", Maktx);
-        addFilter("Matkl", Matkl);
-        addFilter("Bzirk", Bzirk);
-
-        var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-        sap.ui.core.BusyIndicator.show();
-
-        Promise.all([
-          this.readDataEntity(this.mainService, "/DameMaterialSet", aFilters),
-        ]).then(this.buildMaterialesModel.bind(this), this.errorFatal.bind(this));
-
+        var Matkl = this.getView().byId("f_grArtAlta").getValue();        
+        this.onBusqMateriales(Matnr, Maktx, Matkl);
       },
-
-      buildMaterialesModel: function (values) {
-        var oModelMateriales = new JSONModel();
-        if(values[0].results) {
-          oModelMateriales.setData(values[0].results);          
-        }
-        this.oComponent.setModel(oModelMateriales, "listadoMaterialesAlta");
-        this.oComponent.getModel("listadoMaterialesAlta").refresh(true);
-        sap.ui.core.BusyIndicator.hide();
-      },
-
+      
       onPressMaterialAlta: function (oEvent) {
         var mat = this.getSelectMat(oEvent, "listadoMaterialesAlta");
         /*
@@ -814,17 +851,14 @@ sap.ui.define([
         this.closeMatDiagAlta();
       },
 
-      getSelectMat: function (oEvent, oModel) {
-        var oModMat = this.oComponent.getModel(oModel).getData();
-        const sOperationPath = oEvent.getSource().getBindingContext(oModel).getPath();
-        const sOperation = sOperationPath.split("/").slice(-1).pop();
-        var idMaterial = oModMat[sOperation];
-        return idMaterial;
-      },
+      
 
       // -------------------------------------- FUNCIONES BOTONES POSICIONES --------------------------------------
       // FUNCIÓN BOTÓN AGREGAR LÍNEA
       onAddPosPed: function () {
+
+        listadoValidarMateriales = true;
+        this.onBusqMateriales("", "", "");
 
         var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
         var pedidosPos;
@@ -869,6 +903,9 @@ sap.ui.define([
 
       // FUNCIÓN BOTÓN MODIFICAR LÍNEA      
       onModPosPed: function (oEvent) {
+
+        listadoValidarMateriales = true;
+        this.onBusqMateriales("", "", "");
 
         var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
         
@@ -994,7 +1031,141 @@ sap.ui.define([
         this.byId("pedPosDial").close();
       },
 
+      // VALIDAR LOS INPUTS DEL DIÁLOGO DE AÑADIR/MODIFICAR POSICIÓN
+      validarInputsAddPos: function () {    
+        // --Validación inputs obligatorios
+        var inPosicion = this.getView().byId("f_tipopedpos");
+        var inNomMaterial = this.getView().byId("f_nommat");
+        var inFechaPrecio = this.getView().byId("DTPdesde");
+        var inImporte = this.getView().byId("f_importpos");
+        var inCantidad = this.getView().byId("f_cantpos");
+        var inCantidadBase = this.getView().byId("f_cantbasepos");
+        var inMoneda = this.getView().byId("f_monedapos");
+        var inUnidad = this.getView().byId("f_unitpos");
+        
+        if (inPosicion.getValue()) {
+            inPosicion.setValueState("None");
+        } else {
+            inPosicion.setValueState("Error");
+        }
+
+        if (inNomMaterial.getValue()) {
+            inNomMaterial.setValueState("None");
+        } else {
+            inNomMaterial.setValueState("Error");
+        }
+
+        if (inFechaPrecio.getValue()) {
+            inFechaPrecio.setValueState("None");
+        } else {
+            inFechaPrecio.setValueState("Error");
+        }
+
+        if (inImporte.getValue()) {
+            inImporte.setValueState("None");
+        } else {
+            inImporte.setValueState("Error");
+        }
+
+        if (inCantidad.getValue()) {
+          inCantidad.setValueState("None");
+        } else {
+            inCantidad.setValueState("Error");
+        }
+
+        if (inCantidadBase.getValue()) {
+            inCantidadBase.setValueState("None");
+        } else {
+            inCantidadBase.setValueState("Error");
+        }
+
+        if (inMoneda.getValue()) {
+            inMoneda.setValueState("None");
+        } else {
+            inMoneda.setValueState("Error");
+        }
+
+        if (inUnidad.getValue()) {
+            inUnidad.setValueState("None");
+        } else {
+            inUnidad.setValueState("Error");
+        }
+
+        // --Validación CECOS
+        var cecosValidos = this.getView().getModel("listadoValidarCeco").getData();
+
+        // -Ceco Ingreso Posicion
+        var inCecoIngresoPosicion = this.getView().byId("f_cecosIngPos");
+        var cecoIngresoPosicion = inCecoIngresoPosicion.getValue();
+        var cecoEncontrado = !!cecosValidos.find(cecoValido => cecoValido.Kostl === cecoIngresoPosicion);
+        if (cecoIngresoPosicion === "" || cecoEncontrado) {
+          inCecoIngresoPosicion.setValueState("None");
+        }else{
+          inCecoIngresoPosicion.setValueState("Error");
+        }
+
+        // -Ceco Interco Posicion
+        var inCecoIntercoPosicion = this.getView().byId("f_cecosIntPos");
+        var cecoIntercoPosicion = inCecoIntercoPosicion.getValue();
+        var cecoEncontrado = !!cecosValidos.find(cecoValido => cecoValido.Kostl === cecoIntercoPosicion);
+        if (cecoIntercoPosicion === "" || cecoEncontrado) {
+          inCecoIntercoPosicion.setValueState("None");
+        }else{
+          inCecoIntercoPosicion.setValueState("Error");
+        }
+
+        // --Validación Libro Mayor Interco
+        var librosValidos = this.getView().getModel("listadoValidarLibroMayor").getData();
+
+        var inLibroMayor = this.getView().byId("f_libroMayorIntPOS");
+        var libroMayor = inLibroMayor.getValue();
+        var libroEncontrado = !!librosValidos.find(libroValido => libroValido.Saknr === libroMayor);
+        if (libroMayor === "" || libroEncontrado) {
+          inLibroMayor.setValueState("None");
+        }else{
+          inLibroMayor.setValueState("Error");
+        }
+
+        // --Validación Materiales
+        var materialesValidos = this.getView().getModel("listadoValidarMateriales").getData();
+
+        var inMaterial = this.getView().byId("f_material");
+        var material = inMaterial.getValue();
+        var materialEncontrado = !!materialesValidos.find(materialValido => materialValido.Matnr === material);
+        if (materialEncontrado) {
+          inMaterial.setValueState("None");
+        }else{
+          inMaterial.setValueState("Error");
+        }
+
+        var validation = false;
+        //VALIDACIÓN SI CONTIENE UN VALOR Y SI EL ESTADO DEL COMPONENTE NO ES ERROR 
+        if (inPosicion.getValue() && inPosicion.getValueState() != "Error" &&
+            inNomMaterial.getValue() && inNomMaterial.getValueState() != "Error" &&
+            inFechaPrecio.getValue() && inFechaPrecio.getValueState() != "Error" &&
+            inImporte.getValue() && inImporte.getValueState() != "Error" &&
+            inCantidad.getValue() && inCantidad.getValueState() != "Error" &&
+            inCantidadBase.getValue() && inCantidadBase.getValueState() != "Error" &&
+            inMoneda.getValue() && inMoneda.getValueState() != "Error" &&
+            inUnidad.getValue() && inUnidad.getValueState() != "Error" &&
+            inCecoIngresoPosicion.getValueState() != "Error" &&
+            inCecoIntercoPosicion.getValueState() != "Error" &&
+            inLibroMayor.getValueState() != "Error" &&
+            inMaterial.getValueState() != "Error") {
+                validation = true;
+        }
+        
+        return validation;
+      },
+
       addPedPos: function () {
+
+        // Validaciones
+        var validation = this.validarInputsAddPos();
+        if (!validation){
+          return;
+        }
+
         var posiciones = [];
         var posicionN;
 
@@ -1161,7 +1332,7 @@ sap.ui.define([
               ItmNumber: posnr_ItmNumber,
               Material: posicionPed.Matnr,
               ShortText: posicionPed.Arktx,
-              PriceDate: posicionPed.Zzprsdt,
+              PriceDate: new Date(posicionPed.Zzprsdt),
               ReqQty: posicionPed.Kwmeng,
               Kpein: posicionPed.Kpein,
               SalesUnit: posicionPed.Meins,
@@ -1437,14 +1608,156 @@ sap.ui.define([
       },
 
       // -------------------------------------- FUNCIÓN BOTÓN GRABAR --------------------------------------
-      validarDatosGrabar: function () {
+      // VALIDACIONES CAMBIO DE ESTADO DROPDOWNS/INPUTS GRABAR
+      onChangeValueState: function (oEvent) {
+        var value = sap.ui.getCore().byId(oEvent.getSource().sId);
 
-      },
+        var response = value.getValue().toLowerCase();
+        //console.log(response);
+        var aItems = value.getItems();
+        var bValidInput = false;
+
+        for (var i = 0; i < aItems.length; i++) {
+            var sItemText = aItems[i].getText().toLowerCase();
+            if (response === sItemText) {
+                bValidInput = true;
+                break;
+            }
+
+        }
+
+        if (bValidInput) {
+            value.setValueState("None");
+        } else {
+            value.setValueState("Error");
+        }
+    },
+
+    // VALIDAR LA ACTUALIZACIÓN DE LOS INPUTS DE ALTA DE PEDIDOS
+    onLiveChangeRequired: function (oEvent) {
+			var input = sap.ui.getCore().byId(oEvent.getSource().sId);
+      var value = input.getValue();
+			if (value) {
+        input.setValueState("None");
+      } else {
+        input.setValueState("Error");
+        input.setValueStateText("Campo obligatorio");
+      }
+		},
+
+    // QUITAR EL MENSAJE DE ERROR EN EL INPUT CUANDO SE RELLENA UN CAMPO OPCIONAL
+    onLiveChangeOptional: function (oEvent) {
+			var input = sap.ui.getCore().byId(oEvent.getSource().sId);
+      input.setValueState("None");
+		},
+
+    // VALIDAR LOS INPUTS DEL DIÁLOGO DE ALTA DE PEDIDOS
+      validarInputsGrabar: function () {    
+        // --Validación inputs obligatorios
+        var inOficinaVentas = this.getView().byId("idOficinaV");
+        var inNumPedCliente = this.getView().byId("f_refped");
+        var inCondicionPago = this.getView().byId("f_campocondicion");
+        var inNIA = this.getView().byId("f_camponia");
+        
+        if (inOficinaVentas.getValue()) {
+            inOficinaVentas.setValueState("None");
+        } else {
+            inOficinaVentas.setValueState("Error");
+        }
+
+        if (inNumPedCliente.getValue()) {
+            inNumPedCliente.setValueState("None");
+        } else {
+            inNumPedCliente.setValueState("Error");
+        }
+
+        if (inCondicionPago.getValue()) {
+            inCondicionPago.setValueState("None");
+        } else {
+            inCondicionPago.setValueState("Error");
+        }
+
+        if (inNIA.getValue()) {
+            inNIA.setValueState("None");
+        } else {
+            inNIA.setValueState("Error");
+        }
+
+        // --Validación CECOS
+        var cecosValidos = this.getView().getModel("listadoValidarCeco").getData();
+
+        // -Ceco Ingreso Cabecera
+        var inCecoIngresoCabecera = this.getView().byId("f_cecosIngresoCab");
+        var cecoIngresoCabecera = inCecoIngresoCabecera.getValue();
+        var cecoEncontrado = !!cecosValidos.find(cecoValido => cecoValido.Kostl === cecoIngresoCabecera);
+        if (cecoIngresoCabecera === "" || cecoEncontrado) {
+          inCecoIngresoCabecera.setValueState("None");
+        }else{
+          inCecoIngresoCabecera.setValueState("Error");
+        }
+
+        // -Ceco Interco Cabecera
+        var inCecoIntercoCabecera = this.getView().byId("f_cecosIntercoCab");
+        var cecoIntercoCabecera = inCecoIntercoCabecera.getValue();
+        var cecoEncontrado = !!cecosValidos.find(cecoValido => cecoValido.Kostl === cecoIntercoCabecera);
+        if (cecoIntercoCabecera === "" || cecoEncontrado) {
+          inCecoIntercoCabecera.setValueState("None");
+        }else{
+          inCecoIntercoCabecera.setValueState("Error");
+        }
+
+        // --Validación Libro Mayor Interco
+        var librosValidos = this.getView().getModel("listadoValidarLibroMayor").getData();
+
+        var inLibroMayor = this.getView().byId("f_libroMayorInterco");
+        var libroMayor = inLibroMayor.getValue();
+        var libroEncontrado = !!librosValidos.find(libroValido => libroValido.Saknr === libroMayor);
+        if (libroMayor === "" || libroEncontrado) {
+          inLibroMayor.setValueState("None");
+        }else{
+          inLibroMayor.setValueState("Error");
+        }
+
+        var validation = false;
+        //VALIDACIÓN SI CONTIENE UN VALOR Y SI EL ESTADO DEL COMPONENTE NO ES ERROR 
+        if (inOficinaVentas.getValue() && inOficinaVentas.getValueState() != "Error" &&
+            inNumPedCliente.getValue() && inNumPedCliente.getValueState() != "Error" &&
+            inCondicionPago.getValue() && inCondicionPago.getValueState() != "Error" &&
+            inNIA.getValue() && inNIA.getValueState() != "Error" &&
+            inCecoIngresoCabecera.getValueState() != "Error" &&
+            inCecoIntercoCabecera.getValueState() != "Error" &&
+            inLibroMayor.getValueState() != "Error") {
+                validation = true;
+        }
+        
+        return validation;
+    },
 
       onGrabar: function () {
-        sap.ui.core.BusyIndicator.show();
-
         var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
+
+        var posiciones;
+        if (modeApp === 'M') {
+          posiciones = this.getView().getModel("DisplayPosPed").getData();
+        }else{
+          posiciones = this.getView().getModel("PedidoPos").getData();
+        }
+        
+        // Validaciones
+        var validation = this.validarInputsGrabar();
+        if (!validation){
+          MessageBox.error("Se ha producido un error en la validación de los datos introducidos");
+          return;
+        }
+
+        // Validamos que el pedido tiene alguna posición
+        if (!posiciones || posiciones.length < 1) {
+          MessageBox.error("No se puede grabar un pedido sin posiciones");
+          return;  
+        }
+
+        var that = this;
+        sap.ui.core.BusyIndicator.show();
 
         var message;
         var crear = "Se ha creado la solicitud de Venta: ";
@@ -1497,15 +1810,26 @@ sap.ui.define([
         var Kstar = this.oComponent.getModel("DisplayPEP").getData().Kstar; // Libro Mayor Interco
         var OrdReason = this.oComponent.getModel("DisplayPEP").getData().Augru; // Motivo de Pedido
         var BillBlock = this.oComponent.getModel("DisplayPEP").getData().Faksk; // Bloqueo de Factura
+        var Zznia = this.oComponent.getModel("ModoApp").getData().Nia; // NIA
         var TxtCabecera = this.oComponent.getModel("DisplayPEP").getData().Tdlinecab; // Texto de Cabecera
-        //var TxtInfRechazo = this.getView().byId("textAreaCabInfRech").getValue(); // Información de rechazo
         var TxtAclaraciones = this.oComponent.getModel("DisplayPEP").getData().Tdlineacl; // Texto de aclaraciones
 
-        // Otros
-        var Currency = this.oComponent.getModel("DisplayPEP").getData().Currency; // Moneda *****solo
-        var Zznia = this.oComponent.getModel("ModoApp").getData().Nia;
+        // -- Otros campos --        
+        // -Responsable
         var Zzresponsable = "";
+        
+        // -Role
         var PartnRole = "AG";
+
+        // -Moneda
+        var Currency; 
+        // Si existe la moneda en el pedido se mantiene
+        if (this.oComponent.getModel("DisplayPEP").getData().Waerk) {
+          Currency = this.oComponent.getModel("DisplayPEP").getData().Waerk;
+        }else{ // Si es un nuevo pedido, cogemos la moneda de la primera posición
+          Currency = posiciones[0].Currency;
+          this.oComponent.getModel("DisplayPEP").setProperty("/Waerk", Currency);
+        }        
       
         // -------------------- MODO MODIFICACIÓN --------------------
         if (modeApp === 'M') {
@@ -1531,53 +1855,53 @@ sap.ui.define([
             oModAdj2.push(adj);
           });
 
-          // --POSCIONES (SolicitudPepCrSet, SolicitudPedCondSet, SolicitudPedQtySet, PedidoTextosModSet)
-          var posiciones = this.getView().getModel("DisplayPosPed").getData();
+          // --POSCIONES (SolicitudPepCrSet, PedidoCondicionModSet, PedidoCantidadModSet, PedidoTextosModSet)
+          //var posiciones = this.getView().getModel("DisplayPosPed").getData();
 
-          var SolicitudPepCrSet = [];
-          var SolicitudPedCondSet = [];
-          var SolicitudPedQtySet = [];
+          var PedidoPosicionModSet = [];
+          var PedidoCondicionModSet = [];
+          var PedidoCantidadModSet = [];
           var PedidoTextosModSet_Aux = [];
           for (var i = 0; i < posiciones.length; i++) {
 
-            // Entidad SolicitudPepCrSet
-            let objSolicitudPepCrSet = {
-              ItmNumber: posiciones[i].Posnr.toString(),
-              ShortText: posiciones[i].Arktx,
-              Material: posiciones[i].Matnr,
+            // Entidad PedidoPosicionModSet
+            let objPedidoPosicionModSet = {
+              ItmNumber: posiciones[i].Posnr.toString(), // Posición
+              Material: posiciones[i].Matnr, // Material
+              ShortText: posiciones[i].Arktx, // Descripción Material
               BillDate: "\/Date(" + BillDate + ")\/",
               PurchDate: "\/Date(" + PurchDate + ")\/",
               PoDatS: "\/Date(" + PoDatS + ")\/",
               FixValDy: "\/Date(" + FixValDy + ")\/",
-              PriceDate: "\/Date(" + Date.parse(posiciones[i].Zzprsdt) + ")\/",
               ServDate: "\/Date(" + ServDate + ")\/",
-              SalesUnit: posiciones[i].Meins,
-              Plant: this.oComponent.getModel("ModoApp").getData().Vkbur,              
-              Yykostkl: posiciones[i].Yykostkl,
-              Yyaufnr: posiciones[i].Yyaufnr,
-              Zzkostl: posiciones[i].Zzkostl,
-              Zzaufnr: posiciones[i].Zzaufnr,
-              Kstar: posiciones[i].Kstar
+              PriceDate: "\/Date(" + Date.parse(posiciones[i].Zzprsdt) + ")\/", // Fecha Precio
+              SalesUnit: posiciones[i].Meins, // Unidades
+              Plant: SalesOrg,
+              Yykostkl: posiciones[i].Yykostkl, // Ceco Ingreso
+              Yyaufnr: posiciones[i].Yyaufnr, // Orden Ingreso
+              Zzkostl: posiciones[i].Zzkostl, // Ceco Interco
+              Zzaufnr: posiciones[i].Zzaufnr, // Orden Interco
+              Kstar: posiciones[i].Kstar // Libro Mayor Interco
             };
-            SolicitudPepCrSet.push(objSolicitudPepCrSet);
+            PedidoPosicionModSet.push(objPedidoPosicionModSet);
 
-            // Entidad SolicitudPedCondSet
-            let objSolicitudPedCondSet = {
-              ItmNumber: posiciones[i].Posnr.toString(),
-              CondValue: posiciones[i].Netpr,
+            // Entidad PedidoCondicionModSet
+            let objPedidoCondicionModSet = {
               CondType: 'PR00',
-              CondPUnt: posiciones[i].Kpein,
-              CondUnit: posiciones[i].Meins,
-              Currency: 'EUR',
+              ItmNumber: posiciones[i].Posnr.toString(), // Posición
+              CondPUnt: posiciones[i].Kpein, // Cantidad Base
+              CondUnit: posiciones[i].Meins, // Unidades
+              CondValue: posiciones[i].Netpr, // Importe
+              Currency: posiciones[i].Waerk, // Moneda
               Conpricdat: "\/Date(" + Conpricdat + ")\/",
             };
-            SolicitudPedCondSet.push(objSolicitudPedCondSet);
+            PedidoCondicionModSet.push(objPedidoCondicionModSet);
 
-            // Entidad SolicitudPedQtySet
-            let objSolicitudPedQtySet = {
+            // Entidad PedidoCantidadModSet
+            let objPedidoCantidadModSet = {
               //Secu: (i + 1).toString(),
-              ItmNumber: posiciones[i].Posnr.toString(),
-              ReqQty: posiciones[i].Kpein,
+              ItmNumber: posiciones[i].Posnr.toString(), // Posición
+              ReqQty: posiciones[i].Kwmeng, // Cantidad
               ReqDate: "\/Date(" + ReqDate + ")\/",
               TpDate: "\/Date(" + TpDate + ")\/",
               GiDate: "\/Date(" + GiDate + ")\/",
@@ -1585,7 +1909,7 @@ sap.ui.define([
               LoadDate: "\/Date(" + LoadDate + ")\/",
               DlvDate: "\/Date(" + DlvDate + ")\/",
             };
-            SolicitudPedQtySet.push(objSolicitudPedQtySet);
+            PedidoCantidadModSet.push(objPedidoCantidadModSet);
 
             // Entidad PedidoTextosModSet
             let objPedidoTextosModSet;
@@ -1638,21 +1962,21 @@ sap.ui.define([
 
           var oJson = {
             Vbeln: Vbeln,
+            PpSearch: PpSearch,
+            Ref1: Ref1,
             DocType: DocType,
             SalesOrg: SalesOrg,
             SalesDist: SalesDist,
             DistrChan: DistrChan,
             Division: Division,
             SalesOff: SalesOff,
-            PpSearch: PpSearch,
             PurchNoC: PurchNoC,
-            BillBlock: BillBlock,
-            Currency: Currency,
-            OrdReason: OrdReason,
-            Ref1: Ref1,
             Zzkostl: Zzkostl,
             Zzaufnr: Zzaufnr,
             Kstar: Kstar,
+            OrdReason: OrdReason,
+            BillBlock: BillBlock,
+            Currency: Currency,
             ReqDateH: "\/Date(" + ReqDate + ")\/",
             PurchDate: "\/Date(" + PurchDate + ")\/",
             BillDate: "\/Date(" + BillDate + ")\/",
@@ -1680,9 +2004,9 @@ sap.ui.define([
               Yyaufnr: Yyaufnr
             },
             FicheroModSet: oModAdj2,
-            PedidoPosicionModSet: SolicitudPepCrSet,
-            PedidoCondicionModSet: SolicitudPedCondSet,
-            PedidoCantidadModSet: SolicitudPedQtySet,
+            PedidoPosicionModSet: PedidoPosicionModSet,
+            PedidoCondicionModSet: PedidoCondicionModSet,
+            PedidoCantidadModSet: PedidoCantidadModSet,
             PedidoTextosModSet: PedidoTextosModSet,            
             PedidoRespuestaModSet: {
               //Idsolc: Idsolc,
@@ -1719,7 +2043,7 @@ sap.ui.define([
         }else{
 
           // --POSCIONES (SolicitudPepCrSet, SolicitudPedCondSet, SolicitudPedQtySet, PedidoTextosModSet)
-          var posiciones = this.getView().getModel("PedidoPos").getData();
+          //var posiciones = this.getView().getModel("PedidoPos").getData();
 
           var PedidoPosicionSet = [];
           var PedidoCondicionSet = [];
@@ -1729,33 +2053,33 @@ sap.ui.define([
 
             // Entidad PedidoPosicionSet
             let objPedidoPosicionSet = {
-              ItmNumber: posiciones[i].ItmNumber.toString(),
-              ShortText: posiciones[i].ShortText,
-              Material: posiciones[i].Material,
+              ItmNumber: posiciones[i].ItmNumber.toString(), // Posición
+              Material: posiciones[i].Material, // Material
+              ShortText: posiciones[i].ShortText, // Descripción Material
               BillDate: "\/Date(" + BillDate + ")\/",
               PurchDate: "\/Date(" + PurchDate + ")\/",
               PoDatS: "\/Date(" + PoDatS + ")\/",
               FixValDy: "\/Date(" + FixValDy + ")\/",
-              PriceDate: "\/Date(" + Date.parse(posiciones[i].PriceDate) + ")\/",
               ServDate: "\/Date(" + ServDate + ")\/",
-              SalesUnit: posiciones[i].SalesUnit,
-              Plant: this.oComponent.getModel("ModoApp").getData().Vkbur,
-              Yykostkl: posiciones[i].Yykostkl,
-              Yyaufnr: posiciones[i].Yyaufnr,
-              Zzkostl: posiciones[i].Zzkostl,
-              Zzaufnr: posiciones[i].Zzaufnr,
-              Kstar: posiciones[i].Kstar
+              PriceDate: "\/Date(" + Date.parse(posiciones[i].PriceDate) + ")\/", // Fecha Precio
+              SalesUnit: posiciones[i].SalesUnit, // Unidades
+              Plant: SalesOrg,
+              Yykostkl: posiciones[i].Yykostkl, // Ceco Ingreso
+              Yyaufnr: posiciones[i].Yyaufnr, // Orden Ingreso
+              Zzkostl: posiciones[i].Zzkostl, // Ceco Interco
+              Zzaufnr: posiciones[i].Zzaufnr, // Orden Interco
+              Kstar: posiciones[i].Kstar // Libro Mayor Interco
             };
             PedidoPosicionSet.push(objPedidoPosicionSet);
 
             // Entidad PedidoCondicionSet
             let objPedidoCondicionSet = {
-              ItmNumber: posiciones[i].ItmNumber.toString(),
-              CondValue: posiciones[i].CondValue,
               CondType: 'PR00',
-              CondPUnt: posiciones[i].Kpein,
-              CondUnit: posiciones[i].SalesUnit,
-              Currency: 'EUR',
+              ItmNumber: posiciones[i].ItmNumber.toString(), // Posición
+              CondPUnt: posiciones[i].Kpein, // Cantidad Base
+              CondUnit: posiciones[i].SalesUnit, // Unidades
+              CondValue: posiciones[i].CondValue, // Importe
+              Currency: posiciones[i].Currency, // Moneda
               Conpricdat: "\/Date(" + Conpricdat + ")\/",
             };
             PedidoCondicionSet.push(objPedidoCondicionSet);
@@ -1763,8 +2087,8 @@ sap.ui.define([
             // Entidad PedidoCantidadSet
             let objPedidoCantidadSet = {
               //Secu: (i + 1).toString(),
-              ItmNumber: posiciones[i].ItmNumber.toString(),
-              ReqQty: posiciones[i].ReqQty,
+              ItmNumber: posiciones[i].ItmNumber.toString(), // Posición
+              ReqQty: posiciones[i].ReqQty, // Cantidad
               ReqDate: "\/Date(" + ReqDate + ")\/",
               TpDate: "\/Date(" + TpDate + ")\/",
               GiDate: "\/Date(" + GiDate + ")\/",
@@ -1824,21 +2148,21 @@ sap.ui.define([
           }
 
           var oJson = {
+            PpSearch: PpSearch,
+            Ref1: Ref1,            
             DocType: DocType,
             SalesOrg: SalesOrg,
             SalesDist: SalesDist,
             DistrChan: DistrChan,
             Division: Division,
-            SalesOff: SalesOff,
-            PpSearch: PpSearch,
+            SalesOff: SalesOff,            
             PurchNoC: PurchNoC,
-            BillBlock: BillBlock,
-            Currency: Currency,
-            OrdReason: OrdReason,
-            Ref1: Ref1,
             Zzkostl: Zzkostl,
             Zzaufnr: Zzaufnr,
             Kstar: Kstar,
+            OrdReason: OrdReason,
+            BillBlock: BillBlock,
+            Currency: Currency,
             ReqDateH: "\/Date(" + ReqDate + ")\/",
             PurchDate: "\/Date(" + PurchDate + ")\/",
             BillDate: "\/Date(" + BillDate + ")\/",
@@ -1935,1486 +2259,6 @@ sap.ui.define([
 
 
 
-      // ------------------------------------- BACK UP -------------------------------------
-
-      addPedPos_OLD: function () {
-        var posiciones = [];
-        var posicionN;
-
-        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-        //var posPedFrag = this.oComponent.getModel("posPedFrag").getData();
-        //var modePosPed = posPedFrag.mode;
-
-        var fechaposicion = this.getView().byId("DTPdesde").getValue();
-        var posactual = this.getView().byId("f_tipopedpos").getValue();
-        posactual = ('000000' + posactual).slice(-6); // Establecemos el formato de 6 caracteres 000010
-        var matactual = this.getView().byId("f_material").getValue();
-        var descactual = this.getView().byId("f_nommat").getValue();
-        var cantactual = this.getView().byId("f_cantpos").getValue();
-        var cantbaseactual = this.getView().byId("f_cantbasepos").getValue();
-        var unitactual = this.getView().byId("f_unitpos").getValue();
-        var importactual = this.getView().byId("f_importpos").getValue();
-        var monedactual = this.getView().byId("f_monedapos").getValue();
-        var cecosposicion = this.getView().byId("f_cecosPOS").getValue();
-        var ordenposicion = this.getView().byId("f_ordenesPOS").getValue();
-
-        if (modeApp == 'M') {
-          posiciones = this.oComponent.getModel("DisplayPosPed").getData();
-
-          //Mapeamos las posiciones
-          posicionN = {
-            CondType: "PR00",
-            PriceDate: fechaposicion,
-            Posnr: posactual,
-            Matnr: matactual,
-            Arktx: descactual,
-            Kwmeng: cantactual,
-            Kpein: cantbaseactual,
-            Meins: unitactual,
-            Netpr: importactual,
-            Waerk: monedactual,
-            Yykostl: cecosposicion,
-            Yyaufnr: ordenposicion,
-            Ykostl: cecosposicion,
-            Yaufnr: ordenposicion
-          }
-
-          if (modePosPed == 'M') {
-            var indexPosPed = posPedFrag.index;
-            // Modificamos la posición seleccionada
-            posiciones[indexPosPed] = posicionN;
-          } else {
-            posiciones.push(posicionN);
-          }
-          this.oComponent.getModel("DisplayPosPed").refresh(true);
-        } else {
-          posiciones = this.oComponent.getModel("PedidoPos").getData();
-
-          //Mapeamos las posiciones
-          posicionN = {
-            CondType: "PR00",
-            PriceDate: fechaposicion,
-            ItmNumber: posactual,
-            Material: matactual,
-            ShortText: descactual,
-            ReqQty: cantactual,
-            Kpein: cantbaseactual,
-            SalesUnit: unitactual,
-            CondValue: importactual,
-            Currency: monedactual,
-            Yykostl: cecosposicion,
-            Yyaufnr: ordenposicion,
-            Ykostl: cecosposicion,
-            Yaufnr: ordenposicion
-          }
-
-          if (modePosPed == 'M') {
-            var indexPosPed = posPedFrag.index;
-            // Modificamos la posición seleccionada
-            posiciones[indexPosPed] = posicionN;
-          } else {
-            posiciones.push(posicionN);
-          }
-          this.oComponent.getModel("PedidoPos").refresh(true);
-        }
-      },
-
-      onModPosPed_OLD: function (oEvent) {
-
-        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-        var oTable, aContexts, items;
-        //MODO DE MODIFICACION DE PEDIDOS
-        if (modeApp == 'M') {
-          oTable = this.getView().byId("TablaPosicionesDisp");
-          var index = oEvent.getSource().getBindingContext("DisplayPosPed").getPath().split("/").slice(-1).pop();
-          aContexts = [index];
-          items = aContexts.map(function (c) {
-            return this.oComponent.getModel("DisplayPosPed").getProperty("/" + c);
-          }.bind(this));
-          //Obtenemos la fecha de la linea seleccionada
-
-          if (items[0].BillDate) {
-            fechaPos = items[0].PriceDate
-          } else {
-            fechaPos = items[0].Erdat;
-            var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({ pattern: "YYYY-MM-dd" });
-            fechaPos = dateFormat.format(fechaPos);
-          }
-
-            ///////ABRIR DIALOGO
-            var oView = this.getView();
-            var configPos = {
-              mode: "M",
-              type: "P",
-              index: aContexts[0],
-              Vbelp: items[0].Posnr,
-              ShortText: items[0].Arktx,
-              Material: items[0].Matnr,
-              BillDate: fechaPos,
-              CondValue: items[0].Netpr,
-              ReqQty: items[0].Kwmeng,
-              Kpein: items[0].Kpein,
-              Currency: items[0].Waerk,
-              SalesUnit: items[0].Meins,
-              Yykostl: items[0].Yykostl,
-              Yyaufnr: items[0].Yyaufnr,
-              Ykostl: items[0].Ykostl,
-              Yaufnr: items[0].Yaufnr
-            }
-
-            var oModConfigPos = new JSONModel();
-            oModConfigPos.setData(configPos);
-            this.oComponent.setModel(oModConfigPos, "posPedFrag");
-            this.oComponent.getModel("posPedFrag").refresh(true);
-
-            if (!this.pDialogPosiciones) {
-              this.pDialogPosiciones = Fragment.load({
-                id: oView.getId(),
-                name: "monitorpedidos.fragments.AddPosicionesPed",
-                controller: this,
-              }).then(function (oDialogPosiciones) {
-                // connect dialog to the root view of this component (models, lifecycle)
-                oView.addDependent(oDialogPosiciones);
-                return oDialogPosiciones;
-              });
-              ///DESHABILITAR SCROLL EN LOS INPUT NUMERICOS
-              var oInput = this.byId("f_importpos");
-              oInput.attachBrowserEvent("mousewheel", function (oEvent) {
-                oEvent.preventDefault();
-              });
-              var oInput = this.byId("f_cantpos");
-              oInput.attachBrowserEvent("mousewheel", function (oEvent) {
-                oEvent.preventDefault();
-              });
-              var oInput = this.byId("f_cantbasepos");
-              oInput.attachBrowserEvent("mousewheel", function (oEvent) {
-                oEvent.preventDefault();
-              });
-            }
-
-            this.pDialogPosiciones.then(function (oDialogPosiciones) {
-              oDialogPosiciones.open();
-            });
-
-
-          ///MODO DE CREACION DE PEDIDOS
-        } else if (modeApp == 'C') {
-          oTable = this.getView().byId("TablaPosiciones");
-          var index = oEvent.getSource().getBindingContext("PedidoPos").getPath().split("/").slice(-1).pop();
-          aContexts = [index];          
-          items = aContexts.map(function (c) {
-            return this.oComponent.getModel("PedidoPos").getProperty("/" + c);
-          }.bind(this));
-          //Obtenemos la fecha de la linea seleccionada
-          fechaPos = items[0].Erdat;
-
-          ///////ABRIR DIALOGO
-          var oView = this.getView();
-          var configPos = {
-            mode: "M",
-            type: "P",
-            index: aContexts[0],
-            Vbelp: items[0].ItmNumber,
-            ShortText: items[0].ShortText,
-            Material: items[0].Material,
-            BillDate: items[0].BillDate,
-            CondValue: items[0].CondValue,
-            ReqQty: items[0].ReqQty,
-            Kpein: items[0].Kpein,
-            Currency: items[0].Currency,
-            SalesUnit: items[0].SalesUnit,
-            Yykostl: items[0].Yykostl,
-            Yyaufnr: items[0].Yyaufnr,
-            Ykostl: items[0].Ykostl,
-            Yaufnr: items[0].Yaufnr
-          }
-
-
-          var oModConfigPos = new JSONModel();
-          oModConfigPos.setData(configPos);
-          this.oComponent.setModel(oModConfigPos, "posPedFrag");
-          this.oComponent.getModel("posPedFrag").refresh(true);
-
-          if (!this.pDialogPosiciones) {
-            this.pDialogPosiciones = Fragment.load({
-              id: oView.getId(),
-              name: "monitorpedidos.fragments.AddPosicionesPed",
-              controller: this,
-            }).then(function (oDialogPosiciones) {
-              // connect dialog to the root view of this component (models, lifecycle)
-              oView.addDependent(oDialogPosiciones);
-              return oDialogPosiciones;
-            });
-            ///DESHABILITAR SCROLL EN LOS INPUT NUMERICOS
-            var oInput = this.byId("f_importpos");
-            oInput.attachBrowserEvent("mousewheel", function (oEvent) {
-              oEvent.preventDefault();
-            });
-            var oInput = this.byId("f_cantpos");
-            oInput.attachBrowserEvent("mousewheel", function (oEvent) {
-              oEvent.preventDefault();
-            });
-            var oInput = this.byId("f_cantbasepos");
-            oInput.attachBrowserEvent("mousewheel", function (oEvent) {
-              oEvent.preventDefault();
-            });
-          }
-
-          this.pDialogPosiciones.then(function (oDialogPosiciones) {
-            oDialogPosiciones.open();
-          });
-        }
-      },
-
-      // Eliminar????
-      ordenaPedPos: function (actualiza) {
-
-        var posiciones = this.oComponent.getModel("PedidoPos").getData();
-        //var secuModi = this.oComponent.getModel("ModoApp").getData().secuModi;
-        //var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-
-        var posicionesN = [],
-          posicionN;
-
-        if (posiciones.length > 0) {
-
-          var posInicial = 10;
-          var secu = 1;
-          var sumTotal = 0;
-          var cantTotal = 0;
-          var cantBaseTotal = 0;
-
-          for (var i = 0; i <= posiciones.length - 1; i++) {
-
-            posicionN = Object.assign({}, posiciones[i]);
-
-            if (i == 0) {
-
-              posicionN.ItmNumber = posInicial;
-
-              //posicionN.PosnrT = posInicial;
-              //posicionN.Secu      = secu;
-            } else {
-
-              if (posiciones[i].ItmNumber == posAnt) {
-
-                posicionN.ItmNumber = posicionesN[i - 1].ItmNumber;
-
-                //posicionN.PosnrT = "";
-                //posicionN.Secu      = secu;//posicionesN[i-1].Secu + 1;
-              } else {
-
-                posicionN.ItmNumber = posicionesN[i - 1].ItmNumber + 10;
-
-                //posicionN.PosnrT = posicionesN[i - 1].Posnr + 10
-                //posicionN.Secu      = secu;//1;
-              }
-
-            }
-
-            posicionN.Secu = posiciones[i].Secu;
-            posicionesN.push(posicionN);
-            secu = secu + 1;
-            var posAnt = posicionesN[i].ItmNumber;
-          }
-          //ACTUALIZACION IMPORTES    
-          this.actualizaimp();
-
-          //var PosSigCre = posicionesN[posiciones.length - 1].Posnr;
-          var PosSigCre = posicionesN[posiciones.length - 1].ItmNumber
-          var posSig = this.oComponent.getModel("posPedFrag").getData().Vbelp;
-          posSig = PosSigCre + 10;
-          //this.oComponent.getModel("ModoApp").setProperty("/posPed", posSig);
-          //this.oComponent.getModel("ModoApp").setProperty("/secuModi", secuModi);
-          //this.oComponent.getModel("ModoApp").refresh(true);
-
-          var oModPos = new JSONModel();
-
-          oModPos.setData(posicionesN);
-
-          this.oComponent.setModel(oModPos, "PedidoPos");
-          this.oComponent.getModel("PedidoPos").setProperty("/posSig", posSig);
-
-        } else {
-
-          //this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", '0');
-          //this.oComponent.getModel("PedidoCab").setProperty("/Moneda", 'EUR');
-          //this.oComponent.getModel("PedidoCab").refresh(true);
-          this.actualizaimp();
-
-          var posSig = this.oComponent.getModel("posPedFrag").getData().ItmNumber;
-          posSig = 10;
-          this.oComponent.getModel("posPedFrag").setProperty("/posPed", posSig);
-          //this.oComponent.getModel("posPedFrag").refresh(true);
-
-          //this.oComponent.getModel("PedidoPos").refresh(true);
-        }
-        this.oComponent.setModel(new JSONModel(), "listadoCecos");
-        this.oComponent.setModel(new JSONModel(), "listadoOrdenes");
-        this.oComponent.setModel(new JSONModel(), "listadoMaterialesAlta");
-
-        this.byId("pedPosDial").close();
-      },      
-
-      onDeletePosPed_OLD: function (oEvent) {
-        this.deletePosPed_OLD(oEvent, false, true);
-      },
-
-      deletePosPed_OLD: function (oEvent, serv, pos) {
-
-        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-
-        //MODO DE CREACION DE PEDIDO
-
-        if (modeApp == 'C') {
-          var oTable = this.getView().byId("TablaPosiciones");
-          var oModel = this.getView().getModel("PedidoPos");
-          var aContexts = oTable.getSelectedIndices();
-          var items = aContexts.map(function (c) {
-            return this.oComponent.getModel("PedidoPos").getProperty("/" + c);
-          }.bind(this));
-
-          if (items.length == 1) {
-
-            var that = this;
-            that.posIn = pos;
-            var selrow = items[0];
-            var indice = aContexts[0];
-            var ques;
-
-            //Se comprueba que la pos no esté eliminada la posición                    
-            if (selrow.Loekz == 'L') {
-              MessageBox.warning(this.oI18nModel.getProperty("errPosBorr"));
-            } else {
-              if (pos) {
-                //Estamos eliminando una Posición y eliminaremos todos los servicios
-                ques = this.oI18nModel.getProperty("delPosQ");
-              } else if (serv) {
-                //Eliminamos solo el servicio marcado
-                ques = this.oI18nModel.getProperty("delServQ");
-              }
-              that.ques = ques;
-              that.ItmNumber = selrow.ItmNumber;
-              that.indice = indice;
-
-              that.deletePosTable(that.ItmNumber, false, that);
-            }
-          } else {
-            MessageBox.error(this.oI18nModel.getProperty("errpedPosUn"));
-          }
-        }
-
-        //MODO DE MODIFICACION DE PEDIDO
-
-        else if (modeApp == 'M') {
-          var oTable = this.getView().byId("TablaPosicionesDisp");
-          var oModel = this.getView().getModel("DisplayPosPed");
-          var aRows = oModel.getData();
-          var aContexts = oTable.getSelectedIndices();
-          var items = aContexts.map(function (c) {
-            return this.oComponent.getModel("DisplayPosPed").getProperty("/" + c);
-          }.bind(this));
-
-
-          if (items.length == 1) {
-
-            var that = this;
-            that.posIn = pos;
-            var selrow = items[0];
-            var indice = aContexts[0];
-            var ques;
-
-            //Se comprueba que la pos no esté eliminada la posición                    
-            if (selrow.Loekz == 'L') {
-              MessageBox.warning(this.oI18nModel.getProperty("errPosBorr"));
-            } else {
-              if (pos) {
-                //Estamos eliminando una Posición y eliminaremos todos los servicios
-                ques = this.oI18nModel.getProperty("delPosQ");
-              } else if (serv) {
-                //Eliminamos solo el servicio marcado
-                ques = this.oI18nModel.getProperty("delServQ");
-              }
-              that.ques = ques;
-              that.ItmNumber = selrow.ItmNumber;
-              that.indice = indice;
-
-              that.deletePosTable(that.ItmNumber, false, that);
-            }
-          } else {
-            MessageBox.error(this.oI18nModel.getProperty("errpedPosUn"));
-          }
-        }
-
-      },
-
-      deletePosTable_OLD: function (posPed, posTab, that) {
-        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-
-        //MODO DE CREACION DE PEDIDO
-        if (modeApp == 'C') {
-          var posped = that.getView().getModel("PedidoPos").getData();
-
-          if (!posPed) {
-
-            //Si estamos eliminando una posición "padre" que no es la ultima
-            if (posped[posTab].PosnrT && posped.length > 1 && posTab + 1 < posped.length) {
-
-              if (posped[posTab + 1].Posnr === posped[posTab].PosnrT) {
-                posped[posTab + 1].PosnrT = posped[posTab].PosnrT;
-              }
-
-            }
-            //posped.splice(posTab, 1);
-            if (modeApp != "A" || posped[posTab].modificabe) {
-              posped.splice(posTab, 1);
-            } else {
-              posped[posTab].iconoB = "sap-icon://delete";
-              posped[posTab].iconoM = true;
-              posped[posTab].Loekz = "L";
-            }
-
-          } else if (!posTab) {
-
-            for (var i = posped.length - 1; i >= 0; i--) {
-
-              if (posped[i].ItmNumber == posPed) {
-                if (modeApp != "A") {
-                  posped.splice(i, 1);
-                } else {
-                  posped[i].iconoB = "sap-icon://delete";
-                  posped[i].iconoM = true;
-                  posped[i].Loekz = "L";
-                }
-              }
-
-            }
-
-          }
-
-          that.ordenaPedPos(true);
-          //that.oComponent.getModel("PedidoPos").refresh(true);
-
-          //Si estamos eliminando la posición 10 en la creación
-          if (posPed == 10 && modeApp != "A") {
-            //Vemos las posiciones de la tabla actual
-            posped = that.getView().getModel("PedidoPos").getData();
-
-            var posidNew;
-            if (posped.length > 0) {
-              //Se calcula el Departamento en función de la pos 10
-              for (var i = posped.length - 1; i >= 0; i--) {
-                if (posped[i].Posnr == 10) {
-                  posidNew = posped[i].Posid;
-                }
-              }
-
-              if (posidNew) {
-
-                var oJson = {
-                  POSID: posidNew
-                }
-              }
-
-            } else {
-            }
-          }
-
-          //MODO DE MODIFICACION DE PEDIDO
-        } else if (modeApp == 'M') {
-          var posped = that.getView().getModel("DisplayPosPed").getData();
-
-          if (!posPed) {
-
-            //Si estamos eliminando una posición "padre" que no es la ultima
-            if (posped[posTab].PosnrT && posped.length > 1 && posTab + 1 < posped.length) {
-
-              if (posped[posTab + 1].Posnr === posped[posTab].PosnrT) {
-                posped[posTab + 1].PosnrT = posped[posTab].PosnrT;
-              }
-
-            }
-            //posped.splice(posTab, 1);
-            if (modeApp != "A" || posped[posTab].modificabe) {
-              posped.splice(posTab, 1);
-            } else {
-              posped[posTab].iconoB = "sap-icon://delete";
-              posped[posTab].iconoM = true;
-              posped[posTab].Loekz = "L";
-            }
-
-          } else if (!posTab) {
-
-            for (var i = posped.length - 1; i >= 0; i--) {
-
-              if (posped[i].ItmNumber == posPed) {
-                if (modeApp != "A") {
-                  posped.splice(i, 1);
-                } else {
-                  posped[i].iconoB = "sap-icon://delete";
-                  posped[i].iconoM = true;
-                  posped[i].Loekz = "L";
-                }
-              }
-
-            }
-
-          }
-
-          that.ordenaPedPos(true);
-          //that.oComponent.getModel("PedidoPos").refresh(true);
-
-          //Si estamos eliminando la posición 10 en la creación
-          if (posPed == 10 && modeApp != "A") {
-            //Vemos las posiciones de la tabla actual
-            posped = that.getView().getModel("PedidoPos").getData();
-
-            var posidNew;
-            if (posped.length > 0) {
-              //Se calcula el Departamento en función de la pos 10
-              for (var i = posped.length - 1; i >= 0; i--) {
-                if (posped[i].Posnr == 10) {
-                  posidNew = posped[i].Posid;
-                }
-              }
-
-              if (posidNew) {
-
-                var oJson = {
-                  POSID: posidNew
-                }
-              }
-
-            } else {
-            }
-          }
-        }
-
-
-      },
-
-      onCrear_OLD: function () {
-
-        var oJson;
-        var SolicitudPepCrSet = [];
-
-        var SolicitudPedCondSet = [];
-        var SolicitudPedQtySet = [];
-        var ordTextSet = [];
-        var BapeVbaK = [];
-        var BapeVbakx = [];
-        var obj = {};
-        var objCond = {};
-        var objQty = {};
-        var objTxt = {};
-
-        if (!this.getView().getModel("PedidoPos")) {
-          this.oComponent.setModel(new JSONModel([]), "PedidoPos");
-        }
-        var Posiciones = this.getView().getModel("PedidoPos").getData();
-        if (this.oComponent.getModel("ModoApp").getProperty("/mode") == 'M') {
-          var PosicionesMod = this.getView().getModel("DisplayPosPed").getData();
-          var results_arrayMod = PosicionesMod;
-        }
-
-        var results_array = Posiciones;
-
-
-        var message;
-        var that = this;
-        var crear = "Se ha creado la solicitud de Venta: ";
-        var modificar = "Se ha modificado la solicitud de Venta: "
-
-        //var cabecera = Object.assign({}, this.oComponent.getModel("ModoApp").getData());
-        //var posiciones = this.oComponent.getModel("PedidoPos").getData(); 
-        //Object.assign({}, this.oComponent.getModel("PedidoCab").getData()),
-
-
-        /*cabecera.DocType = this.oComponent.getModel("ModoApp").getData().Tipopedido;
-        cabecera.SalesOrg = this.oComponent.getModel("ModoApp").getData().Vkbur;
-        cabecera.DistrChan = this.oComponent.getModel("ModoApp").getData().CvCanal;
-        cabecera.Division = this.oComponent.getModel("ModoApp").getData().CvSector;
-        cabecera.SalesOff = this.getView().byId("idOficinaV").getValue();
-        cabecera.BillBlock = "ZR";
-        cabecera.Currency = this.getView().byId("idMoneda").getText();*/
-
-        console.log(this.oComponent.getModel("DisplayPEP").getData());
-        
-        if (this.oComponent.getModel("ModoApp").getProperty("/mode") == 'M') {
-          var Vbeln = this.oComponent.getModel("DisplayPEP").getData().Vbeln
-          var DocType = this.oComponent.getModel("ModoApp").getData().Tipopedido;
-          var SalesOrg = this.oComponent.getModel("DisplayPEP").getData().Vkbur;
-          var DistrChan = this.oComponent.getModel("ModoApp").getData().CvCanal;
-          var Division = this.oComponent.getModel("ModoApp").getData().CvSector;
-          var SalesOff = this.oComponent.getModel("DisplayPEP").getData().Vkbur;
-          var PpSearch = this.getView().byId("f_denoped").getValue();
-          var PurchNoC = this.getView().byId("f_refped").getValue();
-          var SalesDist = this.oComponent.getModel("ModoApp").getData().Bzirk;
-          var BillBlock = "ZR";
-          var Currency = this.oComponent.getModel("DisplayPEP").getData().Currency;
-          //var Currency = this.oComponent.getModel("PedidoCab").getData().Moneda;
-          var TxtCabecera = this.getView().byId("textAreaCabFact").getValue();
-          //var TxtInfRechazo = this.getView().byId("textAreaCabInfRech").getValue();
-          var TxtAclaraciones = this.getView().byId("textAreaCabAcl").getValue();
-          var Zznia = this.oComponent.getModel("DisplayPEP").getData().Zznia;
-          var Zzresponsable = "";
-          var Yykostkl = this.oComponent.getModel("DisplayPEP").getData().Yykostkl;
-          var Yyaufnr = this.oComponent.getModel("DisplayPEP").getData().Yyaufnr;
-
-        } else {
-
-          var DocType = this.oComponent.getModel("ModoApp").getData().Tipopedido;
-          var SalesOrg = this.oComponent.getModel("ModoApp").getData().Vkbur;
-          var DistrChan = this.oComponent.getModel("ModoApp").getData().CvCanal;
-          var Division = this.oComponent.getModel("ModoApp").getData().CvSector;
-          var SalesOff = this.getView().byId("idOficinaV").getSelectedKey();
-          var PpSearch = this.getView().byId("f_denoped").getValue();
-          var PurchNoC = this.getView().byId("f_refped").getValue();
-          var SalesDist = this.oComponent.getModel("ModoApp").getData().Bzirk;
-          var BillBlock = "ZR";
-          var OrdReason = this.getView().byId("f_campomotivo").getSelectedKey();
-          //var Currency = this.getView().byId("idMoneda").getText();
-          //var Currency = this.oComponent.getModel("PedidoCab").getData().Moneda;
-          var TxtCabecera = this.getView().byId("textAreaCabFact").getValue();
-          //var TxtInfRechazo = this.getView().byId("textAreaCabInfRech").getValue();
-          var TxtAclaraciones = this.getView().byId("textAreaCabAcl").getValue();
-          var Zznia = this.getView().byId("f_camponia").getSelectedKey();
-          var Zzresponsable = "";
-          var Yykostkl = codcecoIngreso;
-          var Yyaufnr = codordIngreso;
-        }
-
-
-        /*cabecera.Erdat = this.getView().byId("fechaAltaPed").getValue();
-        var fechihd = Date.parse(cabecera.Erdat);
-        cabecera.Erdat = "\/Date(" + fechihd + ")\/";
-        cabecera.Ernam = this.getView().byId("inputsolic").getValue();
-        cabecera.Ernam = "Pepe Prueba"
-        cabecera.Kunnr = codcli;
-        cabecera.Mail = this.getView().byId("inputmail").getValue();
-        cabecera.ImpPedido = this.getView().byId("inputimport").getValue();
-        cabecera.ImpPedido = "100";
-        cabecera.Vbtyp = this.getView().byId("f_typeAlta").getSelectedKey();
-        cabecera.Ekorg = this.getView().byId("f_orgAlta").getSelectedKey();
-        cabecera.SdDoc = this.getView().byId("f_contratoAlta").getSelectedKey();
-        cabecera.Text = this.getView().byId("descAltaPed").getValue();
-        cabecera.FRechazo = "\/Date(" + fechihd + ")\/";
-        cabecera.FechaApro = "\/Date(" + fechihd + ")\/";*/
-
-        //pedidosClientes.PartnRole = "AG";
-        //pedidosClientes.PartnNumb = this.oComponent.getModel("ModoApp").getData().Codcli;
-        var PartnRole = "AG";
-
-
-        if (this.oComponent.getModel("ModoApp").getProperty("/mode") == 'M') {
-          var PartnNumb = this.oComponent.getModel("DisplayPEP").getData().Kunnr;
-        } else {
-          var PartnNumb = this.oComponent.getModel("ModoApp").getData().Codcli;
-        }
-        //var PartnNumb = this.oComponent.getModel("ModoApp").getData().Codcli;
-
-
-
-        //pedidosCondicion = this.oComponent.getModel("PedidoCond").getData(); 
-
-        //Fechas de Cabecera
-        var ReqDate = Date.parse(new Date());
-        var DocDate = Date.parse(new Date());
-        var BillDate = Date.parse(new Date());
-        var PurchDate = Date.parse(new Date());
-        var PriceDate = Date.parse(new Date());
-        var QtValidF = Date.parse(new Date());
-        var QtValidT = Date.parse(new Date());
-        var CtValidF = Date.parse(new Date());
-        var CtValidT = Date.parse(new Date());
-        var WarDate = Date.parse(new Date());
-        var FixValDy = Date.parse(new Date());
-        var ServDate = Date.parse(new Date());
-        var CmlqtyDat = Date.parse(new Date());
-        var PsmPstngDate = Date.parse(new Date());
-        var PoDatS = Date.parse(new Date());
-        var DunDate = Date.parse(new Date());
-        var ReqDate = Date.parse(new Date());
-        var TpDate = Date.parse(new Date());
-        var MsDate = Date.parse(new Date());
-        var LoadDate = Date.parse(new Date());
-        var GiDate = Date.parse(new Date());
-        var DlvDate = Date.parse(new Date());
-        var Conpricdat = Date.parse(new Date());
-
-
-        if (this.oComponent.getModel("ModoApp").getProperty("/mode") == 'M') {
-          for (var i = 0; i < PosicionesMod.length; i++) {
-            obj = {
-              //Secu: (i + 1).toString(),
-              ItmNumber: results_arrayMod[i].Posnr.toString(),
-              Material: results_arrayMod[i].Matnr,
-              BillDate: "\/Date(" + BillDate + ")\/",
-              PurchDate: "\/Date(" + PurchDate + ")\/",
-              PoDatS: "\/Date(" + PoDatS + ")\/",
-              FixValDy: "\/Date(" + FixValDy + ")\/",
-              PriceDate: "\/Date(" + PriceDate + ")\/",
-              ServDate: "\/Date(" + ServDate + ")\/",
-              //Importe: results_array[i].Importe.toString(),
-              SalesUnit: results_arrayMod[i].Meins,
-              Plant: this.oComponent.getModel("ModoApp").getData().Vkbur,
-            };
-            SolicitudPepCrSet.push(obj);
-            obj = {};
-          }
-
-          //Fechas de Condiciones
-          for (var i = 0; i < PosicionesMod.length; i++) {
-            objCond = {
-              //Secu: (i + 1).toString(),
-              ItmNumber: results_arrayMod[i].Posnr.toString(),
-              CondValue: results_arrayMod[i].Netpr,
-              CondType: 'PR00',
-              CondPUnt: results_arrayMod[i].Kpein,
-              CondUnit: results_arrayMod[i].Meins,
-              Currency: 'EUR',
-              Conpricdat: "\/Date(" + Conpricdat + ")\/",
-            };
-            SolicitudPedCondSet.push(objCond);
-            objCond = {};
-          }
-
-          //Fechas de Cantidades
-          for (var i = 0; i < PosicionesMod.length; i++) {
-            objQty = {
-              //Secu: (i + 1).toString(),
-              ItmNumber: results_arrayMod[i].Posnr.toString(),
-              ReqQty: results_arrayMod[i].Kpein,
-              ReqDate: "\/Date(" + ReqDate + ")\/",
-              TpDate: "\/Date(" + TpDate + ")\/",
-              GiDate: "\/Date(" + GiDate + ")\/",
-              MsDate: "\/Date(" + MsDate + ")\/",
-              LoadDate: "\/Date(" + LoadDate + ")\/",
-              DlvDate: "\/Date(" + DlvDate + ")\/",
-            };
-            SolicitudPedQtySet.push(objQty);
-            objQty = {};
-          }
-
-          /*for (var i = 0; i < Posiciones.length; i++) {
-            objCli = {
-                Secu: (i + 1).toString(),
-                PartnNumb: PartnNumb,
-                PartnRole: PartnRole
-            };
-            SolicitudClienteSet.push(objCli);
-            objCli = {};                
-           } */
-
-          /* if (TxtCabecera) {
-             objTxt = {
-               Textid: 'Z001',
-                 Langu: 'ES',
-                 Textline: TxtCabecera
-             };
-             ordTextSet.push(objTxt);
-             objTxt = {};
-           } else if (TxtCabecera && TxtInfRechazo) {
-             for (var i = 0; i < ordTextSet.length; i++) {
-               objTxt = {
-                 Textid: 'Z002',
-                   Langu: 'ES',
-                   Textline: TxtInfRechazo
-               };
-               ordTextSet.push(objTxt);
-               objTxt = {};
-             }
-           } else if (TxtCabecera && TxtAclaraciones && TxtAclaraciones) {
-             for (var i = 0; i < ordTextSet.length; i++) {
-               objTxt = {
-                 Textid: 'Z003',
-                   Langu: 'ES',
-                   Textline: TxtAclaraciones
-               };
-               ordTextSet.push(objTxt);
-               objTxt = {};
-             }
-           }*/
-
-          /*if (TxtCabecera !== undefined && TxtInfRechazo == undefined && TxtAclaraciones == undefined) {
-            for (var i = 0; i < Posiciones.length; i++) {
-              //const element = array[index];
-              objTxt  = {
-                Textid: 'Z001',
-                Langu: 'ES',
-                Textline: TxtCabecera
-              };
-              ordTextSet.push(objTxt);
-              objTxt = {};
-             }  
-          } else if (TxtCabecera !== undefined && TxtInfRechazo != undefined && TxtAclaraciones == undefined) {
-            for (var i = 0; i < Posiciones.length; i++) {
-              //const element = array[index];
-              objTxt  = {
-                Textid: 'Z002',
-                Langu: 'ES',
-                Textline: TxtInfRechazo
-              };
-              ordTextSet.push(objTxt);
-              objTxt = {};
-             }  
-          } else if (TxtCabecera !== undefined && TxtInfRechazo != undefined && TxtAclaraciones != undefined) {
-            for (var i = 0; i < Posiciones.length; i++) {
-              //const element = array[index];
-              objTxt  = {
-                Textid: 'Z003',
-                Langu: 'ES',
-                Textline: TxtAclaraciones
-              };
-              ordTextSet.push(objTxt);
-              objTxt = {};
-             }  
-          }*/
-
-          for (var i = 0; i < PosicionesMod.length; i++) {
-            if (TxtCabecera != null && TxtAclaraciones == null) {
-              objTxt = {
-                Textid: '001',
-                Langu: 'ES',
-                Textline: TxtCabecera
-              };
-              ordTextSet.push(objTxt);
-              objTxt = {};
-            } else if (TxtCabecera == null && TxtAclaraciones != null) {
-              objTxt = {
-                Textid: 'Z003',
-                Langu: 'ES',
-                Textline: TxtAclaraciones
-              };
-              ordTextSet.push(objTxt);
-              objTxt = {};
-            } else if (TxtCabecera != null && TxtAclaraciones != null) {
-              if (TxtCabecera) {
-                objTxt = {
-                  Textid: '0001',
-                  Langu: 'ES',
-                  Textline: TxtCabecera
-                };
-                ordTextSet.push(objTxt);
-                objTxt = {};
-              }
-              if (TxtAclaraciones) {
-                objTxt = {
-                  Textid: 'Z003',
-                  Langu: 'ES',
-                  Textline: TxtAclaraciones
-                };
-                ordTextSet.push(objTxt);
-                objTxt = {};
-              }
-            }
-
-          }
-        }
-
-        //Fechas de Posiciones
-
-        for (var i = 0; i < Posiciones.length; i++) {
-          obj = {
-            //Secu: (i + 1).toString(),
-            ItmNumber: results_array[i].ItmNumber.toString(),
-            Material: results_array[i].Material,
-            BillDate: "\/Date(" + BillDate + ")\/",
-            PurchDate: "\/Date(" + PurchDate + ")\/",
-            PoDatS: "\/Date(" + PoDatS + ")\/",
-            FixValDy: "\/Date(" + FixValDy + ")\/",
-            // **Revisar**
-            //PriceDate: "\/Date(" + Date.parse(Posiciones[i].PriceDate) + ")\/",
-            PriceDate: "\/Date(" + PriceDate + ")\/",
-            ServDate: "\/Date(" + ServDate + ")\/",
-            //Importe: results_array[i].Importe.toString(),
-            SalesUnit: results_array[i].SalesUnit,
-            Plant: this.oComponent.getModel("ModoApp").getData().Vkbur,
-            Yykostkl: results_array[i].Ykostl,
-            Yyaufnr: results_array[i].Yaufnr,
-          };
-          SolicitudPepCrSet.push(obj);
-          obj = {};
-        }
-
-        //Fechas de Condiciones
-        for (var i = 0; i < Posiciones.length; i++) {
-          objCond = {
-            //Secu: (i + 1).toString(),
-            ItmNumber: results_array[i].ItmNumber.toString(),
-            CondValue: results_array[i].CondValue,
-            CondType: 'PR00',
-            CondPUnt: results_array[i].Kpein,
-            CondUnit: results_array[i].SalesUnit,
-            Currency: 'EUR',
-            Conpricdat: "\/Date(" + Conpricdat + ")\/",
-          };
-          SolicitudPedCondSet.push(objCond);
-          objCond = {};
-        }
-
-        //Fechas de Cantidades
-        for (var i = 0; i < Posiciones.length; i++) {
-          objQty = {
-            //Secu: (i + 1).toString(),
-            ItmNumber: results_array[i].ItmNumber.toString(),
-            ReqQty: results_array[i].ReqQty,
-            ReqDate: "\/Date(" + ReqDate + ")\/",
-            TpDate: "\/Date(" + TpDate + ")\/",
-            GiDate: "\/Date(" + GiDate + ")\/",
-            MsDate: "\/Date(" + MsDate + ")\/",
-            LoadDate: "\/Date(" + LoadDate + ")\/",
-            DlvDate: "\/Date(" + DlvDate + ")\/",
-          };
-          SolicitudPedQtySet.push(objQty);
-          objQty = {};
-        }
-
-        /*for (var i = 0; i < Posiciones.length; i++) {
-          objCli = {
-              Secu: (i + 1).toString(),
-              PartnNumb: PartnNumb,
-              PartnRole: PartnRole
-          };
-          SolicitudClienteSet.push(objCli);
-          objCli = {};                
-         } */
-
-        /* if (TxtCabecera) {
-           objTxt = {
-             Textid: 'Z001',
-               Langu: 'ES',
-               Textline: TxtCabecera
-           };
-           ordTextSet.push(objTxt);
-           objTxt = {};
-         } else if (TxtCabecera && TxtInfRechazo) {
-           for (var i = 0; i < ordTextSet.length; i++) {
-             objTxt = {
-               Textid: 'Z002',
-                 Langu: 'ES',
-                 Textline: TxtInfRechazo
-             };
-             ordTextSet.push(objTxt);
-             objTxt = {};
-           }
-         } else if (TxtCabecera && TxtAclaraciones && TxtAclaraciones) {
-           for (var i = 0; i < ordTextSet.length; i++) {
-             objTxt = {
-               Textid: 'Z003',
-                 Langu: 'ES',
-                 Textline: TxtAclaraciones
-             };
-             ordTextSet.push(objTxt);
-             objTxt = {};
-           }
-         }*/
-
-        /*if (TxtCabecera !== undefined && TxtInfRechazo == undefined && TxtAclaraciones == undefined) {
-          for (var i = 0; i < Posiciones.length; i++) {
-            //const element = array[index];
-            objTxt  = {
-              Textid: 'Z001',
-              Langu: 'ES',
-              Textline: TxtCabecera
-            };
-            ordTextSet.push(objTxt);
-            objTxt = {};
-           }  
-        } else if (TxtCabecera !== undefined && TxtInfRechazo != undefined && TxtAclaraciones == undefined) {
-          for (var i = 0; i < Posiciones.length; i++) {
-            //const element = array[index];
-            objTxt  = {
-              Textid: 'Z002',
-              Langu: 'ES',
-              Textline: TxtInfRechazo
-            };
-            ordTextSet.push(objTxt);
-            objTxt = {};
-           }  
-        } else if (TxtCabecera !== undefined && TxtInfRechazo != undefined && TxtAclaraciones != undefined) {
-          for (var i = 0; i < Posiciones.length; i++) {
-            //const element = array[index];
-            objTxt  = {
-              Textid: 'Z003',
-              Langu: 'ES',
-              Textline: TxtAclaraciones
-            };
-            ordTextSet.push(objTxt);
-            objTxt = {};
-           }  
-        }*/
-
-        for (var i = 0; i < Posiciones.length; i++) {
-          if (TxtCabecera != null && TxtAclaraciones == null) {
-            objTxt = {
-              Textid: '001',
-              Langu: 'ES',
-              Textline: TxtCabecera
-            };
-            ordTextSet.push(objTxt);
-            objTxt = {};
-          } else if (TxtCabecera == null && TxtAclaraciones != null) {
-            objTxt = {
-              Textid: 'Z003',
-              Langu: 'ES',
-              Textline: TxtAclaraciones
-            };
-            ordTextSet.push(objTxt);
-            objTxt = {};
-          } else if (TxtCabecera != null && TxtAclaraciones != null) {
-            if (TxtCabecera) {
-              objTxt = {
-                Textid: '0001',
-                Langu: 'ES',
-                Textline: TxtCabecera
-              };
-              ordTextSet.push(objTxt);
-              objTxt = {};
-            }
-            if (TxtAclaraciones) {
-              objTxt = {
-                Textid: 'Z003',
-                Langu: 'ES',
-                Textline: TxtAclaraciones
-              };
-              ordTextSet.push(objTxt);
-              objTxt = {};
-            }
-          }
-
-        }
-
-        /**
-         *  
-         * 
-         */
-
-        //Tratamiento de adjuntos
-        var oModAdj = this.oComponent.getModel("Adjuntos").getData();
-        var oModAdj2 = [],
-          numdoc = 0;
-        oModAdj.forEach(function (el) {
-
-          var adj;
-          numdoc = numdoc + 1;
-
-          if (el.URL) {
-            adj = {
-              Numdoc: numdoc.toString(),
-              Filename: el.Filename,
-              Descripcion: el.Descripcion
-            }
-          } else {
-            adj = {
-              Numdoc: numdoc.toString(),
-              Mimetype: el.Mimetype,
-              Filename: el.Filename,
-              Descripcion: el.Descripcion,
-              Content: el.Content
-            }
-          }
-          oModAdj2.push(adj);
-        });
-
-        let newArray = [];
-        let uniqueObject = {};
-
-        for (let i in ordTextSet) {
-          var objTextId = ordTextSet[i]['Textid'];
-          uniqueObject[objTextId] = ordTextSet[i];
-        }
-
-        for (i in uniqueObject) {
-          newArray.push(uniqueObject[i]);
-        }
-
-
-
-        if (this.oComponent.getModel("ModoApp").getProperty("/mode") == 'M') {
-          oJson = {
-            Vbeln: Vbeln,
-            DocType: DocType,
-            SalesOrg: SalesOrg,
-            SalesDist: SalesDist,
-            DistrChan: DistrChan,
-            Division: Division,
-            SalesOff: SalesOff,
-            PpSearch: PpSearch,
-            PurchNoC: PurchNoC,
-            BillBlock: BillBlock,
-            Currency: Currency,
-            ReqDateH: "\/Date(" + ReqDate + ")\/",
-            PurchDate: "\/Date(" + PurchDate + ")\/",
-            BillDate: "\/Date(" + BillDate + ")\/",
-            DocDate: "\/Date(" + DocDate + ")\/",
-            PriceDate: "\/Date(" + PriceDate + ")\/",
-            QtValidF: "\/Date(" + QtValidF + ")\/",
-            QtValidT: "\/Date(" + QtValidT + ")\/",
-            CtValidF: "\/Date(" + CtValidF + ")\/",
-            CtValidT: "\/Date(" + CtValidT + ")\/",
-            WarDate: "\/Date(" + WarDate + ")\/",
-            FixValDy: "\/Date(" + FixValDy + ")\/",
-            ServDate: "\/Date(" + ServDate + ")\/",
-            CmlqtyDat: "\/Date(" + CmlqtyDat + ")\/",
-            PsmPstngDate: "\/Date(" + PsmPstngDate + ")\/",
-            PoDatS: "\/Date(" + PoDatS + ")\/",
-            DunDate: "\/Date(" + DunDate + ")\/",
-            PedidoClienteModSet: {
-              PartnNumb: PartnNumb,
-              PartnRole: PartnRole
-            },
-            PedidoExtensionModSet: {
-              Zznia: Zznia,
-              Zzresponsable: Zzresponsable,
-              Yykostkl: Yykostkl,
-              Yyaufnr: Yyaufnr
-            },
-            //          PedidoTextosSet: [TextId:'0001' , TextLine: TxtCabecera], Z002 Rechazo, Z003 Aclaraciones
-            PedidoTextosModSet: newArray,
-            PedidoPosicionModSet: SolicitudPepCrSet,
-            PedidoCondicionModSet: SolicitudPedCondSet,
-            PedidoCantidadModSet: SolicitudPedQtySet,
-            FicheroModSet: oModAdj2, //oModAdj,
-            PedidoRespuestaModSet: {
-              //Idsolc: Idsolc,
-            }
-          };
-
-        } else {
-
-          var contrato = "";
-          if(this.oComponent.getModel("DisplayPEP")){
-            contrato = this.oComponent.getModel("DisplayPEP").getData().contrato;
-          }
-          oJson = {
-            DocType: DocType,
-            SalesOrg: SalesOrg,
-            SalesDist: SalesDist,
-            DistrChan: DistrChan,
-            OrdReason: OrdReason,
-            Division: Division,
-            SalesOff: SalesOff,
-            PpSearch: PpSearch,
-            PurchNoC: PurchNoC,
-            BillBlock: BillBlock,
-            Currency: Currency,
-            ReqDateH: "\/Date(" + ReqDate + ")\/",
-            PurchDate: "\/Date(" + PurchDate + ")\/",
-            BillDate: "\/Date(" + BillDate + ")\/",
-            DocDate: "\/Date(" + DocDate + ")\/",
-            PriceDate: "\/Date(" + PriceDate + ")\/",
-            QtValidF: "\/Date(" + QtValidF + ")\/",
-            QtValidT: "\/Date(" + QtValidT + ")\/",
-            CtValidF: "\/Date(" + CtValidF + ")\/",
-            CtValidT: "\/Date(" + CtValidT + ")\/",
-            WarDate: "\/Date(" + WarDate + ")\/",
-            FixValDy: "\/Date(" + FixValDy + ")\/",
-            ServDate: "\/Date(" + ServDate + ")\/",
-            CmlqtyDat: "\/Date(" + CmlqtyDat + ")\/",
-            PsmPstngDate: "\/Date(" + PsmPstngDate + ")\/",
-            PoDatS: "\/Date(" + PoDatS + ")\/",
-            DunDate: "\/Date(" + DunDate + ")\/",
-            Ref1: contrato,
-            PedidoClienteSet: {
-              PartnNumb: PartnNumb,
-              PartnRole: PartnRole
-            },
-            PedidoExtensionSet: {
-              Zznia: Zznia,
-              Zzresponsable: Zzresponsable,
-              Yykostkl: Yykostkl,
-              Yyaufnr: Yyaufnr
-            },
-            //          PedidoTextosSet: [TextId:'0001' , TextLine: TxtCabecera], Z002 Rechazo, Z003 Aclaraciones
-            PedidoTextosSet: newArray,
-            PedidoPosicionSet: SolicitudPepCrSet,
-            PedidoCondicionSet: SolicitudPedCondSet,
-            PedidoCantidadSet: SolicitudPedQtySet,
-            FicheroSet: oModAdj2, //oModAdj,
-            PedidoRespuestaSet: {
-              //Idsolc: Idsolc,
-            }
-          };
-
-        }
-        sap.ui.core.BusyIndicator.show();
-        
-        if (this.oComponent.getModel("ModoApp").getProperty("/mode") == 'M') {
-
-          that.mainService.create("/PedidoModSet", oJson, {
-            success: function (result) {
-              if (result.Vbeln && result.Vbeln !== "0") {
-                sap.ui.core.BusyIndicator.hide();
-                message = modificar + result.Vbeln;
-
-                MessageBox.show(message, {
-                  icon: sap.m.MessageBox.Icon.SUCCESS,
-                  onClose: function (oAction) {
-                    that.getView().byId("textAreaCabFact").setValue(null);
-                    that.getView().byId("textAreaCabInfRech").setValue(null);
-                    that.getView().byId("textAreaCabAcl").setValue(null);
-                    that.getView().byId("f_refped").setValue(null);
-                    that.getView().byId("f_denoped").setValue(null);
-                    that.getView().byId("f_campomotivo").setSelectedKey(null);
-                    that.getView().byId("f_campocondicion").setSelectedKey(null);
-                    that.getView().byId("f_camponia").setSelectedKey(null);
-                    that.getView().byId("f_campoplat").setSelectedKey(null);
-                    that.getView().byId("f_campogest").setSelectedKey(null);
-                    that.getView().byId("f_campoundTram").setSelectedKey(null);
-                    that.getView().byId("f_campoofcont").setSelectedKey(null);
-                    that.getView().byId("f_campoAdm").setSelectedKey(null);
-                    that.getView().byId("idOficinaV").setSelectedKey(null);
-                    that.getView().byId("f_cecosCab").setValue(null);
-                    that.getView().byId("f_ordenesCab").setValue(null);
-
-                    if (that.getView().byId("f_cecosPOS")) {
-                      that.getView().byId("f_cecosPOS").setValue(null);
-                    }
-                    if (that.getView().byId("f_ordenesPOS")) {
-                      that.getView().byId("f_ordenesPOS").setValue(null);
-                    }
-
-                    /*that.getView().byId("idCTipoPed").setSelectedKey(null);
-                    that.getView().byId("idCSociedad").setSelectedKey(null);
-                    that.getView().byId("idArea").setSelectedKey(null);
-                    that.getView().byId("idCanal").setSelectedKey(null);
-                    that.getView().byId("idSector").setSelectedKey(null);
-                    that.getView().byId("idzona").setSelectedKey(null);
-                    that.getView().byId("idCCliente").setValue(null);
-                    that.getView().byId("idcontract").setSelectedKey(null);*/
-                    //that.byId("OptionDial").close();
-                    var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-                    oRouter.navTo("RouteMonitorPedidos");
-                  }
-                });
-              } else if (result.PedidoRespuestaModSet.Mensaje) {
-                sap.ui.core.BusyIndicator.hide();
-                MessageBox.error(result.PedidoRespuestaModSet.Mensaje);
-              }
-            },
-            error: function (err) {
-              sap.m.MessageBox.error("Solicitud no Modificada.", {
-                title: "Error",
-                initialFocus: null,
-              });
-              //oTable.clearSelection();
-              sap.ui.core.BusyIndicator.hide();
-            },
-            async: true,
-          });
-        } else {
-
-          this.mainService.create("/PedidoCabSet", oJson, {
-            success: function (result) {
-              if (result.Vbeln && result.Vbeln !== "0") {
-                sap.ui.core.BusyIndicator.hide();
-                message = crear + result.Vbeln;
-
-                MessageBox.show(message, {
-                  icon: sap.m.MessageBox.Icon.SUCCESS,
-                  onClose: function (oAction) {
-                    that.getView().byId("textAreaCabFact").setValue(null);
-                    that.getView().byId("textAreaCabInfRech").setValue(null);
-                    that.getView().byId("textAreaCabAcl").setValue(null);
-                    that.getView().byId("f_refped").setValue(null);
-                    that.getView().byId("f_denoped").setValue(null);
-                    that.getView().byId("f_campomotivo").setSelectedKey(null);
-                    that.getView().byId("f_campocondicion").setSelectedKey(null);
-                    that.getView().byId("f_camponia").setSelectedKey(null);
-                    that.getView().byId("f_campoplat").setSelectedKey(null);
-                    that.getView().byId("f_campogest").setSelectedKey(null);
-                    that.getView().byId("f_campoundTram").setSelectedKey(null);
-                    that.getView().byId("f_campoofcont").setSelectedKey(null);
-                    that.getView().byId("f_campoAdm").setSelectedKey(null);
-                    that.getView().byId("idOficinaV").setSelectedKey(null);
-                    that.getView().byId("f_cecosCab").setValue(null);
-                    that.getView().byId("f_ordenesCab").setValue(null);
-
-                    /*that.getView().byId("idCTipoPed").setSelectedKey(null);
-                    that.getView().byId("idCSociedad").setSelectedKey(null);
-                    that.getView().byId("idArea").setSelectedKey(null);
-                    that.getView().byId("idCanal").setSelectedKey(null);
-                    that.getView().byId("idSector").setSelectedKey(null);
-                    that.getView().byId("idzona").setSelectedKey(null);
-                    that.getView().byId("idCCliente").setValue(null);
-                    that.getView().byId("idcontract").setSelectedKey(null);*/
-                    //that.byId("OptionDial").close();
-                    var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-                    oRouter.navTo("RouteMonitorPedidos");
-                  }
-                });
-              } else if (result.PedidoRespuestaSet.Mensaje) {
-                sap.ui.core.BusyIndicator.hide();
-                MessageBox.error(result.PedidoRespuestaSet.Mensaje);
-              }
-            },
-            error: function (err) {
-              sap.ui.core.BusyIndicator.hide();
-              sap.m.MessageBox.error("Solicitud no creada.", {
-                title: "Error",
-                initialFocus: null,
-              });
-            },
-            async: true
-          });
-        }
-        if (that.getView().byId("f_cecosPOS")) {
-          that.getView().byId("f_cecosPOS").setValue(null);
-        }
-        if (that.getView().byId("f_ordenesPOS")) {
-          that.getView().byId("f_ordenesPOS").setValue(null);
-        }
-      },
-
-      /*fechahoy: function () {
-        var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getMonth() + 1; //January is 0!
-        var yyyy = today.getFullYear();
-        var today1 = (dd + ' ' + mm + ', ' + yyyy);
-        //var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "YYYY/MM/DD" });   
-        //var todayFormatted = dateFormat.format(today1);
-
-        this.getView().byId("DTPdesde").setValue(today1);
-      },*/
-
-      /*resolveCreatePed: function (result) {
-
-        var message;
-        var crear = this.oI18nModel.getProperty("txtCrea");
-        var that = this;
-
-        sap.ui.core.BusyIndicator.hide();
-        if (result[0].PedidoRespuesta.Mensaje == "" && result[0].PedidoRespuesta.Vbeln != "") {
-
-          message = (result[0].PedidoRespuesta.Mensaje + "\n" + crear + result[0].PedidoRespuesta.Vbeln);
-          MessageBox.show(message, {
-            icon: sap.m.MessageBox.Icon.SUCCESS,
-            onClose: function (oAction) {
-              that.oComponent.setModel(new JSONModel(), "ModoApp");
-              that.oComponent.setModel(new JSONModel(), "Adjuntos");
-              that.oComponent.setModel(new JSONModel(), "listadoCecos");
-              that.oComponent.setModel(new JSONModel(), "listadoOrdenes");
-              that.oComponent.setModel(new JSONModel(), "listadoServicios");
-              that.getView().byId("textAreaCabFact").setValue(null);
-              that.getView().byId("textAreaCabInfRech").setValue(null);
-              that.getView().byId("textAreaCabAcl").setValue(null);
-              var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-              oRouter.navTo("RouteView1");
-            }
-          });
-        } else {
-          message = (result[0].PedidoRespuesta.Mensaje);
-          MessageBox.error(message);
-        }
-      },*/
-
-      
-      /*validaForm: function (formulario) {
-        var oForm = this.getView().byId(formulario).getContent();
-        var error = "";
-
-        oForm.forEach(function (Field) {
-          if (typeof Field.getValue === "function") {
-            if (!Field.getValue() || Field.getValue().length < 1) {
-              Field.setValueState("Error");
-              error = "X"
-            } else {
-              Field.setValueState("None");
-            }
-          }
-        });
-        return error;
-      },*/
-
-      
-      
-
-
-      /*_getDialogServicios: function (sInputValue) {
-
-        var oView = this.getView();
-        var ItmNumber = this.oComponent.getModel("ModoApp").getData().ItmNumber;
-        var configPos = {
-          mode: "A",
-          type: "P",
-          Vbelp: ItmNumber
-        }
-
-        var oModConfigPos = new JSONModel();
-        oModConfigPos.setData(configPos);
-        this.oComponent.setModel(oModConfigPos, "posPedFrag");
-
-        if (!this.pDialogPosiciones) {
-          this.pDialogPosiciones = Fragment.load({
-            id: oView.getId(),
-            name: "monitorpedidos.fragments.AddPosicionesPed",
-            controller: this,
-          }).then(function (oDialogPosiciones) {
-            // connect dialog to the root view of this component (models, lifecycle)
-            oView.addDependent(oDialogPosiciones);
-            return oDialogPosiciones;
-          });
-        }
-        this.pDialogPosiciones.then(function (oDialogPosiciones) {
-          oDialogPosiciones.open(sInputValue);
-          //this._configDialogCliente(oDialog)
-        });
-      },*/
-
-      /*_getDialogServicios: function (sInputValue) {
-
-        var oView = this.getView();
-        var ItmNumber = this.oComponent.getModel("ModoApp").getData().ItmNumber;
-        var ItmNumberPos = this.oComponent.getModel("PedidoPos").getData();
-        var posicion;
-
-        var configPos = {
-          mode: "A",
-          type: "P",
-          Vbelp: ItmNumber
-        }
-
-        var oModConfigPos = new JSONModel();
-        oModConfigPos.setData(configPos);
-        this.oComponent.setModel(oModConfigPos, "posPedFrag");
-
-        if (ItmNumberPos.length > 0) {
-          for (var i = 0; i < ItmNumberPos.length; i++) {
-            posicion = ItmNumberPos[i].ItmNumber + 10;
-          }
-          configPos = {
-            mode: "A",
-            type: "P",
-            Vbelp: posicion
-          }
-        }
-
-        var posped = this.getView().getModel("PedidoPos").getData();
-
-        var oModConfigPos = new JSONModel();
-        oModConfigPos.setData(configPos);
-        this.oComponent.setModel(oModConfigPos, "posPedFrag");
-
-        if (!this.pDialogPosiciones) {
-          this.pDialogPosiciones = Fragment.load({
-            id: oView.getId(),
-            name: "monitorpedidos.fragments.AddPosicionesPed",
-            controller: this,
-          }).then(function (oDialogPosiciones) {
-            // connect dialog to the root view of this component (models, lifecycle)
-            oView.addDependent(oDialogPosiciones);
-            return oDialogPosiciones;
-          });
-        }
-        this.pDialogPosiciones.then(function (oDialogPosiciones) {
-          oDialogPosiciones.open(sInputValue);
-          //this._configDialogCliente(oDialog)
-        });
-      },*/
-
-      
 
       
       

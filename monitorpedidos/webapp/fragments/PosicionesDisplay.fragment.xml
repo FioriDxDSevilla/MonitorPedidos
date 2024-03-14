@@ -60,85 +60,85 @@
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>posicion}"/>
                 <table:template>                    
-                    <m:Text text="{DisplayPosPed>Posnr}"/>
+                    <m:Text text="{DisplayPosPed>Posnr}" wrapping="false"/>
                 </table:template>
             </table:Column>    
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Material}"/>
                 <table:template>                    
-                    <m:Text text="{DisplayPosPed>Matnr}"/>
+                    <m:Text text="{DisplayPosPed>Matnr}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Descripcion}" />
                 <table:template>                    
-                    <m:Text text="{DisplayPosPed>Arktx}"/>
+                    <m:Text text="{DisplayPosPed>Arktx}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>fechaPrecio}" />
                 <table:template>
-                    <m:Text text="{path: 'DisplayPosPed>Zzprsdt',  formatter: '.onFormatFechaDocVenta'}"/>
+                    <m:Text text="{path: 'DisplayPosPed>Zzprsdt',  formatter: '.onFormatFechaDocVenta'}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Cantidad}" />
                 <table:template>                    
-                    <m:Text text="{DisplayPosPed>Kwmeng}"/>
+                    <m:Text text="{DisplayPosPed>Kwmeng}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>cantBase}" />
                 <table:template>
-                    <m:Text text="{DisplayPosPed>Kpein}"/>
+                    <m:Text text="{DisplayPosPed>Kpein}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Unidades}" />
                 <table:template>                   
-                    <m:Text text="{DisplayPosPed>Meins}"/>
+                    <m:Text text="{DisplayPosPed>Meins}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Importe}" />
                 <table:template>                    
-                    <m:Text text="{path:'DisplayPosPed>Netpr', formatter: '.onFormatImporte'}" />
+                    <m:Text text="{path:'DisplayPosPed>Netpr', formatter: '.onFormatImporte'}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Moneda}" />
                 <table:template>                    
-                    <m:Text text="{DisplayPosPed>Waerk}" />
+                    <m:Text text="{DisplayPosPed>Waerk}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>ceco}" />
                 <table:template>
-                    <m:Text text="{DisplayPosPed>Yykostkl}" />
+                    <m:Text text="{DisplayPosPed>Yykostkl}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>ord}" />
                 <table:template>
-                    <m:Text text="{DisplayPosPed>Yyaufnr}" />
+                    <m:Text text="{DisplayPosPed>Yyaufnr}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>cecoInterco}" />
                 <table:template>
-                    <m:Text text="{DisplayPosPed>Zzkostl}" />
+                    <m:Text text="{DisplayPosPed>Zzkostl}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>ordInterco}" />
                 <table:template>
-                    <m:Text text="{DisplayPosPed>Zzaufnr}" />
+                    <m:Text text="{DisplayPosPed>Zzaufnr}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>libroMayorInterco}"/>
                 <table:template>                    
-                    <m:Text text="{DisplayPosPed>Kstar}"/>
+                    <m:Text text="{DisplayPosPed>Kstar}" wrapping="false"/>
                 </table:template>
             </table:Column>
         </table:Table>

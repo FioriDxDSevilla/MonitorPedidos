@@ -26,34 +26,34 @@
                 <Label text="{i18n>posicion}" />
                 <table:template>
                     <!--<Text text="{PedidoPosContrato>ItmNumber}"/>-->
-                    <Text text="{PedidoPosContrato>Posnr}" />
+                    <Text text="{PedidoPosContrato>Posnr}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <Label text="{i18n>Material}" />
                 <table:template>
                     <!--<Text text="{PedidoPosContrato>Material}"/>-->
-                    <Text text="{PedidoPosContrato>Matnr}" />
+                    <Text text="{PedidoPosContrato>Matnr}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <Label text="{i18n>Descripcion}" />
                 <table:template>
                     <!--<Text text="{PedidoPosContrato>ShortText}"/>-->
-                    <Text text="{PedidoPosContrato>Arktx}" />
+                    <Text text="{PedidoPosContrato>Arktx}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <Label text="{i18n>Cantidad}" />
                 <table:template>
                     <!--<Text text="{PedidoPosContrato>ReqQty}"/>-->
-                    <Text text="{PedidoPosContrato>ReqQty}" />
+                    <Text text="{PedidoPosContrato>ReqQty}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <Label text="{i18n>cantBase}" />
                 <table:template>
-                    <Text text="{PedidoPosContrato>Kpein}" />
+                    <Text text="{PedidoPosContrato>Kpein}" wrapping="false"/>
                     <!--<Text text="{PedidoPosContrato>Kpein}"/>-->
                 </table:template>
             </table:Column>
@@ -61,21 +61,21 @@
                 <Label text="{i18n>Unidades}" />
                 <table:template>
                     <!--<Text text="{PedidoPosContrato>SalesUnit}"/>-->
-                    <Text text="{PedidoPosContrato>Meins}" />
+                    <Text text="{PedidoPosContrato>Meins}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <Label text="{i18n>Importe}" />
                 <table:template>
                     <!--<Text text="{PedidoPosContrato>CondValue}" />-->
-                    <Text text="{path:'PedidoPosContrato>Netwr', formatter: '.onFormatImporte'}" />
+                    <Text text="{path:'PedidoPosContrato>Netwr', formatter: '.onFormatImporte'}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
                 <Label text="{i18n>Moneda}" />
                 <table:template>
                     <!--<Text text="{PedidoPosContrato>Currency}" />-->
-                    <Text text="{PedidoPosContrato>Waerk}" />
+                    <Text text="{PedidoPosContrato>Waerk}" wrapping="false"/>
                 </table:template>
             </table:Column>
         </table:Table>

@@ -40,6 +40,7 @@
                 value="{posPedFrag>/ShortText}"
                 maxLength="40"
                 editable="true"
+                liveChange=".onLiveChangeRequired"
             />
             <Label text="{i18n>mat}" required="true" />
             <Input
@@ -57,12 +58,13 @@
                 value="{posPedFrag>/PriceDate}"
                 displayFormat="medium"
             />
-            <Label text="{i18n>import}" />
+            <Label text="{i18n>import}" required="true"/>
             <Input
                 id="f_importpos"
                 value="{posPedFrag>/CondValue}"
                 placeholder="0,00"
                 type="Number"
+                liveChange=".onLiveChangeRequired"
             />
             <Label text="{i18n>cant}" required="true" />
             <Input
@@ -70,6 +72,7 @@
                 value="{posPedFrag>/ReqQty}"
                 placeholder="0"
                 type="Number"
+                liveChange=".onLiveChangeRequired"
             />
              <Label text="{i18n>cantBase}" required="true" />
             <Input
@@ -77,6 +80,7 @@
                 value="{posPedFrag>/Kpein}"
                 placeholder="0"
                 type="Number"
+                liveChange=".onLiveChangeRequired"
             />
             <Label text="{i18n>Moneda}" required="true" />
             <ComboBox
@@ -86,7 +90,7 @@
                 items="{ path: 'listadoMoneda>/', sorter: { path: 'Waers' } }"
                 selectedKey="{posPedFrag>/Currency}"
                 placeholder="EUR"
-                
+                selectionChange=".onChangeValueState"
             >
                 <core:ListItem
                     key="{listadoMoneda>Waers}"
@@ -99,6 +103,7 @@
                 value="{posPedFrag>/SalesUnit}"
                 placeholder="UN"
                 type="Text"
+                liveChange=".onLiveChangeRequired"
             />
             <Label text="{i18n>ceco}" />
             <Input
@@ -106,6 +111,7 @@
                 showValueHelp="true"
                 editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
                 valueHelpRequest=".onValueHelpCecosIngresoPosicion"
+                liveChange=".onLiveChangeOptional"
                 value="{posPedFrag>/Yykostkl}"
                 visible="true"
             />
@@ -124,6 +130,7 @@
                 showValueHelp="true"
                 editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
                 valueHelpRequest=".onValueHelpCecosIntercoPosicion"
+                liveChange=".onLiveChangeOptional"
                 value="{posPedFrag>/Zzkostl}"
                 visible="true"
             />
@@ -142,6 +149,7 @@
                 showValueHelp="true"
                 editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
                 valueHelpRequest=".onValueHelpLibroMayorPosicion"
+                liveChange=".onLiveChangeOptional"
                 value="{posPedFrag>/Kstar}"
                 visible="true"
             />

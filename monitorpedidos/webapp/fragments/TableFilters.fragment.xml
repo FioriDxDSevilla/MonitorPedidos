@@ -162,7 +162,7 @@
 				</ui:extension>
                 <ui:columns>
                     <ui:Column
-                        width="8.5em"
+                        width="7.5em"
                         filterProperty="IDSOLICITUD"
                         sortProperty="IDSOLICITUD"
                         tooltip="{i18n>numped}"
@@ -172,6 +172,7 @@
                             <Text
                                 id="idPEP"
                                 text="{listadoSolicitudes>IDSOLICITUD}"
+                                wrapping="false"
                             />
                         </ui:template>
                     </ui:Column>
@@ -184,18 +185,18 @@
                     >
                         <Label text="{i18n>fechadocu}" />
                         <ui:template>
-                            <Text text="{path: 'listadoSolicitudes>Fechadoc',  formatter: '.onFormatFechaDocVenta'}"/>
+                            <Text text="{path: 'listadoSolicitudes>Fechadoc',  formatter: '.onFormatFechaDocVenta'}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="4.5em"
+                        width="5em"
                         filterProperty="Creador"
                         sortProperty="Creador"
                         tooltip="{i18n>creador}"
                     >
                         <Label text="{i18n>creador}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Creador}" />
+                            <Text text="{listadoSolicitudes>Creador}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -206,7 +207,7 @@
                     >
                         <Label text="{i18n>codcli}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>CLIENTE}" />
+                            <Text text="{listadoSolicitudes>CLIENTE}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -217,7 +218,7 @@
                     >
                         <Label text="{i18n>nomcli}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Nombrecliente}" />
+                            <Text text="{listadoSolicitudes>Nombrecliente}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     
@@ -239,7 +240,7 @@
                         tooltip="{i18n>import}">
                         <Label text="{i18n>import}" />
                          <ui:template>
-                            <Text  text="{path:'listadoSolicitudes>Netwr', formatter: '.onFormatImporte'}"/>
+                            <Text  text="{path:'listadoSolicitudes>Netwr', formatter: '.onFormatImporte'}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -249,40 +250,40 @@
                         tooltip="{i18n>Moneda}">
                         <Label text="{i18n>Moneda}" />
                          <ui:template>
-                            <Text text="{listadoSolicitudes>Waerk}" />
+                            <Text text="{listadoSolicitudes>Waerk}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="8em"
+                        width="7.5em"
                         filterProperty="ESTADO"
                         sortProperty="ESTADO"
                         tooltip="{i18n>status}"
                     >
                         <Label text="{i18n>status}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>ESTADO}" />
+                            <Text text="{listadoSolicitudes>ESTADO}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="7.5em"
+                        width="7em"
                         filterProperty="Zorden"
                         sortProperty="Zorden"
                         tooltip="{i18n>zord}"
                     >
                         <Label text="{i18n>zord}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Zorden}" />
+                            <Text text="{listadoSolicitudes>Zorden}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="7em"
+                        width="6.5em"
                         filterProperty="Zcoste"
                         sortProperty="Zcoste"
                         tooltip="{i18n>zcost}"
                     >
                         <Label text="{i18n>zcost}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Zcoste}" />
+                            <Text text="{listadoSolicitudes>Zcoste}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -293,7 +294,7 @@
                     >
                         <Label text="{i18n>nomapprov}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Nombreapr}" />
+                            <Text text="{listadoSolicitudes>Nombreapr}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <!--<ui:Column
@@ -315,11 +316,11 @@
                     >
                         <Label text="{i18n>orgventas}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>ORGVENTAS}" />
+                            <Text text="{listadoSolicitudes>ORGVENTAS}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
-                        width="8em"
+                        width="7.5em"
                         filterProperty="Numfactura"
                         sortProperty="Numfactura"
                         tooltip="{i18n>Numfactura}"
@@ -343,12 +344,12 @@
                     >
                         <Label text="{i18n>Referenciped}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Referenciped}" />
+                            <Text text="{listadoSolicitudes>Referenciped}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
 
                     <ui:Column
-                        width="9em"
+                        width="8.5em"
                         filterProperty="Indcontrato"
                         sortProperty="Indcontrato"
                         tooltip="{i18n>Indcontrato}"
