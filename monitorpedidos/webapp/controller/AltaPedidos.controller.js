@@ -443,7 +443,8 @@ sap.ui.define([
       },      
 
       // -------------------------------------- FUNCIONES ORDENES --------------------------------------
-      onBusqOrdenes: function (Aufnr, Ktext, Bukrs, Ceco) {
+      onBusqOrdenes: function (Aufnr, Ktext, Ceco) {
+        var Bukrs = this.oComponent.getModel("ModoApp").getProperty("/Vkbur");
         var aFilterIds = [],
             aFilterValues = [];
 
@@ -537,8 +538,6 @@ sap.ui.define([
       onBusqOrdenesAlta: function () {
         var Aufnr = this.getView().byId("f_codOrdAlta").getValue();
         var Ktext = this.getView().byId("f_nomOrdAlta").getValue();
-        var Bukrs = this.getView().byId("f_ordbukrsAlta").getValue();
-        //var Ceco = codceco;
         var Ceco;
 
         switch (tipoInputOrden) {
@@ -562,7 +561,7 @@ sap.ui.define([
             break;
         }
 
-        this.onBusqOrdenes(Aufnr, Ktext, Bukrs, Ceco);
+        this.onBusqOrdenes(Aufnr, Ktext, Ceco);
       },
 
       onPressOrdenesAlta: function (oEvent) {
@@ -1257,6 +1256,7 @@ sap.ui.define([
             var posiciones_Aux = JSON.parse(JSON.stringify(posiciones)); // Copy data model without references
             var pedidoCopy = posiciones_Aux[aContexts[0]];
             pedidoCopy.Posnr = Number(posiciones_Aux[posiciones_Aux.length - 1].Posnr) + 10;
+            pedidoCopy.Zzprsdt = new Date(pedidoCopy.Zzprsdt);
             //pedidoCopy.Posnr = ('000000' + itmNumberCopy).slice(-6);
 
             posiciones.push(pedidoCopy);
@@ -1275,6 +1275,7 @@ sap.ui.define([
             var posiciones_Aux = JSON.parse(JSON.stringify(posiciones)); // Copy data model without references
             var pedidoCopy = posiciones_Aux[aContexts[0]];
             pedidoCopy.ItmNumber = Number(posiciones_Aux[posiciones_Aux.length - 1].ItmNumber) + 10;
+            pedidoCopy.PriceDate = new Date(pedidoCopy.PriceDate);
             //pedidoCopy.ItmNumber = ('000000' + itmNumberCopy).slice(-6);
 
             posiciones.push(pedidoCopy);
@@ -1793,7 +1794,7 @@ sap.ui.define([
         var Vbeln = this.oComponent.getModel("DisplayPEP").getData().Vbeln; // Número de pedido (solo al modificar)
 
         var PpSearch = this.oComponent.getModel("DisplayPEP").getData().Ktext; // Denominación
-        var PartnNumb = this.oComponent.getModel("ModoApp").getData().Codcli; // Código de cliente
+        var PartnNumb = this.oComponent.getModel("ModoApp").getData().Kunnr; // Código de cliente
         var Ref1 = this.oComponent.getModel("ModoApp").getData().Numcont; // Contrato
 
         var DocType = this.oComponent.getModel("ModoApp").getData().Clasepedido; // Clase de Pedido
@@ -1813,7 +1814,7 @@ sap.ui.define([
         var Zznia = this.oComponent.getModel("ModoApp").getData().Nia; // NIA
         var TxtCabecera = this.oComponent.getModel("DisplayPEP").getData().Tdlinecab; // Texto de Cabecera
         var TxtAclaraciones = this.oComponent.getModel("DisplayPEP").getData().Tdlineacl; // Texto de aclaraciones
-
+        var SmtpAddr = this.oComponent.getModel("ModoApp").getData().SmtpAddr; // Mail destina de factura
         // -- Otros campos --        
         // -Responsable
         var Zzresponsable = "";
@@ -1995,7 +1996,8 @@ sap.ui.define([
             DunDate: "\/Date(" + DunDate + ")\/",
             PedidoClienteModSet: {
               PartnNumb: PartnNumb,
-              PartnRole: PartnRole
+              PartnRole: PartnRole,
+              SmtpAddr: SmtpAddr
             },
             PedidoExtensionModSet: {
               Zznia: Zznia,
@@ -2050,10 +2052,13 @@ sap.ui.define([
           var PedidoCantidadSet = [];
           var PedidoTextosSet_Aux = [];
           for (var i = 0; i < posiciones.length; i++) {
-
+            
+            // Posición Real en el contrato
+            let PoItmNo = (posiciones[i].PoItmNo)? posiciones[i].PoItmNo.toString() : "";
+            
             // Entidad PedidoPosicionSet
             let objPedidoPosicionSet = {
-              PoItmNo: posiciones[i].PoItmNo.toString(), // Posición Real en el contrato
+              PoItmNo: PoItmNo, // Posición Real en el contrato
               ItmNumber: posiciones[i].ItmNumber.toString(), // Posición Nueva
               Material: posiciones[i].Material, // Material
               ShortText: posiciones[i].ShortText, // Descripción Material
@@ -2182,7 +2187,8 @@ sap.ui.define([
             DunDate: "\/Date(" + DunDate + ")\/",
             PedidoClienteSet: {
               PartnNumb: PartnNumb,
-              PartnRole: PartnRole
+              PartnRole: PartnRole,
+              SmtpAddr: SmtpAddr
             },
             PedidoExtensionSet: {
               Zznia: Zznia,

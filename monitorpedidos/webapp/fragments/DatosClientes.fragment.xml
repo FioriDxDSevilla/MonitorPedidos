@@ -85,7 +85,7 @@
                 <m:Input
                     id="f_mailcli"
                     enabled="true"
-                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }"
+                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }"
                     width="280px"
                     value="{ModoApp>/SmtpAddr}"
                 >
@@ -160,18 +160,6 @@
                     editable="false"
                     width="120px"
                     value="{ModoApp>/Zterm}"
-                >
-                    <m:layoutData>
-                        <l:GridData span="XL1 L2 M2 S4" />
-                    </m:layoutData>
-                </m:Input>
-                <m:Input
-                    id="f_funcint"
-                    enabled="false"
-                    editable="false"
-                    visible="false"
-                    width="120px"
-                    value="{ModoApp>/Stceg}"
                 >
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />

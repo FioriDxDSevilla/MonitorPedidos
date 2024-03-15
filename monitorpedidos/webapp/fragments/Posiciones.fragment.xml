@@ -123,7 +123,7 @@
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>ceco}" />
                 <table:template>
-                    <m:Text text="{PedidoPos>Yykostl}" wrapping="false"/>
+                    <m:Text text="{PedidoPos>Yykostkl}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">

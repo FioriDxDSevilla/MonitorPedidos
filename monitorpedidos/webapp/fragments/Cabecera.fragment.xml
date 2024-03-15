@@ -71,7 +71,7 @@
                 <m:Input
                     id="f_ordenesIngresoCab"
                     showValueHelp="true"
-                    editable="{= (${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true) &amp;&amp; (!!${DisplayPEP>/Yykostkl}) }"
+                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }"
                     valueHelpRequest=".onValueHelpOrdIngresoCabecera"
                     value="{DisplayPEP>/Yyaufnr}"
                 />
@@ -88,7 +88,7 @@
                 <m:Input
                     id="f_ordenesIntercoCab"
                     showValueHelp="true"
-                    editable="{= (${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true) &amp;&amp; (!!${DisplayPEP>/Zzkostl}) }"
+                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }"
                     valueHelpRequest=".onValueHelpOrdIntercoCabecera"
                     value="{DisplayPEP>/Zzaufnr}"
                 />

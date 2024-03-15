@@ -1792,6 +1792,7 @@ sap.ui.define([
                         this.oComponent.setModel(new JSONModel([]), "ContratoCliente");
                         if (this.getView().byId("idcontract")) {
                             this.getView().byId("idcontract").setValue(null);
+                            this.getView().byId("idcontract").setSelectedKey(null);
                         }
 
                     case "Contrato":
@@ -1806,6 +1807,7 @@ sap.ui.define([
                         Cvcan = "";
                         if (this.getView().byId("idCanal")) {
                             this.getView().byId("idCanal").setValue(null);
+                            this.getView().byId("idCanal").setSelectedKey(null);
                         }
 
                     case "Canal":
@@ -1814,6 +1816,7 @@ sap.ui.define([
                         this.oComponent.setModel(new JSONModel([]), "SectorVentas");
                         if (this.getView().byId("idSector")) {
                             this.getView().byId("idSector").setValue(null);
+                            this.getView().byId("idSector").setSelectedKey(null);
                         }
 
                     case "Sector":
@@ -1823,6 +1826,7 @@ sap.ui.define([
                         this.oComponent.setModel(new JSONModel([]), "ZonaVentas");
                         if (this.getView().byId("idzona")) {
                             this.getView().byId("idzona").setValue(null);
+                            this.getView().byId("idzona").setSelectedKey(null);
                         }
                         
                         // Resetear Tipo Pedido
@@ -1831,6 +1835,7 @@ sap.ui.define([
                         this.oComponent.setModel(new JSONModel([]), "TipospedidoAlta");
                         if (this.getView().byId("idCTipoPed")) {
                             this.getView().byId("idCTipoPed").setValue(null);
+                            this.getView().byId("idCTipoPed").setSelectedKey(null);
                         }
                     break;
                 }                
@@ -1984,6 +1989,8 @@ sap.ui.define([
 
             // FUNCIONES DEL DESPLEGABLE DE SOCIEDAD
             onChangeArea: function () {
+                this.resetearInputsDialogoAlta("Sociedad");
+
                 var inputSociedad = this.getView().byId("idArea");
                 var sociedad = inputSociedad.getValue().trim();
 
@@ -2000,8 +2007,7 @@ sap.ui.define([
                     // Hacemos una búsqueda a los clientes de la sociedad para validarlos en onSubmitCliente
                     this.onBusqClientes();
                 } else {
-                    inputSociedad.setValueState("Error");
-                    this.resetearInputsDialogoAlta("Sociedad");
+                    inputSociedad.setValueState("Error");                    
                 }
 
                 this.oComponent.getModel("ModoApp").setProperty("/cclient", validation);
@@ -2242,7 +2248,7 @@ sap.ui.define([
                     var oModelDatosCliente = new JSONModel();
                     oModelDatosCliente.setData(values[0].results);
                     this.oComponent.getModel("ModoApp").setProperty("/Kunnr", values[0].results[0].Kunnr);
-                    this.oComponent.getModel("ModoApp").setProperty("/Codcli", values[0].results[0].Kunnr);
+                    //this.oComponent.getModel("ModoApp").setProperty("/Codcli", values[0].results[0].Kunnr);
                     //this.oComponent.getModel("ModoApp").setProperty("/Codcli", values[0].results[0].Kunnr);
                     //this.oComponent.getModel("ModoApp").setProperty("/Nombre", values[0].results[0].Nombre);
                     this.oComponent.getModel("ModoApp").setProperty("/Nomcli", values[0].results[0].Nombre);
@@ -2301,6 +2307,8 @@ sap.ui.define([
             },
 
             onChangeContrato: function () {
+                this.resetearInputsDialogoAlta("Contrato");
+
                 var inputContrato = this.getView().byId("idcontract");
                 var contrato = inputContrato.getValue().trim();
 
@@ -2339,8 +2347,7 @@ sap.ui.define([
                     this.getView().byId("idSector").setValue(Cvsector);
                     this.getView().byId("idzona").setValue(Bzirk);
                 } else {
-                    inputContrato.setValueState("Error");
-                    this.resetearInputsDialogoAlta("Contrato");                    
+                    inputContrato.setValueState("Error");                                        
                 }
                 this.oComponent.getModel("ModoApp").setProperty("/cvcan", !canal);
                 this.oComponent.getModel("ModoApp").setProperty("/cvsector", false);
@@ -2374,6 +2381,8 @@ sap.ui.define([
             },
 
             onChangeCanal: function () {
+                this.resetearInputsDialogoAlta("Canal");
+
                 var inputCanal = this.getView().byId("idCanal");
                 var canal = inputCanal.getValue().trim();
 
@@ -2385,8 +2394,7 @@ sap.ui.define([
                     Cvcan = inputCanal.getSelectedKey();
                     this.SectorVentas();
                 } else {
-                    inputCanal.setValueState("Error");
-                    this.resetearInputsDialogoAlta("Canal");
+                    inputCanal.setValueState("Error");                    
                 }
 
                 this.oComponent.getModel("ModoApp").setProperty("/cvsector", validation);
@@ -2422,6 +2430,8 @@ sap.ui.define([
             },
 
             onChangeSector: function () {
+                this.resetearInputsDialogoAlta("Sector");
+
                 var inputSector = this.getView().byId("idSector");
                 var sector = inputSector.getValue().trim();
 
@@ -2433,8 +2443,7 @@ sap.ui.define([
                     Cvsector = inputSector.getSelectedKey();
                     this.ObtenerZonas();
                 } else {
-                    inputSector.setValueState("Error");
-                    this.resetearInputsDialogoAlta("Sector");
+                    inputSector.setValueState("Error");                    
                 }
 
                 this.oComponent.getModel("ModoApp").setProperty("/czona", validation);
@@ -2773,7 +2782,7 @@ sap.ui.define([
                                 
                                 that.oComponent.getModel("ModoApp").setProperty("/Vkbur", that.oComponent.getModel("DisplayPEP").getProperty("/Vkorg"));
                                 that.oComponent.getModel("ModoApp").setProperty("/NomSoc", that.oComponent.getModel("DisplayPEP").getProperty("/Vtext"));
-                                // Codcli y Nomcli se rellenan en la función DatosCliente
+                                // Kunnr (Codcli) y Nomcli se rellenan en la función DatosCliente
                                 // Numcont se rellena de DisplayPEP en modo D y M. En modo C se rellena del input
                                 if (that.modoapp === "M" || that.modoapp === "D") {
                                     that.oComponent.getModel("ModoApp").setProperty("/Numcont", that.oComponent.getModel("DisplayPEP").getProperty("/contrato"));
@@ -2807,7 +2816,7 @@ sap.ui.define([
                     this.modoapp = "C";
                     this.oComponent.getModel("ModoApp").setProperty("/Vkbur", vkbur);
                     this.oComponent.getModel("ModoApp").setProperty("/NomSoc", vText);
-                    this.oComponent.getModel("ModoApp").setProperty("/Codcli", codcli);
+                    this.oComponent.getModel("ModoApp").setProperty("/Kunnr", codcli);
                     this.oComponent.getModel("ModoApp").setProperty("/Nomcli", nomcli);
                     this.oComponent.getModel("ModoApp").setProperty("/Numcont", numCont);
                     //this.oComponent.getModel("ModoApp").setProperty("/Nomcont", nomCont);

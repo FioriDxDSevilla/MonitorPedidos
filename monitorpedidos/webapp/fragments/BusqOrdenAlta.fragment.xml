@@ -50,12 +50,13 @@
                 name="D"
                 label="{i18n>orgventas}"
                 partOfCurrentVariant="true"
-                visibleInFilterBar="true">
+                visibleInFilterBar="true"
+                hiddenFilter="true">
                 <fb:control>
                     <Input
                         id="f_ordbukrsAlta"
                         value='{FiltrosOrd>/Bukrs}'
-                        editable="true"
+                        visible="false"
                     />
                 </fb:control>
             </fb:FilterGroupItem>
