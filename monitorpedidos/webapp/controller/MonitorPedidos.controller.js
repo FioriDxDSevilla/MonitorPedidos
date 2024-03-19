@@ -108,8 +108,21 @@ sap.ui.define([
                 this.getUser();
                 this.AreasVenta();
                 this.modoapp = "";
+
+                /* Lógica que llama al metodo handleRouteMatched cuando se realiza un Router */
+                this._oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                this._oRouter.attachRouteMatched(this.handleRouteMatched, this);
             },
 
+            /* Metodo para que cada vez que se abra la vista AltaPedidos, se realice la actualización del importe */
+            handleRouteMatched: function (evt) {
+                if (evt.getParameter("name") !== "MonitorPedidos") {
+                    // Cuando se acceda al monitor por primera vez, se refrescará desde la función getUser()
+                    if (filtroUsuario) {
+                        this.refrescarMonitor();
+                    }                    
+                }
+            },
 
             /**
              * FRAMUMO - INI 04.03.24 - función para crear modelos en el component
@@ -272,7 +285,7 @@ sap.ui.define([
                 if (values[0].results) {
                     var oModelClasePed = new JSONModel();
                     oModelClasePed.setData(values[0].results);
-                    oModelClasePed.setSizeLimit(300);
+                    oModelClasePed.setSizeLimit(values[0].results.length);
                     this.oComponent.setModel(oModelClasePed, "Tipospedido");
                 }
 
@@ -2165,7 +2178,7 @@ sap.ui.define([
                     this.readDataEntity(this.mainService, "/DameClientesSet", aFilters),
                 ]).then(this.buildCliente.bind(this), this.errorFatal.bind(this));*/
                 // en su lugar, usamos:
-                this.DatosCliente(codcli, vkbur);
+                this.DatosCliente(codcli, vkbur, "");
 
                 //this.getView().byId("f_client").setValue(nomcli);
                 this.getView().byId("idCCliente").setValueState("None");
@@ -2223,7 +2236,7 @@ sap.ui.define([
 
             },*/
 
-            DatosCliente: function (codcli, vkbur) {
+            DatosCliente: function (codcli, vkbur, Vbeln) {
                 var aFilters = [],
                     aFilterIds = [],
                     aFilterValues = [];
@@ -2233,6 +2246,9 @@ sap.ui.define([
 
                 aFilterIds.push("Bukrs");
                 aFilterValues.push(vkbur);
+
+                aFilterIds.push("Vbeln");
+                aFilterValues.push(Vbeln);
 
 
                 aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
@@ -2524,7 +2540,7 @@ sap.ui.define([
 
                 var soli = this.getSelectedPed(oEvent);
                 var numsol = soli.IDSOLICITUD;
-                this.onSolicitarPedido(numsol);
+                this.onSolicitarPedido(numsol, false);
             },
 
             onEditOrder: function (oEvent) {
@@ -2538,7 +2554,7 @@ sap.ui.define([
 
                 var soli = this.getSelectedPed(oEvent);
                 var numsol = soli.IDSOLICITUD;
-                this.onSolicitarPedido(numsol);
+                this.onSolicitarPedido(numsol, false);
             },
 
             getSelectedPed: function (oEvent) {
@@ -2607,7 +2623,7 @@ sap.ui.define([
             //},
 
             // ---------------------- FUNCIONES SOLICITAR PEDIDO: ABRIR / MODIFICAR / CREAR PEDIDO CON CONTRATO ----------------------
-            onSolicitarPedido: function (numsol) {
+            onSolicitarPedido: function (numsol, refContrato) {
                 var that = this;
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
 
@@ -2628,9 +2644,56 @@ sap.ui.define([
                                 var SolicitudPed_A = [], 
                                     SolicitudHistorial_A = [];
 
-                                if (data.results[0].Erdat) {
-                                    data.results[0].Erdat = Util.formatDate(data.results[0].Erdat);
+                                SolicitudPed_A = data.results[0].SolicitudPed_A
+
+                                for (var i = 0; i < SolicitudPed_A.results.length; i++) {
+                                    //var sreturn = "";
+                                    //sreturn = SolicitudPed_A.results[i].Netwr;
+                                    //SolicitudPed_A.results[i].Netwr = sreturn;
+                                    //SolicitudPed_A.results[i].Ykostl = SolicitudPed_A.results[i].Yykostkl;
+                                    //SolicitudPed_A.results[i].Yaufnr = SolicitudPed_A.results[i].Yyaufnr;
+                                    
+                                    SolicitudPed_A.results[i].Posnr = parseInt(SolicitudPed_A.results[i].Posnr);
+                                    //SolicitudPed_A.results[i].Zzprsdt = Util.formatDate(SolicitudPed_A.results[i].Zzprsdt);
+                                    //SolicitudPed_A.results[i].PoItmNo = SolicitudPed_A.results[i].Posnr;
+
+                                    if (that.modoapp === "C") { // Si es creación por contrato 'C'
+                                        SolicitudPed_A.results[i].ItmNumber = SolicitudPed_A.results[i].Posnr;                                        
+                                        SolicitudPed_A.results[i].Material = SolicitudPed_A.results[i].Matnr;
+                                        SolicitudPed_A.results[i].ShortText = SolicitudPed_A.results[i].Arktx;
+                                        SolicitudPed_A.results[i].PriceDate = SolicitudPed_A.results[i].Zzprsdt;
+                                        SolicitudPed_A.results[i].ReqQty = SolicitudPed_A.results[i].Kwmeng;
+                                        SolicitudPed_A.results[i].SalesUnit = SolicitudPed_A.results[i].Meins;
+                                        SolicitudPed_A.results[i].CondValue = SolicitudPed_A.results[i].Netpr;
+                                        SolicitudPed_A.results[i].Currency = SolicitudPed_A.results[i].Waerk;
+                                    }
                                 }
+
+                                // Si tiene contrato, se rellena el modelo con las posiciones del contrato
+                                if (refContrato) {
+                                    that.oComponent.setModel(new JSONModel([]), "PedidoPosContrato");
+                                    oModelSolicitud_Ped.setData(SolicitudPed_A);
+                                    that.oComponent.getModel("PedidoPosContrato").setData(oModelSolicitud_Ped.getData().results);
+                                    
+                                    if (that.modoapp === "M") { // Si es modificación, quitamos las posiciones del contrato que ya están referenciadas
+                                        var posiciones = that.oComponent.getModel("DisplayPosPed").getData();
+                                        var posicionesContrato = that.oComponent.getModel("PedidoPosContrato").getData();
+                                        var posicionesPosnr = posiciones.map(posicion => posicion.Posnr);
+
+                                        var objetosFiltrados = posicionesContrato.filter(posicionContrato => 
+                                            !posicionesPosnr.includes(posicionContrato.Posnr)
+                                        );
+
+                                        that.oComponent.getModel("PedidoPosContrato").setData(objetosFiltrados);                                        
+                                        return;
+                                    }
+                                }else if (that.modoapp === "M" && data.results[0].contrato) { // Si es modificación y tiene contrato
+                                    that.onSolicitarPedido(data.results[0].contrato, true);
+                                }
+
+                                // if (data.results[0].Erdat) {
+                                //     data.results[0].Erdat = Util.formatDate(data.results[0].Erdat);
+                                // }
 
                                 oModelDisplay.setData(data.results[0]);
                                 that.oComponent.setModel(oModelDisplay, "DisplayPEP");
@@ -2685,6 +2748,7 @@ sap.ui.define([
                                             Color: el.color,
                                             Icono: el.Icon,
                                             Filename: el.Filename,
+                                            Mimetype: el.Mimetype,
                                             Descripcion: el.Descripcion,
                                             Foltp: el.InstidB.slice(0,3),
                                             Folyr: el.InstidB.slice(3,5),
@@ -2717,38 +2781,6 @@ sap.ui.define([
                                     that.oComponent.setModel(new JSONModel(), "HistorialSol");
                                 }
 
-                                SolicitudPed_A = data.results[0].SolicitudPed_A
-
-                                for (var i = 0; i < SolicitudPed_A.results.length; i++) {
-                                    //var sreturn = "";
-                                    //sreturn = SolicitudPed_A.results[i].Netwr;
-                                    //SolicitudPed_A.results[i].Netwr = sreturn;
-                                    //SolicitudPed_A.results[i].Ykostl = SolicitudPed_A.results[i].Yykostkl;
-                                    //SolicitudPed_A.results[i].Yaufnr = SolicitudPed_A.results[i].Yyaufnr;
-                                    
-                                    SolicitudPed_A.results[i].Posnr = parseInt(SolicitudPed_A.results[i].Posnr);
-                                    //SolicitudPed_A.results[i].Zzprsdt = Util.formatDate(SolicitudPed_A.results[i].Zzprsdt);
-
-                                    if (that.modoapp === "C") { // Si es creación por contrato 'C'
-                                        SolicitudPed_A.results[i].PoItmNo = SolicitudPed_A.results[i].Posnr;
-                                        SolicitudPed_A.results[i].ItmNumber = SolicitudPed_A.results[i].Posnr;                                        
-                                        SolicitudPed_A.results[i].Material = SolicitudPed_A.results[i].Matnr;
-                                        SolicitudPed_A.results[i].ShortText = SolicitudPed_A.results[i].Arktx;
-                                        SolicitudPed_A.results[i].PriceDate = SolicitudPed_A.results[i].Zzprsdt;
-                                        SolicitudPed_A.results[i].ReqQty = SolicitudPed_A.results[i].Kwmeng;
-                                        SolicitudPed_A.results[i].SalesUnit = SolicitudPed_A.results[i].Meins;
-                                        SolicitudPed_A.results[i].CondValue = SolicitudPed_A.results[i].Netpr;
-                                        SolicitudPed_A.results[i].Currency = SolicitudPed_A.results[i].Waerk;
-                                    }
-                                }
-
-                                // Si tiene contrato, se rellena el modelo con las posiciones del contrato
-                                if (data.results[0].contrato || that.modoapp === "C") {
-                                    that.oComponent.setModel(new JSONModel([]), "PedidoPosContrato");
-                                    oModelSolicitud_Ped.setData(SolicitudPed_A);
-                                    that.oComponent.getModel("PedidoPosContrato").setData(oModelSolicitud_Ped.getData().results);
-                                }
-
                                 if (that.modoapp === "C") { // Si es creación por contrato 'C'
                                     var title = that.oI18nModel.getProperty("detSolPCon") + " " + ('0000000000' + that.oComponent.getModel("DisplayPEP").getData().Vbeln).slice(-10);
                                     that.oComponent.getModel("DisplayPEP").setProperty("/Title", title);
@@ -2765,7 +2797,7 @@ sap.ui.define([
                                 
                                 that.DatosAux(data.results[0].Vbeln);
                                 that.condicionPago(data.results[0].Kunnr, data.results[0].Vkorg, data.results[0].Vtweg, data.results[0].Spart);
-                                that.DatosCliente(data.results[0].Kunnr, data.results[0].Vkorg);
+                                that.DatosCliente(data.results[0].Kunnr, data.results[0].Vkorg, data.results[0].Vbeln);
                                 that.OficinaVenta(data.results[0].Vkorg, data.results[0].Vtweg, data.results[0].Spart);
                                 that.motivopedido(data.results[0].Auart, data.results[0].Vkorg);
 
@@ -2831,7 +2863,7 @@ sap.ui.define([
                     this.oComponent.setModel(new JSONModel([]), "PedidoPos");
 
                     if (numCont) { // Si el pedido tiene contrato
-                        this.onSolicitarPedido(numCont);
+                        this.onSolicitarPedido(numCont, true);
                     }else{ // Si el pedido no es con contrato
                         this.oComponent.setModel(new JSONModel([]), "Adjuntos");
                         this.oComponent.setModel(new JSONModel(), "datosAdj");
@@ -2875,24 +2907,42 @@ sap.ui.define([
             onNavAltaContrato: function () {
                 var oTable = this.getView().byId("TablaPosicionesContrato");
                 var aSelectedIndices = oTable.getSelectedIndices();
+                
                 var pedidosContrato = this.oComponent.getModel("PedidoPosContrato").getData();
                 var pedidosContrato_Aux = JSON.parse(JSON.stringify(pedidosContrato)); // Copy data model without references
-                var results_array = [];
-                var posnr_ItmNumber;
-
+                var posiciones = this.oComponent.getModel("PedidoPos").getData();
+                let indexDeleted = 0;
                 for (var i = 0; i < aSelectedIndices.length; i++) {
                     var indice = aSelectedIndices[i];
-                    var posicionPed = pedidosContrato_Aux[indice];
-                    posnr_ItmNumber = (i + 1) * 10;
-                    posicionPed.ItmNumber = posnr_ItmNumber;
-                    posicionPed.Zzprsdt = new Date(posicionPed.Zzprsdt);
-                    posicionPed.PriceDate = new Date(posicionPed.PriceDate);
-                    results_array.push(posicionPed);
+                    let posicionPed = pedidosContrato_Aux[indice];
+                    
+                    var posicionN = {
+                        ItmNumber: posicionPed.Posnr,
+                        Material: posicionPed.Matnr,
+                        ShortText: posicionPed.Arktx,
+                        PriceDate: new Date(posicionPed.Zzprsdt),
+                        ReqQty: posicionPed.Kwmeng,
+                        Kpein: posicionPed.Kpein,
+                        SalesUnit: posicionPed.Meins,
+                        CondValue: posicionPed.Netpr,
+                        Currency: posicionPed.Waerk,
+                        Yykostkl: posicionPed.Yykostkl,
+                        Yyaufnr: posicionPed.Yyaufnr,
+                        Zzkostl: posicionPed.Zzkostl,
+                        Zzaufnr: posicionPed.Zzaufnr,
+                        Kstar: posicionPed.Kstar
+                    }
+                    posiciones.push(posicionN);
+                    pedidosContrato.splice(indice-indexDeleted, 1); // Eliminarmos la posición del modelo de contratos
+                    indexDeleted++;
                 }
-                this.oComponent.setModel(new JSONModel([]), "PedidoPos");
-                this.oComponent.getModel("PedidoPos").setData(results_array);
+                this.oComponent.getModel("PedidoPosContrato").refresh(true);
                 this.oComponent.getModel("PedidoPos").refresh(true);
-                
+
+                // Deseleccionar las opciones
+                aSelectedIndices.forEach(function (oItem) {
+                    oTable.setSelectedIndex(-1);
+                });
                 this.closeOptionsDiagContrato();
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
                 oRouter.navTo("RouteAltaPedidos");
@@ -3294,7 +3344,8 @@ sap.ui.define([
             buildMonedas: function (values) {
                 var oModelMoneda = new JSONModel();
                 if (values[0].results) {
-                    oModelMoneda.setData(values[0].results);                    
+                    oModelMoneda.setData(values[0].results);
+                    oModelMoneda.setSizeLimit(values[0].results.length);
                 }
                 this.oComponent.setModel(oModelMoneda, "listadoMoneda");
             },

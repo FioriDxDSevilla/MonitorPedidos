@@ -67,19 +67,24 @@ sap.ui.define([
       
       /* Metodo para que cada vez que se abra la vista AltaPedidos, se realice la actualización del importe */
       handleRouteMatched: function (evt) {
-        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
+        
         if (evt.getParameter("name") !== "AltaPedidos") {
-          if (modeApp === 'C' || modeApp === 'M') {
-            listadoValidarCeco = true;
-            this.onBusqCecos("", "");
-            listadoValidarLibroMayor = true;
-            this.onBusqLibroMayor("", "");                    
-          }
-          this.actualizaimp();
-          this.oComponent.setModel(new JSONModel(), "listadoLibroMayor");
-        }//else if (evt.getParameter("name") !== "MonitorPedidos") {
-          //this.refrescarMonitor();
-        //}
+          
+          // Si no hay datos en el modelo (cuando se refresca esta vista), vuelve al monitor
+          if (!this.oComponent.getModel("ModoApp") || !this.oComponent.getModel("ModoApp").getData() || !this.oComponent.getModel("ModoApp").getData().NomSoc) {
+            this.onCancelar();
+          }else{
+            var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
+            if (modeApp === 'C' || modeApp === 'M') {
+              listadoValidarCeco = true;
+              this.onBusqCecos("", "");
+              listadoValidarLibroMayor = true;
+              this.onBusqLibroMayor("", "");                    
+            }
+            this.actualizaimp();
+            this.oComponent.setModel(new JSONModel(), "listadoLibroMayor"); 
+          }        
+        }
       },
 
       // -------------------------------------- FUNCIONES PARA EL BOTÓN DE CANCELAR Y VOLVER --------------------------------------
@@ -850,6 +855,51 @@ sap.ui.define([
         this.closeMatDiagAlta();
       },
 
+      // -------------------------------------- FUNCIONES TIPO DE CAMBIO --------------------------------------
+      // FUNCIONES DE TIPO DE CAMBIO
+      handleChangePriceDate: function (oEvent) {
+        var oDP = oEvent.getSource(),
+          sValue = oEvent.getParameter("value"),
+          bValid = oEvent.getParameter("valid");
+  
+        if (bValid) {
+          oDP.setValueState("None");
+          let currency = this.oComponent.getModel("posPedFrag").getData().Currency;
+          this.onBusqTipoCambio(sValue, currency);
+        } else {
+          oDP.setValueState("Error");
+        }
+      },
+
+      onBusqTipoCambio: function(Gdatu, Fcurr) {
+
+        var aFilterIds = [],
+            aFilterValues = [];
+
+          var addFilter = function (id, value) {
+              if (value) {
+                  aFilterIds.push(id);
+                  aFilterValues.push(value);
+              }
+          };
+
+          addFilter("Gdatu", Date.parse(Gdatu));
+          addFilter("Fcurr", Fcurr);
+
+          var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
+
+          Promise.all([
+              this.readDataEntity(this.mainService, "/TipoCambioSet", aFilters),
+          ]).then(this.buildTipoCambio.bind(this), this.errorFatal.bind(this));
+      },
+
+      buildTipoCambio: function (values) {
+          var oModelTipoCambio = new JSONModel();
+          if (values[0].results) {
+              oModelTipoCambio.setData(values[0].results[0]);
+              this.oComponent.getModel("posPedFrag").setProperty("/Ukurs", values[0].results[0].Ukurs);
+          }
+      },
       
 
       // -------------------------------------- FUNCIONES BOTONES POSICIONES --------------------------------------
@@ -884,6 +934,8 @@ sap.ui.define([
           Currency: "EUR",
           // Fecha de hoy por defecto
           PriceDate: Util.formatDate(new Date()),
+          // Tipo de Cambio por defecto
+          Ukurs: "1,00000",
           // Los CECOS / OT se recogen de cabecera de manera predeterminada
           Yykostkl: this.oComponent.getModel("DisplayPEP").getData().Yykostkl,
           Yyaufnr: this.oComponent.getModel("DisplayPEP").getData().Yyaufnr,
@@ -930,14 +982,15 @@ sap.ui.define([
             type: "P",
             index: index,
             Vbelp: posicion.Posnr,
-            Material: posicion.Matnr,
             ShortText: posicion.Arktx,
+            Material: posicion.Matnr,            
             PriceDate: Util.formatDate(new Date(posicion.Zzprsdt)),
+            CondValue: posicion.Netpr,
             ReqQty: posicion.Kwmeng,
             Kpein: posicion.Kpein,
-            SalesUnit: posicion.Meins,
-            CondValue: posicion.Netpr,
             Currency: posicion.Waerk,
+            Ukurs: posicion.Ukurs,
+            SalesUnit: posicion.Meins,
             Yykostkl: posicion.Yykostkl,
             Yyaufnr: posicion.Yyaufnr,
             Zzkostl: posicion.Zzkostl,
@@ -966,14 +1019,15 @@ sap.ui.define([
             type: "P",
             index: index,
             Vbelp: posicion.ItmNumber,            
-            Material: posicion.Material,
             ShortText: posicion.ShortText,
+            Material: posicion.Material,            
             PriceDate: Util.formatDate(new Date(posicion.PriceDate)),
+            CondValue: posicion.CondValue,            
             ReqQty: posicion.ReqQty,
             Kpein: posicion.Kpein,
-            SalesUnit: posicion.SalesUnit,
-            CondValue: posicion.CondValue,
             Currency: posicion.Currency,
+            Ukurs: posicion.Ukurs,
+            SalesUnit: posicion.SalesUnit,
             Yykostkl: posicion.Yykostkl,
             Yyaufnr: posicion.Yyaufnr,
             Zzkostl: posicion.Zzkostl,
@@ -1041,6 +1095,7 @@ sap.ui.define([
         var inCantidadBase = this.getView().byId("f_cantbasepos");
         var inMoneda = this.getView().byId("f_monedapos");
         var inUnidad = this.getView().byId("f_unitpos");
+        var inTipoCambio = this.getView().byId("f_tipocambio");
         
         if (inPosicion.getValue()) {
             inPosicion.setValueState("None");
@@ -1088,6 +1143,12 @@ sap.ui.define([
             inUnidad.setValueState("None");
         } else {
             inUnidad.setValueState("Error");
+        }
+
+        if (inTipoCambio.getValue()) {
+          inTipoCambio.setValueState("None");
+        } else {
+          inTipoCambio.setValueState("Error");
         }
 
         // --Validación CECOS
@@ -1147,6 +1208,7 @@ sap.ui.define([
             inCantidadBase.getValue() && inCantidadBase.getValueState() != "Error" &&
             inMoneda.getValue() && inMoneda.getValueState() != "Error" &&
             inUnidad.getValue() && inUnidad.getValueState() != "Error" &&
+            inTipoCambio.getValue() && inTipoCambio.getValueState() != "Error" &&
             inCecoIngresoPosicion.getValueState() != "Error" &&
             inCecoIntercoPosicion.getValueState() != "Error" &&
             inLibroMayor.getValueState() != "Error" &&
@@ -1189,6 +1251,7 @@ sap.ui.define([
             Meins: posPedFrag.SalesUnit,
             Netpr: posPedFrag.CondValue,
             Waerk: posPedFrag.Currency,
+            Ukurs: posPedFrag.Ukurs,
             Yykostkl: posPedFrag.Yykostkl,
             Yyaufnr: posPedFrag.Yyaufnr,
             Zzkostl: posPedFrag.Zzkostl,
@@ -1209,7 +1272,6 @@ sap.ui.define([
 
           //Mapeamos las posiciones
           posicionN = {
-
             ItmNumber: posPedFrag.Vbelp,
             Material: posPedFrag.Material,
             ShortText: posPedFrag.ShortText,
@@ -1219,6 +1281,7 @@ sap.ui.define([
             SalesUnit: posPedFrag.SalesUnit,
             CondValue: posPedFrag.CondValue,
             Currency: posPedFrag.Currency,
+            Ukurs: posPedFrag.Ukurs,
             Yykostkl: posPedFrag.Yykostkl,
             Yyaufnr: posPedFrag.Yyaufnr,
             Zzkostl: posPedFrag.Zzkostl,
@@ -1285,6 +1348,82 @@ sap.ui.define([
         this.actualizaimp();
       },
 
+      // FUNCIÓN BOTÓN BORRAR LÍNEA      
+      onDeletePosPed: function (oEvent) {
+
+        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
+        
+        //MODO DE MODIFICACION DE PEDIDOS
+        if (modeApp == 'M') {
+          var oTable = this.getView().byId("TablaPosicionesDisp");
+          var aContexts = oTable.getSelectedIndices();
+
+          if (aContexts.length == 0) {
+            //Mostramos un error porque no se ha seleccionado una linea
+            MessageBox.warning(this.oI18nModel.getProperty("errModPos"));
+          } else {
+            var posiciones = this.oComponent.getModel("DisplayPosPed").getData();
+
+            var index = aContexts[0];
+
+            // Si tiene contrato, lo añadimos al modelo para que pueda ser seleccionable
+            if (this.oComponent.getModel("ModoApp").getData().Numcont) {
+              var posicionesContrato = this.oComponent.getModel("PedidoPosContrato").getData();
+              posicionesContrato.push(posiciones[index]);
+              this.oComponent.getModel("PedidoPosContrato").refresh(true);
+            }
+
+            posiciones.splice(index, 1); // Eliminarmos la posición del modelo
+            this.oComponent.getModel("DisplayPosPed").refresh(true);
+            oTable.clearSelection();
+          }
+
+          ///MODO DE CREACION DE PEDIDOS
+        } else if (modeApp == 'C') {
+          var oTable = this.getView().byId("TablaPosiciones");
+          var aContexts = oTable.getSelectedIndices();
+
+          if (aContexts.length == 0) {
+            //Mostramos un error porque no se ha seleccionado una linea
+            MessageBox.warning(this.oI18nModel.getProperty("errModPos"));
+          } else {
+            var posiciones = this.oComponent.getModel("PedidoPos").getData();
+
+            var index = aContexts[0];
+
+            // Si tiene contrato, lo añadimos al modelo para que pueda ser seleccionable
+            if (this.oComponent.getModel("ModoApp").getData().Numcont) {
+              var posicionesContrato = this.oComponent.getModel("PedidoPosContrato").getData();
+              let posicionBorrar = posiciones[index];
+              let posicionN = {
+                Posnr: posicionBorrar.ItmNumber,
+                Matnr: posicionBorrar.Material,
+                Arktx: posicionBorrar.ShortText,
+                Zzprsdt: new Date(posicionBorrar.PriceDate),
+                Kwmeng: posicionBorrar.ReqQty,
+                Kpein: posicionBorrar.Kpein,
+                Meins: posicionBorrar.SalesUnit,
+                Netpr: posicionBorrar.CondValue,
+                Waerk: posicionBorrar.Currency,
+                Ukurs: posicionBorrar.Ukurs,
+                Yykostkl: posicionBorrar.Yykostkl,
+                Yyaufnr: posicionBorrar.Yyaufnr,
+                Zzkostl: posicionBorrar.Zzkostl,
+                Zzaufnr: posicionBorrar.Zzaufnr,
+                Kstar: posicionBorrar.Kstar
+              }
+              posicionesContrato.push(posicionN);
+              this.oComponent.getModel("PedidoPosContrato").refresh(true);
+            }
+
+            posiciones.splice(index, 1); // Eliminarmos la posición del modelo
+            this.oComponent.getModel("PedidoPos").refresh(true);
+            oTable.clearSelection();
+          }          
+        }  
+        this.actualizaimp();      
+      },
+
       // ------------------ FUNCIONES BOTÓN AGREGAR CON REFERENCIA A CONTRATO ------------------
       onAddPosPedCon: function () {
         this._getDialogPedContrato();
@@ -1319,18 +1458,16 @@ sap.ui.define([
         
         var pedidosContrato = this.oComponent.getModel("PedidoPosContrato").getData();
         var pedidosContrato_Aux = JSON.parse(JSON.stringify(pedidosContrato)); // Copy data model without references
-        var results_array = [];
-        var oldPos = (modeApp === 'M')? this.oComponent.getModel("DisplayPosPed").getData() : this.oComponent.getModel("PedidoPos").getData();
-        var posnr_ItmNumber = oldPos.length * 10;
-
+        var posiciones = (modeApp === 'M')? this.oComponent.getModel("DisplayPosPed").getData() : this.oComponent.getModel("PedidoPos").getData();
+        let indexDeleted = 0;
         for (var i = 0; i < aSelectedIndices.length; i++) {
           var indice = aSelectedIndices[i];
-          var posicionPed = pedidosContrato_Aux[indice];
-          posnr_ItmNumber = posnr_ItmNumber + 10;
+          let posicionPed = pedidosContrato_Aux[indice];
+          
           if (modeApp === 'C') {
             
             var posicionN = {
-              ItmNumber: posnr_ItmNumber,
+              ItmNumber: posicionPed.Posnr,
               Material: posicionPed.Matnr,
               ShortText: posicionPed.Arktx,
               PriceDate: new Date(posicionPed.Zzprsdt),
@@ -1339,26 +1476,27 @@ sap.ui.define([
               SalesUnit: posicionPed.Meins,
               CondValue: posicionPed.Netpr,
               Currency: posicionPed.Waerk,
+              Ukurs: posicionPed.Ukurs,
               Yykostkl: posicionPed.Yykostkl,
               Yyaufnr: posicionPed.Yyaufnr,
               Zzkostl: posicionPed.Zzkostl,
               Zzaufnr: posicionPed.Zzaufnr,
               Kstar: posicionPed.Kstar
             }
-            results_array.push(posicionN);
+            posiciones.push(posicionN);
 
           }else{
-            posicionPed.Posnr = posnr_ItmNumber;
-            results_array.push(posicionPed);
+            posicionPed.Zzprsdt = new Date(posicionPed.Zzprsdt);
+            posiciones.push(posicionPed);
           }
+          pedidosContrato.splice(indice-indexDeleted, 1); // Eliminarmos la posición del modelo de contratos
+          indexDeleted++;
         }
-        results_array = oldPos.concat(results_array);
+        this.oComponent.getModel("PedidoPosContrato").refresh(true);
 
         if (modeApp === 'M') {
-          this.oComponent.getModel("DisplayPosPed").setData(results_array);
           this.oComponent.getModel("DisplayPosPed").refresh(true);
         }else{
-          this.oComponent.getModel("PedidoPos").setData(results_array);
           this.oComponent.getModel("PedidoPos").refresh(true);
         }
 
@@ -1372,240 +1510,6 @@ sap.ui.define([
 
       closeOptionsDiagContrato: function () {
         this.byId("OptionDialContrato").close();
-      },
-
-      // FUNCIONES BORRAR LÍNEA
-      onDeletePosPed: function (oEvent, serv, pos) {
-
-        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-
-        //MODO DE CREACION DE PEDIDO
-
-        if (modeApp == 'C') {
-          var oTable = this.getView().byId("TablaPosiciones");
-          var oModel = this.getView().getModel("PedidoPos");
-          var aContexts = oTable.getSelectedIndices();
-          var items = aContexts.map(function (c) {
-            return this.oComponent.getModel("PedidoPos").getProperty("/" + c);
-          }.bind(this));
-
-          if (items.length == 1) {
-
-            var that = this;
-            that.posIn = pos;
-            var selrow = items[0];
-            var indice = aContexts[0];
-            var ques;
-
-            //Se comprueba que la pos no esté eliminada la posición                    
-            if (selrow.Loekz == 'L') {
-              MessageBox.warning(this.oI18nModel.getProperty("errPosBorr"));
-            } else {
-              if (pos) {
-                //Estamos eliminando una Posición y eliminaremos todos los servicios
-                ques = this.oI18nModel.getProperty("delPosQ");
-              } else if (serv) {
-                //Eliminamos solo el servicio marcado
-                ques = this.oI18nModel.getProperty("delServQ");
-              }
-              that.ques = ques;
-              that.ItmNumber = selrow.ItmNumber;
-              that.indice = indice;
-
-              that.deletePosTable(that.ItmNumber, false, that);
-            }
-          } else {
-            MessageBox.error(this.oI18nModel.getProperty("errpedPosUn"));
-          }
-        }
-
-        //MODO DE MODIFICACION DE PEDIDO
-
-        else if (modeApp == 'M') {
-          var oTable = this.getView().byId("TablaPosicionesDisp");
-          var oModel = this.getView().getModel("DisplayPosPed");
-          var aRows = oModel.getData();
-          var aContexts = oTable.getSelectedIndices();
-          var items = aContexts.map(function (c) {
-            return this.oComponent.getModel("DisplayPosPed").getProperty("/" + c);
-          }.bind(this));
-
-
-          if (items.length == 1) {
-
-            var that = this;
-            that.posIn = pos;
-            var selrow = items[0];
-            var indice = aContexts[0];
-            var ques;
-
-            //Se comprueba que la pos no esté eliminada la posición                    
-            if (selrow.Loekz == 'L') {
-              MessageBox.warning(this.oI18nModel.getProperty("errPosBorr"));
-            } else {
-              if (pos) {
-                //Estamos eliminando una Posición y eliminaremos todos los servicios
-                ques = this.oI18nModel.getProperty("delPosQ");
-              } else if (serv) {
-                //Eliminamos solo el servicio marcado
-                ques = this.oI18nModel.getProperty("delServQ");
-              }
-              that.ques = ques;
-              that.ItmNumber = selrow.ItmNumber;
-              that.indice = indice;
-
-              that.deletePosTable(that.ItmNumber, false, that);
-            }
-          } else {
-            MessageBox.error(this.oI18nModel.getProperty("errpedPosUn"));
-          }
-        }
-
-      },
-
-      deletePosTable: function (posPed, posTab, that) {
-        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-
-        //MODO DE CREACION DE PEDIDO
-        if (modeApp == 'C') {
-          var posped = that.getView().getModel("PedidoPos").getData();
-
-          if (!posPed) {
-
-            //Si estamos eliminando una posición "padre" que no es la ultima
-            if (posped[posTab].PosnrT && posped.length > 1 && posTab + 1 < posped.length) {
-
-              if (posped[posTab + 1].Posnr === posped[posTab].PosnrT) {
-                posped[posTab + 1].PosnrT = posped[posTab].PosnrT;
-              }
-
-            }
-            //posped.splice(posTab, 1);
-            if (modeApp != "A" || posped[posTab].modificabe) {
-              posped.splice(posTab, 1);
-            } else {
-              posped[posTab].iconoB = "sap-icon://delete";
-              posped[posTab].iconoM = true;
-              posped[posTab].Loekz = "L";
-            }
-
-          } else if (!posTab) {
-
-            for (var i = posped.length - 1; i >= 0; i--) {
-
-              if (posped[i].ItmNumber == posPed) {
-                if (modeApp != "A") {
-                  posped.splice(i, 1);
-                } else {
-                  posped[i].iconoB = "sap-icon://delete";
-                  posped[i].iconoM = true;
-                  posped[i].Loekz = "L";
-                }
-              }
-
-            }
-
-          }
-
-          //that.ordenaPedPos(true);
-          //that.oComponent.getModel("PedidoPos").refresh(true);
-
-          //Si estamos eliminando la posición 10 en la creación
-          if (posPed == 10 && modeApp != "A") {
-            //Vemos las posiciones de la tabla actual
-            posped = that.getView().getModel("PedidoPos").getData();
-
-            var posidNew;
-            if (posped.length > 0) {
-              //Se calcula el Departamento en función de la pos 10
-              for (var i = posped.length - 1; i >= 0; i--) {
-                if (posped[i].Posnr == 10) {
-                  posidNew = posped[i].Posid;
-                }
-              }
-
-              if (posidNew) {
-
-                var oJson = {
-                  POSID: posidNew
-                }
-              }
-
-            } else {
-            }
-          }
-
-          //MODO DE MODIFICACION DE PEDIDO
-        } else if (modeApp == 'M') {
-          var posped = that.getView().getModel("DisplayPosPed").getData();
-
-          if (!posPed) {
-
-            //Si estamos eliminando una posición "padre" que no es la ultima
-            if (posped[posTab].PosnrT && posped.length > 1 && posTab + 1 < posped.length) {
-
-              if (posped[posTab + 1].Posnr === posped[posTab].PosnrT) {
-                posped[posTab + 1].PosnrT = posped[posTab].PosnrT;
-              }
-
-            }
-            //posped.splice(posTab, 1);
-            if (modeApp != "A" || posped[posTab].modificabe) {
-              posped.splice(posTab, 1);
-            } else {
-              posped[posTab].iconoB = "sap-icon://delete";
-              posped[posTab].iconoM = true;
-              posped[posTab].Loekz = "L";
-            }
-
-          } else if (!posTab) {
-
-            for (var i = posped.length - 1; i >= 0; i--) {
-
-              if (posped[i].ItmNumber == posPed) {
-                if (modeApp != "A") {
-                  posped.splice(i, 1);
-                } else {
-                  posped[i].iconoB = "sap-icon://delete";
-                  posped[i].iconoM = true;
-                  posped[i].Loekz = "L";
-                }
-              }
-
-            }
-
-          }
-
-          //that.ordenaPedPos(true);
-          //that.oComponent.getModel("PedidoPos").refresh(true);
-
-          //Si estamos eliminando la posición 10 en la creación
-          if (posPed == 10 && modeApp != "A") {
-            //Vemos las posiciones de la tabla actual
-            posped = that.getView().getModel("PedidoPos").getData();
-
-            var posidNew;
-            if (posped.length > 0) {
-              //Se calcula el Departamento en función de la pos 10
-              for (var i = posped.length - 1; i >= 0; i--) {
-                if (posped[i].Posnr == 10) {
-                  posidNew = posped[i].Posid;
-                }
-              }
-
-              if (posidNew) {
-
-                var oJson = {
-                  POSID: posidNew
-                }
-              }
-
-            } else {
-            }
-          }
-        }
-
-
       },
 
       // -------------------------------------- FUNCIÓN BOTÓN GRABAR --------------------------------------
@@ -1629,6 +1533,14 @@ sap.ui.define([
 
         if (bValidInput) {
             value.setValueState("None");
+
+            // Si es el input de moneda y viene la fecha informada, obtenemos el tipo de cambio
+            if ((value.getId() === "application-monitorpedidos-display-component---AltaPedidos--f_monedapos" || 
+                value.getId() === "application-ZPV-display-component---AltaPedidos--f_monedapos") &&
+                this.oComponent.getModel("posPedFrag").getData().PriceDate) {
+                  let priceDate = this.oComponent.getModel("posPedFrag").getData().PriceDate;
+                  this.onBusqTipoCambio(priceDate, response);
+            }
         } else {
             value.setValueState("Error");
         }
@@ -1878,6 +1790,7 @@ sap.ui.define([
               PriceDate: "\/Date(" + Date.parse(posiciones[i].Zzprsdt) + ")\/", // Fecha Precio
               SalesUnit: posiciones[i].Meins, // Unidades
               Plant: SalesOrg,
+              Ukurs: posiciones[i].Ukurs, // Tipo de Cambio
               Yykostkl: posiciones[i].Yykostkl, // Ceco Ingreso
               Yyaufnr: posiciones[i].Yyaufnr, // Orden Ingreso
               Zzkostl: posiciones[i].Zzkostl, // Ceco Interco
@@ -2054,11 +1967,11 @@ sap.ui.define([
           for (var i = 0; i < posiciones.length; i++) {
             
             // Posición Real en el contrato
-            let PoItmNo = (posiciones[i].PoItmNo)? posiciones[i].PoItmNo.toString() : "";
+            //let PoItmNo = (posiciones[i].PoItmNo)? posiciones[i].PoItmNo.toString() : "";
             
             // Entidad PedidoPosicionSet
             let objPedidoPosicionSet = {
-              PoItmNo: PoItmNo, // Posición Real en el contrato
+              //PoItmNo: PoItmNo, // Posición Real en el contrato
               ItmNumber: posiciones[i].ItmNumber.toString(), // Posición Nueva
               Material: posiciones[i].Material, // Material
               ShortText: posiciones[i].ShortText, // Descripción Material
@@ -2070,6 +1983,7 @@ sap.ui.define([
               PriceDate: "\/Date(" + Date.parse(posiciones[i].PriceDate) + ")\/", // Fecha Precio
               SalesUnit: posiciones[i].SalesUnit, // Unidades
               Plant: SalesOrg,
+              Ukurs: posiciones[i].Ukurs, // Tipo de Cambio
               Yykostkl: posiciones[i].Yykostkl, // Ceco Ingreso
               Yyaufnr: posiciones[i].Yyaufnr, // Orden Ingreso
               Zzkostl: posiciones[i].Zzkostl, // Ceco Interco
@@ -2275,6 +2189,73 @@ sap.ui.define([
 
       /*ABRIR GESTOR DE ARCHIVOS*/
       handleUploadPress: function (oEvent) {
+        this.act_adj = null;
+        
+        var fileDetails = oEvent.getParameters("file").files[0];
+        //sap.ui.getCore().fileUploaderArr = [];
+        if (fileDetails) {
+          var mimeDet = fileDetails.type,
+            fileName = fileDetails.name;
+          var adjuntos = this.oComponent.getModel("Adjuntos").getData();
+          var nadj = adjuntos.length;
+          this.base64conversionMethod(mimeDet, fileName, fileDetails, nadj, adjuntos)
+        } else {
+          //sap.ui.getCore().fileUploaderArr = []
+        }
+      },
+
+      base64conversionMethod: function (fileMime, fileName, fileDetails, DocNum, adjuntos) {
+        var that = this;
+
+        FileReader.prototype.readAsBinaryString = function (fileData) {
+            var binary = "";
+            var reader = new FileReader();
+
+            // eslint-disable-next-line no-unused-vars
+            reader.onload = function (e) {
+                var bytes = new Uint8Array(reader.result);
+                var length = bytes.byteLength;
+                for (var i = 0; i < length; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                that.base64conversionRes = btoa(binary);
+
+                var numdoc = (DocNum + 1).toString();
+                adjuntos.push({
+                    "Numdoc": numdoc,
+                    "Mimetype": fileMime,
+                    "Filename": fileName,
+                    "Content": that.base64conversionRes
+                });
+
+                that.oComponent.getModel("Adjuntos").setData(adjuntos);
+                //oModel.oData.Adjuntos = adjuntos;
+                //that.getView().byId("fileUploader").setValue("");
+            };
+            reader.readAsArrayBuffer(fileData);
+        };
+        var reader = new FileReader();
+        reader.onload = function (readerEvt) {
+            var binaryString = readerEvt.target.result;
+            that.base64conversionRes = btoa(binaryString);
+            var numdoc = (DocNum + 1).toString();
+            adjuntos.push({
+                "Numdoc": numdoc,
+                "Mimetype": fileMime,
+                "Content": that.base64conversionRes
+            });
+
+            that.oComponent.getModel("Adjuntos").setData(adjuntos);
+            //oModel.oData.Adjuntos = adjuntos;
+            //that.getView().byId("fileUploader").setValue("");
+        };
+        reader.readAsBinaryString(fileDetails);
+
+    },
+
+
+
+      handleUploadPress_OLD: function (oEvent) {
         //Inicializamos el modelo de adjunto 
         //this.act_adj = null;
 
@@ -2314,8 +2295,8 @@ sap.ui.define([
 
 
         this.act_adj = null;
-        var oMdesc = this.oComponent.getModel("datosAdj").getData();
-        var desc = oMdesc.Desc;
+        //var oMdesc = this.oComponent.getModel("datosAdj").getData();
+        //var desc = oMdesc.Desc;
         var fileDetails = oEvent.getParameters("file").files[0];
         sap.ui.getCore().fileUploaderArr = [];
         if (fileDetails) {
@@ -2327,17 +2308,13 @@ sap.ui.define([
         } else {
           sap.ui.getCore().fileUploaderArr = []
         }
-
-
-
-
       },
 
       /*CONVERTIR FICHEROS A BASE64 */
-      base64conversionMethod: function (fileMime, fileName, fileDetails, DocNum, adjuntos, desc) {
+      base64conversionMethod_OLD: function (fileMime, fileName, fileDetails, DocNum, adjuntos, desc) {
         var that = this;
-        var oModAdj = new JSONModel();
-
+        //var oModAdj = new JSONModel();
+        /*
         FileReader.prototype.readAsBinaryString = function (fileData) {
           var binary = "";
           var reader = new FileReader();
@@ -2360,9 +2337,11 @@ sap.ui.define([
             /*that.oComponent.getModel("Adjuntos").refresh(true);
             that.getView().byId("descAdjunto").setValue("");
             that.getView().byId("fileUploader").setValue("");*/
-          };
+          /*};
           reader.readAsArrayBuffer(fileData);
         };
+        */
+
         var reader = new FileReader();
         reader.onload = function (readerEvt) {
           var binaryString = readerEvt.target.result;
@@ -2387,8 +2366,6 @@ sap.ui.define([
       /* Botón para la funcionalidad de meterlo en la tabla de los adjuntos*/
 
       onAttFile: function () {
-
-
         /*var adjuntos = this.oComponent.getModel("Adjuntos").getData();
         var oMdesc = this.oComponent.getModel("datosAdj").getData();
         var desc = oMdesc.Desc;
@@ -2413,20 +2390,20 @@ sap.ui.define([
         var adjuntos = this.oComponent.getModel("Adjuntos").getData();
         var oMdesc = this.oComponent.getModel("datosAdj").getData();
         var desc = oMdesc.Desc;
-        if (!desc) {
-          MessageBox.error(this.oI18nModel.getProperty("errDesArch"));
-          return
-        } else if (!this.act_adj) {
-          MessageBox.error(this.oI18nModel.getProperty("errNoArch"));
-          return
-        } else {
+        // if (!desc) {
+        //   MessageBox.error(this.oI18nModel.getProperty("errDesArch"));
+        //   return
+        // } else if (!this.act_adj) {
+        //   MessageBox.error(this.oI18nModel.getProperty("errNoArch"));
+        //   return
+        // } else {
           this.act_adj.Descripcion = desc;
           adjuntos.push(this.act_adj);
           this.oComponent.getModel("Adjuntos").refresh(true);
           this.getView().byId("descAdjunto").setValue("");
           this.getView().byId("fileUploader").setValue("");
           this.act_adj = null;
-        }
+        //}
 
       },
 
@@ -2445,10 +2422,46 @@ sap.ui.define([
         this.oComponent.setModel(new JSONModel(adjs), "Adjuntos");
       },
 
+
+      onPressIcono: function(oEvent) {
+        var adj = this.Adjunto(oEvent);
+        
+        var fName = adj.Filename;
+        var fType = adj.Mimetype;
+        var fContent = adj.Content;
+
+        // var fContentDecoded = atob(fContent);
+        // var byteNumbers = new Array(fContentDecoded.length);
+        // for (var i = 0; i < fContentDecoded.length; i++) {
+        //     byteNumbers[i] = fContentDecoded.charCodeAt(i);
+        // }
+        // var byteArray = new Uint8Array(byteNumbers);
+
+        // var byteArray = this.parseHexString(fContent);
+        // var blob = new Blob([byteArray], {
+        //     type: fType
+        // });
+        // var url = URL.createObjectURL(blob);
+        // window.open(url, '_blank');
+
+        fContent = atob(fContent);
+        sap.ui.core.util.File.save(fContent, fName.substring(0, fName.length-4), "XLSX", fType);
+      },
+
+      parseHexString: function(str) { 
+        var result = [];
+        while (str.length >= 2) { 
+            result.push(parseInt(str.substring(0, 2), 16));
+            str = str.substring(2, str.length);
+        }
+    
+        return result;
+      },
+
       /**
        * FRAMUMO - 08.03.24 - Fin Visualizar Adjunto en la Modif
        */
-      onPressIcono: function(oEvent) {
+      onPressIcono_OLD: function(oEvent) {
        
         const oI18nModel = this.oComponent.getModel("i18n");
         var oTable = this.getView().byId("idTableAdjuntos");

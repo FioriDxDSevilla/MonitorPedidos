@@ -53,7 +53,7 @@
             <DatePicker
                 id="DTPdesde"
                 placeholder="{i18n>datesel}"
-                change="handleChange"
+                change="handleChangePriceDate"
                 valueFormat="yyyy-MM-dd"
                 value="{posPedFrag>/PriceDate}"
                 displayFormat="medium"
@@ -97,6 +97,11 @@
                     text="{listadoMoneda>Waers}"
                 />
             </ComboBox>
+            <Label text="{i18n>TipoCambio}" required="true"/>
+            <Input  value="{posPedFrag>/Ukurs}" 
+                    id="f_tipocambio" 
+                    editable="false"
+            />
             <Label text="{i18n>Unit}" required="true" />
             <Input
                 id="f_unitpos"

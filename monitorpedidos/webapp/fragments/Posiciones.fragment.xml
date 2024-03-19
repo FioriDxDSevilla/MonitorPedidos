@@ -16,7 +16,7 @@
                     type="Emphasized"
                     press="onAddPosPedCon"
                     visible="{= (${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false) &amp;&amp; (!!${ModoApp>/Numcont})}"
-                    enabled="true"
+                    enabled="{= (${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false) &amp;&amp; (!!${ModoApp>/Numcont}) &amp;&amp; (${PedidoPosContrato>/}.length &gt; 0)}"
                 />
                 <m:Button
                     id="botondel"
@@ -47,7 +47,7 @@
                 />
             </m:OverflowToolbar>
     <m:VBox renderType="Bare">
-        <table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'PedidoPos>/'}"  visibleRowCountMode="Interactive"
+        <table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'PedidoPos>/', sorter: { path: 'ItmNumber', descending: false}}"  visibleRowCountMode="Interactive"
         visibleRowCount="3" width= "100%" selectionBehavior="RowOnly" >
         <!--<table:Table selectionMode="Single" id="TablaPosiciones" rows="{path: 'DisplayPosPed>/results'}"  visibleRowCountMode="Interactive"-->
                 
@@ -118,6 +118,12 @@
                 <table:template>
                     <m:Text text="{PedidoPos>Currency}" wrapping="false"/>
                     <!--<m:Text text="{DisplayPosPed>Waerk}" />-->
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
+                <m:Label text="{i18n>TipoCambio}" />
+                <table:template>
+                    <m:Text text="{PedidoPos>Ukurs}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">

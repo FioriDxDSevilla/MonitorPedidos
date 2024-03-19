@@ -16,7 +16,7 @@
         <table:Table
             selectionMode="MultiToggle"
             id="TablaPosicionesContrato"
-            rows="{path: 'PedidoPosContrato>/'}"
+            rows="{path: 'PedidoPosContrato>/', sorter: { path: 'Posnr', descending: false}}"
             visibleRowCount="4"
             width="100%"
         >
@@ -47,7 +47,7 @@
                 <Label text="{i18n>Cantidad}" />
                 <table:template>
                     <!--<Text text="{PedidoPosContrato>ReqQty}"/>-->
-                    <Text text="{PedidoPosContrato>ReqQty}" wrapping="false"/>
+                    <Text text="{PedidoPosContrato>Kwmeng}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
@@ -68,7 +68,7 @@
                 <Label text="{i18n>Importe}" />
                 <table:template>
                     <!--<Text text="{PedidoPosContrato>CondValue}" />-->
-                    <Text text="{path:'PedidoPosContrato>Netwr', formatter: '.onFormatImporte'}" wrapping="false"/>
+                    <Text text="{path:'PedidoPosContrato>Netpr', formatter: '.onFormatImporte'}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
