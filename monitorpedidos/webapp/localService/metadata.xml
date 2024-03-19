@@ -211,7 +211,7 @@
     <Key>
      <PropertyRef Name="Waers"/>
     </Key>
-    <Property Name="Waers" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Moneda" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="currency-code"/>
+    <Property Name="Waers" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Moneda" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Ktext" Type="Edm.String" Nullable="false" MaxLength="15" sap:unicode="false" sap:label="Texto breve" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
    </EntityType>
    <EntityType Name="MotivosPedido" sap:content-version="1">
@@ -1413,12 +1413,11 @@
     <Key>
      <PropertyRef Name="Numdoc"/>
     </Key>
-    <Property Name="InstidB" Type="Edm.String" Nullable="false" MaxLength="70" sap:unicode="false" sap:label="ID instancia" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Numdoc" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Valor numérico" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Mimetype" Type="Edm.String" Nullable="false" MaxLength="256" sap:unicode="false" sap:label="Dict: Nombre de tipo MIME" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Filename" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false" sap:label="File Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Descripcion" Type="Edm.String" Nullable="false" MaxLength="255" sap:unicode="false" sap:label="char255" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="Content" Type="Edm.Binary" Nullable="false" sap:unicode="false" sap:label="x" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Content" Type="Edm.Binary" Nullable="false" sap:unicode="false" sap:label="String sin formato" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Url" Type="Edm.String" Nullable="false" MaxLength="1024" sap:unicode="false" sap:label="String" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
    </EntityType>
    <EntityType Name="RespuestaAprobacion" sap:content-version="1">

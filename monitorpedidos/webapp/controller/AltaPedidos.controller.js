@@ -74,6 +74,10 @@ sap.ui.define([
           if (!this.oComponent.getModel("ModoApp") || !this.oComponent.getModel("ModoApp").getData() || !this.oComponent.getModel("ModoApp").getData().NomSoc) {
             this.onCancelar();
           }else{
+            // Si es una copia, se quita la barra de progreso
+            if (this.oComponent.getModel("ModoApp").getData().copy) {
+              sap.ui.core.BusyIndicator.hide();
+            }
             var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
             if (modeApp === 'C' || modeApp === 'M') {
               listadoValidarCeco = true;
@@ -1646,9 +1650,450 @@ sap.ui.define([
         return validation;
     },
 
-      onGrabar: function () {
+    onGrabar: function () {
         var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
+        var isCopy = this.oComponent.getModel("ModoApp").getData().copy;
+        
+        var posiciones;
+        if (modeApp === 'M') {
+          posiciones = this.getView().getModel("DisplayPosPed").getData();
+        }else{
+          posiciones = this.getView().getModel("PedidoPos").getData();
+        }
+        
+        // Validaciones
+        var validation = this.validarInputsGrabar();
+        if (!validation){
+          MessageBox.error("Se ha producido un error en la validación de los datos introducidos");
+          return;
+        }
 
+        // Validamos que el pedido tiene alguna posición
+        if (!posiciones || posiciones.length < 1) {
+          MessageBox.error("No se puede grabar un pedido sin posiciones");
+          return;  
+        }
+
+        var that = this;
+        sap.ui.core.BusyIndicator.show();
+
+        var message;
+        var crear = "Se ha creado la solicitud de Venta: ";
+        var modificar = "Se ha modificado la solicitud de Venta: "
+
+        //Fechas de Cabecera
+        var ReqDate = Date.parse(new Date());
+        var PurchDate = Date.parse(new Date());
+        var BillDate = Date.parse(new Date());
+        var DocDate = Date.parse(new Date());
+        var PriceDate = Date.parse(new Date());
+        var QtValidF = Date.parse(new Date());
+        var QtValidT = Date.parse(new Date());
+        var CtValidF = Date.parse(new Date());
+        var CtValidT = Date.parse(new Date());
+        var WarDate = Date.parse(new Date());
+        var FixValDy = Date.parse(new Date());
+        var ServDate = Date.parse(new Date());
+        var CmlqtyDat = Date.parse(new Date());
+        var PsmPstngDate = Date.parse(new Date());
+        var PoDatS = Date.parse(new Date());
+        var DunDate = Date.parse(new Date());
+        
+        // Fechas de Posición
+        var TpDate = Date.parse(new Date());
+        var GiDate = Date.parse(new Date());        
+        var MsDate = Date.parse(new Date());
+        var LoadDate = Date.parse(new Date());        
+        var DlvDate = Date.parse(new Date());
+        var Conpricdat = Date.parse(new Date());
+
+        // Datos Alta Pedidos
+        var Vbeln = this.oComponent.getModel("DisplayPEP").getData().Vbeln; // Número de pedido (solo al modificar)
+
+        var PpSearch = this.oComponent.getModel("DisplayPEP").getData().Ktext; // Denominación
+        var PartnNumb = this.oComponent.getModel("ModoApp").getData().Kunnr; // Código de cliente
+        var Ref1 = this.oComponent.getModel("ModoApp").getData().Numcont; // Contrato
+
+        var DocType = this.oComponent.getModel("ModoApp").getData().Clasepedido; // Clase de Pedido
+        var SalesOrg = this.oComponent.getModel("ModoApp").getData().Vkbur; // Organización de Ventas / Sociedad
+        var SalesDist = this.oComponent.getModel("ModoApp").getData().Bzirk; // Línea Servicio
+        var DistrChan = this.oComponent.getModel("ModoApp").getData().CvCanal; // Canal
+        var Division = this.oComponent.getModel("ModoApp").getData().CvSector; // Sector
+        var SalesOff = this.oComponent.getModel("DisplayPEP").getData().Vkbur; // Oficina de Ventas
+        var PurchNoC = this.oComponent.getModel("DisplayPEP").getData().Bstnk; // Nº de Pedido de Cliente
+        var Yykostkl = this.oComponent.getModel("DisplayPEP").getData().Yykostkl; // Ceco Ingreso
+        var Yyaufnr = this.oComponent.getModel("DisplayPEP").getData().Yyaufnr; // Orden Ingreso
+        var Zzkostl = this.oComponent.getModel("DisplayPEP").getData().Zzkostl; // Ceco Interco
+        var Zzaufnr = this.oComponent.getModel("DisplayPEP").getData().Zzaufnr; // Orden Interco
+        var Kstar = this.oComponent.getModel("DisplayPEP").getData().Kstar; // Libro Mayor Interco
+        var OrdReason = this.oComponent.getModel("DisplayPEP").getData().Augru; // Motivo de Pedido
+        var BillBlock = this.oComponent.getModel("DisplayPEP").getData().Faksk; // Bloqueo de Factura
+        var Zznia = this.oComponent.getModel("ModoApp").getData().Nia; // NIA
+        var TxtCabecera = this.oComponent.getModel("DisplayPEP").getData().Tdlinecab; // Texto de Cabecera
+        var TxtAclaraciones = this.oComponent.getModel("DisplayPEP").getData().Tdlineacl; // Texto de aclaraciones
+        var SmtpAddr = this.oComponent.getModel("ModoApp").getData().SmtpAddr; // Mail destina de factura
+        // -- Otros campos --        
+        // -Responsable
+        var Zzresponsable = "";
+        
+        // -Role
+        var PartnRole = "AG";
+
+        // -Moneda
+        var Currency; 
+        // Si existe la moneda en el pedido se mantiene
+        if (this.oComponent.getModel("DisplayPEP").getData().Waerk) {
+          Currency = this.oComponent.getModel("DisplayPEP").getData().Waerk;
+        }else{ // Si es un nuevo pedido, cogemos la moneda de la primera posición
+          Currency = posiciones[0].Currency;
+          this.oComponent.getModel("DisplayPEP").setProperty("/Waerk", Currency);
+        }
+
+        // --ADJUNTOS (FicheroModSet)
+        var oModAdj = this.oComponent.getModel("Adjuntos").getData();
+        var oModAdj2 = [], numdoc = 0;
+        
+        oModAdj.forEach(function (el) {
+          numdoc++;
+
+          var adj = {
+            Numdoc: numdoc.toString(),
+            Filename: el.Filename,
+            Descripcion: el.Descripcion
+          }
+
+          if (!el.URL) {
+            adj.Mimetype = el.Mimetype;
+            adj.Content = el.Content;
+          }
+
+          oModAdj2.push(adj);
+        });
+        
+        
+        // --POSCIONES (SolicitudPepCrSet, SolicitudPedCondSet, SolicitudPedQtySet, PedidoTextosModSet)
+        var PedidoPosicionSet = [];
+        var PedidoCondicionSet = [];
+        var PedidoCantidadSet = [];
+        var PedidoTextosSet_Aux = [];
+        for (var i = 0; i < posiciones.length; i++) {          
+          if (modeApp === 'M') {
+            // Entidad PedidoPosicionModSet
+            let objPedidoPosicionSet = {
+              ItmNumber: posiciones[i].Posnr.toString(), // Posición
+              Material: posiciones[i].Matnr, // Material
+              ShortText: posiciones[i].Arktx, // Descripción Material
+              BillDate: "\/Date(" + BillDate + ")\/",
+              PurchDate: "\/Date(" + PurchDate + ")\/",
+              PoDatS: "\/Date(" + PoDatS + ")\/",
+              FixValDy: "\/Date(" + FixValDy + ")\/",
+              ServDate: "\/Date(" + ServDate + ")\/",
+              PriceDate: "\/Date(" + Date.parse(posiciones[i].Zzprsdt) + ")\/", // Fecha Precio
+              SalesUnit: posiciones[i].Meins, // Unidades
+              Plant: SalesOrg,
+              Ukurs: posiciones[i].Ukurs, // Tipo de Cambio
+              Yykostkl: posiciones[i].Yykostkl, // Ceco Ingreso
+              Yyaufnr: posiciones[i].Yyaufnr, // Orden Ingreso
+              Zzkostl: posiciones[i].Zzkostl, // Ceco Interco
+              Zzaufnr: posiciones[i].Zzaufnr, // Orden Interco
+              Kstar: posiciones[i].Kstar // Libro Mayor Interco
+            };
+            PedidoPosicionSet.push(objPedidoPosicionSet);
+
+            // Entidad PedidoCondicionModSet
+            let objPedidoCondicionSet = {
+              CondType: 'PR00',
+              ItmNumber: posiciones[i].Posnr.toString(), // Posición
+              CondPUnt: posiciones[i].Kpein, // Cantidad Base
+              CondUnit: posiciones[i].Meins, // Unidades
+              CondValue: posiciones[i].Netpr, // Importe
+              Currency: posiciones[i].Waerk, // Moneda
+              Conpricdat: "\/Date(" + Conpricdat + ")\/",
+            };
+            PedidoCondicionSet.push(objPedidoCondicionSet);
+
+            // Entidad PedidoCantidadModSet
+            let objPedidoCantidadSet = {
+              //Secu: (i + 1).toString(),
+              ItmNumber: posiciones[i].Posnr.toString(), // Posición
+              ReqQty: posiciones[i].Kwmeng, // Cantidad
+              ReqDate: "\/Date(" + ReqDate + ")\/",
+              TpDate: "\/Date(" + TpDate + ")\/",
+              GiDate: "\/Date(" + GiDate + ")\/",
+              MsDate: "\/Date(" + MsDate + ")\/",
+              LoadDate: "\/Date(" + LoadDate + ")\/",
+              DlvDate: "\/Date(" + DlvDate + ")\/",
+            };
+            PedidoCantidadSet.push(objPedidoCantidadSet);
+                        
+          }else{
+            // Entidad PedidoPosicionSet
+            let objPedidoPosicionSet = {
+              ItmNumber: posiciones[i].ItmNumber.toString(), // Posición Nueva
+              Material: posiciones[i].Material, // Material
+              ShortText: posiciones[i].ShortText, // Descripción Material
+              BillDate: "\/Date(" + BillDate + ")\/",
+              PurchDate: "\/Date(" + PurchDate + ")\/",
+              PoDatS: "\/Date(" + PoDatS + ")\/",
+              FixValDy: "\/Date(" + FixValDy + ")\/",
+              ServDate: "\/Date(" + ServDate + ")\/",
+              PriceDate: "\/Date(" + Date.parse(posiciones[i].PriceDate) + ")\/", // Fecha Precio
+              SalesUnit: posiciones[i].SalesUnit, // Unidades
+              Plant: SalesOrg,
+              Ukurs: posiciones[i].Ukurs, // Tipo de Cambio
+              Yykostkl: posiciones[i].Yykostkl, // Ceco Ingreso
+              Yyaufnr: posiciones[i].Yyaufnr, // Orden Ingreso
+              Zzkostl: posiciones[i].Zzkostl, // Ceco Interco
+              Zzaufnr: posiciones[i].Zzaufnr, // Orden Interco
+              Kstar: posiciones[i].Kstar // Libro Mayor Interco
+            };
+            PedidoPosicionSet.push(objPedidoPosicionSet);
+
+            // Entidad PedidoCondicionSet
+            let objPedidoCondicionSet = {
+              CondType: 'PR00',
+              ItmNumber: posiciones[i].ItmNumber.toString(), // Posición
+              CondPUnt: posiciones[i].Kpein, // Cantidad Base
+              CondUnit: posiciones[i].SalesUnit, // Unidades
+              CondValue: posiciones[i].CondValue, // Importe
+              Currency: posiciones[i].Currency, // Moneda
+              Conpricdat: "\/Date(" + Conpricdat + ")\/",
+            };
+            PedidoCondicionSet.push(objPedidoCondicionSet);
+
+            // Entidad PedidoCantidadSet
+            let objPedidoCantidadSet = {
+              //Secu: (i + 1).toString(),
+              ItmNumber: posiciones[i].ItmNumber.toString(), // Posición
+              ReqQty: posiciones[i].ReqQty, // Cantidad
+              ReqDate: "\/Date(" + ReqDate + ")\/",
+              TpDate: "\/Date(" + TpDate + ")\/",
+              GiDate: "\/Date(" + GiDate + ")\/",
+              MsDate: "\/Date(" + MsDate + ")\/",
+              LoadDate: "\/Date(" + LoadDate + ")\/",
+              DlvDate: "\/Date(" + DlvDate + ")\/",
+            };
+            PedidoCantidadSet.push(objPedidoCantidadSet);            
+          }
+          
+          // Entidad PedidoTextosSet
+          let objPedidoTextosSet;
+          if (TxtCabecera != null && TxtAclaraciones == null) {
+            objPedidoTextosSet = {
+              Textid: '001',
+              Langu: 'ES',
+              Textline: TxtCabecera
+            };
+            PedidoTextosSet_Aux.push(objPedidoTextosSet);
+          } else if (TxtCabecera == null && TxtAclaraciones != null) {
+            objPedidoTextosSet = {
+              Textid: 'Z003',
+              Langu: 'ES',
+              Textline: TxtAclaraciones
+            };
+            PedidoTextosSet_Aux.push(objPedidoTextosSet);
+          } else if (TxtCabecera != null && TxtAclaraciones != null) {
+            if (TxtCabecera) {
+              objPedidoTextosSet = {
+                Textid: '0001',
+                Langu: 'ES',
+                Textline: TxtCabecera
+              };
+              PedidoTextosSet_Aux.push(objPedidoTextosSet);
+            }
+            if (TxtAclaraciones) {
+              objPedidoTextosSet = {
+                Textid: 'Z003',
+                Langu: 'ES',
+                Textline: TxtAclaraciones
+              };
+              PedidoTextosSet_Aux.push(objPedidoTextosSet);
+            }
+          }
+        }
+
+        // Entidad PedidoTextosSet
+        let PedidoTextosSet = [];
+        let uniqueObject = {};
+
+        for (let i in PedidoTextosSet_Aux) {
+          var objTextId = PedidoTextosSet_Aux[i]['Textid'];
+          uniqueObject[objTextId] = PedidoTextosSet_Aux[i];
+        }
+
+        for (i in uniqueObject) {
+          PedidoTextosSet.push(uniqueObject[i]);
+        }
+
+        // -------------------- MODO CREACIÓN --------------------
+        if (modeApp === 'C' || isCopy) {
+          var oJson = {
+            PpSearch: PpSearch,
+            Ref1: Ref1,            
+            DocType: DocType,
+            SalesOrg: SalesOrg,
+            SalesDist: SalesDist,
+            DistrChan: DistrChan,
+            Division: Division,
+            SalesOff: SalesOff,            
+            PurchNoC: PurchNoC,
+            Zzkostl: Zzkostl,
+            Zzaufnr: Zzaufnr,
+            Kstar: Kstar,
+            OrdReason: OrdReason,
+            BillBlock: BillBlock,
+            Currency: Currency,
+            ReqDateH: "\/Date(" + ReqDate + ")\/",
+            PurchDate: "\/Date(" + PurchDate + ")\/",
+            BillDate: "\/Date(" + BillDate + ")\/",
+            DocDate: "\/Date(" + DocDate + ")\/",
+            PriceDate: "\/Date(" + PriceDate + ")\/",
+            QtValidF: "\/Date(" + QtValidF + ")\/",
+            QtValidT: "\/Date(" + QtValidT + ")\/",
+            CtValidF: "\/Date(" + CtValidF + ")\/",
+            CtValidT: "\/Date(" + CtValidT + ")\/",
+            WarDate: "\/Date(" + WarDate + ")\/",
+            FixValDy: "\/Date(" + FixValDy + ")\/",
+            ServDate: "\/Date(" + ServDate + ")\/",
+            CmlqtyDat: "\/Date(" + CmlqtyDat + ")\/",
+            PsmPstngDate: "\/Date(" + PsmPstngDate + ")\/",
+            PoDatS: "\/Date(" + PoDatS + ")\/",
+            DunDate: "\/Date(" + DunDate + ")\/",
+            PedidoClienteSet: {
+              PartnNumb: PartnNumb,
+              PartnRole: PartnRole,
+              SmtpAddr: SmtpAddr
+            },
+            PedidoExtensionSet: {
+              Zznia: Zznia,
+              Zzresponsable: Zzresponsable,
+              Yykostkl: Yykostkl,
+              Yyaufnr: Yyaufnr
+            },
+            FicheroSet: oModAdj2,
+            PedidoPosicionSet: PedidoPosicionSet,
+            PedidoCondicionSet: PedidoCondicionSet,
+            PedidoCantidadSet: PedidoCantidadSet,
+            PedidoTextosSet: PedidoTextosSet,            
+            PedidoRespuestaSet: {
+              //Idsolc: Idsolc,
+            }
+          };
+  
+          this.mainService.create("/PedidoCabSet", oJson, {
+            success: function (result) {
+              sap.ui.core.BusyIndicator.hide();
+              if (result.Vbeln && result.Vbeln !== "0") {
+                message = crear + result.Vbeln;
+  
+                MessageBox.show(message, {
+                  icon: sap.m.MessageBox.Icon.SUCCESS,
+                  onClose: function (oAction) {
+                    var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+                    oRouter.navTo("RouteMonitorPedidos");
+                  }
+                });
+              } else if (result.PedidoRespuestaSet.Mensaje) {
+                MessageBox.error(result.PedidoRespuestaSet.Mensaje);
+              }              
+            },
+            error: function (err) {
+              sap.m.MessageBox.error("Solicitud no creada.", {
+                title: "Error",
+                initialFocus: null,
+              });
+              sap.ui.core.BusyIndicator.hide();              
+            },
+            async: true
+          });
+
+          // -------------------- MODO MODIFICACIÓN --------------------
+        }else{
+          var oJson = {
+            Vbeln: Vbeln,
+            PpSearch: PpSearch,
+            Ref1: Ref1,
+            DocType: DocType,
+            SalesOrg: SalesOrg,
+            SalesDist: SalesDist,
+            DistrChan: DistrChan,
+            Division: Division,
+            SalesOff: SalesOff,
+            PurchNoC: PurchNoC,
+            Zzkostl: Zzkostl,
+            Zzaufnr: Zzaufnr,
+            Kstar: Kstar,
+            OrdReason: OrdReason,
+            BillBlock: BillBlock,
+            Currency: Currency,
+            ReqDateH: "\/Date(" + ReqDate + ")\/",
+            PurchDate: "\/Date(" + PurchDate + ")\/",
+            BillDate: "\/Date(" + BillDate + ")\/",
+            DocDate: "\/Date(" + DocDate + ")\/",
+            PriceDate: "\/Date(" + PriceDate + ")\/",
+            QtValidF: "\/Date(" + QtValidF + ")\/",
+            QtValidT: "\/Date(" + QtValidT + ")\/",
+            CtValidF: "\/Date(" + CtValidF + ")\/",
+            CtValidT: "\/Date(" + CtValidT + ")\/",
+            WarDate: "\/Date(" + WarDate + ")\/",
+            FixValDy: "\/Date(" + FixValDy + ")\/",
+            ServDate: "\/Date(" + ServDate + ")\/",
+            CmlqtyDat: "\/Date(" + CmlqtyDat + ")\/",
+            PsmPstngDate: "\/Date(" + PsmPstngDate + ")\/",
+            PoDatS: "\/Date(" + PoDatS + ")\/",
+            DunDate: "\/Date(" + DunDate + ")\/",
+            PedidoClienteModSet: {
+              PartnNumb: PartnNumb,
+              PartnRole: PartnRole,
+              SmtpAddr: SmtpAddr
+            },
+            PedidoExtensionModSet: {
+              Zznia: Zznia,
+              Zzresponsable: Zzresponsable,
+              Yykostkl: Yykostkl,
+              Yyaufnr: Yyaufnr
+            },
+            FicheroModSet: oModAdj2,
+            PedidoPosicionModSet: PedidoPosicionSet,
+            PedidoCondicionModSet: PedidoCondicionSet,
+            PedidoCantidadModSet: PedidoCantidadSet,
+            PedidoTextosModSet: PedidoTextosSet,            
+            PedidoRespuestaModSet: {
+              //Idsolc: Idsolc,
+            }
+          };
+
+          this.mainService.create("/PedidoModSet", oJson, {
+            success: function (result) {
+              sap.ui.core.BusyIndicator.hide();
+              if (result.Vbeln && result.Vbeln !== "0") {                
+                message = modificar + result.Vbeln;
+                MessageBox.show(message, {
+                  icon: sap.m.MessageBox.Icon.SUCCESS,
+                  onClose: function (oAction) {
+                    var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+                    oRouter.navTo("RouteMonitorPedidos");
+                  }
+                });
+              } else if (result.PedidoRespuestaModSet.Mensaje) {
+                MessageBox.error(result.PedidoRespuestaModSet.Mensaje);
+              }
+            },
+            error: function (err) {
+              sap.m.MessageBox.error("Solicitud no Modificada.", {
+                title: "Error",
+                initialFocus: null,
+              });
+              sap.ui.core.BusyIndicator.hide();
+            },
+            async: true,
+          });
+        }      
+      },
+
+      onGrabar_OLD: function () {
+        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
+        
         var posiciones;
         if (modeApp === 'M') {
           posiciones = this.getView().getModel("DisplayPosPed").getData();
@@ -2221,14 +2666,14 @@ sap.ui.define([
                 that.base64conversionRes = btoa(binary);
 
                 var numdoc = (DocNum + 1).toString();
-                adjuntos.push({
+                that.act_adj = {
                     "Numdoc": numdoc,
                     "Mimetype": fileMime,
                     "Filename": fileName,
                     "Content": that.base64conversionRes
-                });
+                };
 
-                that.oComponent.getModel("Adjuntos").setData(adjuntos);
+                //that.oComponent.getModel("Adjuntos").setData(adjuntos);
                 //oModel.oData.Adjuntos = adjuntos;
                 //that.getView().byId("fileUploader").setValue("");
             };
@@ -2239,13 +2684,13 @@ sap.ui.define([
             var binaryString = readerEvt.target.result;
             that.base64conversionRes = btoa(binaryString);
             var numdoc = (DocNum + 1).toString();
-            adjuntos.push({
+            that.act_adj = {
                 "Numdoc": numdoc,
                 "Mimetype": fileMime,
                 "Content": that.base64conversionRes
-            });
+            };
 
-            that.oComponent.getModel("Adjuntos").setData(adjuntos);
+            //that.oComponent.getModel("Adjuntos").setData(adjuntos);
             //oModel.oData.Adjuntos = adjuntos;
             //that.getView().byId("fileUploader").setValue("");
         };
@@ -2390,20 +2835,20 @@ sap.ui.define([
         var adjuntos = this.oComponent.getModel("Adjuntos").getData();
         var oMdesc = this.oComponent.getModel("datosAdj").getData();
         var desc = oMdesc.Desc;
-        // if (!desc) {
-        //   MessageBox.error(this.oI18nModel.getProperty("errDesArch"));
-        //   return
-        // } else if (!this.act_adj) {
-        //   MessageBox.error(this.oI18nModel.getProperty("errNoArch"));
-        //   return
-        // } else {
+        if (!desc) {
+          MessageBox.error(this.oI18nModel.getProperty("errDesArch"));
+          return
+        } else if (!this.act_adj) {
+          MessageBox.error(this.oI18nModel.getProperty("errNoArch"));
+          return
+        } else {
           this.act_adj.Descripcion = desc;
           adjuntos.push(this.act_adj);
           this.oComponent.getModel("Adjuntos").refresh(true);
           this.getView().byId("descAdjunto").setValue("");
           this.getView().byId("fileUploader").setValue("");
           this.act_adj = null;
-        //}
+        }
 
       },
 
@@ -2445,7 +2890,7 @@ sap.ui.define([
         // window.open(url, '_blank');
 
         fContent = atob(fContent);
-        sap.ui.core.util.File.save(fContent, fName.substring(0, fName.length-4), "XLSX", fType);
+        sap.ui.core.util.File.save(fContent, fName.substring(0, fName.length-3), "PDF", fType);
       },
 
       parseHexString: function(str) { 

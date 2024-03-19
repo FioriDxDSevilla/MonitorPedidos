@@ -420,7 +420,8 @@
                                 icon="sap-icon://documents"
                                 tooltip="{i18n>copy}"
                                 type="Ghost"
-                                enabled="false"
+                                enabled="true"
+                                press="onCopyOrder"
                             />
                         </ui:template>
                     </ui:Column>

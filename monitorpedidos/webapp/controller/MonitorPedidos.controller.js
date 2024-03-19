@@ -2527,7 +2527,22 @@ sap.ui.define([
                 this.oComponent.getModel("TipospedidoAlta").refresh(true);
             },
 
+            onCopyOrder: function (oEvent) {
+                this.modoapp = "M";
+                var config = {
+                    mode: this.modoapp,
+                    copy: true
+                };
+                var oModConfig = new JSONModel();
+                oModConfig.setData(config);
+                this.oComponent.setModel(oModConfig, "ModoApp");
 
+                var soli = this.getSelectedPed(oEvent);
+                var numsol = soli.IDSOLICITUD;
+                sap.ui.core.BusyIndicator.show();
+                this.onSolicitarPedido(numsol, false);
+            },
+            
             // -------------------------------------- FUNCIONES ABRIR / MODIFICAR PEDIDO --------------------------------------
             onOpenOrder: function (oEvent) {
                 this.modoapp = "D";
@@ -2750,12 +2765,12 @@ sap.ui.define([
                                             Filename: el.Filename,
                                             Mimetype: el.Mimetype,
                                             Descripcion: el.Descripcion,
-                                            Foltp: el.InstidB.slice(0,3),
-                                            Folyr: el.InstidB.slice(3,5),
-                                            Folno: el.InstidB.slice(5,17),
-                                            Objtp: el.InstidB.slice(17,20),
-                                            Objyr: el.InstidB.slice(20,22),
-                                            Objno: el.InstidB.slice(22,34),
+                                            // Foltp: el.InstidB.slice(0,3),
+                                            // Folyr: el.InstidB.slice(3,5),
+                                            // Folno: el.InstidB.slice(5,17),
+                                            // Objtp: el.InstidB.slice(17,20),
+                                            // Objyr: el.InstidB.slice(20,22),
+                                            // Objno: el.InstidB.slice(22,34),
                                             Content: el.Content,
                                             URL: url
                                         };
@@ -2791,8 +2806,14 @@ sap.ui.define([
                                     oModelSolicitud_Ped.setData(SolicitudPed_A);
                                     that.oComponent.getModel("DisplayPosPed").setData(oModelSolicitud_Ped.getData().results);
 
-                                    var title = that.oI18nModel.getProperty("detSolP") + " " + ('0000000000' + that.oComponent.getModel("DisplayPEP").getData().Vbeln).slice(-10);
-                                    that.oComponent.getModel("DisplayPEP").setProperty("/Title", title);
+                                    // Si es una copia
+                                    if (that.oComponent.getModel("ModoApp").getData().copy) {
+                                        var title = that.oI18nModel.getProperty("detSolCopia") + " " + ('0000000000' + that.oComponent.getModel("DisplayPEP").getData().Vbeln).slice(-10);
+                                        that.oComponent.getModel("DisplayPEP").setProperty("/Title", title);    
+                                    }else{
+                                        var title = that.oI18nModel.getProperty("detSolP") + " " + ('0000000000' + that.oComponent.getModel("DisplayPEP").getData().Vbeln).slice(-10);
+                                        that.oComponent.getModel("DisplayPEP").setProperty("/Title", title);
+                                    }                                    
                                 }   
                                 
                                 that.DatosAux(data.results[0].Vbeln);
@@ -3765,7 +3786,7 @@ sap.ui.define([
                         "Mimetype": fileMime,
                         "Content": that.base64conversionRes
                     });
-
+                
                     oModel.oData.Adjuntos = adjuntos;
                     //that.getView().byId("fileUploader").setValue("");
                 };
