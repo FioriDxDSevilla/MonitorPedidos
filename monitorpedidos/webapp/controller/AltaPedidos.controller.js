@@ -750,6 +750,8 @@ sap.ui.define([
       // FUNCIONES DE MATERIALES
       onBusqMateriales: function (Matnr, Maktx, Matkl) {
         var Bzirk = this.oComponent.getModel("ModoApp").getData().Bzirk;
+        var Vkorg = this.oComponent.getModel("ModoApp").getData().Vkbur;
+        var Vtweg = this.oComponent.getModel("ModoApp").getData().CvCanal;
 
         var aFilterIds = [],
             aFilterValues = [];
@@ -765,6 +767,8 @@ sap.ui.define([
         addFilter("Maktx", Maktx);
         addFilter("Matkl", Matkl);
         addFilter("Bzirk", Bzirk);
+        addFilter("Vkorg", Vkorg);
+        addFilter("Vtweg", Vtweg);
 
         var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
 
