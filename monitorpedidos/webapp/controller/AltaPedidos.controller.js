@@ -943,7 +943,7 @@ sap.ui.define([
           // Fecha de hoy por defecto
           PriceDate: Util.formatDate(new Date()),
           // Tipo de Cambio por defecto
-          Ukurs: "1,00000",
+          Ukurs: "1.00000",
           // Los CECOS / OT se recogen de cabecera de manera predeterminada
           Yykostkl: this.oComponent.getModel("DisplayPEP").getData().Yykostkl,
           Yyaufnr: this.oComponent.getModel("DisplayPEP").getData().Yyaufnr,
