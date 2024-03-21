@@ -2713,7 +2713,7 @@ sap.ui.define([
                                 oModelDisplay.setData(data.results[0]);
                                 that.oComponent.setModel(oModelDisplay, "DisplayPEP");
 
-                                if (data.results[0].SolicitudAdjunto_A.results.length > 0) {
+                                if (data.results[0].SolicitudAdjunto_A.results.length > 0 && !that.oComponent.getModel("ModoApp").getData().copy) {
                                     /*
                                     var oModAdj = new JSONModel();
                                     var adjs = [],
@@ -2809,7 +2809,8 @@ sap.ui.define([
                                     // Si es una copia
                                     if (that.oComponent.getModel("ModoApp").getData().copy) {
                                         var title = that.oI18nModel.getProperty("detSolCopia") + " " + ('0000000000' + that.oComponent.getModel("DisplayPEP").getData().Vbeln).slice(-10);
-                                        that.oComponent.getModel("DisplayPEP").setProperty("/Title", title);    
+                                        that.oComponent.getModel("DisplayPEP").setProperty("/Title", title);
+                                        that.oComponent.getModel("DisplayPEP").setProperty("/Faksk", "ZR");    
                                     }else{
                                         var title = that.oI18nModel.getProperty("detSolP") + " " + ('0000000000' + that.oComponent.getModel("DisplayPEP").getData().Vbeln).slice(-10);
                                         that.oComponent.getModel("DisplayPEP").setProperty("/Title", title);
