@@ -2908,6 +2908,20 @@ sap.ui.define([
         var fName = adj.Filename;
         var fType = adj.Mimetype;
         var fContent = adj.Content;
+        var fNumdoc = adj.Numdoc;
+
+        //*** */
+        /*
+        oEvent.preventDefault();
+				this._download(adj)
+					.then((blob) => {
+						var url = window.URL.createObjectURL(blob);
+						//open in the browser
+						window.open(url);					
+					})
+					.catch((err)=> {
+						console.log(err);
+					});	*/
 
         // var fContentDecoded = atob(fContent);
         // var byteNumbers = new Array(fContentDecoded.length);
@@ -2923,8 +2937,130 @@ sap.ui.define([
         // var url = URL.createObjectURL(blob);
         // window.open(url, '_blank');
 
-        fContent = atob(fContent);
-        sap.ui.core.util.File.save(fContent, fName.substring(0, fName.length-3), "PDF", fType);
+        //fContent = atob(fContent);
+        //sap.ui.core.util.File.save(fContent, fName.substring(0, fName.length-3), "PDF", fType);
+
+        //*** */
+        //sap.m.URLHelper.redirect(adj.Url + "/Content/$value", true);
+
+        //*** */
+        /*var fileName = adj.Filename;
+        var fileContent = adj.Content;
+
+        // Crear un Blob con el contenido del archivo
+        var blob = new Blob([fileContent], { type: adj.Mimetype });
+
+        // Crear una URL para el Blob
+        var url = window.URL.createObjectURL(blob);
+
+        // Codificar el nombre del archivo y la URL
+        var encodedFileName = encodeURI(fileName);
+        var encodedUrl = encodeURI(url);
+
+        // Crear un enlace para descargar el archivo
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUrl);
+        link.setAttribute("download", encodedFileName);
+
+        // Simular el clic en el enlace para iniciar la descarga
+        document.body.appendChild(link);
+        link.click();
+
+        // Limpiar el objeto URL creado
+        window.URL.revokeObjectURL(url);*/
+
+        //*** */
+        /*
+        var sServiceUrl = adj.Url + "/Content/$value";
+        var oUplColItem = new UploadCollectionItem();
+        oUplColItem.setUrl(sServiceUrl);
+        oUplColItem.setMimeType("application/pdf");
+        oUplColItem.download(false);*/
+
+        sap.ui.core.BusyIndicator.show();
+
+        Promise.all([
+          this.mainService.read("/SolicitudAdjuntoSet('"+fNumdoc+"')", {
+              success: function (data, response) {
+                  if (data) {
+                    //let fContent = atob(data.Content);
+                    //sap.ui.core.util.File.save(fContent, data.Filename.substring(0, data.Filename.length-3), "PDF", data.Mimetype, "utf-16");
+
+                    //sap.m.URLHelper.redirect(data.Content);
+
+                    var fContentDecoded = atob(data.Content)
+                    //var fContentDecoded = new Buffer.from(fContent, 'base64');
+
+                    //File.save(fContentDecoded, fName, "pdf", fType);
+
+                    var byteNumbers = new Array(fContentDecoded.length);
+                    for (var i = 0; i < fContentDecoded.length; i++) {
+                        byteNumbers[i] = fContentDecoded.charCodeAt(i);
+                    }
+                    var byteArray = new Uint8Array(byteNumbers);
+                    // var blob = new Blob([byteArray], {
+                    //     type: fType
+                    // });
+                    // var url = URL.createObjectURL(blob);
+                    // window.open(url, '_blank');
+                    
+                    // let arrayfName = fName.split('.');
+                    // let name = arrayfName[0];
+                    // let extension = arrayfName[arrayfName.length-1];
+                    //1. Contenido
+                    //2. Nombre
+                    //3. Extensión
+                    //4. Mimetype
+                    // Docu: https://sapui5.hana.ondemand.com/sdk/#/api/sap.ui.core.util.File%23methods/sap.ui.core.util.File.save
+                    sap.ui.core.util.File.save(byteArray, fName, fType, fType);
+                  }
+                  sap.ui.core.BusyIndicator.hide();
+              },
+              error: function (err) {
+                  sap.m.MessageBox.error("Error, no se ha podido descargar el adjunto.", {
+                      title: "Error",
+                      initialFocus: null,
+                  });
+                  sap.ui.core.BusyIndicator.hide();
+              },
+          })
+        ]);
+        /*
+        Promise.all([
+          this.readDataEntity(this.mainService, "/LibroMayorSet", aFilters),
+        ]).then(this.buildAdjuntoModel.bind(this), this.errorFatal.bind(this));
+        */
+      },
+
+			/*_download: function (item) {
+				var settings = {
+					//url: item.Url + "/Content/$value",
+          url: "http://localhost:8080/sap/opu/odata/sap/ZUI5_MONITOR_PEDIDOS_SRV/SolicitudAdjuntoSet('FOL29000000000004EXT49000000000189')/Content/$value",
+					method: "GET",
+					xhrFields:{
+						responseType: "blob"
+					}
+				}	
+
+				return new Promise((resolve, reject) => {
+					$.ajax(settings)
+					.done((result, textStatus, request) => {
+						resolve(result);
+					})
+					.fail((err) => {
+						reject(err);
+					})
+				});						
+			},
+
+      buildAdjuntoModel: function (values) {
+        // var oModelAdjunto = new JSONModel();
+        // if (values[0].results) {
+        //   oModelAdjunto.setData(values[0].results);
+        // }
+        // this.oComponent.setModel(oModelAdjunto, "listadoLibroMayor");
+        // this.oComponent.getModel("listadoLibroMayor").refresh(true);
+        // sap.ui.core.BusyIndicator.hide();
       },
 
       parseHexString: function(str) { 
@@ -2935,11 +3071,9 @@ sap.ui.define([
         }
     
         return result;
-      },
+      },*/
 
-      /**
-       * FRAMUMO - 08.03.24 - Fin Visualizar Adjunto en la Modif
-       */
+      /** **ELIMINAR***/
       onPressIcono_OLD: function(oEvent) {
        
         const oI18nModel = this.oComponent.getModel("i18n");

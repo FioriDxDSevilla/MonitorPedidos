@@ -1479,7 +1479,7 @@ sap.ui.define([
             _getDialogLiberaciones: function (sInputValue) {
 
                 this.ListadoSolicitudes(
-                    "", //filtroUsuario
+                    usuario, //filtroUsuario
                     //Numped,
                     "", // filtroFechaDsd,
                     "", // filtroFechaHst,
@@ -1492,7 +1492,7 @@ sap.ui.define([
                     "", // filtroOficionaVentas
                     "", // filtroLineaServicio,
                     "", // filtroMaterial,
-                    usuario, // filtroResponsable,
+                    "", // filtroResponsable,
                     ""); // filtroClasePed                
 
                 var oView = this.getView();
@@ -2738,41 +2738,39 @@ sap.ui.define([
                                     var adjs = [],
                                         adj;
                                     data.results[0].SolicitudAdjunto_A.results.forEach(function (el) {
-                                        var url;
-                                        url = "";
+                                        //var url;
+                                        //url = "";
                                         /*data.results[0].AdjuntoSHPSet.results.forEach(function (elshp) {
                                             if (el.Descripcion == elshp.Descriptivo && el.Documento == elshp.Adjunto) {
                                                 url = elshp.Url;
                                             }
                                         });*/
-                                        if (el.Mimetype === "XLS") {
+                                        /*if (el.Mimetype === "XLS") {
                                             el.Icon = "sap-icon://excel-attachment";
-                                            el.color = "Positive";
-                                        }
-                                        if (el.Mimetype === "PDF") {
+                                        }else if (el.Mimetype === "PDF") {
                                             el.Icon = "sap-icon://pdf-reader";
-                                            el.color = "Positive";
-                                        }
-
-                                        if (el.Mimetype === "TXT") {
+                                        }else if (el.Mimetype === "TXT") {
                                             el.Icon = "sap-icon://attachment-text-file";
-                                            el.color = "Positive";
-                                        }
+                                        }else{
+                                            el.Icon = "sap-icon://attachment-text-file";
+                                        }*/
 
                                         adj = {
-                                            Color: el.color,
-                                            Icono: el.Icon,
+                                            //Color: el.color,
+                                            Icono: sap.ui.core.IconPool.getIconForMimeType(el.Mimetype),
                                             Filename: el.Filename,
                                             Mimetype: el.Mimetype,
                                             Descripcion: el.Descripcion,
+                                            Numdoc: el.Numdoc,
+                                            Url: el.__metadata.uri
                                             // Foltp: el.InstidB.slice(0,3),
                                             // Folyr: el.InstidB.slice(3,5),
                                             // Folno: el.InstidB.slice(5,17),
                                             // Objtp: el.InstidB.slice(17,20),
                                             // Objyr: el.InstidB.slice(20,22),
                                             // Objno: el.InstidB.slice(22,34),
-                                            Content: el.Content,
-                                            URL: url
+                                            //Content: el.Content,
+                                            //URL: url
                                         };
                                         adjs.push(adj);
                                     });
