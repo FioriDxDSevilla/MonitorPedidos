@@ -1755,21 +1755,24 @@ sap.ui.define([
 
         // --ADJUNTOS (FicheroModSet)
         var oModAdj = this.oComponent.getModel("Adjuntos").getData();
-        var oModAdj2 = [], numdoc = 0;
+        var oModAdj2 = [];//, numdoc = 0;
         
         oModAdj.forEach(function (el) {
-          numdoc++;
+          //numdoc++;
 
           var adj = {
-            Numdoc: numdoc.toString(),
+            //Numdoc: numdoc.toString(),
             Filename: el.Filename,
-            Descripcion: el.Descripcion
+            Descripcion: el.Descripcion,
+
+            Mimetype: el.Mimetype,
+            Content: el.Content
           }
 
-          if (!el.URL) {
-            adj.Mimetype = el.Mimetype;
-            adj.Content = el.Content;
-          }
+          // if (!el.URL) {
+          //   adj.Mimetype = el.Mimetype;
+          //   adj.Content = el.Content;
+          // }
 
           oModAdj2.push(adj);
         });
