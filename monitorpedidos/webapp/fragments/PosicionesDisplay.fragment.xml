@@ -113,8 +113,8 @@
             </table:Column>
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>TipoCambio}" />
-                <table:template>                    
-                    <m:Text text="{DisplayPosPed>Ukurs}" wrapping="false"/>
+                <table:template>
+                    <m:Text text="{path: 'DisplayPosPed>/Ukurs',  formatter: '.onFormatTipoCambio'}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">

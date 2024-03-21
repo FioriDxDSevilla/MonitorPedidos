@@ -1479,7 +1479,7 @@ sap.ui.define([
             _getDialogLiberaciones: function (sInputValue) {
 
                 this.ListadoSolicitudes(
-                    usuario, //filtroUsuario
+                    "", //filtroUsuario
                     //Numped,
                     "", // filtroFechaDsd,
                     "", // filtroFechaHst,
@@ -1492,7 +1492,7 @@ sap.ui.define([
                     "", // filtroOficionaVentas
                     "", // filtroLineaServicio,
                     "", // filtroMaterial,
-                    "", // filtroResponsable,
+                    usuario, // filtroResponsable,
                     ""); // filtroClasePed                
 
                 var oView = this.getView();
