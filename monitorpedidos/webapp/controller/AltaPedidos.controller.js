@@ -186,7 +186,7 @@ sap.ui.define([
 
       // FUNCION PARA FORMATEAR NUMERO IMPORTE
       onFormatTipoCambio: function (Ukurs) {
-        console.log(Ukurs)
+        //console.log(Ukurs)
         //var expression = /[.,]/;
         if (Ukurs) {
           Ukurs = Number(Ukurs).toFixed(5);
