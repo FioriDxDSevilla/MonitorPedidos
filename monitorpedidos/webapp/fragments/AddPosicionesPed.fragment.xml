@@ -97,8 +97,8 @@
                     text="{listadoMoneda>Waers}"
                 />
             </ComboBox>
-            <Label text="{i18n>TipoCambio}" required="true"/>
-            <Input  value="{posPedFrag>/Ukurs}" 
+            <Label text="{i18n>TipoCambio}" required="false"/>
+            <Input  value="{path: 'posPedFrag>/Ukurs',  formatter: '.onFormatTipoCambio'}" 
                     id="f_tipocambio" 
                     editable="false"
             />

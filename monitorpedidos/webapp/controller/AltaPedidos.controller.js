@@ -183,6 +183,41 @@ sap.ui.define([
         var numeroFormateado = numberFormat.format(Netpr);
         return numeroFormateado;
       },
+
+      // FUNCION PARA FORMATEAR NUMERO IMPORTE
+      onFormatTipoCambio: function (Ukurs) {
+        console.log(Ukurs)
+        //var expression = /[.,]/;
+        if (Ukurs) {
+          Ukurs = Number(Ukurs).toFixed(5);
+        }
+        importeFormat = this.oComponent.getModel("Usuario").getData()[0].Dcpfm;
+        var numberFormat;
+        switch (importeFormat) {
+ 
+          case ""://1.234.567,89
+            numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
+              "maxFractionDigits": 5,
+              "decimalSeparator": ",",
+            });
+ 
+            break;
+          case "X"://1,234,567.89
+            numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
+              "maxFractionDigits": 5,
+              "decimalSeparator": ".",
+            });
+            break;
+          case "Y"://1 234 567,89
+            numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
+              "maxFractionDigits": 5,
+              "decimalSeparator": ",",
+            });
+            break;
+        }
+        var numeroFormateado = numberFormat.format(Ukurs);
+        return numeroFormateado;
+      },
  
       // FUNCION PARA FORMATEAR LA FECHA DOCUMENTO
       onFormatFechaDocVenta: function (Fechadoc) {
@@ -1103,7 +1138,6 @@ sap.ui.define([
         var inCantidadBase = this.getView().byId("f_cantbasepos");
         var inMoneda = this.getView().byId("f_monedapos");
         var inUnidad = this.getView().byId("f_unitpos");
-        var inTipoCambio = this.getView().byId("f_tipocambio");
         
         if (inPosicion.getValue()) {
             inPosicion.setValueState("None");
@@ -1151,12 +1185,6 @@ sap.ui.define([
             inUnidad.setValueState("None");
         } else {
             inUnidad.setValueState("Error");
-        }
-
-        if (inTipoCambio.getValue()) {
-          inTipoCambio.setValueState("None");
-        } else {
-          inTipoCambio.setValueState("Error");
         }
 
         // --Validación CECOS
@@ -1216,7 +1244,6 @@ sap.ui.define([
             inCantidadBase.getValue() && inCantidadBase.getValueState() != "Error" &&
             inMoneda.getValue() && inMoneda.getValueState() != "Error" &&
             inUnidad.getValue() && inUnidad.getValueState() != "Error" &&
-            inTipoCambio.getValue() && inTipoCambio.getValueState() != "Error" &&
             inCecoIngresoPosicion.getValueState() != "Error" &&
             inCecoIntercoPosicion.getValueState() != "Error" &&
             inLibroMayor.getValueState() != "Error" &&
