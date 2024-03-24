@@ -2757,12 +2757,12 @@ sap.ui.define([
 
                                         adj = {
                                             //Color: el.color,
-                                            Icono: sap.ui.core.IconPool.getIconForMimeType(el.Mimetype),
+                                            Icono: sap.ui.core.IconPool.getIconForMimeType(el.Url),
                                             Filename: el.Filename,
                                             Mimetype: el.Mimetype,
                                             Descripcion: el.Descripcion,
                                             Numdoc: el.Numdoc,
-                                            Url: el.__metadata.uri
+                                            Url: el.Url
                                             // Foltp: el.InstidB.slice(0,3),
                                             // Folyr: el.InstidB.slice(3,5),
                                             // Folno: el.InstidB.slice(5,17),
