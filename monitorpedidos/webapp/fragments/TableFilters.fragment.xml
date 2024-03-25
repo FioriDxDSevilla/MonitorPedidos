@@ -408,7 +408,8 @@
                                 icon="sap-icon://pdf-attachment"
                                 tooltip="{i18n>down}"
                                 type="Ghost"
-                                enabled="false"
+                                enabled="{= ${listadoSolicitudes>Numfactura} !== ''}"
+                                press="onDownloadInvoice"
                             />
                         </ui:template>
                     </ui:Column>

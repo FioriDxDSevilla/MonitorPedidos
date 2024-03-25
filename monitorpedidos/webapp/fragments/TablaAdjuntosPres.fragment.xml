@@ -44,7 +44,7 @@
                     <core:Icon src="{Adjuntos>Icono}" color="{Adjuntos>Color}" press="onPressIcono"/>
                     <Text id="dArchFilename" text="{Adjuntos>Filename}" />
                     <Text id="dArchProv" text="{Adjuntos>Descripcion}" />
-                    <Button icon="sap-icon://delete" press=".onDeleteAdj" tooltip="{i18n>Eliminar}" visible="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true }"/>
+                    <Button icon="sap-icon://delete" press=".onDeleteAdj" tooltip="{i18n>Eliminar}" visible="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"/>
                     <Button icon="sap-icon://edit" press=".onChangeAdj" tooltip="{i18n>ModificarAdjunto}" visible="false"/>
                 </cells>
             </ColumnListItem>

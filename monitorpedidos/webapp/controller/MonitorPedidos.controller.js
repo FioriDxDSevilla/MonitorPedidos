@@ -2542,6 +2542,18 @@ sap.ui.define([
                 sap.ui.core.BusyIndicator.show();
                 this.onSolicitarPedido(numsol, false);
             },
+
+            onDownloadInvoice: function (oEvent) {
+                var soli = this.getSelectedPed(oEvent);
+                var numFact = soli.Numfactura;
+                var msg = this.oI18nModel.getProperty("errPedidoSinFactura");
+                if (numFact === "") {
+                    MessageBox.error(msg);
+                } else {
+                    sap.ui.core.BusyIndicator.show();
+                    this.descargarPDFFactura(numFact);
+                }
+            },
             
             // -------------------------------------- FUNCIONES ABRIR / MODIFICAR PEDIDO --------------------------------------
             onOpenOrder: function (oEvent) {
@@ -2855,6 +2867,43 @@ sap.ui.define([
                                     oRouter.navTo("RouteAltaPedidos");
                                 }
                             }
+                        },
+                    }),
+                ]);
+            },
+
+            // ---------------------- FUNCION DESCARGAR FACTURA ----------------------
+            descargarPDFFactura: function (numFact) {
+                var that = this;
+                var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                var sFName = "Factura_"+numFact;
+                var sFType = "pdf";
+
+                Promise.all([
+                    this.mainService.read("/PdfFacturaSet('"+numFact+"')", {
+                        success: function (data, response) {
+                            if (data) {
+                              var fContentDecoded = atob(data.Content)
+                              var byteNumbers = new Array(fContentDecoded.length);
+                              for (var i = 0; i < fContentDecoded.length; i++) {
+                                  byteNumbers[i] = fContentDecoded.charCodeAt(i);
+                              }
+                              var byteArray = new Uint8Array(byteNumbers);
+                              //1. Contenido
+                              //2. Nombre
+                              //3. Extensión
+                              //4. Mimetype
+                              // Docu: https://sapui5.hana.ondemand.com/sdk/#/api/sap.ui.core.util.File%23methods/sap.ui.core.util.File.save
+                              sap.ui.core.util.File.save(byteArray, sFName, sFType, sFType);
+                            }
+                            sap.ui.core.BusyIndicator.hide();
+                        },
+                        error: function (err) {
+                            sap.m.MessageBox.error("Error, no se ha podido descargar la factura.", {
+                                title: "Error",
+                                initialFocus: null,
+                            });
+                            sap.ui.core.BusyIndicator.hide();
                         },
                     }),
                 ]);
