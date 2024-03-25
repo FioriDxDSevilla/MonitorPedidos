@@ -55,7 +55,6 @@ sap.ui.define([
         this.mainService = this.getOwnerComponent().getModel("mainService");
         this.oComponent = this.getOwnerComponent();
         this.oI18nModel = this.oComponent.getModel("i18n");
-
         // var oModAdj = new JSONModel();
         // var oModAdjSHP = new JSONModel();
         // var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
@@ -186,8 +185,6 @@ sap.ui.define([
 
       // FUNCION PARA FORMATEAR NUMERO IMPORTE
       onFormatTipoCambio: function (Ukurs) {
-        //console.log(Ukurs)
-        //var expression = /[.,]/;
         if (Ukurs) {
           Ukurs = Number(Ukurs).toFixed(5);
         }
@@ -978,7 +975,7 @@ sap.ui.define([
           // Fecha de hoy por defecto
           PriceDate: Util.formatDate(new Date()),
           // Tipo de Cambio por defecto
-          Ukurs: "1.00000",
+          //Ukurs: "1.00000",
           // Los CECOS / OT se recogen de cabecera de manera predeterminada
           Yykostkl: this.oComponent.getModel("DisplayPEP").getData().Yykostkl,
           Yyaufnr: this.oComponent.getModel("DisplayPEP").getData().Yyaufnr,
@@ -2887,7 +2884,6 @@ sap.ui.define([
       },
 
       /* Función para eliminar un adjunto de la tabla */
-
       onDeleteAdj: function (oEvent) {
         var oModAdj = this.oComponent.getModel("Adjuntos");
         var adjs = oModAdj.getData();
@@ -2895,10 +2891,18 @@ sap.ui.define([
           .getSource()
           .getBindingContext("Adjuntos")
           .getPath();
-        const sOperation = sOperationPath.split("/").slice(-1).pop;
+        const sOperation = sOperationPath.split("/").slice(-1).pop();
 
         adjs.splice(sOperation, 1);
-        this.oComponent.setModel(new JSONModel(adjs), "Adjuntos");
+
+        MessageBox.information("El cambio se hará efectivo al grabar el pedido.", {
+          actions: [MessageBox.Action.OK],
+          emphasizedAction: MessageBox.Action.OK,
+          styleClass: "sapUiResponsivePadding--header sapUiResponsivePadding--content sapUiResponsivePadding--footer",
+          onClose: function () {
+            this.oComponent.setModel(new JSONModel(adjs), "Adjuntos");
+          }.bind(this)
+        });
       },
 
 
