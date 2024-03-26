@@ -1785,10 +1785,9 @@ sap.ui.define([
           //numdoc++;
 
           var adj = {
-            //Numdoc: numdoc.toString(),
+            Numdoc: el.Numdoc,
             Filename: el.Filename,
             Descripcion: el.Descripcion,
-
             Mimetype: el.Mimetype,
             Content: el.Content
           }
@@ -2885,22 +2884,25 @@ sap.ui.define([
 
       /* Función para eliminar un adjunto de la tabla */
       onDeleteAdj: function (oEvent) {
+
         var oModAdj = this.oComponent.getModel("Adjuntos");
         var adjs = oModAdj.getData();
         const sOperationPath = oEvent
           .getSource()
           .getBindingContext("Adjuntos")
           .getPath();
-        const sOperation = sOperationPath.split("/").slice(-1).pop();
-
-        adjs.splice(sOperation, 1);
-
-        MessageBox.information("El cambio se hará efectivo al grabar el pedido.", {
-          actions: [MessageBox.Action.OK],
+        
+        MessageBox.confirm(this.oI18nModel.getProperty("warningDelAdj"), {
           emphasizedAction: MessageBox.Action.OK,
-          styleClass: "sapUiResponsivePadding--header sapUiResponsivePadding--content sapUiResponsivePadding--footer",
-          onClose: function () {
-            this.oComponent.setModel(new JSONModel(adjs), "Adjuntos");
+          onClose: function (oEventConfirm) {
+            if (oEventConfirm === MessageBox.Action.OK) {
+
+              const sOperation = sOperationPath.split("/").slice(-1).pop();
+      
+              adjs.splice(sOperation, 1);
+      
+              this.oComponent.setModel(new JSONModel(adjs), "Adjuntos");
+          }
           }.bind(this)
         });
       },
