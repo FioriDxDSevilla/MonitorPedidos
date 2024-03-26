@@ -107,6 +107,13 @@
           "target": [
             "TargetAltaPedidos"
           ]
+        },
+        {
+          "name": "RouteMonitorContratos",
+          "pattern": "RouteMonitorContratos",
+          "target": [
+            "TargetMonitorContratos"
+          ]
         }
       ],
       "targets": {
@@ -124,6 +131,14 @@
           "clearControlAggregation": false,
           "viewId": "AltaPedidos",
           "viewName": "AltaPedidos",
+          "level": 2
+        },
+        "TargetMonitorContratos": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "MonitorContratos",
+          "viewName": "MonitorContratos",
           "level": 2
         }
       }

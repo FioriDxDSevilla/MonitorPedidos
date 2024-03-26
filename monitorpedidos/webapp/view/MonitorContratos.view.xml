@@ -1,4 +1,4 @@
-<mvc:View controllerName="monitorpedidos.controller.MonitorPedidos"
+<mvc:View controllerName="monitorpedidos.controller.MonitorContratos"
     xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
     xmlns="sap.m"
     xmlns:core="sap.ui.core" height="100%">
@@ -9,7 +9,7 @@
                     <Menu>
                         <MenuItem text="{i18n>carga}" icon="sap-icon://arrow-top" id="menuItemCargaPedidos" press="onGetKeyFromItemMenu" key="CargaPedidos" />
                         <MenuItem text="{i18n>CrearCliente}" icon="sap-icon://person-placeholder" id="menuItemCrearCliente" press="onGetKeyFromItemMenu" key="CrearCliente" />
-                        <MenuItem text="{i18n>MonitorContratos}" icon="sap-icon://customer-order-entry" id="menuItemMonitorContratos" press="onGetKeyFromItemMenu" key="MonitorContratos" />
+                        <MenuItem text="{i18n>MonitorPedidos}" icon="sap-icon://customer-order-entry" id="menuItemMonitorPedidos" press="onGetKeyFromItemMenu" key="MonitorPedidos" />
                     </Menu>
                 </menu>
             </MenuButton>
@@ -24,14 +24,6 @@
         <footer>
             <OverflowToolbar id="otbFooter">
                 <OverflowToolbarToggleButton tooltip="{i18n>exceldown}" text="{i18n>exceldown}" icon="sap-icon://download" press="onDownExcel"/>
-                <ToolbarSpacer/>
-                <RadioButtonGroup id="rbGroup" columns="2" select="onRadioButtonSelect">
-                    <buttons>
-                        <!--<RadioButton text="Mis Pedidos" visible="false" selected="true"/>-->
-                        <RadioButton id="rbTrue" text="Mis Pedidos" selected="true"/>
-                        <RadioButton id="rbFalse" text="Todos" />
-                    </buttons>
-                </RadioButtonGroup>
             </OverflowToolbar>
         </footer>
     </Page>
