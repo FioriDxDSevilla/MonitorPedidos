@@ -19,13 +19,13 @@ function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util
     "use strict";
 
     // Variables no utilizadas ???
-    //var nomceco, nomord, nommat, sumTotal, nomSoc, Posped, Centges, Centuni, Centpro, Codadm, Plataforma, sAprob, socPed, condPago, vedit, checkMisPed, checkTodos;
+    //var sumTotal, nomSoc, Posped, Centges, Centuni, Centpro, Codadm, Plataforma, sAprob, socPed, condPago, vedit, checkMisPed, checkTodos;
     // var EdmType = exportLibrary.EdmType;
 
     // Variables utilizadas para los botones
     var btnEditar, accionLiberar, btnRescatar, accionRescatar;
     // Variables utilizadas en los filtros
-    var filtroUsuario, filtroFechaDsd, filtroFechaHst, filtroImporteDsd, filtroImporteHst, filtroEstado, filtroClienteCod, filtroClienteTxt, filtroCeco, filtroOrden, filtroOficionaVentas, filtroLineaServicio, filtroMaterial, filtroClasePed, filtroResponsable;
+    var filtroUsuario, filtroFechaDsd, filtroFechaHst, filtroImporteDsd, filtroImporteHst, filtroEstado, filtroClienteCod, filtroClienteTxt, filtroCeco, filtroOrden, filtroOficionaVentas, filtroLineaServicio, filtroMaterial, filtroClasePed, filtroResponsable, nomceco, nomord, nommat;
     //var Usuario, Numped, Fechad, Fechah, Imported, Importeh, sStatus, Cliente, codceco, codord, LineaServicio, codmat, ClasePed, responsable;
     var usuario;
     var arrayFiltroClasePed = [];
