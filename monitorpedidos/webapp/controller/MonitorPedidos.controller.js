@@ -2876,25 +2876,30 @@ sap.ui.define([
             descargarPDFFactura: function (numFact) {
                 var that = this;
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-                var sFName = "Factura_" + numFact;
-                var sFType = "pdf";
+                var sFName = "Factura_"+numFact;
+                var sFType = "application/pdf";
 
                 Promise.all([
-                    this.mainService.read("/PdfFacturaSet('" + numFact + "')", {
+                    this.mainService.read("/PdfFacturaSet('"+numFact+"')", {
                         success: function (data, response) {
                             if (data) {
-                                var fContentDecoded = atob(data.Content)
-                                var byteNumbers = new Array(fContentDecoded.length);
-                                for (var i = 0; i < fContentDecoded.length; i++) {
-                                    byteNumbers[i] = fContentDecoded.charCodeAt(i);
-                                }
-                                var byteArray = new Uint8Array(byteNumbers);
-                                //1. Contenido
-                                //2. Nombre
-                                //3. Extensión
-                                //4. Mimetype
-                                // Docu: https://sapui5.hana.ondemand.com/sdk/#/api/sap.ui.core.util.File%23methods/sap.ui.core.util.File.save
-                                sap.ui.core.util.File.save(byteArray, sFName, sFType, sFType);
+                              var fContentDecoded = atob(data.Content)
+                              var byteNumbers = new Array(fContentDecoded.length);
+                              for (var i = 0; i < fContentDecoded.length; i++) {
+                                  byteNumbers[i] = fContentDecoded.charCodeAt(i);
+                              }
+                              var byteArray = new Uint8Array(byteNumbers);
+                              //1. Contenido
+                              //2. Nombre
+                              //3. Extensión
+                              //4. Mimetype
+                              // Docu: https://sapui5.hana.ondemand.com/sdk/#/api/sap.ui.core.util.File%23methods/sap.ui.core.util.File.save
+                              //sap.ui.core.util.File.save(byteArray, sFName, sFType, sFType);
+                                var blob = new Blob([byteArray], {
+                                    type: "application/pdf"
+                                });
+                                var url = URL.createObjectURL(blob);
+                                window.open(url, '_blank');
                             }
                             sap.ui.core.BusyIndicator.hide();
                         },
