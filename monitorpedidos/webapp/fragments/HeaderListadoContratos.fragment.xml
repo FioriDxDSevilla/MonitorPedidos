@@ -1,0 +1,93 @@
+<core:FragmentDefinition controllerName="monitorpedidos.controller.View1"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:l="sap.ui.layout"
+    xmlns:svm="sap.ui.comp.smartvariants">
+    <fb:FilterBar id="HeaderFragment" search=".onBusqSolicitudes" showClearOnFB="false" showFilterConfiguration="false" filterBarExpanded="false">
+        <fb:filterGroupItems>
+            <fb:FilterGroupItem id="id1" groupName="FiltrosCli" name="C" label="{i18n>fechadesde}" visibleInFilterBar="true">
+                <fb:control>
+                    <DatePicker id="DTPdesde" placeholder="{i18n>datesel}" change="handleChange" valueFormat="yyyy-MM-dd" value="" displayFormat="medium" width="20%" />
+                </fb:control>
+            </fb:FilterGroupItem>
+            <fb:FilterGroupItem id="fechahasta" groupName="FiltrosCli" name="Z" label="{i18n>fechahasta}" visibleInFilterBar="true">
+                <fb:control>
+                    <DatePicker id="DTPhasta" placeholder="{i18n>datesel}" change="handleChange" valueFormat="yyyy-MM-dd" value="" displayFormat="medium" width="30%" />
+                </fb:control>
+            </fb:FilterGroupItem>
+            <fb:FilterGroupItem id="id2" groupName="FiltrosCli" name="B" label="{i18n>user}" visibleInFilterBar="true">
+                <fb:control>
+                    <Input id="f_usuario" />
+                </fb:control>
+            </fb:FilterGroupItem>
+
+            <fb:FilterGroupItem id="id3" groupName="FiltrosCli" name="ID" label="{i18n>impdesde}" visibleInFilterBar="true">
+                <fb:control>
+                    <Input id="f_impdesde" showValueHelp="false" width="10%" />
+                </fb:control>
+            </fb:FilterGroupItem>
+            <fb:FilterGroupItem id="id4" groupName="FiltrosCli" name="IH" label="{i18n>imphasta}" visibleInFilterBar="true">
+                <fb:control>
+                    <Input id="f_imphasta" showValueHelp="false" width="10%" />
+                </fb:control>
+            </fb:FilterGroupItem>
+            <fb:FilterGroupItem id="id5" groupName="FiltrosCli" name="D" label="{i18n>client}" visibleInFilterBar="true">
+                <fb:control>
+                    <Input id="f_client" showValueHelp="true" valueHelpRequest=".onValueHelpRequestClienteMonitor" />
+                </fb:control>
+            </fb:FilterGroupItem>
+
+            <fb:FilterGroupItem id="id6" groupName="FiltrosCli" name="Ce" label="{i18n>ceco}" visibleInFilterBar="true">
+                <fb:control>
+                    <Input id="f_cecos" showValueHelp="true" valueHelpRequest=".onValueHelpRequestCecosMonitor" />
+                </fb:control>
+            </fb:FilterGroupItem>
+            
+            <fb:FilterGroupItem id="id7" groupName="FiltrosCli" name="O" label="{i18n>ord}" visibleInFilterBar="true">
+                <fb:control>
+                    <Input id="f_ordenes" showValueHelp="true" valueHelpRequest=".onValueHelpRequestOrdMonitor" />
+                </fb:control>
+            </fb:FilterGroupItem>
+
+            
+            <fb:FilterGroupItem id="id11" groupName="FiltrosCli" name="Of" label="{i18n>ofi}" visibleInFilterBar="true">
+                <fb:control>
+                    <Input id="f_oficinas" showValueHelp="true" valueHelpRequest=".onValueHelpRequestOficinasMonitor" />
+                </fb:control>
+            </fb:FilterGroupItem>
+
+            <fb:FilterGroupItem id="id8" groupName="FiltrosCli" name="M" label="{i18n>mat}" visibleInFilterBar="true">
+                <fb:control>
+                    <Input id="f_material" showValueHelp="true" valueHelpRequest=".onValueHelpRequestMatMonitor" />
+                </fb:control>
+            </fb:FilterGroupItem>
+
+            <fb:FilterGroupItem id="id9" groupName="FiltrosCli" name="F" label="{i18n>approv}" visibleInFilterBar="true">
+                <fb:control>
+                    <Input id="f_approv" editable="true" />
+                </fb:control>
+            </fb:FilterGroupItem>
+
+            <fb:FilterGroupItem id="id10" groupName="FiltrosCli" name="H" label="{i18n>lineas}" visibleInFilterBar="true">
+                <fb:control>
+                    <ComboBox id="f_line" change=".onChangefLineas" items="{path: 'LineasServicio>/', sorter: { path: 'Bzirk' }}" filterSecondaryValues="true" showSecondaryValues="true">
+                         <core:ListItem key="{LineasServicio>Bzirk}" text="{LineasServicio>Bztxt}" additionalText ="{LineasServicio>Bzirk}"/>
+                    </ComboBox>
+                </fb:control>
+            </fb:FilterGroupItem>
+
+            <fb:FilterGroupItem id="id12" groupName="FiltrosCli" name="T" label="{i18n>type}" visibleInFilterBar="true">
+                <fb:control>
+                    <!--<ComboBox id="f_type" items="{path: 'Tipospedido>/', sorter: {path: 'Bezei'}}" change=".onChangefType" filterSecondaryValues="true">
+                            <core:Item key="{Tipospedido>Auart}" text="{Tipospedido>Bezei}" />
+                    </ComboBox>-->
+                    <MultiComboBox selectionChange="handleSelectionChange" items="{path: 'Tipospedido>/', sorter: {path: 'Descripcion'}}">
+                        <core:Item key="{Tipospedido>Tipo}" text="{Tipospedido>Descripcion}" />
+                    </MultiComboBox>
+                </fb:control>
+            </fb:FilterGroupItem>
+        </fb:filterGroupItems>
+    </fb:FilterBar>
+</core:FragmentDefinition>
