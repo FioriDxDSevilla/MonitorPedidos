@@ -14,166 +14,30 @@
         class="sapUiResponsiveContentPadding"
         expanded="{device>/isNoPhone}"
         expandable="false">
-        <items>
-            <IconTabFilter
-                id="Filtro1"
-                icon="sap-icon://clear-filter"
-                iconColor="Default"
-                design="Horizontal"
-                text="Todas"
-                count="{Filtros>/Total}"
-                key="Free"/>
-            <!-- <IconTabSeparator
-                id="Separador1"
-                icon="sap-icon://begin"
-            />-->
-            <IconTabFilter
-                id="Filtro2"
-                icon="sap-icon://edit"
-                iconColor="Default"
-                design="Horizontal"
-                text="En Redacción"
-                count="{Filtros>/totalred}"
-                key="Ok"
-            />
-            <!--<IconTabSeparator
-                id="Separador2"
-                icon="sap-icon://begin"
-            />-->
-            <IconTabFilter
-                id="Filtro3"
-                icon="sap-icon://approvals"
-                iconColor="Negative"
-                design="Horizontal"
-                text="Pdte. Aprobar"
-                count="{Filtros>/totalpdte}"
-                key="Heavy"
-            />
-            <!--   <IconTabFilter
-                id="Filtro4"
-                icon="sap-icon://accept"
-                iconColor="Positive"
-                design="Horizontal"
-                text="Responsable Aprob."
-                key="Aprob"
-            />-->
-            <!--<IconTabSeparator
-                id="Separador3"
-                icon="sap-icon://begin"
-            />-->
-            <!--<IconTabFilter
-                id="Filtro4"
-                icon="sap-icon://customer-financial-fact-sheet"
-                iconColor="Negative"
-                design="Horizontal"
-                text="Pdte. Financiero"
-                key="Overweight"
-            />-->
-            <!--<IconTabSeparator
-                id="Separador4"
-                icon="sap-icon://begin"
-            />-->
-            <IconTabFilter
-                id="Filtro5"
-                icon="sap-icon://money-bills"
-                iconColor="Negative"
-                design="Horizontal"
-                text="Pdte. Facturar"
-                count="{Filtros>/totalfac}"
-                key="Money"
-            />
-            <!--<IconTabSeparator
-                id="Separador5"
-                icon="sap-icon://begin"
-            />-->
-            <IconTabFilter
-                id="Filtro6"
-                icon="sap-icon://unpaid-leave"
-                iconColor="Negative"
-                design="Horizontal"
-                text="Pdte. Cobrar"
-                count="{Filtros>/totalpdtecobr}"
-                key="Payment"
-            />
-            <!--<IconTabSeparator
-                id="Separador6"
-                icon="sap-icon://begin"
-            />-->
-            <IconTabFilter
-                id="Filtro7"
-                icon="sap-icon://paid-leave"
-                iconColor="Positive"
-                design="Horizontal"
-                text="Cobradas"
-                 count="{Filtros>/totalcob}"
-                key="Sales"
-            />
-            <!--<IconTabSeparator
-                id="Separador7"
-                icon="sap-icon://begin"
-            />-->
-            <IconTabFilter
-                id="Filtro8"
-                icon="sap-icon://decline"
-                iconColor="Negative"
-                design="Horizontal"
-                text="Denegadas"
-                count="{Filtros>/TotalDen}"
-                key="Cancel"
-            />
-             <IconTabFilter
-                id="Filtro9"
-                icon="sap-icon://thumb-up"
-                iconColor="Positive"
-                design="Horizontal"
-                text="Aprobación"
-                key="Approv"
-            />
-
-              
-        </items>
         <content>
             <ui:Table
                 id="idTablePEPs"
                 selectionMode="None"
-                rows="{path: 'listadoSolicitudes>/'}"
+                rows="{path: 'ListadoContratos>/'}"
                 visibleRowCountMode="Interactive"
                 width="auto"
                 enableCellFilter="{ui>/cellFilterOn}"
                 filter="filterOption"
                 sort="sortOption">
-                <ui:extension>
-					<OverflowToolbar style="Clear">
-						<Button
-                            id="Filtr10"
-                            visible="false"
-                            type="Accept"
-                            text="Enviar a Liberacion"
-                            press="onEnviarLiberacion"
-                        />
-                        <Button
-                            id="Filtr11"
-                            visible="false"
-                            type="Accept"
-                            text="Rescatar"
-                            press="onEnviarRescatar"
-                        />
-					</OverflowToolbar>
-				</ui:extension>
                 <ui:columns>
                     <ui:Column
                         width="7.5em"
-                        filterProperty="IDSOLICITUD"
-                        sortProperty="IDSOLICITUD"
-                        tooltip="{i18n>numped}"
+                        filterProperty="Idsolicitud"
+                        sortProperty="Idsolicitud"
+                        tooltip="{i18n>numCont}"
                     >
-                        <Label text="{i18n>numped}" />
+                        <Label text="{i18n>numCont}" />
                         <ui:template>
-                            <Text
-                                id="idPEP"
-                                text="{listadoSolicitudes>IDSOLICITUD}"
-                                wrapping="false"
-                            />
+                            <ObjectIdentifier
+                                    id="NumCont"
+                                    title="{ListadoContratos>Idsolicitud}"
+                                    titleActive = "true"
+                                    titlePress="handleLinkCont(${ListadoContratos>Idsolicitud})" />
                         </ui:template>
                     </ui:Column>
 
@@ -185,7 +49,7 @@
                     >
                         <Label text="{i18n>fechadocu}" />
                         <ui:template>
-                            <Text text="{path: 'listadoSolicitudes>Fechadoc',  formatter: '.onFormatFechaDocVenta'}" wrapping="false"/>
+                            <Text text="{path: 'ListadoContratos>Fechadoc',  formatter: '.onFormatFechaDocVenta'}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -196,7 +60,7 @@
                     >
                         <Label text="{i18n>creador}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Creador}" wrapping="false"/>
+                            <Text text="{ListadoContratos>Creador}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -207,7 +71,7 @@
                     >
                         <Label text="{i18n>codcli}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>CLIENTE}" wrapping="false"/>
+                            <Text text="{ListadoContratos>Cliente}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -218,21 +82,10 @@
                     >
                         <Label text="{i18n>nomcli}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Nombrecliente}" wrapping="false"/>
+                            <Text text="{ListadoContratos>Nombrecliente}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
-                    
-                    <!--<ui:Column
-                        width="auto"
-                        filterProperty="ImpPedido"
-                        sortProperty="ImpPedido"
-                        tooltip="{i18n>imptotal}"
-                    >
-                        <Label text="{i18n>imptotal}" />
-                        <ui:template>
-                            <Text text="{listadoSolicitudes>ImpPedido}" />
-                        </ui:template>
-                    </ui:Column>-->
+
                     <ui:Column
                         width="6em"
                         filterProperty="Netwr"
@@ -240,7 +93,7 @@
                         tooltip="{i18n>import}">
                         <Label text="{i18n>import}" />
                          <ui:template>
-                            <Text  text="{path:'listadoSolicitudes>Netwr', formatter: '.onFormatImporte'}" wrapping="false"/>
+                            <Text  text="{path:'ListadoContratos>Netwr', formatter: '.onFormatImporte'}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -250,18 +103,7 @@
                         tooltip="{i18n>Moneda}">
                         <Label text="{i18n>Moneda}" />
                          <ui:template>
-                            <Text text="{listadoSolicitudes>Waerk}" wrapping="false"/>
-                        </ui:template>
-                    </ui:Column>
-                    <ui:Column
-                        width="7.5em"
-                        filterProperty="ESTADO"
-                        sortProperty="ESTADO"
-                        tooltip="{i18n>status}"
-                    >
-                        <Label text="{i18n>status}" />
-                        <ui:template>
-                            <Text text="{listadoSolicitudes>ESTADO}" wrapping="false"/>
+                            <Text text="{ListadoContratos>Waerk}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -272,7 +114,7 @@
                     >
                         <Label text="{i18n>zord}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Zorden}" wrapping="false"/>
+                            <Text text="{ListadoContratos>Zorden}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -283,31 +125,9 @@
                     >
                         <Label text="{i18n>zcost}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Zcoste}" wrapping="false"/>
+                            <Text text="{ListadoContratos>Zcoste}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
-                    <ui:Column
-                        width="9em"
-                        filterProperty="Nombreapr"
-                        sortProperty="Nombreapr"
-                        tooltip="{i18n>nomapprov}"
-                    >
-                        <Label text="{i18n>nomapprov}" />
-                        <ui:template>
-                            <Text text="{listadoSolicitudes>Nombreapr}" wrapping="false"/>
-                        </ui:template>
-                    </ui:Column>
-                    <!--<ui:Column
-                        width="auto"
-                        filterProperty="Claseped"
-                        sortProperty="Claseped"
-                        tooltip="{i18n>claseped}"
-                    >
-                        <Label text="{i18n>claseped}" />
-                        <ui:template>
-                            <Text text="{listadoSolicitudes>Claseped}" />
-                        </ui:template>
-                    </ui:Column>-->
                     <ui:Column
                         width="5em"
                         filterProperty="Orgventas"
@@ -316,114 +136,18 @@
                     >
                         <Label text="{i18n>orgventas}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>ORGVENTAS}" wrapping="false"/>
-                        </ui:template>
-                    </ui:Column>
-                    <ui:Column
-                        width="7.5em"
-                        filterProperty="Numfactura"
-                        sortProperty="Numfactura"
-                        tooltip="{i18n>Numfactura}"
-                    >
-                        <Label text="{i18n>Numfactura}" />
-                        <ui:template>
-                            <!--<Text text="{listadoSolicitudes>Numfactura}" />-->
-                            <!--<Link text="{listadoSolicitudes>Numfactura}" press="handleLinkFact" />-->
-                            	<ObjectIdentifier
-                                    id="f_numfact"
-                                    title="{listadoSolicitudes>Numfactura}"
-                                    titleActive = "true"
-                                    titlePress="handleLinkFact(${listadoSolicitudes>Numfactura})" />
+                            <Text text="{ListadoContratos>Orgventas}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
                         width="7.5em"
                         filterProperty="Referenciped"
                         sortProperty="Referenciped"
-                        tooltip="{i18n>Referenciped}"
+                        tooltip="{i18n>Referencia}"
                     >
-                        <Label text="{i18n>Referenciped}" />
+                        <Label text="{i18n>Referencia}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudes>Referenciped}" wrapping="false"/>
-                        </ui:template>
-                    </ui:Column>
-
-                    <ui:Column
-                        width="8.5em"
-                        filterProperty="Indcontrato"
-                        sortProperty="Indcontrato"
-                        tooltip="{i18n>Indcontrato}"
-                    >
-                        <Label text="{i18n>Indcontrato}" />
-                        <ui:template>
-                            <!--<Text text="{listadoSolicitudes>Indcontrato}" />-->
-                            <!--<Switch
-                                state="{listadoSolicitudes>Indcontrato}"
-                                customTextOn="Yes" customTextOff="No"
-                                enabled="false"
-                                tooltip="{i18n>Indcontrato}">
-                                <layoutData>
-                                    <FlexItemData growFactor="1" />
-                                </layoutData>
-                            </Switch>-->
-                            <!--<Link text="{listadoSolicitudes>Indcontrato}" press="handleLinkCont" />-->
-                            <ObjectIdentifier
-                                    id="f_numcont"
-                                    title="{listadoSolicitudes>Indcontrato}"
-                                    titleActive = "true"
-                                    titlePress="handleLinkCont(${listadoSolicitudes>Indcontrato})" />
-                        </ui:template>
-                    </ui:Column>
-                    <ui:Column id="colbtnedit" width="2%" visible="false">
-                        <Label text="" />
-                        <ui:template>
-                            <Button
-                                id="TableButton4"
-                                icon="sap-icon://edit"
-                                tooltip="{i18n>modPos}"
-                                type="Ghost"
-                                press="onEditOrder"
-                                enabled="{= ${listadoSolicitudes>Creador} === ${Usuario>/user} &amp;&amp; ${Usuario>editPos}}"
-                                visible="true"
-                            />
-                        </ui:template>
-                    </ui:Column>
-                    <ui:Column width="2%">
-                        <Label text="" />
-                        <ui:template>
-                            <Button
-                                id="TableButton1"
-                                icon="sap-icon://display"
-                                tooltip="{i18n>visual}"
-                                type="Ghost"
-                                press="onOpenOrder"
-                            />
-                        </ui:template>
-                    </ui:Column>
-                    <ui:Column width="2%">
-                        <Label text="" />
-                        <ui:template>
-                            <Button
-                                id="TableButton2"
-                                icon="sap-icon://pdf-attachment"
-                                tooltip="{i18n>down}"
-                                type="Ghost"
-                                enabled="{= ${listadoSolicitudes>Numfactura} !== ''}"
-                                press="onDownloadInvoice"
-                            />
-                        </ui:template>
-                    </ui:Column>
-                    <ui:Column width="2%">
-                        <Label text="" />
-                        <ui:template>
-                            <Button
-                                id="TableButton3"
-                                icon="sap-icon://documents"
-                                tooltip="{i18n>copy}"
-                                type="Ghost"
-                                enabled="true"
-                                press="onCopyOrder"
-                            />
+                            <Text text="{ListadoContratos>Referenciped}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                 </ui:columns>

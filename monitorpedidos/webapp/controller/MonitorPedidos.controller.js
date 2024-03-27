@@ -1370,7 +1370,6 @@ sap.ui.define([
                                 var oTextArea = that.oConfirmDialog.mAggregations.content[1].mProperties.value;
                                 if (oComboBox) {
                                     var selectedKey = that.oConfirmDialog.mAggregations.content[0].mAggregations.content[1].mProperties.selectedKey;
-                                    //console.log("Selected Key:", selectedKey);
                                 }
 
                                 var DatosRechazo = [];
@@ -1859,7 +1858,6 @@ sap.ui.define([
                 var value = sap.ui.getCore().byId(oEvent.getSource().sId);
 
                 var response = value.getValue().toLowerCase();
-                //console.log(response);
                 var aItems = value.getItems();
                 var bValidInput = false;
 
@@ -3516,7 +3514,6 @@ sap.ui.define([
             //LÓGICA PARA LOS DIFERENTES MENU ITEMS QUE SE CREEN
 
             onGetKeyFromItemMenu: function (oEvent) {
-                //console.log(oEvent.getSource().getProperty("key"));
                 var selectedKey = oEvent.getSource().getProperty("key");
 
                 switch (selectedKey) {
@@ -3705,9 +3702,7 @@ sap.ui.define([
                                         sUploadedFileName = oModAdj2[i].Filename;
                                         setTimeout(function () {
                                             var oUploadCollection = that.getView().byId("UploadCollection");
-                                            console.log("Entra");
                                             for (var i = 0; i < oUploadCollection.getItems().length; i++) {
-                                                console.log("Entra2");
                                                 if (oUploadCollection.getItems()[i].getFileName() === sUploadedFileName) {
                                                     oUploadCollection.removeItem(oUploadCollection.getItems()[i]);
                                                     break;
@@ -3746,9 +3741,7 @@ sap.ui.define([
                 var sUploadedFileName = oEvent.getParameter("files")[0].fileName;
                 setTimeout(function () {
                     var oUploadCollection = this.getView().byId("UploadCollection");
-                    console.log("Entra");
                     for (var i = 0; i < oUploadCollection.getItems().length; i++) {
-                        console.log("Entra2");
                         if (oUploadCollection.getItems()[i].getFileName() === sUploadedFileName) {
                             oUploadCollection.removeItem(oUploadCollection.getItems()[i]);
                             break;
@@ -3801,7 +3794,6 @@ sap.ui.define([
 
             onSelectionChange: function (oEvent) {
                 var aSelectedFiles = oEvent.getParameter("files");
-                console.log("Selected files:", aSelectedFiles);
             },
 
             base64conversionMethod: function (fileMime, fileName, fileDetails, DocNum, adjuntos) {
@@ -3863,9 +3855,7 @@ sap.ui.define([
                 var sUploadedFileName = oEvent.getParameter("files")[0].fileName;
                 setTimeout(function () {
                     var oUploadCollection = this.getView().byId("UploadCollection");
-                    console.log("Entra");
                     for (var i = 0; i < oUploadCollection.getItems().length; i++) {
-                        console.log("Entra2");
                         if (oUploadCollection.getItems()[i].getFileName() === sUploadedFileName) {
                             oUploadCollection.removeItem(oUploadCollection.getItems()[i]);
                             break;

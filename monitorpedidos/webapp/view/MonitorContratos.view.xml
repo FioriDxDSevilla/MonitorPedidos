@@ -7,8 +7,10 @@
             <MenuButton icon="sap-icon://menu" tooltip="Más opciones">
                 <menu>
                     <Menu>
+<!--                        
                         <MenuItem text="{i18n>carga}" icon="sap-icon://arrow-top" id="menuItemCargaPedidos" press="onGetKeyFromItemMenu" key="CargaPedidos" />
                         <MenuItem text="{i18n>CrearCliente}" icon="sap-icon://person-placeholder" id="menuItemCrearCliente" press="onGetKeyFromItemMenu" key="CrearCliente" />
+-->
                         <MenuItem text="{i18n>MonitorPedidos}" icon="sap-icon://customer-order-entry" id="menuItemMonitorPedidos" press="onGetKeyFromItemMenu" key="MonitorPedidos" />
                     </Menu>
                 </menu>

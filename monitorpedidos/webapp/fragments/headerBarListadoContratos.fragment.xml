@@ -8,53 +8,5 @@
     xmlns:tnt="sap.tnt"
 >
     <tnt:ToolHeader id="ToolHeader">
-
-        <!---BOTONES A LA IZQUIERDA DE LA BARRA-->
-
-        <Button
-            id="Nueva"
-            icon="sap-icon://add"
-            type="Emphasized"
-            press="onNavToAltaPedidos"
-            text="{i18n>new}"
-           visible="false"
-        >
-            <layoutData>
-                <OverflowToolbarLayoutData
-                    id="Over1"
-                    priority="NeverOverflow"
-                />
-            </layoutData>
-        </Button>
-        <Button
-            id="CargaPed"
-            icon="sap-icon://arrow-top"
-            type="Emphasized"  
-            press="onGoToZpv"          
-            text="{i18n>carga}"
-           visible="false"
-        >
-            <layoutData>
-                <OverflowToolbarLayoutData
-                    id="Over3"
-                    priority="NeverOverflow"
-                />
-            </layoutData>
-        </Button>
-        <IconTabHeader
-            id="iconTabHeader"
-            selectedKey="invalidKey"
-            select=".onSelectTab"
-            backgroundDesign="Transparent"
-            mode="Inline"
-        >
-            <layoutData>
-                <OverflowToolbarLayoutData
-                    id="Over2"
-                    priority="NeverOverflow"
-                    shrinkable="true"
-                />
-            </layoutData>
-        </IconTabHeader>              
     </tnt:ToolHeader>
 </core:FragmentDefinition>
