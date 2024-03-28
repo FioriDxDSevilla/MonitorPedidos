@@ -1673,12 +1673,9 @@ function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util
 
             var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
 
-            MessageBox.warning("Descarga Excel en construcción");
-/*
             Promise.all([
                 this.readDataExcel(this.mainService, "/excelContratosSet", aFilters)
             ]);
-*/
         },
 
         readDataExcel: function (oModel, path, aFilters) {

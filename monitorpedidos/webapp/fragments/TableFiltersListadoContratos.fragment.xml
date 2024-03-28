@@ -40,29 +40,6 @@
                                     titlePress="handleLinkCont(${ListadoContratos>Idsolicitud})" />
                         </ui:template>
                     </ui:Column>
-
-                    <ui:Column
-                        width="8em"
-                        filterProperty="Fechadoc"
-                        sortProperty="Fechadoc"
-                        tooltip="{i18n>fechadocu}"
-                    >
-                        <Label text="{i18n>fechadocu}" />
-                        <ui:template>
-                            <Text text="{path: 'ListadoContratos>Fechadoc',  formatter: '.onFormatFechaDocVenta'}" wrapping="false"/>
-                        </ui:template>
-                    </ui:Column>
-                    <ui:Column
-                        width="5em"
-                        filterProperty="Creador"
-                        sortProperty="Creador"
-                        tooltip="{i18n>creador}"
-                    >
-                        <Label text="{i18n>creador}" />
-                        <ui:template>
-                            <Text text="{ListadoContratos>Creador}" wrapping="false"/>
-                        </ui:template>
-                    </ui:Column>
                     <ui:Column
                         width="7em"
                         filterProperty="CLIENTE"
@@ -90,10 +67,30 @@
                         width="6em"
                         filterProperty="Netwr"
                         sortProperty="Netwr"
-                        tooltip="{i18n>import}">
-                        <Label text="{i18n>import}" />
+                        tooltip="{i18n>ImpTotal}">
+                        <Label text="{i18n>ImpTotal}" />
                          <ui:template>
                             <Text  text="{path:'ListadoContratos>Netwr', formatter: '.onFormatImporte'}" wrapping="false"/>
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="6em"
+                        filterProperty="Impfacturado"
+                        sortProperty="Impfacturado"
+                        tooltip="{i18n>Impfacturado}">
+                        <Label text="{i18n>Impfacturado}" />
+                         <ui:template>
+                            <Text  text="{path:'ListadoContratos>Impfacturado', formatter: '.onFormatImporte'}" wrapping="false"/>
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="6em"
+                        filterProperty="Imppdtefacturar"
+                        sortProperty="Imppdtefacturar"
+                        tooltip="{i18n>Imppdtefacturar}">
+                        <Label text="{i18n>Imppdtefacturar}" />
+                         <ui:template>
+                            <Text  text="{path:'ListadoContratos>Imppdtefacturar', formatter: '.onFormatImporte'}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -104,28 +101,6 @@
                         <Label text="{i18n>Moneda}" />
                          <ui:template>
                             <Text text="{ListadoContratos>Waerk}" wrapping="false"/>
-                        </ui:template>
-                    </ui:Column>
-                    <ui:Column
-                        width="7em"
-                        filterProperty="Zorden"
-                        sortProperty="Zorden"
-                        tooltip="{i18n>zord}"
-                    >
-                        <Label text="{i18n>zord}" />
-                        <ui:template>
-                            <Text text="{ListadoContratos>Zorden}" wrapping="false"/>
-                        </ui:template>
-                    </ui:Column>
-                    <ui:Column
-                        width="6.5em"
-                        filterProperty="Zcoste"
-                        sortProperty="Zcoste"
-                        tooltip="{i18n>zcost}"
-                    >
-                        <Label text="{i18n>zcost}" />
-                        <ui:template>
-                            <Text text="{ListadoContratos>Zcoste}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
@@ -143,13 +118,70 @@
                         width="7.5em"
                         filterProperty="Referenciped"
                         sortProperty="Referenciped"
-                        tooltip="{i18n>Referencia}"
+                        tooltip="{i18n>NumPedCliente}"
                     >
-                        <Label text="{i18n>Referencia}" />
+                        <Label text="{i18n>NumPedCliente}" />
                         <ui:template>
                             <Text text="{ListadoContratos>Referenciped}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
+                    <ui:Column
+                        width="11em"
+                        filterProperty="Denominacion"
+                        sortProperty="Denominacion"
+                        tooltip="{i18n>Denominacion}"
+                    >
+                        <Label text="{i18n>Denominacion}" />
+                        <ui:template>
+                            <Text text="{ListadoContratos>Denominacion}" wrapping="false"/>
+                        </ui:template>
+                    </ui:Column>
+<!--
+                    <ui:Column
+                        width="7.5em"
+                        filterProperty="Linea"
+                        sortProperty="Linea"
+                        tooltip="{i18n>Linea}"
+                    >
+                        <Label text="{i18n>Linea}" />
+                        <ui:template>
+                            <Text text="{ListadoContratos>Linea} - {ListadoContratos>Lineatxt}" wrapping="false"/>
+                        </ui:template>
+                    </ui:Column>
+-->
+                    <ui:Column
+                        width="7.5em"
+                        filterProperty="Lineatxt"
+                        sortProperty="Lineatxt"
+                        tooltip="{i18n>Lineatxt}"
+                    >
+                        <Label text="{i18n>Lineatxt}" />
+                        <ui:template>
+                            <Text text="{ListadoContratos>Lineatxt}" wrapping="false"/>
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="7.5em"
+                        filterProperty="Fvalidezini"
+                        sortProperty="Fvalidezini"
+                        tooltip="{i18n>Fvalidezini}"
+                    >
+                        <Label text="{i18n>Fvalidezini}" />
+                        <ui:template>
+                            <Text text="{path: 'ListadoContratos>Fvalidezini',  formatter: '.onFormatFechaDocVenta'}" wrapping="false"/>
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="7.5em"
+                        filterProperty="Fvalidezfin"
+                        sortProperty="Fvalidezfin"
+                        tooltip="{i18n>Fvalidezfin}"
+                    >
+                        <Label text="{i18n>Fvalidezfin}" />
+                        <ui:template>
+                            <Text text="{path: 'ListadoContratos>Fvalidezfin',  formatter: '.onFormatFechaDocVenta'}" wrapping="false"/>
+                        </ui:template>
+                    </ui:Column>                
                 </ui:columns>
             </ui:Table>
         </content>
