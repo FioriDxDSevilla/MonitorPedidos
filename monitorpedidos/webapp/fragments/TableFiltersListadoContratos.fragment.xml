@@ -62,47 +62,6 @@
                             <Text text="{ListadoContratos>Nombrecliente}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
-
-                    <ui:Column
-                        width="6em"
-                        filterProperty="Netwr"
-                        sortProperty="Netwr"
-                        tooltip="{i18n>ImpTotal}">
-                        <Label text="{i18n>ImpTotal}" />
-                         <ui:template>
-                            <Text  text="{path:'ListadoContratos>Netwr', formatter: '.onFormatImporte'}" wrapping="false"/>
-                        </ui:template>
-                    </ui:Column>
-                    <ui:Column
-                        width="6em"
-                        filterProperty="Impfacturado"
-                        sortProperty="Impfacturado"
-                        tooltip="{i18n>Impfacturado}">
-                        <Label text="{i18n>Impfacturado}" />
-                         <ui:template>
-                            <Text  text="{path:'ListadoContratos>Impfacturado', formatter: '.onFormatImporte'}" wrapping="false"/>
-                        </ui:template>
-                    </ui:Column>
-                    <ui:Column
-                        width="6em"
-                        filterProperty="Imppdtefacturar"
-                        sortProperty="Imppdtefacturar"
-                        tooltip="{i18n>Imppdtefacturar}">
-                        <Label text="{i18n>Imppdtefacturar}" />
-                         <ui:template>
-                            <Text  text="{path:'ListadoContratos>Imppdtefacturar', formatter: '.onFormatImporte'}" wrapping="false"/>
-                        </ui:template>
-                    </ui:Column>
-                    <ui:Column
-                        width="4.5em"
-                        filterProperty="Waerk"
-                        sortProperty="Waerk"
-                        tooltip="{i18n>Moneda}">
-                        <Label text="{i18n>Moneda}" />
-                         <ui:template>
-                            <Text text="{ListadoContratos>Waerk}" wrapping="false"/>
-                        </ui:template>
-                    </ui:Column>
                     <ui:Column
                         width="5em"
                         filterProperty="Orgventas"
@@ -182,6 +141,46 @@
                             <Text text="{path: 'ListadoContratos>Fvalidezfin',  formatter: '.onFormatFechaDocVenta'}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>                
+                    <ui:Column
+                        width="6em"
+                        filterProperty="Netwr"
+                        sortProperty="Netwr"
+                        tooltip="{i18n>ImpTotal}">
+                        <Label text="{i18n>ImpTotal}" />
+                         <ui:template>
+                            <Text  text="{path:'ListadoContratos>Netwr', formatter: '.onFormatImporte'}" wrapping="false"/>
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="6em"
+                        filterProperty="Impfacturado"
+                        sortProperty="Impfacturado"
+                        tooltip="{i18n>Impfacturado}">
+                        <Label text="{i18n>Impfacturado}" />
+                         <ui:template>
+                            <Text  text="{path:'ListadoContratos>Impfacturado', formatter: '.onFormatImporte'}" wrapping="false"/>
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="6em"
+                        filterProperty="Imppdtefacturar"
+                        sortProperty="Imppdtefacturar"
+                        tooltip="{i18n>Imppdtefacturar}">
+                        <Label text="{i18n>Imppdtefacturar}" />
+                         <ui:template>
+                            <Text  text="{path:'ListadoContratos>Imppdtefacturar', formatter: '.onFormatImporte'}" wrapping="false"/>
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="4.5em"
+                        filterProperty="Waerk"
+                        sortProperty="Waerk"
+                        tooltip="{i18n>Moneda}">
+                        <Label text="{i18n>Moneda}" />
+                         <ui:template>
+                            <Text text="{ListadoContratos>Waerk}" wrapping="false"/>
+                        </ui:template>
+                    </ui:Column>
                 </ui:columns>
             </ui:Table>
         </content>
