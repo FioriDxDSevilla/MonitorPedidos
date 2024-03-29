@@ -1640,8 +1640,10 @@ function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util
             this.DownLoadExcell(
                 filtroUsuario,
                 //Numped,
-                filtroFechaDsd,
-                filtroFechaHst,
+                filtroFechaDsdIni,
+                filtroFechaHstIni,
+                filtroFechaDsdFin,
+                filtroFechaHstFin,
                 filtroImporteDsd,
                 filtroImporteHst,
                 filtroEstado,
@@ -1655,7 +1657,7 @@ function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util
                 filtroClasePed);
         },
 
-        DownLoadExcell: function (filtroUsuario, filtroFechaDsd, filtroFechaHst, filtroImporteDsd, filtroImporteHst, filtroEstado, filtroClienteCod, filtroCeco, filtroOrden, filtroOficinaVentas, filtroLineaServicio, filtroMaterial, filtroResponsable, filtroClasePed) {
+        DownLoadExcell: function (filtroUsuario, filtroFechaDsd, filtroFechaHst, filtroFechaDsdIni, filtroFechaHstIni, filtroFechaDsdFin, filtroFechaHstFin, filtroImporteDsd, filtroImporteHst, filtroEstado, filtroClienteCod, filtroCeco, filtroOrden, filtroOficinaVentas, filtroLineaServicio, filtroMaterial, filtroResponsable, filtroClasePed) {
             var aFilterIds = [],
                 aFilterValues = [];
 
@@ -1665,7 +1667,7 @@ function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util
                     aFilterValues.push(value);
                 }
             };
-
+/*
             addFilter("USUARIO", filtroUsuario);
             addFilter("FECHAD", Date.parse(filtroFechaDsd));
             addFilter("FECHAH", Date.parse(filtroFechaHst));
@@ -1680,7 +1682,7 @@ function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util
             addFilter("MATERIAL", filtroMaterial);
             addFilter("ZRESPONSABLE", filtroResponsable);
             addFilter("TIPO", filtroClasePed);
-
+*/
             var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
 
             Promise.all([
