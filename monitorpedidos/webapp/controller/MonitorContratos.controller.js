@@ -25,7 +25,7 @@ function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util
     // Variables utilizadas para los botones
     var btnEditar, accionLiberar, btnRescatar, accionRescatar;
     // Variables utilizadas en los filtros
-    var filtroUsuario, filtroFechaDsd, filtroFechaHst, filtroImporteDsd, filtroImporteHst, filtroEstado, filtroClienteCod, filtroClienteTxt, filtroCeco, filtroOrden, filtroOficionaVentas, filtroLineaServicio, filtroMaterial, filtroClasePed, filtroResponsable, nomceco, nomord, nommat;
+    var filtroUsuario, filtroFechaDsdIni, filtroFechaHstIni, filtroFechaDsdFin, filtroFechaHstFin, filtroImporteDsd, filtroImporteHst, filtroEstado, filtroClienteCod, filtroClienteTxt, filtroCeco, filtroOrden, filtroOficionaVentas, filtroLineaServicio, filtroMaterial, filtroClasePed, filtroResponsable, nomceco, nomord, nommat;
     //var Usuario, Numped, Fechad, Fechah, Imported, Importeh, sStatus, Cliente, codceco, codord, LineaServicio, codmat, ClasePed, responsable;
     var usuario;
     var arrayFiltroClasePed = [];
@@ -80,13 +80,13 @@ function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util
              */
             var oModClientes = new JSONModel();
             oModel = this.getOwnerComponent().getModel();
-            //this.oModel = this.
+            this.oModel = this.
             oModel = this._createViewModel();
 
-            this.oComponent.setModel(oModClientes, "AltaClientes");
-            this.adjuntos = [];
-            this.oComponent.setModel(new JSONModel([]), "Adjuntos");
-            this.oComponent.setModel(new JSONModel(), "datosAdj");
+//            this.oComponent.setModel(oModClientes, "AltaClientes");
+//            this.adjuntos = [];
+//            this.oComponent.setModel(new JSONModel([]), "Adjuntos");
+//            this.oComponent.setModel(new JSONModel(), "datosAdj");
             /**
              * FRAMUMO - FIN 04.03.24 - Modelo JSON para Alta Clientes
              */
@@ -102,7 +102,7 @@ function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util
             this.dameLineas();
             //this.DameOrganizaciones();
             //this.TiposPedidoAlta();
-            this.motivosRechazo();
+            //this.motivosRechazo();
 
             // De primeras mostrará las solicitudes de Mi usuario
             this.getUser();
@@ -119,7 +119,8 @@ function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util
             if (evt.getParameter("name") !== "MonitorPedidos") {
                 // Cuando se acceda al monitor por primera vez, se refrescará desde la función getUser()
                 if (filtroUsuario) {
-                    this.refrescarListadoContratos();
+                    this.onBusqSolicitudes();
+                    //this.refrescarListadoContratos();
                 }                    
             }
         },
@@ -401,14 +402,17 @@ function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util
         // FUNCION DE LA BUSQUEDA PRINCIPAL
         onBusqSolicitudes: function (oEvent) {
 
+/*            
             var inputUsuario = this.getView().byId("f_usuario").getValue();
             if (inputUsuario) {
                 filtroUsuario = inputUsuario;
             }
-
+*/
             //Numped = this.getView().byId("f_numsolic").getValue();
-            filtroFechaDsd = this.getView().byId("DTPdesde").getValue();
-            filtroFechaHst = this.getView().byId("DTPhasta").getValue();
+            filtroFechaDsdIni = this.getView().byId("DTPdesdeIni").getValue();
+            filtroFechaHstIni = this.getView().byId("DTPhastaIni").getValue();
+            filtroFechaDsdFin = this.getView().byId("DTPdesdeFin").getValue();
+            filtroFechaHstFin = this.getView().byId("DTPhastaFin").getValue();
             filtroImporteDsd = this.getView().byId("f_impdesde").getValue();
             filtroImporteHst = this.getView().byId("f_imphasta").getValue();
             //filtroEstado
@@ -416,11 +420,11 @@ function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util
             if (!filtroClienteTxt) {
                 filtroClienteCod = this.getView().byId("f_client").getValue();
             }
-            filtroCeco = this.getView().byId("f_cecos").getValue();
-            filtroOrden = this.getView().byId("f_ordenes").getValue();
+//            filtroCeco = this.getView().byId("f_cecos").getValue();
+//            filtroOrden = this.getView().byId("f_ordenes").getValue();
             filtroOficionaVentas = this.getView().byId("f_oficinas").getValue();
             filtroMaterial = this.getView().byId("f_material").getValue();
-            filtroResponsable = this.getView().byId("f_approv").getValue();
+//            filtroResponsable = this.getView().byId("f_approv").getValue();
             filtroLineaServicio = this.getView().byId("f_line").getSelectedKey();
             filtroClasePed = arrayFiltroClasePed;
 
@@ -873,8 +877,10 @@ function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util
         ListadoContratos: function (
             filtroUsuario,
             //Numped,
-            filtroFechaDsd,
-            filtroFechaHst,
+            filtroFechaDsdIni,
+            filtroFechaHstIni,
+            filtroFechaDsdFin,
+            filtroFechaHstFin,
             filtroImporteDsd,
             filtroImporteHst,
             filtroEstado,
@@ -898,8 +904,10 @@ function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util
             };
 
             //addFilter("USUARIO", "");
-            addFilter("Fechad", Date.parse(filtroFechaDsd));
-            addFilter("Fechah", Date.parse(filtroFechaHst));
+            addFilter("FechadIni", Date.parse(filtroFechaDsdIni));
+            addFilter("FechahIni", Date.parse(filtroFechaHstIni));
+            addFilter("FechadFin", Date.parse(filtroFechaDsdFin));
+            addFilter("FechahFin", Date.parse(filtroFechaHstFin));
             addFilter("Imported", filtroImporteDsd);
             addFilter("Importeh", filtroImporteHst);
             addFilter("Cliente", filtroClienteCod);
@@ -935,8 +943,10 @@ function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util
             this.ListadoContratos(
                 filtroUsuario,
                 //Numped,
-                filtroFechaDsd,
-                filtroFechaHst,
+                filtroFechaDsdIni,
+                filtroFechaHstIni,
+                filtroFechaDsdFin,
+                filtroFechaHstFin,
                 filtroImporteDsd,
                 filtroImporteHst,
                 filtroEstado,
