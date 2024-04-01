@@ -329,7 +329,7 @@ sap.ui.define([
           sumCalculo = Number(sumCalculo).toFixed(2);
         }
 
-        this.oComponent.getModel("ModoApp").setProperty("/ImpPedido", sumCalculo);
+        this.oComponent.getModel("ModoApp").setProperty("/ImpPedido", this.onFormatImporte(sumCalculo));
         this.oComponent.getModel("ModoApp").setProperty("/Moneda", moneda);
         this.oComponent.getModel("ModoApp").refresh(true);
       },

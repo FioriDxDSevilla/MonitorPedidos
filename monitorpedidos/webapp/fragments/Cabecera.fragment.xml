@@ -118,7 +118,7 @@
                 </m:ComboBox>-->
                 <m:Input
                     id="f_campocondicion"
-                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }"
+                    editable="false"
                     width="300px"
                     value="{ModoApp>/Zterm}"
                     liveChange=".onLiveChangeRequired"/> 
@@ -128,7 +128,7 @@
                 </m:ComboBox>-->
                 <m:Input
                     id="f_camponia"
-                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }"
+                    editable="false"
                     width="300px"
                     value="{ModoApp>/Nia}"
                     liveChange=".onLiveChangeRequired"/> 

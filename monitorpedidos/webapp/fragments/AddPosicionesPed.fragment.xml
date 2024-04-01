@@ -34,14 +34,6 @@
                 value="{posPedFrag>/Vbelp}"
                 editable="false"
             />
-            <Label text="{i18n>nomMat}" required="true" />
-           <Input
-                id="f_nommat"
-                value="{posPedFrag>/ShortText}"
-                maxLength="40"
-                editable="true"
-                liveChange=".onLiveChangeRequired"
-            />
             <Label text="{i18n>mat}" required="true" />
             <Input
                 id="f_material"
@@ -49,6 +41,14 @@
                 valueHelpRequest=".onValueHelpRequestMatAlta"
                 value="{posPedFrag>/Material}"
             />
+            <Label text="{i18n>nomMat}" required="true" />
+            <Input
+                    id="f_nommat"
+                    value="{posPedFrag>/ShortText}"
+                    maxLength="40"
+                    editable="true"
+                    liveChange=".onLiveChangeRequired"
+                />
             <Label text="{i18n>fechaPrecio}" required="true" />
             <DatePicker
                 id="DTPdesde"
@@ -74,7 +74,7 @@
                 type="Number"
                 liveChange=".onLiveChangeRequired"
             />
-             <Label text="{i18n>cantBase}" required="true" />
+            <Label text="{i18n>cantBase}" required="true" />
             <Input
                 id="f_cantbasepos"
                 value="{posPedFrag>/Kpein}"
