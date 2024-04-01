@@ -83,6 +83,29 @@
                             <Text text="{listadoSolicitudesLiberar>Nombrecliente}" />
                         </ui:template>
                     </ui:Column>
+                    <ui:Column
+                        width="auto"
+                        filterProperty="Denominacion"
+                        sortProperty="Denominacion"
+                        tooltip="{i18n>ktext}"
+                    >
+                        <Label text="{i18n>ktext}" />
+                        <ui:template>
+                            <Text text="{listadoSolicitudesLiberar>Denominacion}"/>
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="auto"
+                        filterProperty="Lineatxt"
+                        sortProperty="Lineatxt"
+                        tooltip="{i18n>lineas}"
+                    >
+                        <Label text="{i18n>lineas}" />
+                        <ui:template>
+                            <Text text="{listadoSolicitudesLiberar>Lineatxt}"/>
+                        </ui:template>
+                    </ui:Column>
+
                     
                     <!--<ui:Column
                         width="auto"
@@ -99,7 +122,8 @@
                         width="auto"
                         filterProperty="Netwr"
                         sortProperty="Netwr"
-                        tooltip="{i18n>import}">
+                        tooltip="{i18n>import}"
+                        hAlign="Right">
                         <Label text="{i18n>import}" />
                          <ui:template>
                          <Text  text="{path:'listadoSolicitudesLiberar>Netwr', formatter: '.onFormatImporte'}"/>

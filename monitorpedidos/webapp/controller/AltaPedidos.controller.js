@@ -2624,43 +2624,6 @@ sap.ui.define([
         }        
       },
       
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
-
-
-
-
-      
-      
-      
-
-      
 
       /*ABRIR GESTOR DE ARCHIVOS*/
       handleUploadPress: function (oEvent) {
@@ -2669,8 +2632,16 @@ sap.ui.define([
         var fileDetails = oEvent.getParameters("file").files[0];
         //sap.ui.getCore().fileUploaderArr = [];
         if (fileDetails) {
-          var mimeDet = fileDetails.type,
-            fileName = fileDetails.name;
+          var fileName = fileDetails.name;
+          var mimeDet = fileDetails.type;
+
+          // En los mails (msg) que se adjuntan, el campo mime no se determina correctamente
+          // Se fuerza a este tipo cuando venga vacío, en las pruebas es el tipo asignado
+          // para otros archivos que están en la misma situación (ej .exe)
+          if (mimeDet === "") {
+            mimeDet = "application/vnd.ms-outlook";
+          }
+
           var adjuntos = this.oComponent.getModel("Adjuntos").getData();
           var nadj = adjuntos.length;
           this.base64conversionMethod(mimeDet, fileName, fileDetails, nadj, adjuntos)

@@ -145,7 +145,8 @@
                         width="6em"
                         filterProperty="Netwr"
                         sortProperty="Netwr"
-                        tooltip="{i18n>ImpTotal}">
+                        tooltip="{i18n>ImpTotal}"
+                        hAlign="Right">
                         <Label text="{i18n>ImpTotal}" />
                          <ui:template>
                             <Text  text="{path:'ListadoContratos>Netwr', formatter: '.onFormatImporte'}" wrapping="false"/>
@@ -155,7 +156,8 @@
                         width="6em"
                         filterProperty="Impfacturado"
                         sortProperty="Impfacturado"
-                        tooltip="{i18n>Impfacturado}">
+                        tooltip="{i18n>Impfacturado}"
+                        hAlign="Right">
                         <Label text="{i18n>Impfacturado}" />
                          <ui:template>
                             <Text  text="{path:'ListadoContratos>Impfacturado', formatter: '.onFormatImporte'}" wrapping="false"/>
@@ -165,7 +167,8 @@
                         width="6em"
                         filterProperty="Imppdtefacturar"
                         sortProperty="Imppdtefacturar"
-                        tooltip="{i18n>Imppdtefacturar}">
+                        tooltip="{i18n>Imppdtefacturar}"
+                        hAlign="Right">
                         <Label text="{i18n>Imppdtefacturar}" />
                          <ui:template>
                             <Text  text="{path:'ListadoContratos>Imppdtefacturar', formatter: '.onFormatImporte'}" wrapping="false"/>

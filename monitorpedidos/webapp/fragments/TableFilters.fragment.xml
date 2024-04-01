@@ -161,6 +161,20 @@
 					</OverflowToolbar>
 				</ui:extension>
                 <ui:columns>
+                    <ui:Column id="colbtnedit" width="2%" visible="false">
+                        <Label text="" />
+                        <ui:template>
+                            <Button
+                                id="TableButton4"
+                                icon="sap-icon://edit"
+                                tooltip="{i18n>modPos}"
+                                type="Ghost"
+                                press="onEditOrder"
+                                enabled="{= ${listadoSolicitudes>Creador} === ${Usuario>/user} &amp;&amp; ${Usuario>editPos}}"
+                                visible="true"
+                            />
+                        </ui:template>
+                    </ui:Column>
                     <ui:Column
                         width="7.5em"
                         filterProperty="IDSOLICITUD"
@@ -221,7 +235,28 @@
                             <Text text="{listadoSolicitudes>Nombrecliente}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
-                    
+                    <ui:Column
+                        width="11em"
+                        filterProperty="Denominacion"
+                        sortProperty="Denominacion"
+                        tooltip="{i18n>ktext}"
+                    >
+                        <Label text="{i18n>ktext}" />
+                        <ui:template>
+                            <Text text="{listadoSolicitudes>Denominacion}" wrapping="false"/>
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="9em"
+                        filterProperty="Lineatxt"
+                        sortProperty="Lineatxt"
+                        tooltip="{i18n>lineas}"
+                    >
+                        <Label text="{i18n>lineas}" />
+                        <ui:template>
+                            <Text text="{listadoSolicitudes>Lineatxt}" wrapping="false"/>
+                        </ui:template>
+                    </ui:Column>
                     <!--<ui:Column
                         width="auto"
                         filterProperty="ImpPedido"
@@ -237,7 +272,8 @@
                         width="6em"
                         filterProperty="Netwr"
                         sortProperty="Netwr"
-                        tooltip="{i18n>import}">
+                        tooltip="{i18n>import}"
+                        hAlign="Right">
                         <Label text="{i18n>import}" />
                          <ui:template>
                             <Text  text="{path:'listadoSolicitudes>Netwr', formatter: '.onFormatImporte'}" wrapping="false"/>
@@ -372,20 +408,6 @@
                                     title="{listadoSolicitudes>Indcontrato}"
                                     titleActive = "true"
                                     titlePress="handleLinkCont(${listadoSolicitudes>Indcontrato})" />
-                        </ui:template>
-                    </ui:Column>
-                    <ui:Column id="colbtnedit" width="2%" visible="false">
-                        <Label text="" />
-                        <ui:template>
-                            <Button
-                                id="TableButton4"
-                                icon="sap-icon://edit"
-                                tooltip="{i18n>modPos}"
-                                type="Ghost"
-                                press="onEditOrder"
-                                enabled="{= ${listadoSolicitudes>Creador} === ${Usuario>/user} &amp;&amp; ${Usuario>editPos}}"
-                                visible="true"
-                            />
                         </ui:template>
                     </ui:Column>
                     <ui:Column width="2%">
