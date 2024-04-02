@@ -96,7 +96,7 @@
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>Unidades}" />
                 <table:template>                   
-                    <m:Text text="{DisplayPosPed>Meins}" wrapping="false"/>
+                    <m:Text text="{DisplayPosPed>Zieme}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">

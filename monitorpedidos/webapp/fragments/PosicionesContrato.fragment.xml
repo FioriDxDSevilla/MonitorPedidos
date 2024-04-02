@@ -61,7 +61,7 @@
                 <Label text="{i18n>Unidades}" />
                 <table:template>
                     <!--<Text text="{PedidoPosContrato>SalesUnit}"/>-->
-                    <Text text="{PedidoPosContrato>Meins}" wrapping="false"/>
+                    <Text text="{PedidoPosContrato>Zieme}" wrapping="false"/>
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">

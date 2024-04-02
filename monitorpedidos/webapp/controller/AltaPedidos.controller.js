@@ -24,7 +24,7 @@ sap.ui.define([
     
     // Variables inputs
     var tipoInputCeco, tipoInputOrden, tipoInputLibroMayor;
-    var listadoValidarCeco, listadoValidarLibroMayor, listadoValidarMateriales;
+    var listadoValidarCeco, listadoValidarOrdenes, listadoValidarLibroMayor, listadoValidarMateriales;
      // Variables globales para el formateo de los campos 'FECHA DOC. VENTA' e 'IMPORTE'
      var fechaDocVentaFormat;
      /*
@@ -81,6 +81,8 @@ sap.ui.define([
             if (modeApp === 'C' || modeApp === 'M') {
               listadoValidarCeco = true;
               this.onBusqCecos("", "");
+              listadoValidarOrdenes = true;
+              this.onBusqOrdenes("", "", "");
               listadoValidarLibroMayor = true;
               this.onBusqLibroMayor("", "");                    
             }
@@ -519,6 +521,11 @@ sap.ui.define([
         }
         this.oComponent.setModel(oModelOrdenes, "listadoOrdenes");
         this.oComponent.getModel("listadoOrdenes").refresh(true);
+        if (listadoValidarOrdenes) {
+          this.oComponent.setModel(oModelOrdenes, "listadoValidarOrdenes");
+          this.oComponent.getModel("listadoValidarOrdenes").refresh(true);
+          listadoValidarOrdenes = false;
+        }
         sap.ui.core.BusyIndicator.hide();
       },
 
@@ -1030,7 +1037,7 @@ sap.ui.define([
             Kpein: posicion.Kpein,
             Currency: posicion.Waerk,
             Ukurs: posicion.Ukurs,
-            SalesUnit: posicion.Meins,
+            SalesUnit: posicion.Zieme,
             Yykostkl: posicion.Yykostkl,
             Yyaufnr: posicion.Yyaufnr,
             Zzkostl: posicion.Zzkostl,
@@ -1207,6 +1214,29 @@ sap.ui.define([
           inCecoIntercoPosicion.setValueState("Error");
         }
 
+        // --Validación OT
+        var ordenesValidas = this.getView().getModel("listadoValidarOrdenes").getData();
+
+        // -Orden Ingreso Posicion
+        var inOrdenIngresoPosicion = this.getView().byId("f_ordenesIngPos");
+        var ordenIngresoPosicion = inOrdenIngresoPosicion.getValue();
+        var ordenEncontrada = !!ordenesValidas.find(ordenValida => ordenValida.Aufnr === ordenIngresoPosicion);
+        if (ordenIngresoPosicion === "" || ordenEncontrada) {
+          inOrdenIngresoPosicion.setValueState("None");
+        }else{
+          inOrdenIngresoPosicion.setValueState("Error");
+        }
+
+        // -Orden Interco Posicion
+        var inOrdenIntercoPosicion = this.getView().byId("f_ordenesIntPos");
+        var ordenIntercoPosicion = inOrdenIntercoPosicion.getValue();
+        var ordenEncontrada = !!ordenesValidas.find(ordenValida => ordenValida.Aufnr === ordenIntercoPosicion);
+        if (ordenIntercoPosicion === "" || ordenEncontrada) {
+          inOrdenIntercoPosicion.setValueState("None");
+        }else{
+          inOrdenIntercoPosicion.setValueState("Error");
+        }
+
         // --Validación Libro Mayor Interco
         var librosValidos = this.getView().getModel("listadoValidarLibroMayor").getData();
 
@@ -1243,6 +1273,8 @@ sap.ui.define([
             inUnidad.getValue() && inUnidad.getValueState() != "Error" &&
             inCecoIngresoPosicion.getValueState() != "Error" &&
             inCecoIntercoPosicion.getValueState() != "Error" &&
+            inOrdenIngresoPosicion.getValueState() != "Error" &&
+            inOrdenIntercoPosicion.getValueState() != "Error" &&
             inLibroMayor.getValueState() != "Error" &&
             inMaterial.getValueState() != "Error") {
                 validation = true;
@@ -1280,7 +1312,7 @@ sap.ui.define([
             Zzprsdt: new Date(posPedFrag.PriceDate),
             Kwmeng: posPedFrag.ReqQty,
             Kpein: posPedFrag.Kpein,
-            Meins: posPedFrag.SalesUnit,
+            Zieme: posPedFrag.SalesUnit,
             Netpr: posPedFrag.CondValue,
             Waerk: posPedFrag.Currency,
             Ukurs: posPedFrag.Ukurs,
@@ -1399,11 +1431,11 @@ sap.ui.define([
             var index = aContexts[0];
 
             // Si tiene contrato, lo añadimos al modelo para que pueda ser seleccionable
-            if (this.oComponent.getModel("ModoApp").getData().Numcont) {
-              var posicionesContrato = this.oComponent.getModel("PedidoPosContrato").getData();
-              posicionesContrato.push(posiciones[index]);
-              this.oComponent.getModel("PedidoPosContrato").refresh(true);
-            }
+            // if (this.oComponent.getModel("ModoApp").getData().Numcont) {
+            //   var posicionesContrato = this.oComponent.getModel("PedidoPosContrato").getData();
+            //   posicionesContrato.push(posiciones[index]);
+            //   this.oComponent.getModel("PedidoPosContrato").refresh(true);
+            // }
 
             posiciones.splice(index, 1); // Eliminarmos la posición del modelo
             this.oComponent.getModel("DisplayPosPed").refresh(true);
@@ -1424,29 +1456,29 @@ sap.ui.define([
             var index = aContexts[0];
 
             // Si tiene contrato, lo añadimos al modelo para que pueda ser seleccionable
-            if (this.oComponent.getModel("ModoApp").getData().Numcont) {
-              var posicionesContrato = this.oComponent.getModel("PedidoPosContrato").getData();
-              let posicionBorrar = posiciones[index];
-              let posicionN = {
-                Posnr: posicionBorrar.ItmNumber,
-                Matnr: posicionBorrar.Material,
-                Arktx: posicionBorrar.ShortText,
-                Zzprsdt: new Date(posicionBorrar.PriceDate),
-                Kwmeng: posicionBorrar.ReqQty,
-                Kpein: posicionBorrar.Kpein,
-                Meins: posicionBorrar.SalesUnit,
-                Netpr: posicionBorrar.CondValue,
-                Waerk: posicionBorrar.Currency,
-                Ukurs: posicionBorrar.Ukurs,
-                Yykostkl: posicionBorrar.Yykostkl,
-                Yyaufnr: posicionBorrar.Yyaufnr,
-                Zzkostl: posicionBorrar.Zzkostl,
-                Zzaufnr: posicionBorrar.Zzaufnr,
-                Kstar: posicionBorrar.Kstar
-              }
-              posicionesContrato.push(posicionN);
-              this.oComponent.getModel("PedidoPosContrato").refresh(true);
-            }
+            // if (this.oComponent.getModel("ModoApp").getData().Numcont) {
+            //   var posicionesContrato = this.oComponent.getModel("PedidoPosContrato").getData();
+            //   let posicionBorrar = posiciones[index];
+            //   let posicionN = {
+            //     Posnr: posicionBorrar.ItmNumber,
+            //     Matnr: posicionBorrar.Material,
+            //     Arktx: posicionBorrar.ShortText,
+            //     Zzprsdt: new Date(posicionBorrar.PriceDate),
+            //     Kwmeng: posicionBorrar.ReqQty,
+            //     Kpein: posicionBorrar.Kpein,
+            //     Zieme: posicionBorrar.SalesUnit,
+            //     Netpr: posicionBorrar.CondValue,
+            //     Waerk: posicionBorrar.Currency,
+            //     Ukurs: posicionBorrar.Ukurs,
+            //     Yykostkl: posicionBorrar.Yykostkl,
+            //     Yyaufnr: posicionBorrar.Yyaufnr,
+            //     Zzkostl: posicionBorrar.Zzkostl,
+            //     Zzaufnr: posicionBorrar.Zzaufnr,
+            //     Kstar: posicionBorrar.Kstar
+            //   }
+            //   posicionesContrato.push(posicionN);
+            //   this.oComponent.getModel("PedidoPosContrato").refresh(true);
+            // }
 
             posiciones.splice(index, 1); // Eliminarmos la posición del modelo
             this.oComponent.getModel("PedidoPos").refresh(true);
@@ -1490,22 +1522,38 @@ sap.ui.define([
         
         var pedidosContrato = this.oComponent.getModel("PedidoPosContrato").getData();
         var pedidosContrato_Aux = JSON.parse(JSON.stringify(pedidosContrato)); // Copy data model without references
-        var posiciones = (modeApp === 'M')? this.oComponent.getModel("DisplayPosPed").getData() : this.oComponent.getModel("PedidoPos").getData();
-        let indexDeleted = 0;
+        var posiciones;
+        //let indexDeleted = 0;
+        var itmNumber = 0;
+
+        if (modeApp == 'M') {
+          posiciones = this.oComponent.getModel("DisplayPosPed").getData();
+          if (posiciones.length > 0) {
+            itmNumber = Number(posiciones[posiciones.length - 1].Posnr);
+          }
+        } else {
+          posiciones = this.oComponent.getModel("PedidoPos").getData();
+          if (posiciones.length > 0) {
+            itmNumber = Number(posiciones[posiciones.length - 1].ItmNumber);
+          }
+        }
+        
         for (var i = 0; i < aSelectedIndices.length; i++) {
           var indice = aSelectedIndices[i];
           let posicionPed = pedidosContrato_Aux[indice];
+          itmNumber += 10;
           
           if (modeApp === 'C') {
             
             var posicionN = {
-              ItmNumber: posicionPed.Posnr,
+              ItmNumber: itmNumber,
+              PoItmNo: posicionPed.Posnr,
               Material: posicionPed.Matnr,
               ShortText: posicionPed.Arktx,
               PriceDate: new Date(posicionPed.Zzprsdt),
               ReqQty: posicionPed.Kwmeng,
               Kpein: posicionPed.Kpein,
-              SalesUnit: posicionPed.Meins,
+              SalesUnit: posicionPed.Zieme,
               CondValue: posicionPed.Netpr,
               Currency: posicionPed.Waerk,
               Ukurs: posicionPed.Ukurs,
@@ -1518,13 +1566,15 @@ sap.ui.define([
             posiciones.push(posicionN);
 
           }else{
+            posicionPed.PoItmNo = posicionPed.Posnr,
+            posicionPed.Posnr = itmNumber;            
             posicionPed.Zzprsdt = new Date(posicionPed.Zzprsdt);
             posiciones.push(posicionPed);
           }
-          pedidosContrato.splice(indice-indexDeleted, 1); // Eliminarmos la posición del modelo de contratos
-          indexDeleted++;
+          //pedidosContrato.splice(indice-indexDeleted, 1); // Eliminarmos la posición del modelo de contratos
+          //indexDeleted++;
         }
-        this.oComponent.getModel("PedidoPosContrato").refresh(true);
+        //this.oComponent.getModel("PedidoPosContrato").refresh(true);
 
         if (modeApp === 'M') {
           this.oComponent.getModel("DisplayPosPed").refresh(true);
@@ -1651,6 +1701,29 @@ sap.ui.define([
           inCecoIntercoCabecera.setValueState("Error");
         }
 
+        // --Validación OT
+        var ordenesValidas = this.getView().getModel("listadoValidarOrdenes").getData();
+
+        // -Ordenes Ingreso Cabecera
+        var inOrdenIngresoCabecera = this.getView().byId("f_ordenesIngresoCab");
+        var ordenIngresoCabecera = inOrdenIngresoCabecera.getValue();
+        var ordenEncontrada = !!ordenesValidas.find(ordenValida => ordenValida.Aufnr === ordenIngresoCabecera);
+        if (ordenIngresoCabecera === "" || ordenEncontrada) {
+          inOrdenIngresoCabecera.setValueState("None");
+        }else{
+          inOrdenIngresoCabecera.setValueState("Error");
+        }
+
+        // -Ordenes Interco Cabecera
+        var inOrdenIntercoCabecera = this.getView().byId("f_ordenesIntercoCab");
+        var ordenIntercoCabecera = inOrdenIntercoCabecera.getValue();
+        var ordenEncontrada = !!ordenesValidas.find(ordenValida => ordenValida.Aufnr === ordenIntercoCabecera);
+        if (ordenIntercoCabecera === "" || ordenEncontrada) {
+          inOrdenIntercoCabecera.setValueState("None");
+        }else{
+          inOrdenIntercoCabecera.setValueState("Error");
+        }
+
         // --Validación Libro Mayor Interco
         var librosValidos = this.getView().getModel("listadoValidarLibroMayor").getData();
 
@@ -1671,6 +1744,8 @@ sap.ui.define([
             inNIA.getValue() && inNIA.getValueState() != "Error" &&
             inCecoIngresoCabecera.getValueState() != "Error" &&
             inCecoIntercoCabecera.getValueState() != "Error" &&
+            inOrdenIngresoCabecera.getValueState() != "Error" &&
+            inOrdenIntercoCabecera.getValueState() != "Error" &&
             inLibroMayor.getValueState() != "Error") {
                 validation = true;
         }
@@ -1811,6 +1886,7 @@ sap.ui.define([
             // Entidad PedidoPosicionModSet
             let objPedidoPosicionSet = {
               ItmNumber: posiciones[i].Posnr.toString(), // Posición
+              PoItmNo: posiciones[i].PoItmNo, // Posición del contrato con referencia
               Material: posiciones[i].Matnr, // Material
               ShortText: posiciones[i].Arktx, // Descripción Material
               BillDate: "\/Date(" + BillDate + ")\/",
@@ -1819,7 +1895,7 @@ sap.ui.define([
               FixValDy: "\/Date(" + FixValDy + ")\/",
               ServDate: "\/Date(" + ServDate + ")\/",
               PriceDate: "\/Date(" + Date.parse(posiciones[i].Zzprsdt) + ")\/", // Fecha Precio
-              SalesUnit: posiciones[i].Meins, // Unidades
+              SalesUnit: posiciones[i].Zieme, // Unidades
               Plant: SalesOrg,
               Ukurs: posiciones[i].Ukurs, // Tipo de Cambio
               Yykostkl: posiciones[i].Yykostkl, // Ceco Ingreso
@@ -1835,7 +1911,7 @@ sap.ui.define([
               CondType: 'PR00',
               ItmNumber: posiciones[i].Posnr.toString(), // Posición
               CondPUnt: posiciones[i].Kpein, // Cantidad Base
-              CondUnit: posiciones[i].Meins, // Unidades
+              CondUnit: posiciones[i].Zieme, // Unidades
               CondValue: posiciones[i].Netpr, // Importe
               Currency: posiciones[i].Waerk, // Moneda
               Conpricdat: "\/Date(" + Conpricdat + ")\/",
@@ -1860,6 +1936,7 @@ sap.ui.define([
             // Entidad PedidoPosicionSet
             let objPedidoPosicionSet = {
               ItmNumber: posiciones[i].ItmNumber.toString(), // Posición Nueva
+              PoItmNo: posiciones[i].PoItmNo, // Posición del contrato con referencia
               Material: posiciones[i].Material, // Material
               ShortText: posiciones[i].ShortText, // Descripción Material
               BillDate: "\/Date(" + BillDate + ")\/",
@@ -1959,7 +2036,7 @@ sap.ui.define([
         if (modeApp === 'C' || isCopy) {
           var oJson = {
             PpSearch: PpSearch,
-            Ref1: Ref1,            
+            Ref1: Ref1,
             DocType: DocType,
             SalesOrg: SalesOrg,
             SalesDist: SalesDist,
@@ -2121,508 +2198,7 @@ sap.ui.define([
         }      
       },
 
-      onGrabar_OLD: function () {
-        var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-        
-        var posiciones;
-        if (modeApp === 'M') {
-          posiciones = this.getView().getModel("DisplayPosPed").getData();
-        }else{
-          posiciones = this.getView().getModel("PedidoPos").getData();
-        }
-        
-        // Validaciones
-        var validation = this.validarInputsGrabar();
-        if (!validation){
-          MessageBox.error("Se ha producido un error en la validación de los datos introducidos");
-          return;
-        }
-
-        // Validamos que el pedido tiene alguna posición
-        if (!posiciones || posiciones.length < 1) {
-          MessageBox.error("No se puede grabar un pedido sin posiciones");
-          return;  
-        }
-
-        var that = this;
-        sap.ui.core.BusyIndicator.show();
-
-        var message;
-        var crear = "Se ha creado la solicitud de Venta: ";
-        var modificar = "Se ha modificado la solicitud de Venta: "
-
-        //Fechas de Cabecera
-        var ReqDate = Date.parse(new Date());
-        var PurchDate = Date.parse(new Date());
-        var BillDate = Date.parse(new Date());
-        var DocDate = Date.parse(new Date());
-        var PriceDate = Date.parse(new Date());
-        var QtValidF = Date.parse(new Date());
-        var QtValidT = Date.parse(new Date());
-        var CtValidF = Date.parse(new Date());
-        var CtValidT = Date.parse(new Date());
-        var WarDate = Date.parse(new Date());
-        var FixValDy = Date.parse(new Date());
-        var ServDate = Date.parse(new Date());
-        var CmlqtyDat = Date.parse(new Date());
-        var PsmPstngDate = Date.parse(new Date());
-        var PoDatS = Date.parse(new Date());
-        var DunDate = Date.parse(new Date());
-        
-        // Fechas de Posición
-        var TpDate = Date.parse(new Date());
-        var GiDate = Date.parse(new Date());        
-        var MsDate = Date.parse(new Date());
-        var LoadDate = Date.parse(new Date());        
-        var DlvDate = Date.parse(new Date());
-        var Conpricdat = Date.parse(new Date());
-
-        // Datos Alta Pedidos
-        var Vbeln = this.oComponent.getModel("DisplayPEP").getData().Vbeln; // Número de pedido (solo al modificar)
-
-        var PpSearch = this.oComponent.getModel("DisplayPEP").getData().Ktext; // Denominación
-        var PartnNumb = this.oComponent.getModel("ModoApp").getData().Kunnr; // Código de cliente
-        var Ref1 = this.oComponent.getModel("ModoApp").getData().Numcont; // Contrato
-
-        var DocType = this.oComponent.getModel("ModoApp").getData().Clasepedido; // Clase de Pedido
-        var SalesOrg = this.oComponent.getModel("ModoApp").getData().Vkbur; // Organización de Ventas / Sociedad
-        var SalesDist = this.oComponent.getModel("ModoApp").getData().Bzirk; // Línea Servicio
-        var DistrChan = this.oComponent.getModel("ModoApp").getData().CvCanal; // Canal
-        var Division = this.oComponent.getModel("ModoApp").getData().CvSector; // Sector
-        var SalesOff = this.oComponent.getModel("DisplayPEP").getData().Vkbur; // Oficina de Ventas
-        var PurchNoC = this.oComponent.getModel("DisplayPEP").getData().Bstnk; // Nº de Pedido de Cliente
-        var Yykostkl = this.oComponent.getModel("DisplayPEP").getData().Yykostkl; // Ceco Ingreso
-        var Yyaufnr = this.oComponent.getModel("DisplayPEP").getData().Yyaufnr; // Orden Ingreso
-        var Zzkostl = this.oComponent.getModel("DisplayPEP").getData().Zzkostl; // Ceco Interco
-        var Zzaufnr = this.oComponent.getModel("DisplayPEP").getData().Zzaufnr; // Orden Interco
-        var Kstar = this.oComponent.getModel("DisplayPEP").getData().Kstar; // Libro Mayor Interco
-        var OrdReason = this.oComponent.getModel("DisplayPEP").getData().Augru; // Motivo de Pedido
-        var BillBlock = this.oComponent.getModel("DisplayPEP").getData().Faksk; // Bloqueo de Factura
-        var Zznia = this.oComponent.getModel("ModoApp").getData().Nia; // NIA
-        var TxtCabecera = this.oComponent.getModel("DisplayPEP").getData().Tdlinecab; // Texto de Cabecera
-        var TxtAclaraciones = this.oComponent.getModel("DisplayPEP").getData().Tdlineacl; // Texto de aclaraciones
-        var SmtpAddr = this.oComponent.getModel("ModoApp").getData().SmtpAddr; // Mail destina de factura
-        // -- Otros campos --        
-        // -Responsable
-        var Zzresponsable = "";
-        
-        // -Role
-        var PartnRole = "AG";
-
-        // -Moneda
-        var Currency; 
-        // Si existe la moneda en el pedido se mantiene
-        if (this.oComponent.getModel("DisplayPEP").getData().Waerk) {
-          Currency = this.oComponent.getModel("DisplayPEP").getData().Waerk;
-        }else{ // Si es un nuevo pedido, cogemos la moneda de la primera posición
-          Currency = posiciones[0].Currency;
-          this.oComponent.getModel("DisplayPEP").setProperty("/Waerk", Currency);
-        }        
       
-        // -------------------- MODO MODIFICACIÓN --------------------
-        if (modeApp === 'M') {
-          
-          // --ADJUNTOS (FicheroModSet)
-          var oModAdj = this.oComponent.getModel("Adjuntos").getData();
-          var oModAdj2 = [], numdoc = 0;
-          
-          oModAdj.forEach(function (el) {
-            numdoc++;
-
-            var adj = {
-              Numdoc: numdoc.toString(),
-              Filename: el.Filename,
-              Descripcion: el.Descripcion
-            }
-
-            if (!el.URL) {
-              adj.Mimetype = el.Mimetype;
-              adj.Content = el.Content;
-            }
-
-            oModAdj2.push(adj);
-          });
-
-          // --POSCIONES (SolicitudPepCrSet, PedidoCondicionModSet, PedidoCantidadModSet, PedidoTextosModSet)
-          //var posiciones = this.getView().getModel("DisplayPosPed").getData();
-
-          var PedidoPosicionModSet = [];
-          var PedidoCondicionModSet = [];
-          var PedidoCantidadModSet = [];
-          var PedidoTextosModSet_Aux = [];
-          for (var i = 0; i < posiciones.length; i++) {
-
-            // Entidad PedidoPosicionModSet
-            let objPedidoPosicionModSet = {
-              ItmNumber: posiciones[i].Posnr.toString(), // Posición
-              Material: posiciones[i].Matnr, // Material
-              ShortText: posiciones[i].Arktx, // Descripción Material
-              BillDate: "\/Date(" + BillDate + ")\/",
-              PurchDate: "\/Date(" + PurchDate + ")\/",
-              PoDatS: "\/Date(" + PoDatS + ")\/",
-              FixValDy: "\/Date(" + FixValDy + ")\/",
-              ServDate: "\/Date(" + ServDate + ")\/",
-              PriceDate: "\/Date(" + Date.parse(posiciones[i].Zzprsdt) + ")\/", // Fecha Precio
-              SalesUnit: posiciones[i].Meins, // Unidades
-              Plant: SalesOrg,
-              Ukurs: posiciones[i].Ukurs, // Tipo de Cambio
-              Yykostkl: posiciones[i].Yykostkl, // Ceco Ingreso
-              Yyaufnr: posiciones[i].Yyaufnr, // Orden Ingreso
-              Zzkostl: posiciones[i].Zzkostl, // Ceco Interco
-              Zzaufnr: posiciones[i].Zzaufnr, // Orden Interco
-              Kstar: posiciones[i].Kstar // Libro Mayor Interco
-            };
-            PedidoPosicionModSet.push(objPedidoPosicionModSet);
-
-            // Entidad PedidoCondicionModSet
-            let objPedidoCondicionModSet = {
-              CondType: 'PR00',
-              ItmNumber: posiciones[i].Posnr.toString(), // Posición
-              CondPUnt: posiciones[i].Kpein, // Cantidad Base
-              CondUnit: posiciones[i].Meins, // Unidades
-              CondValue: posiciones[i].Netpr, // Importe
-              Currency: posiciones[i].Waerk, // Moneda
-              Conpricdat: "\/Date(" + Conpricdat + ")\/",
-            };
-            PedidoCondicionModSet.push(objPedidoCondicionModSet);
-
-            // Entidad PedidoCantidadModSet
-            let objPedidoCantidadModSet = {
-              //Secu: (i + 1).toString(),
-              ItmNumber: posiciones[i].Posnr.toString(), // Posición
-              ReqQty: posiciones[i].Kwmeng, // Cantidad
-              ReqDate: "\/Date(" + ReqDate + ")\/",
-              TpDate: "\/Date(" + TpDate + ")\/",
-              GiDate: "\/Date(" + GiDate + ")\/",
-              MsDate: "\/Date(" + MsDate + ")\/",
-              LoadDate: "\/Date(" + LoadDate + ")\/",
-              DlvDate: "\/Date(" + DlvDate + ")\/",
-            };
-            PedidoCantidadModSet.push(objPedidoCantidadModSet);
-
-            // Entidad PedidoTextosModSet
-            let objPedidoTextosModSet;
-            if (TxtCabecera != null && TxtAclaraciones == null) {
-              objPedidoTextosModSet = {
-                Textid: '001',
-                Langu: 'ES',
-                Textline: TxtCabecera
-              };
-              PedidoTextosModSet_Aux.push(objPedidoTextosModSet);
-            } else if (TxtCabecera == null && TxtAclaraciones != null) {
-              objPedidoTextosModSet = {
-                Textid: 'Z003',
-                Langu: 'ES',
-                Textline: TxtAclaraciones
-              };
-              PedidoTextosModSet_Aux.push(objPedidoTextosModSet);
-            } else if (TxtCabecera != null && TxtAclaraciones != null) {
-              if (TxtCabecera) {
-                objPedidoTextosModSet = {
-                  Textid: '0001',
-                  Langu: 'ES',
-                  Textline: TxtCabecera
-                };
-                PedidoTextosModSet_Aux.push(objPedidoTextosModSet);
-              }
-              if (TxtAclaraciones) {
-                objPedidoTextosModSet = {
-                  Textid: 'Z003',
-                  Langu: 'ES',
-                  Textline: TxtAclaraciones
-                };
-                PedidoTextosModSet_Aux.push(objPedidoTextosModSet);
-              }
-            }
-          }
-
-          // Entidad PedidoTextosModSet
-          let PedidoTextosModSet = [];
-          let uniqueObject = {};
-
-          for (let i in PedidoTextosModSet_Aux) {
-            var objTextId = PedidoTextosModSet_Aux[i]['Textid'];
-            uniqueObject[objTextId] = PedidoTextosModSet_Aux[i];
-          }
-
-          for (i in uniqueObject) {
-            PedidoTextosModSet.push(uniqueObject[i]);
-          }
-
-          var oJson = {
-            Vbeln: Vbeln,
-            PpSearch: PpSearch,
-            Ref1: Ref1,
-            DocType: DocType,
-            SalesOrg: SalesOrg,
-            SalesDist: SalesDist,
-            DistrChan: DistrChan,
-            Division: Division,
-            SalesOff: SalesOff,
-            PurchNoC: PurchNoC,
-            Zzkostl: Zzkostl,
-            Zzaufnr: Zzaufnr,
-            Kstar: Kstar,
-            OrdReason: OrdReason,
-            BillBlock: BillBlock,
-            Currency: Currency,
-            ReqDateH: "\/Date(" + ReqDate + ")\/",
-            PurchDate: "\/Date(" + PurchDate + ")\/",
-            BillDate: "\/Date(" + BillDate + ")\/",
-            DocDate: "\/Date(" + DocDate + ")\/",
-            PriceDate: "\/Date(" + PriceDate + ")\/",
-            QtValidF: "\/Date(" + QtValidF + ")\/",
-            QtValidT: "\/Date(" + QtValidT + ")\/",
-            CtValidF: "\/Date(" + CtValidF + ")\/",
-            CtValidT: "\/Date(" + CtValidT + ")\/",
-            WarDate: "\/Date(" + WarDate + ")\/",
-            FixValDy: "\/Date(" + FixValDy + ")\/",
-            ServDate: "\/Date(" + ServDate + ")\/",
-            CmlqtyDat: "\/Date(" + CmlqtyDat + ")\/",
-            PsmPstngDate: "\/Date(" + PsmPstngDate + ")\/",
-            PoDatS: "\/Date(" + PoDatS + ")\/",
-            DunDate: "\/Date(" + DunDate + ")\/",
-            PedidoClienteModSet: {
-              PartnNumb: PartnNumb,
-              PartnRole: PartnRole,
-              SmtpAddr: SmtpAddr
-            },
-            PedidoExtensionModSet: {
-              Zznia: Zznia,
-              Zzresponsable: Zzresponsable,
-              Yykostkl: Yykostkl,
-              Yyaufnr: Yyaufnr
-            },
-            FicheroModSet: oModAdj2,
-            PedidoPosicionModSet: PedidoPosicionModSet,
-            PedidoCondicionModSet: PedidoCondicionModSet,
-            PedidoCantidadModSet: PedidoCantidadModSet,
-            PedidoTextosModSet: PedidoTextosModSet,            
-            PedidoRespuestaModSet: {
-              //Idsolc: Idsolc,
-            }
-          };
-
-          this.mainService.create("/PedidoModSet", oJson, {
-            success: function (result) {
-              sap.ui.core.BusyIndicator.hide();
-              if (result.Vbeln && result.Vbeln !== "0") {                
-                message = modificar + result.Vbeln;
-                MessageBox.show(message, {
-                  icon: sap.m.MessageBox.Icon.SUCCESS,
-                  onClose: function (oAction) {
-                    var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-                    oRouter.navTo("RouteMonitorPedidos");
-                  }
-                });
-              } else if (result.PedidoRespuestaModSet.Mensaje) {
-                MessageBox.error(result.PedidoRespuestaModSet.Mensaje);
-              }
-            },
-            error: function (err) {
-              sap.m.MessageBox.error("Solicitud no Modificada.", {
-                title: "Error",
-                initialFocus: null,
-              });
-              sap.ui.core.BusyIndicator.hide();
-            },
-            async: true,
-          });
-
-          // -------------------- MODO CREACIÓN --------------------
-        }else{
-
-          // --POSCIONES (SolicitudPepCrSet, SolicitudPedCondSet, SolicitudPedQtySet, PedidoTextosModSet)
-          //var posiciones = this.getView().getModel("PedidoPos").getData();
-
-          var PedidoPosicionSet = [];
-          var PedidoCondicionSet = [];
-          var PedidoCantidadSet = [];
-          var PedidoTextosSet_Aux = [];
-          for (var i = 0; i < posiciones.length; i++) {
-            
-            // Posición Real en el contrato
-            //let PoItmNo = (posiciones[i].PoItmNo)? posiciones[i].PoItmNo.toString() : "";
-            
-            // Entidad PedidoPosicionSet
-            let objPedidoPosicionSet = {
-              //PoItmNo: PoItmNo, // Posición Real en el contrato
-              ItmNumber: posiciones[i].ItmNumber.toString(), // Posición Nueva
-              Material: posiciones[i].Material, // Material
-              ShortText: posiciones[i].ShortText, // Descripción Material
-              BillDate: "\/Date(" + BillDate + ")\/",
-              PurchDate: "\/Date(" + PurchDate + ")\/",
-              PoDatS: "\/Date(" + PoDatS + ")\/",
-              FixValDy: "\/Date(" + FixValDy + ")\/",
-              ServDate: "\/Date(" + ServDate + ")\/",
-              PriceDate: "\/Date(" + Date.parse(posiciones[i].PriceDate) + ")\/", // Fecha Precio
-              SalesUnit: posiciones[i].SalesUnit, // Unidades
-              Plant: SalesOrg,
-              Ukurs: posiciones[i].Ukurs, // Tipo de Cambio
-              Yykostkl: posiciones[i].Yykostkl, // Ceco Ingreso
-              Yyaufnr: posiciones[i].Yyaufnr, // Orden Ingreso
-              Zzkostl: posiciones[i].Zzkostl, // Ceco Interco
-              Zzaufnr: posiciones[i].Zzaufnr, // Orden Interco
-              Kstar: posiciones[i].Kstar // Libro Mayor Interco
-            };
-            PedidoPosicionSet.push(objPedidoPosicionSet);
-
-            // Entidad PedidoCondicionSet
-            let objPedidoCondicionSet = {
-              CondType: 'PR00',
-              ItmNumber: posiciones[i].ItmNumber.toString(), // Posición
-              CondPUnt: posiciones[i].Kpein, // Cantidad Base
-              CondUnit: posiciones[i].SalesUnit, // Unidades
-              CondValue: posiciones[i].CondValue, // Importe
-              Currency: posiciones[i].Currency, // Moneda
-              Conpricdat: "\/Date(" + Conpricdat + ")\/",
-            };
-            PedidoCondicionSet.push(objPedidoCondicionSet);
-
-            // Entidad PedidoCantidadSet
-            let objPedidoCantidadSet = {
-              //Secu: (i + 1).toString(),
-              ItmNumber: posiciones[i].ItmNumber.toString(), // Posición
-              ReqQty: posiciones[i].ReqQty, // Cantidad
-              ReqDate: "\/Date(" + ReqDate + ")\/",
-              TpDate: "\/Date(" + TpDate + ")\/",
-              GiDate: "\/Date(" + GiDate + ")\/",
-              MsDate: "\/Date(" + MsDate + ")\/",
-              LoadDate: "\/Date(" + LoadDate + ")\/",
-              DlvDate: "\/Date(" + DlvDate + ")\/",
-            };
-            PedidoCantidadSet.push(objPedidoCantidadSet);
-
-            // Entidad PedidoTextosSet
-            let objPedidoTextosSet;
-            if (TxtCabecera != null && TxtAclaraciones == null) {
-              objPedidoTextosSet = {
-                Textid: '001',
-                Langu: 'ES',
-                Textline: TxtCabecera
-              };
-              PedidoTextosSet_Aux.push(objPedidoTextosSet);
-            } else if (TxtCabecera == null && TxtAclaraciones != null) {
-              objPedidoTextosSet = {
-                Textid: 'Z003',
-                Langu: 'ES',
-                Textline: TxtAclaraciones
-              };
-              PedidoTextosSet_Aux.push(objPedidoTextosSet);
-            } else if (TxtCabecera != null && TxtAclaraciones != null) {
-              if (TxtCabecera) {
-                objPedidoTextosSet = {
-                  Textid: '0001',
-                  Langu: 'ES',
-                  Textline: TxtCabecera
-                };
-                PedidoTextosSet_Aux.push(objPedidoTextosSet);
-              }
-              if (TxtAclaraciones) {
-                objPedidoTextosSet = {
-                  Textid: 'Z003',
-                  Langu: 'ES',
-                  Textline: TxtAclaraciones
-                };
-                PedidoTextosSet_Aux.push(objPedidoTextosSet);
-              }
-            }
-          }
-
-          // Entidad PedidoTextosSet
-          let PedidoTextosSet = [];
-          let uniqueObject = {};
-
-          for (let i in PedidoTextosSet_Aux) {
-            var objTextId = PedidoTextosSet_Aux[i]['Textid'];
-            uniqueObject[objTextId] = PedidoTextosSet_Aux[i];
-          }
-
-          for (i in uniqueObject) {
-            PedidoTextosSet.push(uniqueObject[i]);
-          }
-
-          var oJson = {
-            PpSearch: PpSearch,
-            Ref1: Ref1,            
-            DocType: DocType,
-            SalesOrg: SalesOrg,
-            SalesDist: SalesDist,
-            DistrChan: DistrChan,
-            Division: Division,
-            SalesOff: SalesOff,            
-            PurchNoC: PurchNoC,
-            Zzkostl: Zzkostl,
-            Zzaufnr: Zzaufnr,
-            Kstar: Kstar,
-            OrdReason: OrdReason,
-            BillBlock: BillBlock,
-            Currency: Currency,
-            ReqDateH: "\/Date(" + ReqDate + ")\/",
-            PurchDate: "\/Date(" + PurchDate + ")\/",
-            BillDate: "\/Date(" + BillDate + ")\/",
-            DocDate: "\/Date(" + DocDate + ")\/",
-            PriceDate: "\/Date(" + PriceDate + ")\/",
-            QtValidF: "\/Date(" + QtValidF + ")\/",
-            QtValidT: "\/Date(" + QtValidT + ")\/",
-            CtValidF: "\/Date(" + CtValidF + ")\/",
-            CtValidT: "\/Date(" + CtValidT + ")\/",
-            WarDate: "\/Date(" + WarDate + ")\/",
-            FixValDy: "\/Date(" + FixValDy + ")\/",
-            ServDate: "\/Date(" + ServDate + ")\/",
-            CmlqtyDat: "\/Date(" + CmlqtyDat + ")\/",
-            PsmPstngDate: "\/Date(" + PsmPstngDate + ")\/",
-            PoDatS: "\/Date(" + PoDatS + ")\/",
-            DunDate: "\/Date(" + DunDate + ")\/",
-            PedidoClienteSet: {
-              PartnNumb: PartnNumb,
-              PartnRole: PartnRole,
-              SmtpAddr: SmtpAddr
-            },
-            PedidoExtensionSet: {
-              Zznia: Zznia,
-              Zzresponsable: Zzresponsable,
-              Yykostkl: Yykostkl,
-              Yyaufnr: Yyaufnr
-            },
-            FicheroSet: oModAdj2,
-            PedidoPosicionSet: PedidoPosicionSet,
-            PedidoCondicionSet: PedidoCondicionSet,
-            PedidoCantidadSet: PedidoCantidadSet,
-            PedidoTextosSet: PedidoTextosSet,            
-            PedidoRespuestaSet: {
-              //Idsolc: Idsolc,
-            }
-          };
-
-          this.mainService.create("/PedidoCabSet", oJson, {
-            success: function (result) {
-              sap.ui.core.BusyIndicator.hide();
-              if (result.Vbeln && result.Vbeln !== "0") {
-                message = crear + result.Vbeln;
-
-                MessageBox.show(message, {
-                  icon: sap.m.MessageBox.Icon.SUCCESS,
-                  onClose: function (oAction) {
-                    var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-                    oRouter.navTo("RouteMonitorPedidos");
-                  }
-                });
-              } else if (result.PedidoRespuestaSet.Mensaje) {
-                MessageBox.error(result.PedidoRespuestaSet.Mensaje);
-              }              
-            },
-            error: function (err) {
-              sap.m.MessageBox.error("Solicitud no creada.", {
-                title: "Error",
-                initialFocus: null,
-              });
-              sap.ui.core.BusyIndicator.hide();              
-            },
-            async: true
-          });
-        }        
-      },
       
 
       /*ABRIR GESTOR DE ARCHIVOS*/
@@ -2701,113 +2277,7 @@ sap.ui.define([
 
 
 
-      handleUploadPress_OLD: function (oEvent) {
-        //Inicializamos el modelo de adjunto 
-        //this.act_adj = null;
-
-        //var oMdesc = this.oComponent.getModel("datosAdj").getData();
-        //var desc = oMdesc.Desc;
-
-        /*if (!desc || desc == undefined) {
-          desc = this.getView().byId("descAdjunto").getValue();
-        }*/
-
-        /*if (!desc) {
-            MessageBox.error(this.oI18nModel.getProperty("errDesArch"));
-            this.getView().byId("fileUploader").setValue("");
-            return;
-        }*/
-
-        /*var fileDetails = oEvent.getParameters("file").files[0];
-        sap.ui.getCore().fileUploaderArr = [];
-
-        if (fileDetails) {
-          var mimeDet = fileDetails.type,
-            fileName = fileDetails.name;
-          //Calling method....
-          var adjuntos = this.oComponent.getModel("Adjuntos").getData();
-          var nadj = adjuntos.length;
-
-          this.base64conversionMethod(
-            C,
-            fileName,
-            fileDetails,
-            nadj,
-            adjuntos,
-            "");
-        } else {
-          sap.ui.getCore().fileUploaderArr = [];
-        }*/
-
-
-        this.act_adj = null;
-        //var oMdesc = this.oComponent.getModel("datosAdj").getData();
-        //var desc = oMdesc.Desc;
-        var fileDetails = oEvent.getParameters("file").files[0];
-        sap.ui.getCore().fileUploaderArr = [];
-        if (fileDetails) {
-          var mimeDet = fileDetails.type,
-            fileName = fileDetails.name;
-          var adjuntos = this.oComponent.getModel("Adjuntos").getData();
-          var nadj = adjuntos.length;
-          this.base64conversionMethod(mimeDet, fileName, fileDetails, nadj, adjuntos, "")
-        } else {
-          sap.ui.getCore().fileUploaderArr = []
-        }
-      },
-
-      /*CONVERTIR FICHEROS A BASE64 */
-      base64conversionMethod_OLD: function (fileMime, fileName, fileDetails, DocNum, adjuntos, desc) {
-        var that = this;
-        //var oModAdj = new JSONModel();
-        /*
-        FileReader.prototype.readAsBinaryString = function (fileData) {
-          var binary = "";
-          var reader = new FileReader();
-          reader.onload = function (e) {
-            var bytes = new Uint8Array(reader.result);
-            var length = bytes.byteLength;
-            for (var i = 0; i < length; i++) {
-              binary += String.fromCharCode(bytes[i]);
-            }
-            that.base64conversionRes = btoa(binary);
-
-            var numdoc = (DocNum + 1).toString();
-            that.act_adj = {
-              "Numdoc": numdoc,
-              "Mimetype": fileMime,
-              "Filename": fileName,
-              //"Descripcion": desc,
-              "Content": that.base64conversionRes,
-            };
-            /*that.oComponent.getModel("Adjuntos").refresh(true);
-            that.getView().byId("descAdjunto").setValue("");
-            that.getView().byId("fileUploader").setValue("");*/
-          /*};
-          reader.readAsArrayBuffer(fileData);
-        };
-        */
-
-        var reader = new FileReader();
-        reader.onload = function (readerEvt) {
-          var binaryString = readerEvt.target.result;
-          that.base64conversionRes = btoa(binaryString);
-          var numdoc = (DocNum + 1).toString();
-
-          that.act_adj = {
-            "Numdoc": numdoc,
-            "Mimetype": fileMime,
-            "Filename": fileName,
-            //"Descripcion": desc,
-            "Content": that.base64conversionRes,
-          };
-
-          /*that.oComponent.getModel("Adjuntos").refresh(true);
-           that.getView().byId("descAdjunto").setValue("");
-           that.getView().byId("fileUploader").setValue("");*/
-        };
-        reader.readAsBinaryString(fileDetails);
-      },
+      
 
       /* Botón para la funcionalidad de meterlo en la tabla de los adjuntos*/
 
@@ -3049,50 +2519,6 @@ sap.ui.define([
     
         return result;
       },*/
-
-      /** **ELIMINAR***/
-      onPressIcono_OLD: function(oEvent) {
-       
-        const oI18nModel = this.oComponent.getModel("i18n");
-        var oTable = this.getView().byId("idTableAdjuntos");
-        var adj = this.Adjunto(oEvent);
-        
-   
-        var DatosAdjunto = [];
-        var obj = {};
-        var that = this;
-
-        obj = {
-          Foltp: adj.Foltp,
-          Folyr: adj.Folyr,
-          Folno: adj.Folno,
-          Objtp: adj.Objtp,
-          Objyr: adj.Objyr,
-          Objno: adj.Objno
-        };
-
-        DatosAdjunto.push(obj);
-          obj = {};
-
-        var json1 = {
-          Activity: "DISPLAY",
-          Foltp: adj.Foltp,
-          Folyr: adj.Folyr,
-          Folno: adj.Folno,
-          Objtp: adj.Objtp,
-          Objyr: adj.Objyr,
-          Objno: adj.Objno
-        };
-
-        this.mainService.create("/VisualizarAdjuntoSet", json1, {
-          success: function(result) {
-
-          },
-          error: function (err) {
-            MessageBox.error(that.oI18nModel.getProperty("errFat"));
-          }
-        })
-      },
 
       Adjunto: function(oEvent) {
         var oModAdj = this.oComponent.getModel("Adjuntos").getData();

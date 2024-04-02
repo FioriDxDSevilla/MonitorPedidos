@@ -2688,7 +2688,7 @@ sap.ui.define([
                                         SolicitudPed_A.results[i].ShortText = SolicitudPed_A.results[i].Arktx;
                                         SolicitudPed_A.results[i].PriceDate = SolicitudPed_A.results[i].Zzprsdt;
                                         SolicitudPed_A.results[i].ReqQty = SolicitudPed_A.results[i].Kwmeng;
-                                        SolicitudPed_A.results[i].SalesUnit = SolicitudPed_A.results[i].Meins;
+                                        SolicitudPed_A.results[i].SalesUnit = SolicitudPed_A.results[i].Zieme;
                                         SolicitudPed_A.results[i].CondValue = SolicitudPed_A.results[i].Netpr;
                                         SolicitudPed_A.results[i].Currency = SolicitudPed_A.results[i].Waerk;
                                     }
@@ -2700,7 +2700,7 @@ sap.ui.define([
                                     oModelSolicitud_Ped.setData(SolicitudPed_A);
                                     that.oComponent.getModel("PedidoPosContrato").setData(oModelSolicitud_Ped.getData().results);
 
-                                    if (that.modoapp === "M") { // Si es modificación, quitamos las posiciones del contrato que ya están referenciadas
+                                    /*if (that.modoapp === "M") { // Si es modificación, quitamos las posiciones del contrato que ya están referenciadas
                                         var posiciones = that.oComponent.getModel("DisplayPosPed").getData();
                                         var posicionesContrato = that.oComponent.getModel("PedidoPosContrato").getData();
                                         var posicionesPosnr = posiciones.map(posicion => posicion.Posnr);
@@ -2711,7 +2711,8 @@ sap.ui.define([
 
                                         that.oComponent.getModel("PedidoPosContrato").setData(objetosFiltrados);
                                         return;
-                                    }
+                                    }*/
+                                    if (that.modoapp === "M") return;
                                 } else if (that.modoapp === "M" && data.results[0].contrato) { // Si es modificación y tiene contrato
                                     that.onSolicitarPedido(data.results[0].contrato, true);
                                 }
@@ -2983,19 +2984,22 @@ sap.ui.define([
                 var pedidosContrato = this.oComponent.getModel("PedidoPosContrato").getData();
                 var pedidosContrato_Aux = JSON.parse(JSON.stringify(pedidosContrato)); // Copy data model without references
                 var posiciones = this.oComponent.getModel("PedidoPos").getData();
-                let indexDeleted = 0;
+                //let indexDeleted = 0;
+                var itmNumber = 0;
                 for (var i = 0; i < aSelectedIndices.length; i++) {
                     var indice = aSelectedIndices[i];
                     let posicionPed = pedidosContrato_Aux[indice];
+                    itmNumber += 10;
 
                     var posicionN = {
-                        ItmNumber: posicionPed.Posnr,
+                        ItmNumber: itmNumber, // La posición es autoincrementada
+                        PoItmNo: posicionPed.Posnr, // Posición del contrato con referencia
                         Material: posicionPed.Matnr,
                         ShortText: posicionPed.Arktx,
                         PriceDate: new Date(posicionPed.Zzprsdt),
                         ReqQty: posicionPed.Kwmeng,
                         Kpein: posicionPed.Kpein,
-                        SalesUnit: posicionPed.Meins,
+                        SalesUnit: posicionPed.Zieme,
                         CondValue: posicionPed.Netpr,
                         Currency: posicionPed.Waerk,
                         Yykostkl: posicionPed.Yykostkl,
@@ -3004,11 +3008,11 @@ sap.ui.define([
                         Zzaufnr: posicionPed.Zzaufnr,
                         Kstar: posicionPed.Kstar
                     }
-                    posiciones.push(posicionN);
-                    pedidosContrato.splice(indice - indexDeleted, 1); // Eliminarmos la posición del modelo de contratos
-                    indexDeleted++;
+                    posiciones.push(posicionN);                    
+                    //pedidosContrato.splice(indice - indexDeleted, 1); // Eliminarmos la posición del modelo de contratos
+                    //indexDeleted++;
                 }
-                this.oComponent.getModel("PedidoPosContrato").refresh(true);
+                //this.oComponent.getModel("PedidoPosContrato").refresh(true);
                 this.oComponent.getModel("PedidoPos").refresh(true);
 
                 // Deseleccionar las opciones

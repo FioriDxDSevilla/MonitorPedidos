@@ -103,7 +103,7 @@
                 <m:Label text="{i18n>Unidades}" />
                 <table:template>
                     <m:Text text="{PedidoPos>SalesUnit}" wrapping="false"/>
-                    <!--<m:Text text="{DisplayPosPed>Meins}"/>-->
+                    <!--<m:Text text="{DisplayPosPed>Zieme}"/>-->
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
