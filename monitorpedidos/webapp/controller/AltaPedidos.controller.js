@@ -24,7 +24,7 @@ sap.ui.define([
     
     // Variables inputs
     var tipoInputCeco, tipoInputOrden, tipoInputLibroMayor;
-    var listadoValidarCeco, listadoValidarOrdenes, listadoValidarLibroMayor, listadoValidarMateriales;
+    var listadoValidarCeco, listadoValidarLibroMayor, listadoValidarMateriales;
      // Variables globales para el formateo de los campos 'FECHA DOC. VENTA' e 'IMPORTE'
      var fechaDocVentaFormat;
      /*
@@ -81,8 +81,6 @@ sap.ui.define([
             if (modeApp === 'C' || modeApp === 'M') {
               listadoValidarCeco = true;
               this.onBusqCecos("", "");
-              listadoValidarOrdenes = true;
-              this.onBusqOrdenes("", "", "");
               listadoValidarLibroMayor = true;
               this.onBusqLibroMayor("", "");                    
             }
@@ -516,16 +514,11 @@ sap.ui.define([
         var oModelOrdenes = new JSONModel();
         if (values[0].results && values[0].results.length > 0) {         
           oModelOrdenes.setData(values[0].results);          
-        } else {
-          MessageBox.warning(this.oI18nModel.getProperty("noOrd"));
-        }
+        } //else {
+          //MessageBox.warning(this.oI18nModel.getProperty("noOrd"));
+        //}
         this.oComponent.setModel(oModelOrdenes, "listadoOrdenes");
-        this.oComponent.getModel("listadoOrdenes").refresh(true);
-        if (listadoValidarOrdenes) {
-          this.oComponent.setModel(oModelOrdenes, "listadoValidarOrdenes");
-          this.oComponent.getModel("listadoValidarOrdenes").refresh(true);
-          listadoValidarOrdenes = false;
-        }
+        this.oComponent.getModel("listadoOrdenes").refresh(true);        
         sap.ui.core.BusyIndicator.hide();
       },
 
@@ -1214,29 +1207,6 @@ sap.ui.define([
           inCecoIntercoPosicion.setValueState("Error");
         }
 
-        // --Validación OT
-        var ordenesValidas = this.getView().getModel("listadoValidarOrdenes").getData();
-
-        // -Orden Ingreso Posicion
-        var inOrdenIngresoPosicion = this.getView().byId("f_ordenesIngPos");
-        var ordenIngresoPosicion = inOrdenIngresoPosicion.getValue();
-        var ordenEncontrada = !!ordenesValidas.find(ordenValida => ordenValida.Aufnr === ordenIngresoPosicion);
-        if (ordenIngresoPosicion === "" || ordenEncontrada) {
-          inOrdenIngresoPosicion.setValueState("None");
-        }else{
-          inOrdenIngresoPosicion.setValueState("Error");
-        }
-
-        // -Orden Interco Posicion
-        var inOrdenIntercoPosicion = this.getView().byId("f_ordenesIntPos");
-        var ordenIntercoPosicion = inOrdenIntercoPosicion.getValue();
-        var ordenEncontrada = !!ordenesValidas.find(ordenValida => ordenValida.Aufnr === ordenIntercoPosicion);
-        if (ordenIntercoPosicion === "" || ordenEncontrada) {
-          inOrdenIntercoPosicion.setValueState("None");
-        }else{
-          inOrdenIntercoPosicion.setValueState("Error");
-        }
-
         // --Validación Libro Mayor Interco
         var librosValidos = this.getView().getModel("listadoValidarLibroMayor").getData();
 
@@ -1273,8 +1243,6 @@ sap.ui.define([
             inUnidad.getValue() && inUnidad.getValueState() != "Error" &&
             inCecoIngresoPosicion.getValueState() != "Error" &&
             inCecoIntercoPosicion.getValueState() != "Error" &&
-            inOrdenIngresoPosicion.getValueState() != "Error" &&
-            inOrdenIntercoPosicion.getValueState() != "Error" &&
             inLibroMayor.getValueState() != "Error" &&
             inMaterial.getValueState() != "Error") {
                 validation = true;
@@ -1701,29 +1669,6 @@ sap.ui.define([
           inCecoIntercoCabecera.setValueState("Error");
         }
 
-        // --Validación OT
-        var ordenesValidas = this.getView().getModel("listadoValidarOrdenes").getData();
-
-        // -Ordenes Ingreso Cabecera
-        var inOrdenIngresoCabecera = this.getView().byId("f_ordenesIngresoCab");
-        var ordenIngresoCabecera = inOrdenIngresoCabecera.getValue();
-        var ordenEncontrada = !!ordenesValidas.find(ordenValida => ordenValida.Aufnr === ordenIngresoCabecera);
-        if (ordenIngresoCabecera === "" || ordenEncontrada) {
-          inOrdenIngresoCabecera.setValueState("None");
-        }else{
-          inOrdenIngresoCabecera.setValueState("Error");
-        }
-
-        // -Ordenes Interco Cabecera
-        var inOrdenIntercoCabecera = this.getView().byId("f_ordenesIntercoCab");
-        var ordenIntercoCabecera = inOrdenIntercoCabecera.getValue();
-        var ordenEncontrada = !!ordenesValidas.find(ordenValida => ordenValida.Aufnr === ordenIntercoCabecera);
-        if (ordenIntercoCabecera === "" || ordenEncontrada) {
-          inOrdenIntercoCabecera.setValueState("None");
-        }else{
-          inOrdenIntercoCabecera.setValueState("Error");
-        }
-
         // --Validación Libro Mayor Interco
         var librosValidos = this.getView().getModel("listadoValidarLibroMayor").getData();
 
@@ -1744,8 +1689,6 @@ sap.ui.define([
             inNIA.getValue() && inNIA.getValueState() != "Error" &&
             inCecoIngresoCabecera.getValueState() != "Error" &&
             inCecoIntercoCabecera.getValueState() != "Error" &&
-            inOrdenIngresoCabecera.getValueState() != "Error" &&
-            inOrdenIntercoCabecera.getValueState() != "Error" &&
             inLibroMayor.getValueState() != "Error") {
                 validation = true;
         }
