@@ -1022,6 +1022,7 @@ sap.ui.define([
             type: "P",
             index: index,
             Vbelp: posicion.Posnr,
+            PoItmNo: posicion.PoItmNo,
             ShortText: posicion.Arktx,
             Material: posicion.Matnr,            
             PriceDate: Util.formatDate(new Date(posicion.Zzprsdt)),
@@ -1035,7 +1036,8 @@ sap.ui.define([
             Yyaufnr: posicion.Yyaufnr,
             Zzkostl: posicion.Zzkostl,
             Zzaufnr: posicion.Zzaufnr,
-            Kstar: posicion.Kstar
+            Kstar: posicion.Kstar,
+            Tdlinepos: posicion.Tdlinepos
           }
 
           var oModConfigPos = new JSONModel();
@@ -1058,7 +1060,8 @@ sap.ui.define([
             mode: "M",
             type: "P",
             index: index,
-            Vbelp: posicion.ItmNumber,            
+            Vbelp: posicion.ItmNumber,  
+            PoItmNo: posicion.PoItmNo,
             ShortText: posicion.ShortText,
             Material: posicion.Material,            
             PriceDate: Util.formatDate(new Date(posicion.PriceDate)),
@@ -1072,7 +1075,8 @@ sap.ui.define([
             Yyaufnr: posicion.Yyaufnr,
             Zzkostl: posicion.Zzkostl,
             Zzaufnr: posicion.Zzaufnr,
-            Kstar: posicion.Kstar
+            Kstar: posicion.Kstar,
+            Tdlinepos: posicion.Tdlinepos
           }
 
           var oModConfigPos = new JSONModel();
@@ -1275,6 +1279,7 @@ sap.ui.define([
           //Mapeamos las posiciones
           posicionN = {
             Posnr: posPedFrag.Vbelp,
+            PoItmNo: posPedFrag.PoItmNo,
             Matnr: posPedFrag.Material,
             Arktx: posPedFrag.ShortText,
             Zzprsdt: new Date(posPedFrag.PriceDate),
@@ -1288,7 +1293,8 @@ sap.ui.define([
             Yyaufnr: posPedFrag.Yyaufnr,
             Zzkostl: posPedFrag.Zzkostl,
             Zzaufnr: posPedFrag.Zzaufnr,
-            Kstar: posPedFrag.Kstar
+            Kstar: posPedFrag.Kstar,
+            Tdlinepos: posPedFrag.Tdlinepos
           }
 
           if (modePosPed == 'M') {
@@ -1305,6 +1311,7 @@ sap.ui.define([
           //Mapeamos las posiciones
           posicionN = {
             ItmNumber: posPedFrag.Vbelp,
+            PoItmNo: posPedFrag.PoItmNo,
             Material: posPedFrag.Material,
             ShortText: posPedFrag.ShortText,
             PriceDate: new Date(posPedFrag.PriceDate),
@@ -1318,7 +1325,8 @@ sap.ui.define([
             Yyaufnr: posPedFrag.Yyaufnr,
             Zzkostl: posPedFrag.Zzkostl,
             Zzaufnr: posPedFrag.Zzaufnr,
-            Kstar: posPedFrag.Kstar
+            Kstar: posPedFrag.Kstar,
+            Tdlinepos: posPedFrag.Tdlinepos
           }
 
           if (modePosPed == 'M') {
@@ -1515,7 +1523,7 @@ sap.ui.define([
             
             var posicionN = {
               ItmNumber: itmNumber,
-              PoItmNo: posicionPed.Posnr,
+              PoItmNo: posicionPed.PoItmNo,
               Material: posicionPed.Matnr,
               ShortText: posicionPed.Arktx,
               PriceDate: new Date(posicionPed.Zzprsdt),
@@ -1529,12 +1537,12 @@ sap.ui.define([
               Yyaufnr: posicionPed.Yyaufnr,
               Zzkostl: posicionPed.Zzkostl,
               Zzaufnr: posicionPed.Zzaufnr,
-              Kstar: posicionPed.Kstar
+              Kstar: posicionPed.Kstar,
+              Tdlinepos: posicionPed.Tdlinepos
             }
             posiciones.push(posicionN);
 
           }else{
-            posicionPed.PoItmNo = posicionPed.Posnr,
             posicionPed.Posnr = itmNumber;            
             posicionPed.Zzprsdt = new Date(posicionPed.Zzprsdt);
             posiciones.push(posicionPed);
@@ -1829,7 +1837,7 @@ sap.ui.define([
             // Entidad PedidoPosicionModSet
             let objPedidoPosicionSet = {
               ItmNumber: posiciones[i].Posnr.toString(), // Posición
-              PoItmNo: posiciones[i].PoItmNo, // Posición del contrato con referencia
+              PoItmNo: posiciones[i].PoItmNo.toString(), // Posición del contrato con referencia
               Material: posiciones[i].Matnr, // Material
               ShortText: posiciones[i].Arktx, // Descripción Material
               BillDate: "\/Date(" + BillDate + ")\/",
@@ -1845,7 +1853,8 @@ sap.ui.define([
               Yyaufnr: posiciones[i].Yyaufnr, // Orden Ingreso
               Zzkostl: posiciones[i].Zzkostl, // Ceco Interco
               Zzaufnr: posiciones[i].Zzaufnr, // Orden Interco
-              Kstar: posiciones[i].Kstar // Libro Mayor Interco
+              Kstar: posiciones[i].Kstar, // Libro Mayor Interco
+              Tdlinepos: posiciones[i].Tdlinepos // Texto Posición Factura
             };
             PedidoPosicionSet.push(objPedidoPosicionSet);
 
@@ -1879,7 +1888,7 @@ sap.ui.define([
             // Entidad PedidoPosicionSet
             let objPedidoPosicionSet = {
               ItmNumber: posiciones[i].ItmNumber.toString(), // Posición Nueva
-              PoItmNo: posiciones[i].PoItmNo, // Posición del contrato con referencia
+              PoItmNo: posiciones[i].PoItmNo.toString(), // Posición del contrato con referencia
               Material: posiciones[i].Material, // Material
               ShortText: posiciones[i].ShortText, // Descripción Material
               BillDate: "\/Date(" + BillDate + ")\/",
@@ -1895,7 +1904,8 @@ sap.ui.define([
               Yyaufnr: posiciones[i].Yyaufnr, // Orden Ingreso
               Zzkostl: posiciones[i].Zzkostl, // Ceco Interco
               Zzaufnr: posiciones[i].Zzaufnr, // Orden Interco
-              Kstar: posiciones[i].Kstar // Libro Mayor Interco
+              Kstar: posiciones[i].Kstar, // Libro Mayor Interco
+              Tdlinepos: posiciones[i].Tdlinepos // Texto Posición Factura
             };
             PedidoPosicionSet.push(objPedidoPosicionSet);
 

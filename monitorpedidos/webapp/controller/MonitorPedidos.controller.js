@@ -2680,9 +2680,9 @@ sap.ui.define([
 
                                     SolicitudPed_A.results[i].Posnr = parseInt(SolicitudPed_A.results[i].Posnr);
                                     //SolicitudPed_A.results[i].Zzprsdt = Util.formatDate(SolicitudPed_A.results[i].Zzprsdt);
-                                    //SolicitudPed_A.results[i].PoItmNo = SolicitudPed_A.results[i].Posnr;
 
                                     if (that.modoapp === "C") { // Si es creación por contrato 'C'
+                                        SolicitudPed_A.results[i].PoItmNo = SolicitudPed_A.results[i].Posnr;
                                         SolicitudPed_A.results[i].ItmNumber = SolicitudPed_A.results[i].Posnr;
                                         SolicitudPed_A.results[i].Material = SolicitudPed_A.results[i].Matnr;
                                         SolicitudPed_A.results[i].ShortText = SolicitudPed_A.results[i].Arktx;
@@ -2993,7 +2993,7 @@ sap.ui.define([
 
                     var posicionN = {
                         ItmNumber: itmNumber, // La posición es autoincrementada
-                        PoItmNo: posicionPed.Posnr, // Posición del contrato con referencia
+                        PoItmNo: posicionPed.PoItmNo, // Posición del contrato con referencia
                         Material: posicionPed.Matnr,
                         ShortText: posicionPed.Arktx,
                         PriceDate: new Date(posicionPed.Zzprsdt),

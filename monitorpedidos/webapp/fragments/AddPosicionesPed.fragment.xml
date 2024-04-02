@@ -158,29 +158,12 @@
                 value="{posPedFrag>/Kstar}"
                 visible="true"
             />
-            <!--<ComboBox
-                value="{posPedFrag>/Waers}"
-                placeholder="EUR"
-            />
-            <core:ListItem key="{posPedFrag>Waers}"  text="{posPedFrag>Ktext}"/>-->
-            <!--//////////////////////////////////////////////////////////////////////////////////////////////////////////7-->
-
-            <!-- <Label text="{i18n>centrocoste}" />
-            <ComboBox
-                value="{posPedFrag>/Netwr}"
-                placeholder="0,00"
-            />
-            <Label text="{i18n>orden}" />
-            <ComboBox
-                value="{posPedFrag>/Netwr}"
-                placeholder="0,00"
-            />
-            <Label text="{i18n>libromayor}" />
-            <ComboBox
-                value="{posPedFrag>/Netwr}"
-                placeholder="0,00"
-            />-->
-           
+            <Label text="{i18n>TextoPosicionFactura}" wrapping="false" />
+            <TextArea 
+                id="textAreaPosFact" 
+                editable="true" 
+                value="{posPedFrag>/Tdlinepos}"
+            />            
         </f:SimpleForm>
     </Dialog>
 </core:FragmentDefinition>
