@@ -352,7 +352,14 @@ sap.ui.define([
         } else {
           Bukrs = this.getOwnerComponent().getModel("ModoApp").getProperty("/Vkbur");
         }*/
-        var Bukrs = this.oComponent.getModel("ModoApp").getProperty("/Vkbur");
+
+        var Kokrs;
+        if (tipoInputCeco === 'CecoIngresoCabecera' || tipoInputCeco === 'CecoIngresoPosicion') {
+          Kokrs = this.oComponent.getModel("ModoApp").getProperty("/Vkbur"); // Sociedad del pedido
+        }else{
+          Kokrs = this.oComponent.getModel("ModoApp").getProperty("/Vbund"); // Sociedad asociada al cliente
+        }
+        
 
         var aFilterIds = [],
             aFilterValues = [];
@@ -366,7 +373,7 @@ sap.ui.define([
 
         addFilter("Kostl", Kostl);
         addFilter("Ltext", Ltext);
-        addFilter("Kokrs", Bukrs);
+        addFilter("Kokrs", Kokrs);
 
         var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
 
@@ -965,17 +972,17 @@ sap.ui.define([
           }
         }        
 
+        var currency = "EUR";
+        var priceDate = Util.formatDate(new Date());
         var configPos = {
           mode: "A",
           type: "P",
           index: null,
           Vbelp: posicion,
           // Moneda EUR por defecto
-          Currency: "EUR",
+          Currency: currency,
           // Fecha de hoy por defecto
-          PriceDate: Util.formatDate(new Date()),
-          // Tipo de Cambio por defecto
-          //Ukurs: "1.00000",
+          PriceDate: priceDate,
           // Los CECOS / OT se recogen de cabecera de manera predeterminada
           Yykostkl: this.oComponent.getModel("DisplayPEP").getData().Yykostkl,
           Yyaufnr: this.oComponent.getModel("DisplayPEP").getData().Yyaufnr,
@@ -983,6 +990,9 @@ sap.ui.define([
           Zzaufnr: this.oComponent.getModel("DisplayPEP").getData().Zzaufnr,
           Kstar: this.oComponent.getModel("DisplayPEP").getData().Kstar          
         }
+        
+        // Tipo de Cambio por defecto (Ukurs = 1.00000)
+        this.onBusqTipoCambio(priceDate, currency);
 
         var oModConfigPos = new JSONModel();
         oModConfigPos.setData(configPos);
@@ -1273,6 +1283,8 @@ sap.ui.define([
 
         //posactual = ('000000' + posactual).slice(-6); // Establecemos el formato de 6 caracteres 000010
         
+        var tipocambio = this.getView().byId("f_tipocambio").getValue();
+        
         if (modeApp == 'M') {
           posiciones = this.oComponent.getModel("DisplayPosPed").getData();
 
@@ -1288,7 +1300,7 @@ sap.ui.define([
             Zieme: posPedFrag.SalesUnit,
             Netpr: posPedFrag.CondValue,
             Waerk: posPedFrag.Currency,
-            Ukurs: posPedFrag.Ukurs,
+            Ukurs: tipocambio,
             Yykostkl: posPedFrag.Yykostkl,
             Yyaufnr: posPedFrag.Yyaufnr,
             Zzkostl: posPedFrag.Zzkostl,
@@ -1320,7 +1332,7 @@ sap.ui.define([
             SalesUnit: posPedFrag.SalesUnit,
             CondValue: posPedFrag.CondValue,
             Currency: posPedFrag.Currency,
-            Ukurs: posPedFrag.Ukurs,
+            Ukurs: tipocambio,
             Yykostkl: posPedFrag.Yykostkl,
             Yyaufnr: posPedFrag.Yyaufnr,
             Zzkostl: posPedFrag.Zzkostl,

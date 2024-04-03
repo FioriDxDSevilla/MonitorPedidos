@@ -2273,6 +2273,7 @@ sap.ui.define([
                     this.oComponent.getModel("ModoApp").setProperty("/Pstlz", values[0].results[0].Pstlz);
                     this.oComponent.getModel("ModoApp").setProperty("/Land1", values[0].results[0].Land1);
                     this.oComponent.getModel("ModoApp").setProperty("/Zwels", values[0].results[0].Zwels);
+                    this.oComponent.getModel("ModoApp").setProperty("/Vbund", values[0].results[0].Vbund); // Soc.asociada al cliente
                     //this.oComponent.getModel("ModoApp").setProperty("/Zterm", values[0].results[0].Zterm);
                     this.oComponent.getModel("ModoApp").refresh(true);
 

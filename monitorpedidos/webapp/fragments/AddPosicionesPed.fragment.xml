@@ -98,7 +98,7 @@
                 />
             </ComboBox>
             <Label text="{i18n>TipoCambio}" required="false"/>
-            <Input  value="{path: 'posPedFrag>/Ukurs',  formatter: '.onFormatTipoCambio'}" 
+            <Input  value="{posPedFrag>/Ukurs}" 
                     id="f_tipocambio" 
                     editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
             />
