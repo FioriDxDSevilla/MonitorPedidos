@@ -20,11 +20,11 @@ sap.ui.define([
 
   function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util, MessageBox, ExportTypeCSV, Export, exportLibrary, Dialog, DialogType, Button, ButtonType, Text) {
     "use strict";
-    var codmat, nommat,unimedmat, fechaPos, codordPos, nomordPos, codcecoPos, nomcecoPos, sStatus;
     
     // Variables inputs
     var tipoInputCeco, tipoInputOrden, tipoInputLibroMayor;
-    var listadoValidarCeco, listadoValidarLibroMayor, listadoValidarMateriales;
+    var listadoValidarMateriales; // listadoValidarCeco, listadoValidarLibroMayor;
+
      // Variables globales para el formateo de los campos 'FECHA DOC. VENTA' e 'IMPORTE'
      var fechaDocVentaFormat;
      /*
@@ -78,12 +78,14 @@ sap.ui.define([
               sap.ui.core.BusyIndicator.hide();
             }
             var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
+            /* **Eliminar - finalmente los cecos y OT se validan en SAP**
             if (modeApp === 'C' || modeApp === 'M') {
               listadoValidarCeco = true;
               this.onBusqCecos("", "");
               listadoValidarLibroMayor = true;
               this.onBusqLibroMayor("", "");                    
             }
+            */
             this.actualizaimp();
             this.oComponent.setModel(new JSONModel(), "listadoLibroMayor"); 
           }        
@@ -391,11 +393,13 @@ sap.ui.define([
         }        
         this.oComponent.setModel(oModelCecos, "listadoCecos");
         this.oComponent.getModel("listadoCecos").refresh(true);
+        /* **Eliminar - finalmente los cecos y OT se validan en SAP**
         if (listadoValidarCeco) {
           this.oComponent.setModel(oModelCecos, "listadoValidarCeco");
           this.oComponent.getModel("listadoValidarCeco").refresh(true);
           listadoValidarCeco = false;
         }
+        */
         sap.ui.core.BusyIndicator.hide();
       },
 
@@ -708,11 +712,13 @@ sap.ui.define([
         }
         this.oComponent.setModel(oModelLibroMayor, "listadoLibroMayor");
         this.oComponent.getModel("listadoLibroMayor").refresh(true);
+        /* **Eliminar - finalmente los cecos y OT se validan en SAP**
         if (listadoValidarLibroMayor) {
           this.oComponent.setModel(oModelLibroMayor, "listadoValidarLibroMayor");
           this.oComponent.getModel("listadoValidarLibroMayor").refresh(true);
           listadoValidarLibroMayor = false;
         }
+        */
         sap.ui.core.BusyIndicator.hide();
       },
 
@@ -1198,6 +1204,7 @@ sap.ui.define([
             inUnidad.setValueState("Error");
         }
 
+        /* **Eliminar - finalmente los cecos y OT se validan en SAP**
         // --Validación CECOS
         var cecosValidos = this.getView().getModel("listadoValidarCeco").getData();
 
@@ -1232,6 +1239,7 @@ sap.ui.define([
         }else{
           inLibroMayor.setValueState("Error");
         }
+        */
 
         // --Validación Materiales
         var materialesValidos = this.getView().getModel("listadoValidarMateriales").getData();
@@ -1255,9 +1263,9 @@ sap.ui.define([
             inCantidadBase.getValue() && inCantidadBase.getValueState() != "Error" &&
             inMoneda.getValue() && inMoneda.getValueState() != "Error" &&
             inUnidad.getValue() && inUnidad.getValueState() != "Error" &&
-            inCecoIngresoPosicion.getValueState() != "Error" &&
-            inCecoIntercoPosicion.getValueState() != "Error" &&
-            inLibroMayor.getValueState() != "Error" &&
+            //inCecoIngresoPosicion.getValueState() != "Error" &&
+            //inCecoIntercoPosicion.getValueState() != "Error" &&
+            //inLibroMayor.getValueState() != "Error" &&
             inMaterial.getValueState() != "Error") {
                 validation = true;
         }
@@ -1666,6 +1674,7 @@ sap.ui.define([
             inNIA.setValueState("Error");
         }
 
+        /* **Eliminar - finalmente los cecos y OT se validan en SAP**
         // --Validación CECOS
         var cecosValidos = this.getView().getModel("listadoValidarCeco").getData();
 
@@ -1699,17 +1708,17 @@ sap.ui.define([
           inLibroMayor.setValueState("None");
         }else{
           inLibroMayor.setValueState("Error");
-        }
+        }*/
 
         var validation = false;
         //VALIDACIÓN SI CONTIENE UN VALOR Y SI EL ESTADO DEL COMPONENTE NO ES ERROR 
         if (inOficinaVentas.getValue() && inOficinaVentas.getValueState() != "Error" &&
             inNumPedCliente.getValue() && inNumPedCliente.getValueState() != "Error" &&
             inCondicionPago.getValue() && inCondicionPago.getValueState() != "Error" &&
-            inNIA.getValue() && inNIA.getValueState() != "Error" &&
-            inCecoIngresoCabecera.getValueState() != "Error" &&
-            inCecoIntercoCabecera.getValueState() != "Error" &&
-            inLibroMayor.getValueState() != "Error") {
+            inNIA.getValue() && inNIA.getValueState() != "Error") {
+            //inCecoIngresoCabecera.getValueState() != "Error" &&
+            //inCecoIntercoCabecera.getValueState() != "Error" &&
+            //inLibroMayor.getValueState() != "Error"
                 validation = true;
         }
         
@@ -1844,12 +1853,18 @@ sap.ui.define([
         var PedidoCondicionSet = [];
         var PedidoCantidadSet = [];
         var PedidoTextosSet_Aux = [];
-        for (var i = 0; i < posiciones.length; i++) {          
+        for (var i = 0; i < posiciones.length; i++) {     
+          
+          var PoItmNo;
+          if (posiciones[i].PoItmNo) {
+            PoItmNo = posiciones[i].PoItmNo.toString();
+          }
+          
           if (modeApp === 'M') {
             // Entidad PedidoPosicionModSet
             let objPedidoPosicionSet = {
               ItmNumber: posiciones[i].Posnr.toString(), // Posición
-              PoItmNo: posiciones[i].PoItmNo.toString(), // Posición del contrato con referencia
+              PoItmNo: PoItmNo, // Posición del contrato con referencia
               Material: posiciones[i].Matnr, // Material
               ShortText: posiciones[i].Arktx, // Descripción Material
               BillDate: "\/Date(" + BillDate + ")\/",
@@ -1900,7 +1915,7 @@ sap.ui.define([
             // Entidad PedidoPosicionSet
             let objPedidoPosicionSet = {
               ItmNumber: posiciones[i].ItmNumber.toString(), // Posición Nueva
-              PoItmNo: posiciones[i].PoItmNo.toString(), // Posición del contrato con referencia
+              PoItmNo: PoItmNo, // Posición del contrato con referencia
               Material: posiciones[i].Material, // Material
               ShortText: posiciones[i].ShortText, // Descripción Material
               BillDate: "\/Date(" + BillDate + ")\/",
@@ -1948,6 +1963,7 @@ sap.ui.define([
             PedidoCantidadSet.push(objPedidoCantidadSet);            
           }
           
+          // ***REVISAR***
           // Entidad PedidoTextosSet
           let objPedidoTextosSet;
           if (TxtCabecera != null && TxtAclaraciones == null) {
