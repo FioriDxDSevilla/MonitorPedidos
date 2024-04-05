@@ -7,7 +7,7 @@
     <!--  -->
 
     <m:VBox renderType="Bare">
-        <f:SimpleForm editable="true" maxContainerCols="2" layout="GridLayout" singleContainerFullSize="false" adjustLabelSpan="true">
+        <f:SimpleForm id="fAltaCab" editable="true" maxContainerCols="2" layout="GridLayout" singleContainerFullSize="false" adjustLabelSpan="true">
             <f:content>
                 <!-- -->
                 <core:Title text="{i18n>TituloDatosCabeceraPedido}" level="H5" />

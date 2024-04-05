@@ -1774,6 +1774,18 @@ sap.ui.define([
 
                 switch (key) {
                     case "All":
+                        // Quitar la marca roja si hay algún campo con error
+                        if(this.getView().byId("fDatosCab")){
+                            this.getView().byId("idArea").setValueState("None");
+                            this.getView().byId("idCCliente").setValueState("None");
+                            this.getView().byId("descrProv").setValueState("None");
+                            this.getView().byId("idcontract").setValueState("None");
+                            this.getView().byId("idCanal").setValueState("None");
+                            this.getView().byId("idSector").setValueState("None");
+                            this.getView().byId("idzona").setValueState("None");
+                            this.getView().byId("idCTipoPed").setValueState("None");
+                        }                        
+
                         // Resetear Sociedad
                         vkbur = "";
                         vText = "";
@@ -3003,11 +3015,13 @@ sap.ui.define([
                         SalesUnit: posicionPed.Zieme,
                         CondValue: posicionPed.Netpr,
                         Currency: posicionPed.Waerk,
+                        Ukurs: posicionPed.Ukurs,
                         Yykostkl: posicionPed.Yykostkl,
                         Yyaufnr: posicionPed.Yyaufnr,
                         Zzkostl: posicionPed.Zzkostl,
                         Zzaufnr: posicionPed.Zzaufnr,
-                        Kstar: posicionPed.Kstar
+                        Kstar: posicionPed.Kstar,
+                        Tdlinepos: posicionPed.Tdlinepos
                     }
                     posiciones.push(posicionN);                    
                     //pedidosContrato.splice(indice - indexDeleted, 1); // Eliminarmos la posición del modelo de contratos

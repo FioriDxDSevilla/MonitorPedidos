@@ -68,7 +68,7 @@ sap.ui.define([
       handleRouteMatched: function (evt) {
         
         if (evt.getParameter("name") !== "AltaPedidos") {
-          
+          this.resetearEstadoInputsAltaPedido();
           // Si no hay datos en el modelo (cuando se refresca esta vista), vuelve al monitor
           if (!this.oComponent.getModel("ModoApp") || !this.oComponent.getModel("ModoApp").getData() || !this.oComponent.getModel("ModoApp").getData().NomSoc) {
             this.onCancelar();
@@ -77,7 +77,7 @@ sap.ui.define([
             if (this.oComponent.getModel("ModoApp").getData().copy) {
               sap.ui.core.BusyIndicator.hide();
             }
-            var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
+            //var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
             /* **Eliminar - finalmente los cecos y OT se validan en SAP**
             if (modeApp === 'C' || modeApp === 'M') {
               listadoValidarCeco = true;
@@ -853,6 +853,7 @@ sap.ui.define([
       },
 
       _getDialogMaterialAlta: function (sInputValue) {
+        this.oComponent.setModel(new JSONModel(), "FiltrosMat");
         this.oComponent.setModel(new JSONModel(), "listadoMaterialesAlta");
 
         var oView = this.getView();
@@ -959,6 +960,7 @@ sap.ui.define([
       // FUNCIÓN BOTÓN AGREGAR LÍNEA
       onAddPosPed: function () {
 
+        this.resetearEstadoInputsAddPos();
         listadoValidarMateriales = true;
         this.onBusqMateriales("", "", "");
 
@@ -1011,6 +1013,7 @@ sap.ui.define([
       // FUNCIÓN BOTÓN MODIFICAR LÍNEA      
       onModPosPed: function (oEvent) {
 
+        this.resetearEstadoInputsAddPos();
         listadoValidarMateriales = true;
         this.onBusqMateriales("", "", "");
 
@@ -1271,6 +1274,45 @@ sap.ui.define([
         }
         
         return validation;
+      },
+
+      // RESETEAR LOS INPUTS DEL DIÁLOGO DE AÑADIR/MODIFICAR POSICIÓN
+      resetearEstadoInputsAddPos: function () {
+        // Quitar la marca roja si hay algún campo con error
+        if(this.getView().byId("sf_PedPos")){
+          this.getView().byId("f_tipopedpos").setValueState("None");
+          this.getView().byId("f_material").setValueState("None");
+          this.getView().byId("f_nommat").setValueState("None");
+          this.getView().byId("DTPdesde").setValueState("None");
+          this.getView().byId("f_importpos").setValueState("None");
+          this.getView().byId("f_cantpos").setValueState("None");
+          this.getView().byId("f_cantbasepos").setValueState("None");
+          this.getView().byId("f_monedapos").setValueState("None");
+          this.getView().byId("f_tipocambio").setValueState("None");
+          this.getView().byId("f_unitpos").setValueState("None");
+          this.getView().byId("f_cecosIngPos").setValueState("None");
+          this.getView().byId("f_ordenesIngPos").setValueState("None");
+          this.getView().byId("f_cecosIntPos").setValueState("None");
+          this.getView().byId("f_ordenesIntPos").setValueState("None");
+          this.getView().byId("f_libroMayorIntPOS").setValueState("None");
+          this.getView().byId("textAreaPosFact").setValueState("None");
+        }
+      },
+
+      resetearEstadoInputsAltaPedido: function () {
+        // Quitar la marca roja si hay algún campo con error
+        if(this.getView().byId("fAltaCab")){
+          this.getView().byId("idOficinaV").setValueState("None");
+          this.getView().byId("f_refped").setValueState("None");
+          this.getView().byId("f_cecosIngresoCab").setValueState("None");
+          this.getView().byId("f_ordenesIngresoCab").setValueState("None");
+          this.getView().byId("f_cecosIntercoCab").setValueState("None");
+          this.getView().byId("f_ordenesIntercoCab").setValueState("None");
+          this.getView().byId("f_libroMayorInterco").setValueState("None");
+          this.getView().byId("f_campomotivo").setValueState("None");
+          this.getView().byId("f_campocondicion").setValueState("None");
+          this.getView().byId("f_camponia").setValueState("None");
+        }
       },
 
       addPedPos: function () {
@@ -1968,7 +2010,7 @@ sap.ui.define([
           let objPedidoTextosSet;
           if (TxtCabecera != null && TxtAclaraciones == null) {
             objPedidoTextosSet = {
-              Textid: '001',
+              Textid: '0001',
               Langu: 'ES',
               Textline: TxtCabecera
             };
