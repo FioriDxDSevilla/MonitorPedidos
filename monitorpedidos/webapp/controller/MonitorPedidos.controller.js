@@ -2188,7 +2188,7 @@ sap.ui.define([
                     this.readDataEntity(this.mainService, "/DameClientesSet", aFilters),
                 ]).then(this.buildCliente.bind(this), this.errorFatal.bind(this));*/
                 // en su lugar, usamos:
-                this.DatosCliente(codcli, vkbur, "");
+                this.DatosCliente(codcli, vkbur, "", "", "");
 
                 //this.getView().byId("f_client").setValue(nomcli);
                 this.getView().byId("idCCliente").setValueState("None");
@@ -2246,7 +2246,7 @@ sap.ui.define([
 
             },*/
 
-            DatosCliente: function (codcli, vkbur, Vbeln) {
+            DatosCliente: function (codcli, vkbur, Vbeln, Vtweg, Spart) {
                 var aFilters = [],
                     aFilterIds = [],
                     aFilterValues = [];
@@ -2259,6 +2259,12 @@ sap.ui.define([
 
                 aFilterIds.push("Vbeln");
                 aFilterValues.push(Vbeln);
+
+                aFilterIds.push("Vtweg");
+                aFilterValues.push(Vtweg);
+                
+                aFilterIds.push("Spart");
+                aFilterValues.push(Spart);
 
 
                 aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
@@ -2286,7 +2292,7 @@ sap.ui.define([
                     this.oComponent.getModel("ModoApp").setProperty("/Land1", values[0].results[0].Land1);
                     this.oComponent.getModel("ModoApp").setProperty("/Zwels", values[0].results[0].Zwels);
                     this.oComponent.getModel("ModoApp").setProperty("/Vbund", values[0].results[0].Vbund); // Soc.asociada al cliente
-                    //this.oComponent.getModel("ModoApp").setProperty("/Zterm", values[0].results[0].Zterm);
+                    this.oComponent.getModel("ModoApp").setProperty("/Zterm", values[0].results[0].Zterm);
                     this.oComponent.getModel("ModoApp").refresh(true);
 
                     // Establecer el nombre cuando no se ha utilizado la búsqueda del Alta de pedidos
@@ -2295,6 +2301,11 @@ sap.ui.define([
                         // if (this.getView().byId("idCCliente") && !this.getView().byId("idCCliente").getValue()) {
                         //     this.getView().byId("idCCliente").setValue(nomcli);
                         // }
+                    }
+
+                    // Si es una creación, establecemos la condición de pago de cabecera de la condición de pago del cliente
+                    if (values[0].results[0].Zterm && this.oComponent.getModel("DisplayPEP") && !this.oComponent.getModel("DisplayPEP").getData().Zterm) {
+                        this.oComponent.getModel("DisplayPEP").setProperty("/Zterm", values[0].results[0].Zterm)
                     }
                 }
             },
@@ -2840,8 +2851,8 @@ sap.ui.define([
                                 }
 
                                 that.DatosAux(data.results[0].Vbeln);
-                                that.condicionPago(data.results[0].Kunnr, data.results[0].Vkorg, data.results[0].Vtweg, data.results[0].Spart);
-                                that.DatosCliente(data.results[0].Kunnr, data.results[0].Vkorg, data.results[0].Vbeln);
+                                //that.condicionPago(data.results[0].Kunnr, data.results[0].Vkorg, data.results[0].Vtweg, data.results[0].Spart);
+                                that.DatosCliente(data.results[0].Kunnr, data.results[0].Vkorg, data.results[0].Vbeln, data.results[0].Vtweg, data.results[0].Spart);
                                 that.OficinaVenta(data.results[0].Vkorg, data.results[0].Vtweg, data.results[0].Spart);
                                 that.motivopedido(data.results[0].Auart, data.results[0].Vkorg);
 
@@ -2931,7 +2942,7 @@ sap.ui.define([
             onNavAlta: function () {
                 var validation = this.validarInputsDialogoAlta();
                 if (validation) {
-                    this.modoapp = "C";
+                    this.modoapp = "C";                    
                     this.oComponent.getModel("ModoApp").setProperty("/Vkbur", vkbur);
                     this.oComponent.getModel("ModoApp").setProperty("/NomSoc", vText);
                     this.oComponent.getModel("ModoApp").setProperty("/Kunnr", codcli);
@@ -2966,7 +2977,8 @@ sap.ui.define([
                         this.oComponent.getModel("DisplayPEP").setProperty("/Faksk", "ZR");
                         this.oComponent.getModel("DisplayPEP").refresh(true);
 
-                        this.condicionPago(codcli, vkbur, Cvcan, Cvsector);
+                        this.DatosCliente(codcli, vkbur, "", Cvcan, Cvsector); // Aquí se recupera la condición de pago
+                        //this.condicionPago(codcli, vkbur, Cvcan, Cvsector);
                         this.OficinaVenta(vkbur, Cvcan, Cvsector);
                         this.motivopedido(TipoPed, vkbur);
 
@@ -3092,7 +3104,7 @@ sap.ui.define([
             },
 
             // FUNCIONES PARA OBTENER LA CONDICIÓN DE PAGO
-            condicionPago: function (codcli, vkbur, Cvcan, Cvsector) {
+            /*condicionPago: function (codcli, vkbur, Cvcan, Cvsector) {
                 var aFilters = [],
                     aFilterIds = [],
                     aFilterValues = [];
@@ -3129,9 +3141,9 @@ sap.ui.define([
                         condPago = values[0].results[0].Zterm;
                         this.oComponent.setModel(oModelCondicion, "CondicionPago");*/
                         //this.oComponent.getModel("ContratoCliente").refresh(true);
-                    }
+                /*    }
                 }
-            },
+            },*/
 
             // FUNCIONES PARA OBTENER LA OFICINA DE VENTA
             OficinaVenta: function (vkbur, Cvcan, Cvsector) {

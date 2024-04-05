@@ -120,7 +120,7 @@
                     id="f_campocondicion"
                     editable="false"
                     width="300px"
-                    value="{ModoApp>/Zterm}"
+                    value="{DisplayPEP>/Zterm}"
                     liveChange=".onLiveChangeRequired"/> 
                 <m:Label text="{i18n>NIA}" required="{= ${ModoApp>/mode}  === 'C' ?  true : false ||   ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" />
                 <!--<m:ComboBox id="f_camponia" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }" width="200px" items="{ path: 'listadoNIA>/', sorter: { path: 'Kunnr' } }" selectedKey="{DisplayPEP>/Zznia}">
