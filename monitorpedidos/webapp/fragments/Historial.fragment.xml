@@ -17,17 +17,17 @@
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
+                <m:Label text="{i18n>ValorAnterior}" />
+                <table:template>
+                    <m:Text text="{HistorialSol>FOld}"/>
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
                 <m:Label text="{i18n>ValorActual}" />
                 <table:template>
                     <m:Text text="{HistorialSol>FNew}"/>
                 </table:template>
             </table:Column>
-            <!--<table:Column hAlign="Center">
-                <m:Label text="{i18n>ValorAnterior}" />
-                <table:template>
-                    <m:Text text=""/>
-                </table:template>
-            </table:Column>-->
             <table:Column hAlign="Center">
                 <m:Label text="{i18n>FechaModificacion}" />
                 <table:template>

@@ -7,6 +7,7 @@
     xmlns:l="sap.ui.layout"
     xmlns:ui="sap.ui.table"
     xmlns:tnt="sap.tnt"
+    xmlns:u="sap.ui.unified"
 >
     <IconTabBar
         id="idIconTabBar"
@@ -22,15 +23,15 @@
                 visibleRowCountMode="Interactive"
                 width="auto"
                 enableCellFilter="{ui>/cellFilterOn}"
-                filter="filterOption"
-                sort="sortOption">
+                filter="filterTableContratos"
+                sort="sortTableContratos">
                 <ui:columns>
                     <ui:Column
+                        id="Contrato"
                         width="7.5em"
                         filterProperty="Idsolicitud"
                         sortProperty="Idsolicitud"
-                        tooltip="{i18n>numCont}"
-                    >
+                        tooltip="{i18n>numCont}">
                         <Label text="{i18n>numCont}" />
                         <ui:template>
                             <ObjectIdentifier
@@ -41,6 +42,7 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
+                        id="Cliente"
                         width="7em"
                         filterProperty="CLIENTE"
                         sortProperty="CLIENTE"
@@ -52,6 +54,7 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
+                        id="Nombrecliente"
                         width="11em"
                         filterProperty="Nombrecliente"
                         sortProperty="Nombrecliente"
@@ -63,6 +66,7 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
+                        id="Orgventas"
                         width="5em"
                         filterProperty="Orgventas"
                         sortProperty="Orgventas"
@@ -74,6 +78,7 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
+                        id="Referenciped"
                         width="7.5em"
                         filterProperty="Referenciped"
                         sortProperty="Referenciped"
@@ -85,6 +90,7 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
+                        id="Denominacion"
                         width="11em"
                         filterProperty="Denominacion"
                         sortProperty="Denominacion"
@@ -109,6 +115,7 @@
                     </ui:Column>
 -->
                     <ui:Column
+                        id="Lineatxt"
                         width="7.5em"
                         filterProperty="Lineatxt"
                         sortProperty="Lineatxt"
@@ -120,17 +127,18 @@
                         </ui:template>
                     </ui:Column>
                     <ui:Column
+                        id="Fvalidezini"
                         width="7.5em"
                         filterProperty="Fvalidezini"
                         sortProperty="Fvalidezini"
-                        tooltip="{i18n>Fvalidezini}"
-                    >
+                        tooltip="{i18n>Fvalidezini}">
                         <Label text="{i18n>Fvalidezini}" />
                         <ui:template>
                             <Text text="{path: 'ListadoContratos>Fvalidezini',  formatter: '.onFormatFechaDocVenta'}" wrapping="false"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
+                        id="Fvalidezfin"
                         width="7.5em"
                         filterProperty="Fvalidezfin"
                         sortProperty="Fvalidezfin"
@@ -142,6 +150,7 @@
                         </ui:template>
                     </ui:Column>                
                     <ui:Column
+                        id="Netwr"
                         width="6em"
                         filterProperty="Netwr"
                         sortProperty="Netwr"
@@ -149,10 +158,11 @@
                         hAlign="Right">
                         <Label text="{i18n>ImpTotal}" />
                          <ui:template>
-                            <Text  text="{path:'ListadoContratos>Netwr', formatter: '.onFormatImporte'}" wrapping="false"/>
+						    <u:Currency value="{path: 'ListadoContratos>Netwr',  formatter: '.onFormatImporteFloat'}" currency="{ListadoContratos>Waerk}"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
+                        id="Impfacturado"
                         width="6em"
                         filterProperty="Impfacturado"
                         sortProperty="Impfacturado"
@@ -160,10 +170,11 @@
                         hAlign="Right">
                         <Label text="{i18n>Impfacturado}" />
                          <ui:template>
-                            <Text  text="{path:'ListadoContratos>Impfacturado', formatter: '.onFormatImporte'}" wrapping="false"/>
+                             <u:Currency value="{path: 'ListadoContratos>Impfacturado',  formatter: '.onFormatImporteFloat'}" currency="{ListadoContratos>Waerk}"/>
                         </ui:template>
                     </ui:Column>
                     <ui:Column
+                        id="Imppdtefacturar"
                         width="6em"
                         filterProperty="Imppdtefacturar"
                         sortProperty="Imppdtefacturar"
@@ -171,17 +182,7 @@
                         hAlign="Right">
                         <Label text="{i18n>Imppdtefacturar}" />
                          <ui:template>
-                            <Text  text="{path:'ListadoContratos>Imppdtefacturar', formatter: '.onFormatImporte'}" wrapping="false"/>
-                        </ui:template>
-                    </ui:Column>
-                    <ui:Column
-                        width="4.5em"
-                        filterProperty="Waerk"
-                        sortProperty="Waerk"
-                        tooltip="{i18n>Moneda}">
-                        <Label text="{i18n>Moneda}" />
-                         <ui:template>
-                            <Text text="{ListadoContratos>Waerk}" wrapping="false"/>
+                            <u:Currency value="{path: 'ListadoContratos>Imppdtefacturar',  formatter: '.onFormatImporteFloat'}" currency="{ListadoContratos>Waerk}"/>                            
                         </ui:template>
                     </ui:Column>
                 </ui:columns>

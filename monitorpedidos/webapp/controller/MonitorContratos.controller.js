@@ -1,5 +1,7 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
+    "sap/ui/model/Sorter",
+    "sap/ui/core/library",
     "sap/ui/model/json/JSONModel",
     "sap/ui/core/Fragment",
     "sap/ui/core/routing/History",
@@ -15,8 +17,10 @@ sap.ui.define([
 /**
  * @param {typeof sap.ui.core.mvc.Controller} Controller
  */
-function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util, MessageBox, ExportTypeCSV, Export, exportLibrary) {
+function (Controller, Sorter, CoreLibrary, JSONModel, Fragment, History, Filter, FilterOperator, Util, MessageBox, ExportTypeCSV, Export, exportLibrary) {
     "use strict";
+
+    var SortOrder = CoreLibrary.SortOrder;
 
     // Variables no utilizadas ???
     //var sumTotal, nomSoc, Posped, Centges, Centuni, Centpro, Codadm, Plataforma, sAprob, socPed, condPago, vedit, checkMisPed, checkTodos;
@@ -112,6 +116,9 @@ function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util
             /* Lógica que llama al metodo handleRouteMatched cuando se realiza un Router */
             this._oRouter = sap.ui.core.UIComponent.getRouterFor(this);
             this._oRouter.attachRouteMatched(this.handleRouteMatched, this);
+
+            this._oPriceFilter = null;
+            this._oGlobalFilter = null;
         },
 
         /* Metodo para que cada vez que se abra la vista AltaPedidos, se realice la actualización del importe */
@@ -160,7 +167,139 @@ function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util
             sap.ui.core.BusyIndicator.hide();
         },
 
+		filterTableContratos: function(oEvent) {
+			var oColumn = oEvent.getParameter("column");
+
+            if (oColumn != this.byId("Netwr") && 
+                oColumn != this.byId("Impfacturado") && 
+                oColumn != this.byId("Imppdtefacturar") &&
+                oColumn != this.byId("Fvalidezini") &&
+                oColumn != this.byId("Fvalidezfin")) {
+				return;
+			}
+
+			oEvent.preventDefault();
+
+			var sValue = oEvent.getParameter("value");
+
+			function clear() {
+				this._oPriceFilter = null;
+				oColumn.setFiltered(false);
+				this._filter();
+			}
+
+			if (!sValue) {
+				clear.apply(this);
+				return;
+			}
+
+            if (oColumn === this.byId("Netwr") || 
+                oColumn === this.byId("Impfacturado") || 
+                oColumn === this.byId("Imppdtefacturar")) {
+
+                var fValue = null;
+                try {
+                    fValue = parseFloat(sValue, 10);
+                } catch (e) {
+                    // nothing
+                }
+
+                if (!isNaN(fValue)) {
+                    this._oPriceFilter = new Filter(oColumn.mProperties.sortProperty, FilterOperator.BT, fValue - 100, fValue + 100);
+                    oColumn.setFiltered(true);
+                    this._filter();
+                } else {
+                    clear.apply(this);
+                }
+            }
+            else {
+                if (sValue.length===10) {
+
+                    const sDay = sValue.substring(0,2);
+                    const sMonth = sValue.substring(3,5);
+                    const sYear = sValue.substring(6,10);
+                    
+                    var dFecha = Date.parse(sYear+"-"+sMonth+"-"+sDay);
+
+                    this._oPriceFilter = new Filter(oColumn.mProperties.sortProperty, FilterOperator.EQ, dFecha);
+                    oColumn.setFiltered(true);
+                    this._filter();
+                } else {
+                    clear.apply(this);
+                }
+            }
+		},
+		_filter: function() {
+			var oFilter = null;
+
+			if (this._oGlobalFilter && this._oPriceFilter) {
+				oFilter = new Filter([this._oGlobalFilter, this._oPriceFilter], true);
+			} else if (this._oGlobalFilter) {
+				oFilter = this._oGlobalFilter;
+			} else if (this._oPriceFilter) {
+				oFilter = this._oPriceFilter;
+			}
+
+			this.byId("idTablePEPs").getBinding().filter(oFilter, "Application");
+		},
+
+		sortTableContratos: function(oEvent) {
+			var oCurrentColumn = oEvent.getParameter("column");
+
+            this._resetSortingState(); //No multi-column sorting
+
+            if (oCurrentColumn != this.byId("Netwr") && 
+                oCurrentColumn != this.byId("Impfacturado") && 
+                oCurrentColumn != this.byId("Imppdtefacturar")) {
+
+                return;
+            }
+
+			oEvent.preventDefault();
+
+			var sOrder = oEvent.getParameter("sortOrder");
+
+			oCurrentColumn.setSorted(true);
+            oCurrentColumn.setSortOrder(sOrder);
+
+			var oSorter = new Sorter(oCurrentColumn.getSortProperty(), sOrder === SortOrder.Descending);
+			//The date data in the JSON model is string based. For a proper sorting the compare function needs to be customized.
+			oSorter.fnCompare = function(a, b) {
+
+				if (b == null) {
+					return -1;
+				}
+				if (a == null) {
+					return 1;
+				}
+
+                var aa = parseFloat(a);
+                var bb = parseFloat(b);
+
+				if (aa < bb) {
+					return -1;
+				}
+				if (aa > bb) {
+					return 1;
+				}
+				return 0;
+			};
+
+			this.byId("idTablePEPs").getBinding().sort(oSorter);
+		},
+
+        _resetSortingState: function() {
+			var oTable = this.byId("idTablePEPs");
+			var aColumns = oTable.getColumns();
+			for (var i = 0; i < aColumns.length; i++) {
+				aColumns[i].setSorted(false);
+			}
+		},
+
         // -------------------------------------- FUNCIONES FORMATEO DE CAMPOS --------------------------------------
+        onFormatImporteFloat: function (sValue) {
+            return parseFloat(sValue);
+        },
         // FUNCION PARA FORMATEAR NUMERO IMPORTE
         onFormatImporte: function (Netwr) {
             importeFormat = this.oComponent.getModel("Usuario").getData()[0].Dcpfm;
