@@ -295,7 +295,8 @@ sap.ui.define([
         return fechaFormateada;
       },
 
-      // -------------------------------------- FUNCIÓN ACTUALIZAR EL IMPORTE --------------------------------------
+      // -------------------------------------- FUNCIONES IMPORTE --------------------------------------
+      // FUNCIÓN ACTUALIZAR IMPORTE PEDIDO
       actualizaimp: function () {
         var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
         //this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", '0');
@@ -334,6 +335,11 @@ sap.ui.define([
         this.oComponent.getModel("ModoApp").setProperty("/ImpPedido", this.onFormatImporte(sumCalculo));
         this.oComponent.getModel("ModoApp").setProperty("/Moneda", moneda);
         this.oComponent.getModel("ModoApp").refresh(true);
+      },
+
+      // FUNCIÓN CALCULAR IMPORTE TOTAL LÍNEA
+      calcularImporteTotal: function (cantidad, cantbase, importe) {
+        return Number((importe / cantbase) * cantidad).toFixed(2);
       },
 
       // -------------------------------------- FUNCIONES CECOS --------------------------------------
@@ -1333,7 +1339,11 @@ sap.ui.define([
 
         //posactual = ('000000' + posactual).slice(-6); // Establecemos el formato de 6 caracteres 000010
         
+        // Tipo cambio
         var tipocambio = this.getView().byId("f_tipocambio").getValue();
+
+        // Importe Total por línea
+        var impTotal = this.calcularImporteTotal(posPedFrag.ReqQty, posPedFrag.Kpein, posPedFrag.CondValue);
         
         if (modeApp == 'M') {
           posiciones = this.oComponent.getModel("DisplayPosPed").getData();
@@ -1356,7 +1366,8 @@ sap.ui.define([
             Zzkostl: posPedFrag.Zzkostl,
             Zzaufnr: posPedFrag.Zzaufnr,
             Kstar: posPedFrag.Kstar,
-            Tdlinepos: posPedFrag.Tdlinepos
+            Tdlinepos: posPedFrag.Tdlinepos,
+            ImpTotal: impTotal
           }
 
           if (modePosPed == 'M') {
@@ -1388,7 +1399,8 @@ sap.ui.define([
             Zzkostl: posPedFrag.Zzkostl,
             Zzaufnr: posPedFrag.Zzaufnr,
             Kstar: posPedFrag.Kstar,
-            Tdlinepos: posPedFrag.Tdlinepos
+            Tdlinepos: posPedFrag.Tdlinepos,
+            ImpTotal: impTotal
           }
 
           if (modePosPed == 'M') {
@@ -1582,7 +1594,10 @@ sap.ui.define([
           itmNumber += 10;
           
           if (modeApp === 'C') {
-            
+
+            // Importe Total por línea
+            var impTotal = this.calcularImporteTotal(posicionPed.Kwmeng, posicionPed.Kpein, posicionPed.Netpr);
+        
             var posicionN = {
               ItmNumber: itmNumber,
               PoItmNo: posicionPed.PoItmNo,
@@ -1600,11 +1615,15 @@ sap.ui.define([
               Zzkostl: posicionPed.Zzkostl,
               Zzaufnr: posicionPed.Zzaufnr,
               Kstar: posicionPed.Kstar,
-              Tdlinepos: posicionPed.Tdlinepos
+              Tdlinepos: posicionPed.Tdlinepos,
+              ImpTotal: impTotal
             }
             posiciones.push(posicionN);
 
           }else{
+            // Importe Total por línea
+            var impTotal = this.calcularImporteTotal(posicionPed.Kwmeng, posicionPed.Kpein, posicionPed.Netpr);
+            posicionPed.ImpTotal = impTotal;
             posicionPed.Posnr = itmNumber;            
             posicionPed.Zzprsdt = new Date(posicionPed.Zzprsdt);
             posiciones.push(posicionPed);

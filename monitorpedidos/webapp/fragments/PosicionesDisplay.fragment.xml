@@ -106,6 +106,12 @@
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
+                <m:Label text="{i18n>imptotal}" />
+                <table:template>                    
+                    <m:Text text="{path:'DisplayPosPed>ImpTotal', formatter: '.onFormatImporte'}" wrapping="false"/>
+                </table:template>
+            </table:Column>
+            <table:Column hAlign="Center">
                 <m:Label text="{i18n>Moneda}" />
                 <table:template>                    
                     <m:Text text="{DisplayPosPed>Waerk}" wrapping="false"/>

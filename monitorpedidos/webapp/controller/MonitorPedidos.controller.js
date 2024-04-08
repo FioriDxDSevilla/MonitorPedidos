@@ -159,6 +159,11 @@ sap.ui.define([
                 sap.ui.core.BusyIndicator.hide();
             },
 
+            // -------------------------------------- FUNCIONES IMPORTE --------------------------------------
+            calcularImporteTotal: function (cantidad, cantbase, importe) {
+                return Number((importe / cantbase) * cantidad).toFixed(2);
+            },
+
             // -------------------------------------- FUNCIONES FORMATEO DE CAMPOS --------------------------------------
             // FUNCION PARA FORMATEAR NUMERO IMPORTE
             onFormatImporte: function (Netwr) {
@@ -2716,6 +2721,9 @@ sap.ui.define([
                                         SolicitudPed_A.results[i].CondValue = SolicitudPed_A.results[i].Netpr;
                                         SolicitudPed_A.results[i].Currency = SolicitudPed_A.results[i].Waerk;
                                     }
+
+                                    // Importe Total por línea
+                                    SolicitudPed_A.results[i].ImpTotal = that.calcularImporteTotal(SolicitudPed_A.results[i].Kwmeng, SolicitudPed_A.results[i].Kpein, SolicitudPed_A.results[i].Netpr);
                                 }
 
                                 // Si tiene contrato, se rellena el modelo con las posiciones del contrato
