@@ -978,7 +978,7 @@ sap.ui.define([
                 tablaMonitor.setEnableGrouping(true);
 
                 // -- ACTUALIZAR EL TOTAL EN CADA ESTADO --
-                var estados = ["", "REDA", "APRB", "FINA", "FACT", "PDTE", "COBR", "DEN"];
+                var estados = ["", "REDA", "APRB", "FINA", "FACT", "PDTE", "COBR", "DEN", "BTN_APRB"];
 
                 var addFilter = function (id, value) {
                     if (value) {
@@ -993,20 +993,25 @@ sap.ui.define([
                     var aFilterIds = [],
                         aFilterValues = [];
 
-                    addFilter("USUARIO", filtroUsuario);
-                    addFilter("FECHAD", Date.parse(filtroFechaDsd));
-                    addFilter("FECHAH", Date.parse(filtroFechaHst));
-                    addFilter("IMPORTED", filtroImporteDsd);
-                    addFilter("IMPORTEH", filtroImporteHst);
-                    addFilter("ESTADO", estado);
-                    addFilter("CLIENTE", filtroClienteCod);
-                    addFilter("CECO", filtroCeco);
-                    addFilter("ORDEN", filtroOrden);
-                    addFilter("ORGVENTAS", filtroOficionaVentas);
-                    addFilter("LINEA", filtroLineaServicio);
-                    addFilter("MATERIAL", filtroMaterial);
-                    addFilter("ZRESPONSABLE", filtroResponsable);
-                    addFilter("TIPO", filtroClasePed);
+                    if (estado === 'BTN_APRB') {
+                        addFilter("ESTADO", "APRB");
+                        addFilter("ZRESPONSABLE", usuario);
+                    }else{
+                        addFilter("USUARIO", filtroUsuario);
+                        addFilter("FECHAD", Date.parse(filtroFechaDsd));
+                        addFilter("FECHAH", Date.parse(filtroFechaHst));
+                        addFilter("IMPORTED", filtroImporteDsd);
+                        addFilter("IMPORTEH", filtroImporteHst);
+                        addFilter("ESTADO", estado);
+                        addFilter("CLIENTE", filtroClienteCod);
+                        addFilter("CECO", filtroCeco);
+                        addFilter("ORDEN", filtroOrden);
+                        addFilter("ORGVENTAS", filtroOficionaVentas);
+                        addFilter("LINEA", filtroLineaServicio);
+                        addFilter("MATERIAL", filtroMaterial);
+                        addFilter("ZRESPONSABLE", filtroResponsable);
+                        addFilter("TIPO", filtroClasePed);
+                    }                    
 
                     var aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
 
@@ -1041,6 +1046,9 @@ sap.ui.define([
                                 break;
                             case 'DEN':
                                 that.oComponent.getModel("Filtros").setProperty("/TotalDen", results[0]);
+                                break;
+                            case 'BTN_APRB':
+                                that.oComponent.getModel("Filtros").setProperty("/totalaprb", results[0]);
                                 break;
                         }
                     }, "");
@@ -2700,6 +2708,7 @@ sap.ui.define([
 
                                 SolicitudPed_A = data.results[0].SolicitudPed_A
 
+                                var last_ItmNumber = 0;
                                 for (var i = 0; i < SolicitudPed_A.results.length; i++) {
                                     //var sreturn = "";
                                     //sreturn = SolicitudPed_A.results[i].Netwr;
@@ -2709,6 +2718,7 @@ sap.ui.define([
 
                                     SolicitudPed_A.results[i].Posnr = parseInt(SolicitudPed_A.results[i].Posnr);
                                     //SolicitudPed_A.results[i].Zzprsdt = Util.formatDate(SolicitudPed_A.results[i].Zzprsdt);
+                                    last_ItmNumber = SolicitudPed_A.results[i].Posnr;
 
                                     if (that.modoapp === "C") { // Si es creación por contrato 'C'
                                         SolicitudPed_A.results[i].PoItmNo = SolicitudPed_A.results[i].Posnr;
@@ -2724,7 +2734,7 @@ sap.ui.define([
 
                                     // Importe Total por línea
                                     SolicitudPed_A.results[i].ImpTotal = that.calcularImporteTotal(SolicitudPed_A.results[i].Kwmeng, SolicitudPed_A.results[i].Kpein, SolicitudPed_A.results[i].Netpr);
-                                }
+                                }                                
 
                                 // Si tiene contrato, se rellena el modelo con las posiciones del contrato
                                 if (refContrato) {
@@ -2755,6 +2765,7 @@ sap.ui.define([
 
                                 oModelDisplay.setData(data.results[0]);
                                 that.oComponent.setModel(oModelDisplay, "DisplayPEP");
+                                that.oComponent.getModel("DisplayPEP").setProperty("/Last_ItmNumber", last_ItmNumber);
 
                                 if (data.results[0].SolicitudAdjunto_A.results.length > 0 && !that.oComponent.getModel("ModoApp").getData().copy) {
                                     /*

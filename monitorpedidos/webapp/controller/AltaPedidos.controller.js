@@ -25,6 +25,8 @@ sap.ui.define([
     var tipoInputCeco, tipoInputOrden, tipoInputLibroMayor;
     var listadoValidarMateriales; // listadoValidarCeco, listadoValidarLibroMayor;
 
+    var itmNumber_incio;
+
      // Variables globales para el formateo de los campos 'FECHA DOC. VENTA' e 'IMPORTE'
      var fechaDocVentaFormat;
      /*
@@ -972,7 +974,7 @@ sap.ui.define([
 
         var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
         var pedidosPos;
-        var posicion = 10;
+        var posicion = 0;
 
         if (modeApp == 'M') {
           pedidosPos = this.oComponent.getModel("DisplayPosPed").getData();
@@ -985,6 +987,12 @@ sap.ui.define([
             posicion = Number(pedidosPos[pedidosPos.length - 1].ItmNumber) + 10;
           }
         }        
+
+        var last_ItmNumber = this.oComponent.getModel("DisplayPEP").getData().Last_ItmNumber + 10;
+
+        if (last_ItmNumber > posicion) {
+          posicion = last_ItmNumber;
+        }
 
         var currency = "EUR";
         var priceDate = Util.formatDate(new Date());
@@ -1183,21 +1191,15 @@ sap.ui.define([
             inFechaPrecio.setValueState("Error");
         }
 
-        if (inImporte.getValue()) {
-            inImporte.setValueState("None");
-        } else {
+        if (!inImporte.getValue()) {
             inImporte.setValueState("Error");
         }
 
-        if (inCantidad.getValue()) {
-          inCantidad.setValueState("None");
-        } else {
+        if (!inCantidad.getValue()) {
             inCantidad.setValueState("Error");
         }
 
-        if (inCantidadBase.getValue()) {
-            inCantidadBase.setValueState("None");
-        } else {
+        if (!inCantidadBase.getValue()) {
             inCantidadBase.setValueState("Error");
         }
 
@@ -1432,7 +1434,12 @@ sap.ui.define([
             var posiciones = this.oComponent.getModel("DisplayPosPed").getData();
             var posiciones_Aux = JSON.parse(JSON.stringify(posiciones)); // Copy data model without references
             var pedidoCopy = posiciones_Aux[aContexts[0]];
-            pedidoCopy.Posnr = Number(posiciones_Aux[posiciones_Aux.length - 1].Posnr) + 10;
+            var posicion = Number(posiciones_Aux[posiciones_Aux.length - 1].Posnr) + 10;
+            var last_ItmNumber = this.oComponent.getModel("DisplayPEP").getData().Last_ItmNumber + 10;
+            if (last_ItmNumber > posicion) {
+              posicion = last_ItmNumber;
+            }
+            pedidoCopy.Posnr = posicion;
             pedidoCopy.Zzprsdt = new Date(pedidoCopy.Zzprsdt);
             //pedidoCopy.Posnr = ('000000' + itmNumberCopy).slice(-6);
 
@@ -1451,7 +1458,12 @@ sap.ui.define([
             var posiciones = this.oComponent.getModel("PedidoPos").getData();
             var posiciones_Aux = JSON.parse(JSON.stringify(posiciones)); // Copy data model without references
             var pedidoCopy = posiciones_Aux[aContexts[0]];
-            pedidoCopy.ItmNumber = Number(posiciones_Aux[posiciones_Aux.length - 1].ItmNumber) + 10;
+            var posicion = Number(posiciones_Aux[posiciones_Aux.length - 1].ItmNumber) + 10;
+            var last_ItmNumber = this.oComponent.getModel("DisplayPEP").getData().Last_ItmNumber + 10;
+            if (last_ItmNumber > posicion) {
+              posicion = last_ItmNumber;
+            }
+            pedidoCopy.ItmNumber = posicion;
             pedidoCopy.PriceDate = new Date(pedidoCopy.PriceDate);
             //pedidoCopy.ItmNumber = ('000000' + itmNumberCopy).slice(-6);
 
@@ -1691,6 +1703,22 @@ sap.ui.define([
       var value = input.getValue();
 			if (value) {
         input.setValueState("None");
+      } else {
+        input.setValueState("Error");
+        input.setValueStateText("Campo obligatorio");
+      }
+		},
+
+    onLiveChangePositiveNumber: function (oEvent) {
+			var input = sap.ui.getCore().byId(oEvent.getSource().sId);
+      var value = input.getValue();
+			if (value) {
+        if (value >= 0) {
+          input.setValueState("None");
+        }else{
+          input.setValueState("Error");
+          input.setValueStateText("Solo se permiten valores positivos");
+        }        
       } else {
         input.setValueState("Error");
         input.setValueStateText("Campo obligatorio");

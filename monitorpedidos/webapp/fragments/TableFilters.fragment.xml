@@ -127,6 +127,7 @@
                 iconColor="Positive"
                 design="Horizontal"
                 text="Aprobación"
+                count="{Filtros>/totalaprb}"
                 key="Approv"
             />
 
