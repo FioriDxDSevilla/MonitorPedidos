@@ -974,7 +974,7 @@ sap.ui.define([
 
         var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
         var pedidosPos;
-        var posicion = 0;
+        var posicion = 10;
 
         if (modeApp == 'M') {
           pedidosPos = this.oComponent.getModel("DisplayPosPed").getData();

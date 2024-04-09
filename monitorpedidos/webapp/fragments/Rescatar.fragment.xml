@@ -200,7 +200,7 @@
                     >
                         <Label text="{i18n>orgventas}" />
                         <ui:template>
-                            <Text text="{listadoSolicitudesRescatar>Orgventas}" />
+                            <Text text="{listadoSolicitudesRescatar>ORGVENTAS}" />
                         </ui:template>
                     </ui:Column>
                     <ui:Column

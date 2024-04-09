@@ -39,7 +39,7 @@ function (Controller, Sorter, CoreLibrary, JSONModel, Fragment, History, Filter,
 
     // Variables globales para el formateo de los campos 'FECHA DOC. VENTA' e 'IMPORTE'
 
-    var fechaDocVentaFormat;
+    var fechaDocVentaFormat, fechaDocVentaDateFormat;
     /*
     1 -> DD.MM.AAAA
     2 -> MM/DD/AAAA
@@ -211,21 +211,34 @@ function (Controller, Sorter, CoreLibrary, JSONModel, Fragment, History, Filter,
                 } else {
                     clear.apply(this);
                 }
-            }
-            else {
-                var dFecha = new Date(sValue);
+            }else {
+                var dFecha = fechaDocVentaDateFormat.parse(sValue);
+                
                 // Si es de tipo fecha y el valor es válido
-                if (sValue && Object.prototype.toString.call(dFecha) === "[object Date]" && !isNaN(dFecha)) {
-                    dFecha.setMilliseconds(0);
-                    dFecha.setSeconds(0);
-                    dFecha.setMinutes(0);
-                    dFecha.setHours(2);
-                    this._oPriceFilter = new Filter(oColumn.mProperties.sortProperty, FilterOperator.EQ, dFecha);
+                if (dFecha && !isNaN(dFecha)) {
+
+                    var dDateStart = dFecha;
+	                var dDateEnd = new Date(dDateStart);
+
+                    // Set first date as start of day
+                    dDateStart.setMilliseconds(0);
+                    dDateStart.setSeconds(0);
+                    dDateStart.setMinutes(0);
+                    dDateStart.setHours(0);
+
+
+                    // Set second date as end of day
+                    dDateEnd.setMilliseconds(0);
+                    dDateEnd.setSeconds(59);
+                    dDateEnd.setMinutes(59);
+                    dDateEnd.setHours(23);
+
+                    this._oPriceFilter = new Filter(oColumn.mProperties.sortProperty, FilterOperator.BT, dDateStart, dDateEnd);
                     oColumn.setFiltered(true);
                     this._filter();
                 } else {
                     clear.apply(this);
-                }
+                }                
             }
 		},
 		_filter: function() {
@@ -339,76 +352,71 @@ function (Controller, Sorter, CoreLibrary, JSONModel, Fragment, History, Filter,
         onFormatFechaDocVenta: function (Fechadoc) {
 
             fechaDocVentaFormat = this.oComponent.getModel("Usuario").getData()[0].Datfm;
-            var dateFormat = Fechadoc;
-
+            
             switch (fechaDocVentaFormat) {
                 case "1":
-                    dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "dd.MM.YYYY"
+                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+                        pattern: "dd.MM.yyyy"
                     });
-
                     break;
                 case "2":
-                    dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "MM/dd/YYYY"
+                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+                        pattern: "MM/dd/yyyy"
                     });
                     break;
                 case "3":
-                    dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "MM-dd-YYYY"
+                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+                        pattern: "MM-dd-yyyy"
                     });
                     break;
-
                 case "4":
-                    dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "YYYY.MM.dd"
+                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+                        pattern: "yyyy.MM.dd"
                     });
                     break;
                 case "5":
-                    dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "YYYY/MM/dd"
+                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+                        pattern: "yyyy/MM/dd"
                     });
                     break;
                 case "6":
-                    dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "YYYY-MM-dd"
+                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+                        pattern: "yyyy-MM-dd"
                     });
                     break;
                 case "7":
-                    dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
                         pattern: "GYY.MM.dd"
                     });
                     break;
                 case "8":
-                    dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
                         pattern: "GYY/MM/dd"
                     });
                     break;
                 case "9":
-                    dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
                         pattern: "GYY-MM-dd"
                     });
                     break;
                 case "A":
-                    dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "YYYY/MM/dd"
+                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+                        pattern: "yyyy/MM/dd"
                     });
                     break;
                 case "B":
-                    dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "YYYY/MM/dd"
+                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+                        pattern: "yyyy/MM/dd"
                     });
-
                     break;
                 case "C":
-                    dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "YYYY/MM/dd"
+                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+                        pattern: "yyyy/MM/dd"
                     });
-
                     break;
             }
 
-            var fechaFormateada = dateFormat.format(Fechadoc);
+            var fechaFormateada = fechaDocVentaDateFormat.format(Fechadoc);
             return fechaFormateada;
         },
 

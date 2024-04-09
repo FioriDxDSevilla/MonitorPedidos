@@ -126,8 +126,8 @@
                 icon="sap-icon://thumb-up"
                 iconColor="Positive"
                 design="Horizontal"
-                text="Aprobación"
-                count="{Filtros>/totalaprb}"
+                text="Aprobación"   
+                count="{Filtros>/totalaprb}"             
                 key="Approv"
             />
 

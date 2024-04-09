@@ -210,34 +210,34 @@ sap.ui.define([
                 switch (fechaDocVentaFormat) {
                     case "1":
                         dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "dd.MM.YYYY"
+                            pattern: "dd.MM.yyyy"
                         });
 
                         break;
                     case "2":
                         dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "MM/dd/YYYY"
+                            pattern: "MM/dd/yyyy"
                         });
                         break;
                     case "3":
                         dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "MM-dd-YYYY"
+                            pattern: "MM-dd-yyyy"
                         });
                         break;
 
                     case "4":
                         dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "YYYY.MM.dd"
+                            pattern: "yyyy.MM.dd"
                         });
                         break;
                     case "5":
                         dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "YYYY/MM/dd"
+                            pattern: "yyyy/MM/dd"
                         });
                         break;
                     case "6":
                         dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "YYYY-MM-dd"
+                            pattern: "yyyy-MM-dd"
                         });
                         break;
                     case "7":
@@ -257,18 +257,18 @@ sap.ui.define([
                         break;
                     case "A":
                         dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "YYYY/MM/dd"
+                            pattern: "yyyy/MM/dd"
                         });
                         break;
                     case "B":
                         dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "YYYY/MM/dd"
+                            pattern: "yyyy/MM/dd"
                         });
 
                         break;
                     case "C":
                         dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "YYYY/MM/dd"
+                            pattern: "yyyy/MM/dd"
                         });
 
                         break;
@@ -2839,7 +2839,7 @@ sap.ui.define([
 
                                 SolicitudHistorial_A = data.results[0].SolicitudMod_A;
 
-                                if (SolicitudHistorial_A.results.length > 0) {
+                                if (SolicitudHistorial_A.results.length > 0 && !that.oComponent.getModel("ModoApp").getData().copy) {
                                     var oModHist = new JSONModel();
                                     oModHist.setData(SolicitudHistorial_A.results);
                                     that.oComponent.setModel(oModHist, "HistorialSol");
