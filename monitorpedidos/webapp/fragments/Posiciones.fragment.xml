@@ -107,14 +107,14 @@
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
-                <m:Label text="{i18n>Importe}" />
+                <m:Label text="{i18n>Precio}" />
                 <table:template>
                     <m:Text text="{path:'PedidoPos>CondValue', formatter: '.onFormatImporte'}" wrapping="false" />
                     <!--<m:Text text="{DisplayPosPed>Netwr}" />-->
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
-                <m:Label text="{i18n>imptotal}" />
+                <m:Label text="{i18n>Importe}" />
                 <table:template>                    
                     <m:Text text="{path:'PedidoPos>ImpTotal', formatter: '.onFormatImporte'}" wrapping="false"/>
                 </table:template>

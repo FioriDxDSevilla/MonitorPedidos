@@ -254,8 +254,8 @@
      <PropertyRef Name="Secu"/>
      <PropertyRef Name="SdDoc"/>
     </Key>
-    <Property Name="Zzkostl" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Centro coste" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Tdlinepos" Type="Edm.String" Nullable="false" sap:unicode="false" sap:label="String" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Zzkostl" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Centro coste" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Zzaufnr" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Orden" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Yykostkl" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Centro coste" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Yyaufnr" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Orden ingresos" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
@@ -749,10 +749,11 @@
     <Key>
      <PropertyRef Name="IDSOLICITUD"/>
     </Key>
-    <Property Name="Lineatxt" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="DenominZonaVtas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="Referenciped" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Nº ped.cliente" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="CLIENTE" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Deudor" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
-    <Property Name="IMPORTED" Type="Edm.String" MaxLength="16" sap:unicode="false" sap:label="Importe Desde" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+    <Property Name="Lineatxt" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="DenominZonaVtas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Denominacion" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Denominación" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+    <Property Name="IMPORTED" Type="Edm.String" MaxLength="16" sap:unicode="false" sap:label="Importe Desde" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
     <Property Name="IMPORTEH" Type="Edm.String" MaxLength="16" sap:unicode="false" sap:label="Importe Hasta" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
     <Property Name="ORDEN" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Orden ingresos" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
     <Property Name="CECO" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Centro coste" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
@@ -785,7 +786,6 @@
     <Property Name="ImpPedido" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Importe Pedido" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="ESTADO" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Estado Pedido" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
     <Property Name="Nombreapr" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Nombre Aprobador" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="Referenciped" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Doc.ventas" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Claseped" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Clase de Pedido" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Indcontrato" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Casilla de selección" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Numfactura" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Numero factura" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
@@ -1519,9 +1519,9 @@
     <Key>
      <PropertyRef Name="Accion"/>
     </Key>
+    <Property Name="Renum" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Doc.comercial" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="Accion" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Carácter 1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
     <Property Name="TextoLog" Type="Edm.String" Nullable="false" sap:unicode="false" sap:label="String" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-    <Property Name="Renum" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Doc.comercial" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
    </EntityType>
    <EntityType Name="DameUsuario" sap:content-version="1">
     <Key>

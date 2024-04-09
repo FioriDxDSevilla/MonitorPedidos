@@ -58,7 +58,7 @@
                 value="{posPedFrag>/PriceDate}"
                 displayFormat="medium"
             />
-            <Label text="{i18n>import}" required="true"/>
+            <Label text="{i18n>Precio}" required="true"/>
             <Input
                 id="f_importpos"
                 value="{posPedFrag>/CondValue}"

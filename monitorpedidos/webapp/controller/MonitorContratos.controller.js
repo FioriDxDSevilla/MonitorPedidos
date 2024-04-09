@@ -213,14 +213,13 @@ function (Controller, Sorter, CoreLibrary, JSONModel, Fragment, History, Filter,
                 }
             }
             else {
-                if (sValue.length===10) {
-
-                    const sDay = sValue.substring(0,2);
-                    const sMonth = sValue.substring(3,5);
-                    const sYear = sValue.substring(6,10);
-                    
-                    var dFecha = Date.parse(sYear+"-"+sMonth+"-"+sDay);
-
+                var dFecha = new Date(sValue);
+                // Si es de tipo fecha y el valor es válido
+                if (sValue && Object.prototype.toString.call(dFecha) === "[object Date]" && !isNaN(dFecha)) {
+                    dFecha.setMilliseconds(0);
+                    dFecha.setSeconds(0);
+                    dFecha.setMinutes(0);
+                    dFecha.setHours(2);
                     this._oPriceFilter = new Filter(oColumn.mProperties.sortProperty, FilterOperator.EQ, dFecha);
                     oColumn.setFiltered(true);
                     this._filter();
