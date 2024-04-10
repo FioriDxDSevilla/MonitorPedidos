@@ -141,8 +141,8 @@
                 visibleRowCountMode="Interactive"
                 width="auto"
                 enableCellFilter="{ui>/cellFilterOn}"
-                filter="filterOption"
-                sort="sortOption">
+                filter="filterTablePedidos"
+                sort="sortTablePedidos">
                 <ui:extension>
 					<OverflowToolbar style="Clear">
 						<Button
@@ -194,6 +194,7 @@
 
                     <ui:Column
                         width="8em"
+                        id="Fechadoc"
                         filterProperty="Fechadoc"
                         sortProperty="Fechadoc"
                         tooltip="{i18n>fechadocu}"
@@ -271,6 +272,7 @@
                     </ui:Column>-->
                     <ui:Column
                         width="6em"
+                        id="Netwr"
                         filterProperty="Netwr"
                         sortProperty="Netwr"
                         tooltip="{i18n>import}"

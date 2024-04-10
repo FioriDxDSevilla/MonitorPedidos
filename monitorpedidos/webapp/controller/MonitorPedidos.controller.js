@@ -1,5 +1,7 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
+    "sap/ui/model/Sorter",
+    "sap/ui/core/library",
     "sap/ui/model/json/JSONModel",
     "sap/ui/core/Fragment",
     "sap/ui/core/routing/History",
@@ -15,8 +17,11 @@ sap.ui.define([
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, JSONModel, Fragment, History, Filter, FilterOperator, Util, MessageBox, ExportTypeCSV, Export, exportLibrary) {
+    function (Controller, Sorter, CoreLibrary, JSONModel, Fragment, History, Filter, FilterOperator, Util, MessageBox, ExportTypeCSV, Export, exportLibrary) {
         "use strict";
+
+        // Ordenación monitor
+        var SortOrder = CoreLibrary.SortOrder;
 
         // Variables no utilizadas ???
         //var sumTotal, nomSoc, Posped, Centges, Centuni, Centpro, Codadm, Plataforma, sAprob, socPed, condPago, vedit, checkMisPed, checkTodos;
@@ -35,7 +40,7 @@ sap.ui.define([
 
         // Variables globales para el formateo de los campos 'FECHA DOC. VENTA' e 'IMPORTE'
 
-        var fechaDocVentaFormat;
+        //var fechaDocVentaFormat;
         /*
         1 -> DD.MM.AAAA
         2 -> MM/DD/AAAA
@@ -51,7 +56,7 @@ sap.ui.define([
         C -> AAAA/MM/DD (fecha iraní)
         */
 
-        var importeFormat;
+        //var importeFormat;
         /*
         W -> 1.234.567,89
         X -> 1,234,567.89
@@ -159,6 +164,141 @@ sap.ui.define([
                 sap.ui.core.BusyIndicator.hide();
             },
 
+            // -------------------------------------- FILTROS Y ORDENACIÓN TABLA MONITOR --------------------------------------
+            filterTablePedidos: function(oEvent) {
+                var oColumn = oEvent.getParameter("column");
+
+                if (oColumn != this.byId("Netwr") && 
+                    oColumn != this.byId("Fechadoc")) {
+                    return;
+                }
+
+                oEvent.preventDefault();
+
+                var sValue = oEvent.getParameter("value");
+
+                function clear() {
+                    this._oPriceFilter = null;
+                    oColumn.setFiltered(false);
+                    this._filter();
+                }
+
+                if (!sValue) {
+                    clear.apply(this);
+                    return;
+                }
+
+                if (oColumn === this.byId("Netwr")) {
+
+                    var fValue = null;
+                    try {
+                        fValue = parseFloat(sValue, 10);
+                    } catch (e) {
+                        // nothing
+                    }
+
+                    if (!isNaN(fValue)) {
+                        this._oPriceFilter = new Filter(oColumn.mProperties.sortProperty, FilterOperator.BT, fValue - 100, fValue + 100);
+                        oColumn.setFiltered(true);
+                        this._filter();
+                    } else {
+                        clear.apply(this);
+                    }
+                }else {
+                    let dateFormat = sap.ui.core.format.DateFormat.getDateInstance();
+                    var dFecha = dateFormat.parse(sValue);
+                    
+                    // Si es de tipo fecha y el valor es válido
+                    if (dFecha && !isNaN(dFecha)) {
+
+                        var dDateStart = dFecha;
+                        var dDateEnd = new Date(dDateStart);
+
+                        // Set first date as start of day
+                        dDateStart.setMilliseconds(0);
+                        dDateStart.setSeconds(0);
+                        dDateStart.setMinutes(0);
+                        dDateStart.setHours(0);
+
+
+                        // Set second date as end of day
+                        dDateEnd.setMilliseconds(0);
+                        dDateEnd.setSeconds(59);
+                        dDateEnd.setMinutes(59);
+                        dDateEnd.setHours(23);
+
+                        this._oPriceFilter = new Filter(oColumn.mProperties.sortProperty, FilterOperator.BT, dDateStart, dDateEnd);
+                        oColumn.setFiltered(true);
+                        this._filter();
+                    } else {
+                        clear.apply(this);
+                    }                
+                }
+            },
+            _filter: function() {
+                var oFilter = null;
+
+                if (this._oGlobalFilter && this._oPriceFilter) {
+                    oFilter = new Filter([this._oGlobalFilter, this._oPriceFilter], true);
+                } else if (this._oGlobalFilter) {
+                    oFilter = this._oGlobalFilter;
+                } else if (this._oPriceFilter) {
+                    oFilter = this._oPriceFilter;
+                }
+
+                this.byId("idTablePEPs").getBinding().filter(oFilter, "Application");
+            },
+
+            sortTablePedidos: function(oEvent) {
+                var oCurrentColumn = oEvent.getParameter("column");
+
+                this._resetSortingState(); //No multi-column sorting
+
+                if (oCurrentColumn != this.byId("Netwr")) {
+                    return;
+                }
+
+                oEvent.preventDefault();
+
+                var sOrder = oEvent.getParameter("sortOrder");
+
+                oCurrentColumn.setSorted(true);
+                oCurrentColumn.setSortOrder(sOrder);
+
+                var oSorter = new Sorter(oCurrentColumn.getSortProperty(), sOrder === SortOrder.Descending);
+                //The date data in the JSON model is string based. For a proper sorting the compare function needs to be customized.
+                oSorter.fnCompare = function(a, b) {
+
+                    if (b == null) {
+                        return -1;
+                    }
+                    if (a == null) {
+                        return 1;
+                    }
+
+                    var aa = parseFloat(a);
+                    var bb = parseFloat(b);
+
+                    if (aa < bb) {
+                        return -1;
+                    }
+                    if (aa > bb) {
+                        return 1;
+                    }
+                    return 0;
+                };
+
+                this.byId("idTablePEPs").getBinding().sort(oSorter);
+            },
+
+            _resetSortingState: function() {
+                var oTable = this.byId("idTablePEPs");
+                var aColumns = oTable.getColumns();
+                for (var i = 0; i < aColumns.length; i++) {
+                    aColumns[i].setSorted(false);
+                }
+            },
+
             // -------------------------------------- FUNCIONES IMPORTE --------------------------------------
             calcularImporteTotal: function (cantidad, cantbase, importe) {
                 return Number((importe / cantbase) * cantidad).toFixed(2);
@@ -167,115 +307,14 @@ sap.ui.define([
             // -------------------------------------- FUNCIONES FORMATEO DE CAMPOS --------------------------------------
             // FUNCION PARA FORMATEAR NUMERO IMPORTE
             onFormatImporte: function (Netwr) {
-                importeFormat = this.oComponent.getModel("Usuario").getData()[0].Dcpfm;
-                var numberFormat;
-                switch (importeFormat) {
-
-                    case "": //1.234.567,89
-                        numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
-                            "maxFractionDigits": 2,
-                            "decimalSeparator": ",",
-                            "groupingEnabled": true,
-                            "groupingSeparator": '.'
-                        });
-
-                        break;
-                    case "X": //1,234,567.89
-                        numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
-                            "maxFractionDigits": 2,
-                            "decimalSeparator": ".",
-                            "groupingEnabled": true,
-                            "groupingSeparator": ','
-                        });
-                        break;
-                    case "Y": //1 234 567,89
-                        numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
-                            "maxFractionDigits": 2,
-                            "decimalSeparator": ",",
-                            "groupingEnabled": true,
-                            "groupingSeparator": ' '
-                        });
-                        break;
-                }
-                var numeroFormateado = numberFormat.format(Netwr);
-                return numeroFormateado;
+                var numFormat = sap.ui.core.format.NumberFormat.getCurrencyInstance();
+                return numFormat.format(Netwr);
             },
 
             // FUNCION PARA FORMATEAR LA FECHA DOCUMENTO
             onFormatFechaDocVenta: function (Fechadoc) {
-
-                fechaDocVentaFormat = this.oComponent.getModel("Usuario").getData()[0].Datfm;
-                var dateFormat = Fechadoc;
-
-                switch (fechaDocVentaFormat) {
-                    case "1":
-                        dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "dd.MM.yyyy"
-                        });
-
-                        break;
-                    case "2":
-                        dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "MM/dd/yyyy"
-                        });
-                        break;
-                    case "3":
-                        dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "MM-dd-yyyy"
-                        });
-                        break;
-
-                    case "4":
-                        dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "yyyy.MM.dd"
-                        });
-                        break;
-                    case "5":
-                        dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "yyyy/MM/dd"
-                        });
-                        break;
-                    case "6":
-                        dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "yyyy-MM-dd"
-                        });
-                        break;
-                    case "7":
-                        dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "GYY.MM.dd"
-                        });
-                        break;
-                    case "8":
-                        dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "GYY/MM/dd"
-                        });
-                        break;
-                    case "9":
-                        dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "GYY-MM-dd"
-                        });
-                        break;
-                    case "A":
-                        dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "yyyy/MM/dd"
-                        });
-                        break;
-                    case "B":
-                        dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "yyyy/MM/dd"
-                        });
-
-                        break;
-                    case "C":
-                        dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                            pattern: "yyyy/MM/dd"
-                        });
-
-                        break;
-                }
-
-                var fechaFormateada = dateFormat.format(Fechadoc);
-                return fechaFormateada;
+                let dateFormat = sap.ui.core.format.DateFormat.getDateInstance();
+                return dateFormat.format(Fechadoc);
             },
 
             // -------------------------------------- FUNCIONES EJECUTADAS AL INICIAR LA APLICACIÓN --------------------------------------
@@ -2876,12 +2915,11 @@ sap.ui.define([
                                 that.motivopedido(data.results[0].Auart, data.results[0].Vkorg);
 
                                 that.NIApedido(data.results[0].Kunnr, data.results[0].Vkorg);
-                                that.OrganoGestor(data.results[0].Kunnr, data.results[0].Vkorg, "");
-                                that.UnidadTramitadora(data.results[0].Kunnr, data.results[0].Vkorg, "");
-                                that.OficinaContable(data.results[0].Kunnr, data.results[0].Vkorg, "");
-                                that.CodigoAdmon(data.results[0].Kunnr, data.results[0].Vkorg, "");
-                                that.Plataformapedido(data.results[0].Kunnr, data.results[0].Vkorg, "");
-
+                                if (data.results[0].contrato) { // Si tiene contrato, Vbeln = numero contrato
+                                    that.CamposDIR(data.results[0].Kunnr, data.results[0].Vkorg, data.results[0].contrato);
+                                } else { // Si no tiene contrato, Vbeln = numero pedido
+                                    that.CamposDIR(data.results[0].Kunnr, data.results[0].Vkorg, data.results[0].Vbeln);
+                                }                                
                                 if (that.modoapp === "M" || that.modoapp === "C") {
                                     that.DameMonedas();
                                 }
@@ -3002,11 +3040,7 @@ sap.ui.define([
                         this.motivopedido(TipoPed, vkbur);
 
                         this.NIApedido(codcli, vkbur);
-                        this.OrganoGestor(codcli, vkbur, "");
-                        this.UnidadTramitadora(codcli, vkbur, "");
-                        this.OficinaContable(codcli, vkbur, "");
-                        this.CodigoAdmon(codcli, vkbur, "");
-                        this.Plataformapedido(codcli, vkbur, "");
+                        this.CamposDIR(codcli, vkbur, "");
                         this.DameMonedas();
 
                         /**
@@ -3251,8 +3285,8 @@ sap.ui.define([
                 }
             },
 
-            // FUNCIONES PARA OBTENER EL ORGANO GESTOR
-            OrganoGestor: function (codcli, vkbur, Vbeln) {
+            // FUNCIONES PARA OBTENER LOS CAMPOS DIR
+            CamposDIR: function (codcli, vkbur, Vbeln) {
 
                 var aFilters = [],
                     aFilterIds = [],
@@ -3268,178 +3302,19 @@ sap.ui.define([
                 aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
 
                 Promise.all([
-                    this.readDataEntity(this.mainService, "/OrgGestorSet", aFilters),
-                ]).then(this.buildOrgGestor.bind(this), this.errorFatal.bind(this));
+                    this.readDataEntity(this.mainService, "/CamposDIRSet", aFilters),
+                ]).then(this.buildCamposDIR.bind(this), this.errorFatal.bind(this));
 
             },
 
-            buildOrgGestor: function (values) {
-                if (values[0].results && values[0].results.length > 0 && values[0].results[0].Centges) {
-                    this.oComponent.getModel("ModoApp").setProperty("/Centges", values[0].results[0].Centges);
+            buildCamposDIR: function (values) {
+                if (values[0].results && values[0].results.length > 0) {
+                    this.oComponent.getModel("ModoApp").setProperty("/Plataforma", values[0].results[0].Plataforma); // Plataforma
+                    this.oComponent.getModel("ModoApp").setProperty("/Centges", values[0].results[0].Centges);       // DIR Órgano Gestor
+                    this.oComponent.getModel("ModoApp").setProperty("/Centuni", values[0].results[0].Centuni);       // DIR Unidad Tramitadora
+                    this.oComponent.getModel("ModoApp").setProperty("/Centpro", values[0].results[0].Centpro);       // DIR Oficina Contable
+                    this.oComponent.getModel("ModoApp").setProperty("/Codadm", values[0].results[0].Codadm);         // DIR Administración
                     this.oComponent.getModel("ModoApp").refresh(true);
-                }
-            },
-
-            // FUNCIONES PARA OBTENER LA UNIDAD TRAMITADORA
-            UnidadTramitadora: function (codcli, vkbur, vbeln) {
-
-                var aFilters = [],
-                    aFilterIds = [],
-                    aFilterValues = [];
-
-                aFilterIds.push("Kunnr");
-                aFilterValues.push(codcli);
-                aFilterIds.push("Bukrs");
-                aFilterValues.push(vkbur);
-                aFilterIds.push("Vbeln");
-                aFilterValues.push(vbeln);
-
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/UndTramSet", aFilters),
-                ]).then(this.buildUndTram.bind(this), this.errorFatal.bind(this));
-
-            },
-
-            buildUndTram: function (values) {
-                if (values[0].results && values[0].results.length > 0 && values[0].results[0].Centuni) {
-                    this.oComponent.getModel("ModoApp").setProperty("/Centuni", values[0].results[0].Centuni);
-                    this.oComponent.getModel("ModoApp").refresh(true);
-                    //var oModelUndTram = new JSONModel();
-                    //oModelUndTram.setData(values[0].results);
-                    //this.oComponent.setModel(oModelUndTram, "UndTram");
-
-                    //this.oComponent.getModel("listadoNIA").refresh(true);
-                    /* Centges = values[0].results[0].Centges;
-                     Centuni = values[0].results[0].Centuni;
-                     Centpro = values[0].results[0].Centpro;
-                     Codadm = values[0].results[0].Codadm;*/
-                    /*this.getView().byId("f_DIRorgest").setValue(Centges);
-                    this.getView().byId("f_DIRuni").setValue(Centuni);
-                    this.getView().byId("f_DIRofcont").setValue(Centpro);
-                    this.getView().byId("f_DIRadm").setValue(Codadm);*/
-                    //this.oComponent.getModel("listadoNIA").refresh(true);
-                }
-            },
-
-            // FUNCIONES PARA OBTENER LA OFICINA CONTABLE
-            OficinaContable: function (codcli, vkbur, Vbeln) {
-
-                var aFilters = [],
-                    aFilterIds = [],
-                    aFilterValues = [];
-
-                aFilterIds.push("Kunnr");
-                aFilterValues.push(codcli);
-                aFilterIds.push("Bukrs");
-                aFilterValues.push(vkbur);
-                aFilterIds.push("Vbeln");
-                aFilterValues.push(Vbeln);
-
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/OfContableSet", aFilters),
-                ]).then(this.buildOfContable.bind(this), this.errorFatal.bind(this));
-
-            },
-
-            buildOfContable: function (values) {
-                if (values[0].results && values[0].results.length > 0 && values[0].results[0].Centpro) {
-                    this.oComponent.getModel("ModoApp").setProperty("/Centpro", values[0].results[0].Centpro);
-                    this.oComponent.getModel("ModoApp").refresh(true);
-
-                    /*var oModelOfContable = new JSONModel();
-                    oModelOfContable.setData(values[0].results);
-                    this.oComponent.setModel(oModelOfContable, "OfContable");*/
-                    //this.oComponent.getModel("listadoNIA").refresh(true);
-                    /* Centges = values[0].results[0].Centges;
-                     Centuni = values[0].results[0].Centuni;
-                     Centpro = values[0].results[0].Centpro;
-                     Codadm = values[0].results[0].Codadm;*/
-                    /*this.getView().byId("f_DIRorgest").setValue(Centges);
-                    this.getView().byId("f_DIRuni").setValue(Centuni);
-                    this.getView().byId("f_DIRofcont").setValue(Centpro);
-                    this.getView().byId("f_DIRadm").setValue(Codadm);*/
-                    //this.oComponent.getModel("listadoNIA").refresh(true);
-                }
-            },
-
-            // FUNCIONES PARA OBTENER EL CÓDIGO ADMINISTRACIÓN
-            CodigoAdmon: function (codcli, vkbur, vbeln) {
-
-                var aFilters = [],
-                    aFilterIds = [],
-                    aFilterValues = [];
-
-
-                aFilterIds.push("Kunnr");
-                aFilterValues.push(codcli);
-                aFilterIds.push("Bukrs");
-                aFilterValues.push(vkbur);
-                aFilterIds.push("Vbeln");
-                aFilterValues.push(vbeln);
-
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/CodAdmonSet", aFilters),
-                ]).then(this.buildCodAdmon.bind(this), this.errorFatal.bind(this));
-
-            },
-
-            buildCodAdmon: function (values) {
-                if (values[0].results && values[0].results.length > 0 && values[0].results[0].Codadm) {
-                    this.oComponent.getModel("ModoApp").setProperty("/Codadm", values[0].results[0].Codadm);
-                    this.oComponent.getModel("ModoApp").refresh(true);
-
-                    /*var oModelCodAdmon = new JSONModel();
-                    oModelCodAdmon.setData(values[0].results);
-                    this.oComponent.setModel(oModelCodAdmon, "codAdmon");*/
-                    //this.oComponent.getModel("listadoNIA").refresh(true);
-                    /* Centges = values[0].results[0].Centges;
-                     Centuni = values[0].results[0].Centuni;
-                     Centpro = values[0].results[0].Centpro;
-                     Codadm = values[0].results[0].Codadm;*/
-                    /*this.getView().byId("f_DIRorgest").setValue(Centges);
-                    this.getView().byId("f_DIRuni").setValue(Centuni);
-                    this.getView().byId("f_DIRofcont").setValue(Centpro);
-                    this.getView().byId("f_DIRadm").setValue(Codadm);*/
-                    //this.oComponent.getModel("listadoNIA").refresh(true);
-                }
-            },
-
-            // FUNCIONES PARA OBTENER LA PLATAFORMA DEL PEDIDO
-            Plataformapedido: function (codcli, vkbur, Vbeln) {
-
-                var aFilters = [],
-                    aFilterIds = [],
-                    aFilterValues = [];
-
-                aFilterIds.push("Kunnr");
-                aFilterValues.push(codcli);
-                aFilterIds.push("Bukrs");
-                aFilterValues.push(vkbur);
-                aFilterIds.push("Vbeln");
-                aFilterValues.push(Vbeln);
-
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/DamePlataformaSet", aFilters),
-                ]).then(this.buildPlataforma.bind(this), this.errorFatal.bind(this));
-
-            },
-
-            buildPlataforma: function (values) {
-                if (values[0].results && values[0].results.length > 0 && values[0].results[0].Plataforma) {
-                    this.oComponent.getModel("ModoApp").setProperty("/Plataforma", values[0].results[0].Plataforma);
-                    this.oComponent.getModel("ModoApp").refresh(true);
-
-                    /*var oModelPlataforma = new JSONModel();
-                    oModelPlataforma.setData(values[0].results);
-                    this.oComponent.setModel(oModelPlataforma, "Plataforma");*/
                 }
             },
 

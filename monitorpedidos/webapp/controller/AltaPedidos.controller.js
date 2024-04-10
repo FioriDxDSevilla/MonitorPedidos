@@ -153,38 +153,8 @@ sap.ui.define([
         if (Netpr) {
           Netpr = Number(Netpr).toFixed(2);
         }
-        importeFormat = this.oComponent.getModel("Usuario").getData()[0].Dcpfm;
-        var numberFormat;
-        switch (importeFormat) {
- 
-          case ""://1.234.567,89
-            numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
-              "maxFractionDigits": 2,
-              "decimalSeparator": ",",
-              "groupingEnabled": true,
-              "groupingSeparator": '.'
-            });
- 
-            break;
-          case "X"://1,234,567.89
-            numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
-              "maxFractionDigits": 2,
-              "decimalSeparator": ".",
-              "groupingEnabled": true,
-              "groupingSeparator": ','
-            });
-            break;
-          case "Y"://1 234 567,89
-            numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
-              "maxFractionDigits": 2,
-              "decimalSeparator": ",",
-              "groupingEnabled": true,
-              "groupingSeparator": ' '
-            });
-            break;
-        }
-        var numeroFormateado = numberFormat.format(Netpr);
-        return numeroFormateado;
+        var numFormat = sap.ui.core.format.NumberFormat.getCurrencyInstance();
+        return numFormat.format(Netpr);
       },
 
       // FUNCION PARA FORMATEAR NUMERO IMPORTE
@@ -221,80 +191,9 @@ sap.ui.define([
       },
  
       // FUNCION PARA FORMATEAR LA FECHA DOCUMENTO
-      onFormatFechaDocVenta: function (Fechadoc) {
- 
-        fechaDocVentaFormat = this.oComponent.getModel("Usuario").getData()[0].Datfm;
-        var dateFormat = Fechadoc;
- 
-        switch (fechaDocVentaFormat) {
-          case "1":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "dd.MM.YYYY"
-            });
- 
-            break;
-          case "2":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "MM/dd/YYYY"
-            });
-            break;
-          case "3":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "MM-dd-YYYY"
-            });
-            break;
- 
-          case "4":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "YYYY.MM.dd"
-            });
-            break;
-          case "5":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "YYYY/MM/dd"
-            });
-            break;
-          case "6":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "YYYY-MM-dd"
-            });
-            break;
-          case "7":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "GYY.MM.dd"
-            });
-            break;
-          case "8":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "GYY/MM/dd"
-            });
-            break;
-          case "9":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "GYY-MM-dd"
-            });
-            break;
-          case "A":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "YYYY/MM/dd"
-            });
-            break;
-          case "B":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "YYYY/MM/dd"
-            });
- 
-            break;
-          case "C":
-            dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-              pattern: "YYYY/MM/dd"
-            });
- 
-            break;
-        }
- 
-        var fechaFormateada = dateFormat.format(Fechadoc);
-        return fechaFormateada;
+      onFormatFechaDocVenta: function (Fechadoc) { 
+        let dateFormat = sap.ui.core.format.DateFormat.getDateInstance();
+        return dateFormat.format(Fechadoc);
       },
 
       // -------------------------------------- FUNCIONES IMPORTE --------------------------------------

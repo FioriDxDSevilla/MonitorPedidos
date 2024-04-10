@@ -20,6 +20,7 @@ sap.ui.define([
 function (Controller, Sorter, CoreLibrary, JSONModel, Fragment, History, Filter, FilterOperator, Util, MessageBox, ExportTypeCSV, Export, exportLibrary) {
     "use strict";
 
+    // Ordenación monitor
     var SortOrder = CoreLibrary.SortOrder;
 
     // Variables no utilizadas ???
@@ -38,8 +39,8 @@ function (Controller, Sorter, CoreLibrary, JSONModel, Fragment, History, Filter,
     var vkbur, vText, codcli, nomcli, numCont, nomCont, Cvcan, Cvsector, Bzirk, Bztxt, TipoPed;//, TipoPedTxt;
 
     // Variables globales para el formateo de los campos 'FECHA DOC. VENTA' e 'IMPORTE'
-
-    var fechaDocVentaFormat, fechaDocVentaDateFormat;
+    
+    //var fechaDocVentaFormat;
     /*
     1 -> DD.MM.AAAA
     2 -> MM/DD/AAAA
@@ -55,7 +56,7 @@ function (Controller, Sorter, CoreLibrary, JSONModel, Fragment, History, Filter,
     C -> AAAA/MM/DD (fecha iraní)
     */
 
-    var importeFormat;
+    //var importeFormat;
     /*
     W -> 1.234.567,89
     X -> 1,234,567.89
@@ -167,6 +168,7 @@ function (Controller, Sorter, CoreLibrary, JSONModel, Fragment, History, Filter,
             sap.ui.core.BusyIndicator.hide();
         },
 
+        // -------------------------------------- FILTROS Y ORDENACIÓN TABLA MONITOR --------------------------------------
 		filterTableContratos: function(oEvent) {
 			var oColumn = oEvent.getParameter("column");
 
@@ -212,7 +214,8 @@ function (Controller, Sorter, CoreLibrary, JSONModel, Fragment, History, Filter,
                     clear.apply(this);
                 }
             }else {
-                var dFecha = fechaDocVentaDateFormat.parse(sValue);
+                let dateFormat = sap.ui.core.format.DateFormat.getDateInstance();
+                var dFecha = dateFormat.parse(sValue);
                 
                 // Si es de tipo fecha y el valor es válido
                 if (dFecha && !isNaN(dFecha)) {
@@ -309,115 +312,15 @@ function (Controller, Sorter, CoreLibrary, JSONModel, Fragment, History, Filter,
 		},
 
         // -------------------------------------- FUNCIONES FORMATEO DE CAMPOS --------------------------------------
+        // FUNCION PARA FORMATEAR NÚMERO IMPORTE
         onFormatImporteFloat: function (sValue) {
             return parseFloat(sValue);
-        },
-        // FUNCION PARA FORMATEAR NUMERO IMPORTE
-        onFormatImporte: function (Netwr) {
-            importeFormat = this.oComponent.getModel("Usuario").getData()[0].Dcpfm;
-            var numberFormat;
-            switch (importeFormat) {
-
-                case "": //1.234.567,89
-                    numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
-                        "maxFractionDigits": 2,
-                        "decimalSeparator": ",",
-                        "groupingEnabled": true,
-                        "groupingSeparator": '.'
-                    });
-
-                    break;
-                case "X": //1,234,567.89
-                    numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
-                        "maxFractionDigits": 2,
-                        "decimalSeparator": ".",
-                        "groupingEnabled": true,
-                        "groupingSeparator": ','
-                    });
-                    break;
-                case "Y": //1 234 567,89
-                    numberFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
-                        "maxFractionDigits": 2,
-                        "decimalSeparator": ",",
-                        "groupingEnabled": true,
-                        "groupingSeparator": ' '
-                    });
-                    break;
-            }
-            var numeroFormateado = numberFormat.format(Netwr);
-            return numeroFormateado;
         },
 
         // FUNCION PARA FORMATEAR LA FECHA DOCUMENTO
         onFormatFechaDocVenta: function (Fechadoc) {
-
-            fechaDocVentaFormat = this.oComponent.getModel("Usuario").getData()[0].Datfm;
-            
-            switch (fechaDocVentaFormat) {
-                case "1":
-                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "dd.MM.yyyy"
-                    });
-                    break;
-                case "2":
-                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "MM/dd/yyyy"
-                    });
-                    break;
-                case "3":
-                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "MM-dd-yyyy"
-                    });
-                    break;
-                case "4":
-                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "yyyy.MM.dd"
-                    });
-                    break;
-                case "5":
-                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "yyyy/MM/dd"
-                    });
-                    break;
-                case "6":
-                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "yyyy-MM-dd"
-                    });
-                    break;
-                case "7":
-                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "GYY.MM.dd"
-                    });
-                    break;
-                case "8":
-                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "GYY/MM/dd"
-                    });
-                    break;
-                case "9":
-                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "GYY-MM-dd"
-                    });
-                    break;
-                case "A":
-                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "yyyy/MM/dd"
-                    });
-                    break;
-                case "B":
-                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "yyyy/MM/dd"
-                    });
-                    break;
-                case "C":
-                    fechaDocVentaDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                        pattern: "yyyy/MM/dd"
-                    });
-                    break;
-            }
-
-            var fechaFormateada = fechaDocVentaDateFormat.format(Fechadoc);
-            return fechaFormateada;
+            let dateFormat = sap.ui.core.format.DateFormat.getDateInstance();
+            return dateFormat.format(Fechadoc);
         },
 
         // -------------------------------------- FUNCIONES EJECUTADAS AL INICIAR LA APLICACIÓN --------------------------------------
