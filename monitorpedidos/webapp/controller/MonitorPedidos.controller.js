@@ -449,6 +449,15 @@ sap.ui.define([
                 if (inputUsuario) {
                     filtroUsuario = inputUsuario;
                     this.getView().byId("rbGroup").setSelectedIndex(1); // Cambiamos el radio button a 'Todos'
+                } else {
+                    var oRbGroup = this.getView().byId("rbGroup"); // Get the RadioButtonGroup control
+                    var oSelectedButton = oRbGroup.getSelectedButton(); // Get the selected radio button
+
+                    if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbTrue" || oSelectedButton.getId() === "application-ZPV-display-component---MonitorPedidos--rbTrue") {
+                        filtroUsuario = this.oComponent.getModel("Usuario").getData()[0].Bname;
+                    } else if (oSelectedButton.getId() === "application-monitorpedidos-display-component---MonitorPedidos--rbFalse" || oSelectedButton.getId() === "application-ZPV-display-component---MonitorPedidos--rbFalse") {
+                        filtroUsuario = "";
+                    };
                 }
 
                 //Numped = this.getView().byId("f_numsolic").getValue();

@@ -37,7 +37,7 @@
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
-                <Label text="{i18n>Descripcion}" />
+                <Label text="{i18n>nomMat}" />
                 <table:template>
                     <!--<Text text="{PedidoPosContrato>ShortText}"/>-->
                     <Text text="{PedidoPosContrato>Arktx}" wrapping="false"/>

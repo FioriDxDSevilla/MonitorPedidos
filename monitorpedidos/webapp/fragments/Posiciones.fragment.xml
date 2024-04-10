@@ -73,7 +73,7 @@
                 </table:template>
             </table:Column>
             <table:Column hAlign="Center">
-                <m:Label text="{i18n>Descripcion}" />
+                <m:Label text="{i18n>nomMat}" />
                 <table:template>
                     <m:Text text="{PedidoPos>ShortText}" wrapping="false"/>
                     <!--<m:Text text="{DisplayPosPed>Arktx}"/>-->
