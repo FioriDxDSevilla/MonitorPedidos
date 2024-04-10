@@ -44,8 +44,8 @@
                     <ui:Column
                         id="Cliente"
                         width="7em"
-                        filterProperty="CLIENTE"
-                        sortProperty="CLIENTE"
+                        filterProperty="Cliente"
+                        sortProperty="Cliente"
                         tooltip="{i18n>codcli}"
                     >
                         <Label text="{i18n>codcli}" />

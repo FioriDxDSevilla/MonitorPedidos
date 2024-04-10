@@ -349,8 +349,8 @@
                     </ui:Column>-->
                     <ui:Column
                         width="5em"
-                        filterProperty="Orgventas"
-                        sortProperty="Orgventas"
+                        filterProperty="ORGVENTAS"
+                        sortProperty="ORGVENTAS"
                         tooltip="{i18n>orgventas}"
                     >
                         <Label text="{i18n>orgventas}" />

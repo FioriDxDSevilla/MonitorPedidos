@@ -53,7 +53,7 @@
                     <core:ListItem key="{OficinaVenta>Vkbur}" text="{OficinaVenta>Bezei}" additionalText="{OficinaVenta>Vkbur}" />
                 </m:ComboBox>
                 <m:Label text="{i18n>NumPedidoCliente}" required="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" />
-                <m:Input id="f_refped" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" value="{DisplayPEP>/Bstnk}" width="300px" liveChange=".onLiveChangeRequired">
+                <m:Input id="f_refped" maxLength="35" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" value="{DisplayPEP>/Bstnk}" width="300px" liveChange=".onLiveChangeRequired">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>

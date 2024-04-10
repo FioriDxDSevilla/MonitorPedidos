@@ -448,6 +448,7 @@ sap.ui.define([
                 var inputUsuario = this.getView().byId("f_usuario").getValue();
                 if (inputUsuario) {
                     filtroUsuario = inputUsuario;
+                    this.getView().byId("rbGroup").setSelectedIndex(1); // Cambiamos el radio button a 'Todos'
                 }
 
                 //Numped = this.getView().byId("f_numsolic").getValue();
@@ -456,8 +457,11 @@ sap.ui.define([
                 filtroImporteDsd = this.getView().byId("f_impdesde").getValue();
                 filtroImporteHst = this.getView().byId("f_imphasta").getValue();
                 //filtroEstado
-                // Si el usuario no ha seleccionado un cliente desde el diálogo, buscamos el código en el input
-                if (!filtroClienteTxt) {
+                // Si no está informado el input, reseteamos los valores del cliente
+                if(!this.getView().byId("f_client").getValue()){
+                    filtroClienteCod = "";
+                    filtroClienteTxt = "";
+                }else if (!filtroClienteTxt) { // Si el usuario no ha seleccionado un cliente desde el diálogo, buscamos el código en el input
                     filtroClienteCod = this.getView().byId("f_client").getValue();
                 }
                 filtroCeco = this.getView().byId("f_cecos").getValue();
@@ -469,6 +473,7 @@ sap.ui.define([
                 filtroClasePed = arrayFiltroClasePed;
 
                 this.refrescarMonitor();
+                filtroClienteTxt = "";
             },
 
             // FUNCIONES DEL DIÁLOGO DE BÚSQUEDA DE CLIENTES EN LOS FILTROS PRINCIPALES
@@ -1012,9 +1017,6 @@ sap.ui.define([
                     tablaMonitor.getColumns()[iColCounter].setFiltered(false);
                     tablaMonitor.getColumns()[iColCounter].setGrouped(false);
                 }
-
-                //after reset, set the enableGrouping back to true
-                tablaMonitor.setEnableGrouping(true);
 
                 // -- ACTUALIZAR EL TOTAL EN CADA ESTADO --
                 var estados = ["", "REDA", "APRB", "FINA", "FACT", "PDTE", "COBR", "DEN", "BTN_APRB"];
@@ -3086,7 +3088,8 @@ sap.ui.define([
                         Zzkostl: posicionPed.Zzkostl,
                         Zzaufnr: posicionPed.Zzaufnr,
                         Kstar: posicionPed.Kstar,
-                        Tdlinepos: posicionPed.Tdlinepos
+                        Tdlinepos: posicionPed.Tdlinepos,
+                        ImpTotal: posicionPed.ImpTotal
                     }
                     posiciones.push(posicionN);                    
                     //pedidosContrato.splice(indice - indexDeleted, 1); // Eliminarmos la posición del modelo de contratos
