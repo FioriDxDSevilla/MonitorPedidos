@@ -40,6 +40,7 @@
                 showValueHelp="true"
                 valueHelpRequest=".onValueHelpRequestMatAlta"
                 value="{posPedFrag>/Material}"
+                liveChange=".onLiveChangeRequired"
             />
             <Label text="{i18n>nomMat}" required="true" />
             <Input
@@ -111,13 +112,13 @@
                 type="Text"
                 liveChange=".onLiveChangeRequired"
             />
-            <Label text="{i18n>ceco}" />
+            <Label text="{i18n>ceco}" required="true"/>
             <Input
                 id="f_cecosIngPos"
                 showValueHelp="true"
                 editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false }"
                 valueHelpRequest=".onValueHelpCecosIngresoPosicion"
-                liveChange=".onLiveChangeOptional"
+                liveChange=".onLiveChangeRequired"
                 value="{posPedFrag>/Yykostkl}"
                 visible="true"
             />

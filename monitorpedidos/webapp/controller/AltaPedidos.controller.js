@@ -389,6 +389,7 @@ sap.ui.define([
 
           case "CecoIngresoPosicion":
             this.oComponent.getModel("posPedFrag").setProperty("/Yykostkl", codceco);
+            this.getView().byId("f_cecosIngPos").setValueState("None");
             break;
 
           case "CecoIntercoPosicion":
@@ -814,6 +815,7 @@ sap.ui.define([
         this.oComponent.getModel("posPedFrag").setProperty("/SalesUnit", unimedmat);
         this.oComponent.getModel("posPedFrag").refresh(true);
         this.closeMatDiagAlta();
+        this.getView().byId("f_material").setValueState("None");
       },
 
       // -------------------------------------- FUNCIONES TIPO DE CAMBIO --------------------------------------
@@ -1071,6 +1073,7 @@ sap.ui.define([
         var inCantidadBase = this.getView().byId("f_cantbasepos");
         var inMoneda = this.getView().byId("f_monedapos");
         var inUnidad = this.getView().byId("f_unitpos");
+        var inCecosIngPos = this.getView().byId("f_cecosIngPos");
         
         if (inPosicion.getValue()) {
             inPosicion.setValueState("None");
@@ -1112,6 +1115,12 @@ sap.ui.define([
             inUnidad.setValueState("None");
         } else {
             inUnidad.setValueState("Error");
+        }
+
+        if (inCecosIngPos.getValue()) {
+            inCecosIngPos.setValueState("None");
+        } else {
+            inCecosIngPos.setValueState("Error");
         }
 
         /* **Eliminar - finalmente los cecos y OT se validan en SAP**
@@ -1161,6 +1170,7 @@ sap.ui.define([
           inMaterial.setValueState("None");
         }else{
           inMaterial.setValueState("Error");
+          inMaterial.setValueStateText("Material no permitido");
         }
 
         var validation = false;
@@ -1173,7 +1183,7 @@ sap.ui.define([
             inCantidadBase.getValue() && inCantidadBase.getValueState() != "Error" &&
             inMoneda.getValue() && inMoneda.getValueState() != "Error" &&
             inUnidad.getValue() && inUnidad.getValueState() != "Error" &&
-            //inCecoIngresoPosicion.getValueState() != "Error" &&
+            inCecosIngPos.getValue() && inCecosIngPos.getValueState() != "Error" &&
             //inCecoIntercoPosicion.getValueState() != "Error" &&
             //inLibroMayor.getValueState() != "Error" &&
             inMaterial.getValueState() != "Error") {
@@ -1599,7 +1609,7 @@ sap.ui.define([
     // VALIDAR LA ACTUALIZACIÓN DE LOS INPUTS DE ALTA DE PEDIDOS
     onLiveChangeRequired: function (oEvent) {
 			var input = sap.ui.getCore().byId(oEvent.getSource().sId);
-      var value = input.getValue();
+      var value = input.getValue().trim();
 			if (value) {
         input.setValueState("None");
       } else {
