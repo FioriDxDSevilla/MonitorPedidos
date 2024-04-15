@@ -185,6 +185,18 @@
                             <u:Currency value="{path: 'ListadoContratos>Imppdtefacturar',  formatter: '.onFormatImporteFloat'}" currency="{ListadoContratos>Waerk}"/>                            
                         </ui:template>
                     </ui:Column>
+                    <ui:Column
+                        id="responsable"
+                        width="7.5em"
+                        filterProperty="Creador"
+                        sortProperty="Creador"
+                        tooltip="{i18n>responsable}"
+                    >
+                        <Label text="{i18n>responsable}" />
+                        <ui:template>
+                            <Text text="{ListadoContratos>Creador}" wrapping="false"/>
+                        </ui:template>
+                    </ui:Column>
                 </ui:columns>
             </ui:Table>
         </content>
