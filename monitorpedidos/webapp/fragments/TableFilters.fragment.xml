@@ -413,6 +413,30 @@
                                     titlePress="handleLinkCont(${listadoSolicitudes>Indcontrato})" />
                         </ui:template>
                     </ui:Column>
+                    <ui:Column
+                        width="7.5em"
+                        filterProperty="Abgru"
+                        sortProperty="Abgru"
+                        tooltip="{i18n>MotivoRechazo}"
+                        visible="{Filtros>/visibleMotivoRechazo}"
+                    >
+                        <Label text="{i18n>MotivoRechazo}" />
+                        <ui:template>
+                            <Text text="{listadoSolicitudes>Abgru}" wrapping="false"/>
+                        </ui:template>
+                    </ui:Column>
+                    <ui:Column
+                        width="7.5em"
+                        filterProperty="HbExpdate"
+                        sortProperty="HbExpdate"
+                        tooltip="{i18n>FechaVencimiento}"
+                        visible="{Filtros>/visibleFechaVenci}"
+                    >
+                        <Label text="{i18n>FechaVencimiento}" />
+                        <ui:template>
+                            <Text text="{path: 'listadoSolicitudes>HbExpdate',  formatter: '.onFormatFechaDocVenta'}" wrapping="false"/>
+                        </ui:template>
+                    </ui:Column>
                     <ui:Column width="2%">
                         <Label text="" />
                         <ui:template>

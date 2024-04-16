@@ -77,6 +77,8 @@ sap.ui.define([
 
                 // Modelo para el total de cada estado
                 this.oComponent.setModel(new JSONModel(), "Filtros");
+                this.oComponent.getModel("Filtros").setProperty("/visibleMotivoRechazo", false);
+                this.oComponent.getModel("Filtros").setProperty("/visibleFechaVenci", false);
                 // Modelo para el filtrado de Sociedad en la búsqueda de clientes para el Alta de Pedidos
                 this.oComponent.setModel(new JSONModel(), "FiltrosCli");
 
@@ -1151,6 +1153,7 @@ sap.ui.define([
                 filtroEstado = "";
                 btnEditar = false;
                 btnRescatar = false;
+                let visibleMotivoRechazo = false, visibleFechaVenci = false;
 
                 switch (skey) {
                     case "Free":
@@ -1159,6 +1162,7 @@ sap.ui.define([
                     case "Ok":
                         filtroEstado = "REDA";
                         btnEditar = true;
+                        visibleMotivoRechazo = true;
                         break;
                     case "Heavy":
                         filtroEstado = "APRB";
@@ -1173,14 +1177,21 @@ sap.ui.define([
                         break;
                     case "Payment":
                         filtroEstado = "PDTE";
+                        visibleFechaVenci = true;
                         break;
                     case "Sales":
                         filtroEstado = "COBR";
                         break;
                     case "Cancel":
                         filtroEstado = "DEN";
+                        visibleMotivoRechazo = true;
                         break;
                 }
+
+                // Visualizar columnas
+                this.oComponent.getModel("Filtros").setProperty("/visibleMotivoRechazo", visibleMotivoRechazo);
+                this.oComponent.getModel("Filtros").setProperty("/visibleFechaVenci", visibleFechaVenci);
+                this.oComponent.getModel("Filtros").refresh(true);
 
                 if (skey === 'Approv') {
                     filtroEstado = "APRB";
