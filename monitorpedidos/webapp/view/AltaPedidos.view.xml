@@ -29,8 +29,8 @@
                                  <!-- -->
                                 <core:Title text="" />
                                 
-                                <m:Label text="{i18n>Denominacion}" />
-                                <m:Input id="f_denoped" maxLength="40" width="300px" editable="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" value="{DisplayPEP>/Ktext}">
+                                <m:Label text="{i18n>Denominacion}" required="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" />
+                                <m:Input id="f_denoped" maxLength="40" width="300px" editable="{= ${ModoApp>/mode} === 'C' ? true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" value="{DisplayPEP>/Ktext}"  liveChange=".onLiveChangeRequired">
                                     <m:layoutData>
                                         <l:GridData span="XL1 L2 M2 S4" />
                                     </m:layoutData>

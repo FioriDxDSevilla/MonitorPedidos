@@ -79,15 +79,6 @@ sap.ui.define([
             if (this.oComponent.getModel("ModoApp").getData().copy) {
               sap.ui.core.BusyIndicator.hide();
             }
-            //var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-            /* **Eliminar - finalmente los cecos y OT se validan en SAP**
-            if (modeApp === 'C' || modeApp === 'M') {
-              listadoValidarCeco = true;
-              this.onBusqCecos("", "");
-              listadoValidarLibroMayor = true;
-              this.onBusqLibroMayor("", "");                    
-            }
-            */
             this.actualizaimp();
             this.oComponent.setModel(new JSONModel(), "listadoLibroMayor"); 
           }        
@@ -246,27 +237,15 @@ sap.ui.define([
       // -------------------------------------- FUNCIONES CECOS --------------------------------------
       // FUNCIONES DE CECOS
       onBusqCecos: function (Kostl, Ltext) {
-        /*
-        var Kostl = this.getView().byId("f_codCeco").getValue();
-        var Ltext = this.getView().byId("f_nomCeco").getValue();
-        */
-
-        //var Bukrs = this.getView().byId("f_cecoSoc").getValue();
-        //var Bukrs = this.getOwnerComponent().getModel("ModoApp").getProperty("/Vkbur");
-        //var Bukrs = this.getView().byId("f_nifcAcr").getValue();
-        
-        /*var Bukrs;
-        if (this.getOwnerComponent().getModel("ModoApp").getProperty("/mode") == 'M') {
-          Bukrs = this.getOwnerComponent().getModel("DisplayPEP").getProperty("/Vkorg");
-        } else {
-          Bukrs = this.getOwnerComponent().getModel("ModoApp").getProperty("/Vkbur");
-        }*/
-
         var Kokrs;
         if (tipoInputCeco === 'CecoIngresoCabecera' || tipoInputCeco === 'CecoIngresoPosicion') {
           Kokrs = this.oComponent.getModel("ModoApp").getProperty("/Vkbur"); // Sociedad del pedido
         }else{
           Kokrs = this.oComponent.getModel("ModoApp").getProperty("/Vbund"); // Sociedad asociada al cliente
+          if (!Kokrs) {
+            this.oComponent.setModel(new JSONModel(), "listadoCecos");
+            return;
+          }
         }
         
 
@@ -340,7 +319,8 @@ sap.ui.define([
       },
 
       _getDialogCecosAlta: function (sInputValue) {
-        this.oComponent.setModel(new JSONModel(), "listadoCecos");
+        this.oComponent.setModel(new JSONModel(), "FiltrosCeco");
+        this.oComponent.setModel(new JSONModel(), "listadoCecos");        
 
         var oView = this.getView();
 
@@ -365,8 +345,8 @@ sap.ui.define([
       },
 
       onBusqCecosAlta: function () {
-        var Kostl = this.getView().byId("f_codCecoAlta").getValue();
-        var Ltext = this.getView().byId("f_nomCecoAlta").getValue();
+        var Kostl = this.getView().byId("f_codCecoAlta").getValue().trim();
+        var Ltext = this.getView().byId("f_nomCecoAlta").getValue().trim();
         this.onBusqCecos(Kostl, Ltext)
       },
 
@@ -471,7 +451,9 @@ sap.ui.define([
       },
 
       _getDialogOrdenesAlta: function (sInputValue) {
+        this.oComponent.setModel(new JSONModel(), "FiltrosOrd");
         this.oComponent.setModel(new JSONModel(), "listadoOrdenes");
+        
 
         var oView = this.getView();
 
@@ -496,8 +478,8 @@ sap.ui.define([
       },
 
       onBusqOrdenesAlta: function () {
-        var Aufnr = this.getView().byId("f_codOrdAlta").getValue();
-        var Ktext = this.getView().byId("f_nomOrdAlta").getValue();
+        var Aufnr = this.getView().byId("f_codOrdAlta").getValue().trim();
+        var Ktext = this.getView().byId("f_nomOrdAlta").getValue().trim();
         var Ceco;
 
         switch (tipoInputOrden) {
@@ -586,8 +568,8 @@ sap.ui.define([
       },
 
       // --------------------------------- FUNCIONES LIBRO MAYOR ---------------------------------
-      // FUNCIONES DE LIBRO MAYOR
-      onBusqLibroMayor: function (Saknr, Txt50) {        
+      // FUNCIONES DE LIBRO MAYOR - Finalmente debe ser un campo NO modificable
+      /*onBusqLibroMayor: function (Saknr, Txt50) {        
         var Bukrs = this.oComponent.getModel("ModoApp").getProperty("/Vkbur").toString();
 
         var aFilterIds = [],
@@ -620,13 +602,6 @@ sap.ui.define([
         }
         this.oComponent.setModel(oModelLibroMayor, "listadoLibroMayor");
         this.oComponent.getModel("listadoLibroMayor").refresh(true);
-        /* **Eliminar - finalmente los cecos y OT se validan en SAP**
-        if (listadoValidarLibroMayor) {
-          this.oComponent.setModel(oModelLibroMayor, "listadoValidarLibroMayor");
-          this.oComponent.getModel("listadoValidarLibroMayor").refresh(true);
-          listadoValidarLibroMayor = false;
-        }
-        */
         sap.ui.core.BusyIndicator.hide();
       },
 
@@ -650,7 +625,9 @@ sap.ui.define([
       },
 
       _getDialogLibroMayorAlta: function (sInputValue) {
-        
+        this.oComponent.setModel(new JSONModel(), "FiltrosLibroMayor");
+        this.oComponent.setModel(new JSONModel(), "listadoLibroMayor");
+
         var oView = this.getView();
 
         if (!this.pDialogLibroMayorAlta) {
@@ -674,8 +651,8 @@ sap.ui.define([
       },
 
       onBusqLibroMayorAlta: function () {
-        var Saknr = this.getView().byId("f_ctaLibroMayorAlta").getValue();
-        var Txt50 = this.getView().byId("f_descLibroMayorAlta").getValue();
+        var Saknr = this.getView().byId("f_ctaLibroMayorAlta").getValue().trim();
+        var Txt50 = this.getView().byId("f_descLibroMayorAlta").getValue().trim();
         this.onBusqLibroMayor(Saknr, Txt50)
       },
 
@@ -697,7 +674,7 @@ sap.ui.define([
             break;
         }
         this.closeLibroMayorDiagAlta();
-      },
+      },*/
 
       // -------------------------------------- FUNCIONES MATERIALES --------------------------------------
       // FUNCIONES DE MATERIALES
@@ -787,9 +764,9 @@ sap.ui.define([
       },
 
       onBusqMaterialesAlta: function () {
-        var Matnr = this.getView().byId("f_codMatAlta").getValue();
-        var Maktx = this.getView().byId("f_nomMatAlta").getValue();
-        var Matkl = this.getView().byId("f_grArtAlta").getValue();        
+        var Matnr = this.getView().byId("f_codMatAlta").getValue().trim();
+        var Maktx = this.getView().byId("f_nomMatAlta").getValue().trim();
+        var Matkl = this.getView().byId("f_grArtAlta").getValue().trim();        
         this.onBusqMateriales(Matnr, Maktx, Matkl);
       },
       
@@ -1075,90 +1052,53 @@ sap.ui.define([
         var inUnidad = this.getView().byId("f_unitpos");
         var inCecosIngPos = this.getView().byId("f_cecosIngPos");
         
-        if (inPosicion.getValue()) {
+        if (inPosicion.getValue().trim()) {
             inPosicion.setValueState("None");
         } else {
             inPosicion.setValueState("Error");
         }
 
-        if (inNomMaterial.getValue()) {
+        if (inNomMaterial.getValue().trim()) {
             inNomMaterial.setValueState("None");
         } else {
             inNomMaterial.setValueState("Error");
         }
 
-        if (inFechaPrecio.getValue()) {
+        if (inFechaPrecio.getValue().trim()) {
             inFechaPrecio.setValueState("None");
         } else {
             inFechaPrecio.setValueState("Error");
         }
 
-        if (!inImporte.getValue()) {
+        if (!inImporte.getValue().trim()) {
             inImporte.setValueState("Error");
         }
 
-        if (!inCantidad.getValue()) {
+        if (!inCantidad.getValue().trim()) {
             inCantidad.setValueState("Error");
         }
 
-        if (!inCantidadBase.getValue()) {
+        if (!inCantidadBase.getValue().trim()) {
             inCantidadBase.setValueState("Error");
         }
 
-        if (inMoneda.getValue()) {
+        if (inMoneda.getValue().trim()) {
             inMoneda.setValueState("None");
         } else {
             inMoneda.setValueState("Error");
         }
 
-        if (inUnidad.getValue()) {
+        if (inUnidad.getValue().trim()) {
             inUnidad.setValueState("None");
         } else {
             inUnidad.setValueState("Error");
         }
 
-        if (inCecosIngPos.getValue()) {
+        if (inCecosIngPos.getValue().trim()) {
             inCecosIngPos.setValueState("None");
         } else {
             inCecosIngPos.setValueState("Error");
         }
-
-        /* **Eliminar - finalmente los cecos y OT se validan en SAP**
-        // --Validación CECOS
-        var cecosValidos = this.getView().getModel("listadoValidarCeco").getData();
-
-        // -Ceco Ingreso Posicion
-        var inCecoIngresoPosicion = this.getView().byId("f_cecosIngPos");
-        var cecoIngresoPosicion = inCecoIngresoPosicion.getValue();
-        var cecoEncontrado = !!cecosValidos.find(cecoValido => cecoValido.Kostl === cecoIngresoPosicion);
-        if (cecoIngresoPosicion === "" || cecoEncontrado) {
-          inCecoIngresoPosicion.setValueState("None");
-        }else{
-          inCecoIngresoPosicion.setValueState("Error");
-        }
-
-        // -Ceco Interco Posicion
-        var inCecoIntercoPosicion = this.getView().byId("f_cecosIntPos");
-        var cecoIntercoPosicion = inCecoIntercoPosicion.getValue();
-        var cecoEncontrado = !!cecosValidos.find(cecoValido => cecoValido.Kostl === cecoIntercoPosicion);
-        if (cecoIntercoPosicion === "" || cecoEncontrado) {
-          inCecoIntercoPosicion.setValueState("None");
-        }else{
-          inCecoIntercoPosicion.setValueState("Error");
-        }
-
-        // --Validación Libro Mayor Interco
-        var librosValidos = this.getView().getModel("listadoValidarLibroMayor").getData();
-
-        var inLibroMayor = this.getView().byId("f_libroMayorIntPOS");
-        var libroMayor = inLibroMayor.getValue();
-        var libroEncontrado = !!librosValidos.find(libroValido => libroValido.Saknr === libroMayor);
-        if (libroMayor === "" || libroEncontrado) {
-          inLibroMayor.setValueState("None");
-        }else{
-          inLibroMayor.setValueState("Error");
-        }
-        */
 
         // --Validación Materiales
         var materialesValidos = this.getView().getModel("listadoValidarMateriales").getData();
@@ -1175,18 +1115,17 @@ sap.ui.define([
 
         var validation = false;
         //VALIDACIÓN SI CONTIENE UN VALOR Y SI EL ESTADO DEL COMPONENTE NO ES ERROR 
-        if (inPosicion.getValue() && inPosicion.getValueState() != "Error" &&
-            inNomMaterial.getValue() && inNomMaterial.getValueState() != "Error" &&
-            inFechaPrecio.getValue() && inFechaPrecio.getValueState() != "Error" &&
-            inImporte.getValue() && inImporte.getValueState() != "Error" &&
-            inCantidad.getValue() && inCantidad.getValueState() != "Error" &&
-            inCantidadBase.getValue() && inCantidadBase.getValueState() != "Error" &&
-            inMoneda.getValue() && inMoneda.getValueState() != "Error" &&
-            inUnidad.getValue() && inUnidad.getValueState() != "Error" &&
-            inCecosIngPos.getValue() && inCecosIngPos.getValueState() != "Error" &&
-            //inCecoIntercoPosicion.getValueState() != "Error" &&
-            //inLibroMayor.getValueState() != "Error" &&
-            inMaterial.getValueState() != "Error") {
+        // Nota: Los CECOS y OT se validan en SAP
+        if (inPosicion.getValueState()      != "Error" &&
+            inNomMaterial.getValueState()   != "Error" &&
+            inFechaPrecio.getValueState()   != "Error" &&
+            inImporte.getValueState()       != "Error" &&
+            inCantidad.getValueState()      != "Error" &&
+            inCantidadBase.getValueState()  != "Error" &&
+            inMoneda.getValueState()        != "Error" &&
+            inUnidad.getValueState()        != "Error" &&
+            inCecosIngPos.getValueState()   != "Error" &&
+            inMaterial.getValueState()      != "Error") {
                 validation = true;
         }
         
@@ -1219,6 +1158,7 @@ sap.ui.define([
       resetearEstadoInputsAltaPedido: function () {
         // Quitar la marca roja si hay algún campo con error
         if(this.getView().byId("fAltaCab")){
+          this.getView().byId("f_denoped").setValueState("None");
           this.getView().byId("idOficinaV").setValueState("None");
           this.getView().byId("f_refped").setValueState("None");
           this.getView().byId("f_cecosIngresoCab").setValueState("None");
@@ -1229,6 +1169,7 @@ sap.ui.define([
           this.getView().byId("f_campomotivo").setValueState("None");
           this.getView().byId("f_campocondicion").setValueState("None");
           this.getView().byId("f_camponia").setValueState("None");
+          this.getView().byId("textAreaCabFact").setValueState("None");
         }
       },
 
@@ -1251,7 +1192,7 @@ sap.ui.define([
         //posactual = ('000000' + posactual).slice(-6); // Establecemos el formato de 6 caracteres 000010
         
         // Tipo cambio
-        var tipocambio = this.getView().byId("f_tipocambio").getValue();
+        var tipocambio = this.getView().byId("f_tipocambio").getValue().trim();
 
         // Importe Total por línea
         var impTotal = this.calcularImporteTotal(posPedFrag.ReqQty, posPedFrag.Kpein, posPedFrag.CondValue);
@@ -1610,7 +1551,7 @@ sap.ui.define([
     onLiveChangeRequired: function (oEvent) {
 			var input = sap.ui.getCore().byId(oEvent.getSource().sId);
       var value = input.getValue().trim();
-			if (value) {
+			if (value && value.trim() !== '') {
         input.setValueState("None");
       } else {
         input.setValueState("Error");
@@ -1620,7 +1561,7 @@ sap.ui.define([
 
     onLiveChangePositiveNumber: function (oEvent) {
 			var input = sap.ui.getCore().byId(oEvent.getSource().sId);
-      var value = input.getValue();
+      var value = input.getValue().trim();
 			if (value) {
         if (value >= 0) {
           input.setValueState("None");
@@ -1643,80 +1584,74 @@ sap.ui.define([
     // VALIDAR LOS INPUTS DEL DIÁLOGO DE ALTA DE PEDIDOS
       validarInputsGrabar: function () {    
         // --Validación inputs obligatorios
+        var inDenominacion = this.getView().byId("f_denoped");
         var inOficinaVentas = this.getView().byId("idOficinaV");
         var inNumPedCliente = this.getView().byId("f_refped");
+        var inMotivoPedido = this.getView().byId("f_campomotivo");
         var inCondicionPago = this.getView().byId("f_campocondicion");
         var inNIA = this.getView().byId("f_camponia");
+        var inTxtCabecera = this.getView().byId("textAreaCabFact");
         
-        if (inOficinaVentas.getValue()) {
-            inOficinaVentas.setValueState("None");
+        if (inDenominacion.getValue().trim()) {
+          inDenominacion.setValueState("None");
         } else {
-            inOficinaVentas.setValueState("Error");
+          inDenominacion.setValueState("Error");
         }
 
-        if (inNumPedCliente.getValue()) {
+        // Validación Oficina de ventas
+        var oficina = inOficinaVentas.getSelectedKey();
+        var oficinasVenta = new Set(this.oComponent.getModel("OficinaVenta").getData().map(item => item.Vkbur));
+
+        if (oficina && oficinasVenta.has(oficina)) {
+          inOficinaVentas.setValueState("None");
+        } else {
+          inOficinaVentas.setValueState("Error");
+        }
+
+        if (inNumPedCliente.getValue().trim()) {
             inNumPedCliente.setValueState("None");
         } else {
             inNumPedCliente.setValueState("Error");
         }
 
-        if (inCondicionPago.getValue()) {
+        // Validación motivo de pedido        
+        var motivo = inMotivoPedido.getSelectedKey();
+        var motivosPed = new Set(this.oComponent.getModel("listadoMotivo").getData().map(item => item.Augru));
+
+        if (motivo && motivosPed.has(motivo)) {
+          inMotivoPedido.setValueState("None");
+        } else {
+          inMotivoPedido.setValueState("Error");
+        }
+
+        if (inCondicionPago.getValue().trim()) {
             inCondicionPago.setValueState("None");
         } else {
             inCondicionPago.setValueState("Error");
         }
 
-        if (inNIA.getValue()) {
+        if (inNIA.getValue().trim()) {
             inNIA.setValueState("None");
         } else {
             inNIA.setValueState("Error");
         }
 
-        /* **Eliminar - finalmente los cecos y OT se validan en SAP**
-        // --Validación CECOS
-        var cecosValidos = this.getView().getModel("listadoValidarCeco").getData();
-
-        // -Ceco Ingreso Cabecera
-        var inCecoIngresoCabecera = this.getView().byId("f_cecosIngresoCab");
-        var cecoIngresoCabecera = inCecoIngresoCabecera.getValue();
-        var cecoEncontrado = !!cecosValidos.find(cecoValido => cecoValido.Kostl === cecoIngresoCabecera);
-        if (cecoIngresoCabecera === "" || cecoEncontrado) {
-          inCecoIngresoCabecera.setValueState("None");
-        }else{
-          inCecoIngresoCabecera.setValueState("Error");
+        if (inTxtCabecera.getValue().trim()) {
+          inTxtCabecera.setValueState("None");
+        } else {
+          inTxtCabecera.setValueState("Error");
         }
-
-        // -Ceco Interco Cabecera
-        var inCecoIntercoCabecera = this.getView().byId("f_cecosIntercoCab");
-        var cecoIntercoCabecera = inCecoIntercoCabecera.getValue();
-        var cecoEncontrado = !!cecosValidos.find(cecoValido => cecoValido.Kostl === cecoIntercoCabecera);
-        if (cecoIntercoCabecera === "" || cecoEncontrado) {
-          inCecoIntercoCabecera.setValueState("None");
-        }else{
-          inCecoIntercoCabecera.setValueState("Error");
-        }
-
-        // --Validación Libro Mayor Interco
-        var librosValidos = this.getView().getModel("listadoValidarLibroMayor").getData();
-
-        var inLibroMayor = this.getView().byId("f_libroMayorInterco");
-        var libroMayor = inLibroMayor.getValue();
-        var libroEncontrado = !!librosValidos.find(libroValido => libroValido.Saknr === libroMayor);
-        if (libroMayor === "" || libroEncontrado) {
-          inLibroMayor.setValueState("None");
-        }else{
-          inLibroMayor.setValueState("Error");
-        }*/
 
         var validation = false;
-        //VALIDACIÓN SI CONTIENE UN VALOR Y SI EL ESTADO DEL COMPONENTE NO ES ERROR 
-        if (inOficinaVentas.getValue() && inOficinaVentas.getValueState() != "Error" &&
-            inNumPedCliente.getValue() && inNumPedCliente.getValueState() != "Error" &&
-            inCondicionPago.getValue() && inCondicionPago.getValueState() != "Error" &&
-            inNIA.getValue() && inNIA.getValueState() != "Error") {
-            //inCecoIngresoCabecera.getValueState() != "Error" &&
-            //inCecoIntercoCabecera.getValueState() != "Error" &&
-            //inLibroMayor.getValueState() != "Error"
+        // VALIDACIÓN SI CONTIENE UN VALOR Y SI EL ESTADO DEL COMPONENTE NO ES ERROR
+        // Nota: Los CECOS y OT se validan en SAP
+        if (inDenominacion.getValueState()  != "Error" &&
+            inOficinaVentas.getValueState() != "Error" &&
+            inNumPedCliente.getValueState() != "Error" &&
+            inMotivoPedido.getValueState()  != "Error" &&
+            inCondicionPago.getValueState() != "Error" &&
+            inNIA.getValueState()           != "Error" &&
+            inTxtCabecera.getValueState()   != "Error") {
                 validation = true;
         }
         

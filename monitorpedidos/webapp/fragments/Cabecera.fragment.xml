@@ -79,7 +79,7 @@
                  <m:Input
                     id="f_cecosIntercoCab"
                     showValueHelp="true"
-                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }"
+                    editable="{= (${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true) &amp;&amp; ${ModoApp>/CvCanal} === '50' ? true : false}"
                     valueHelpRequest=".onValueHelpCecosIntercoCabecera"
                     liveChange=".onLiveChangeOptional"
                     value="{DisplayPEP>/Zzkostl}"
@@ -88,7 +88,7 @@
                 <m:Input
                     id="f_ordenesIntercoCab"
                     showValueHelp="true"
-                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }"
+                    editable="{= (${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true) &amp;&amp; ${ModoApp>/CvCanal} === '50' ? true : false}"
                     valueHelpRequest=".onValueHelpOrdIntercoCabecera"
                     value="{DisplayPEP>/Zzaufnr}"
                 />
@@ -96,13 +96,11 @@
                 <m:Input
                     id="f_libroMayorInterco"
                     showValueHelp="true"
-                    editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }"
-                    valueHelpRequest=".onValueHelpLibroMayorCabecera"
-                    liveChange=".onLiveChangeOptional"
+                    editable="false"
                     value="{DisplayPEP>/Kstar}"
                 />
                 <core:Title text="" />
-                <m:Label text="{i18n>MotivoPedido}" />
+                <m:Label text="{i18n>MotivoPedido}" required="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" />
                 <m:ComboBox id="f_campomotivo" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" width="300px" items="{ path: 'listadoMotivo>/', sorter: { path: 'Augru' } }" selectedKey="{DisplayPEP>/Augru}" selectionChange=".onChangeValueState">
                     <core:ListItem key="{listadoMotivo>Augru}" text="{listadoMotivo>Bezei}" additionalText="{listadoMotivo>Bezei}" />
                 </m:ComboBox>
@@ -229,8 +227,8 @@
                 <m:Input editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }" width="100px" />-->
 
                 <core:Title text="" />
-                <m:Label text="{i18n>TextoCabeceraFactura}" wrapping="false" />
-                <m:TextArea id="textAreaCabFact" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" width="570px" value="{DisplayPEP>/Tdlinecab}"/>
+                <m:Label text="{i18n>TextoCabeceraFactura}" wrapping="false" required="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" />
+                <m:TextArea id="textAreaCabFact" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false ||  ${ModoApp>/mode} === 'M' ? true : false ||  ${ModoApp>/mode} === 'D' ? false : true }" width="570px" value="{DisplayPEP>/Tdlinecab}"  liveChange=".onLiveChangeRequired"/>
                 <m:Label text="{i18n>InformacionRechazo}" />
                 <m:TextArea  id="textAreaCabInfRech" width="570px" editable="false" value="{DisplayPEP>/Tdlinerech}"/>
                 <m:Label text="{i18n>TextoAclaraciones}" />

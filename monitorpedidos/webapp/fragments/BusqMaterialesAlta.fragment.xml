@@ -77,7 +77,7 @@
                 <Text text="{i18n>creador}" />
             </Column>
             <Column width="20%">
-                <Text text="{i18n>nomMat}" />
+                <Text text="{i18n>denomMat}" />
             </Column>
             <Column width="10%">
                 <Text text="{i18n>grArt}"/>

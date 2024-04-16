@@ -445,7 +445,7 @@ sap.ui.define([
             // FUNCION DE LA BUSQUEDA PRINCIPAL
             onBusqSolicitudes: function (oEvent) {
 
-                var inputUsuario = this.getView().byId("f_usuario").getValue();
+                var inputUsuario = this.getView().byId("f_usuario").getValue().trim();
                 if (inputUsuario) {
                     filtroUsuario = inputUsuario;
                     this.getView().byId("rbGroup").setSelectedIndex(1); // Cambiamos el radio button a 'Todos'
@@ -460,24 +460,24 @@ sap.ui.define([
                     };
                 }
 
-                //Numped = this.getView().byId("f_numsolic").getValue();
-                filtroFechaDsd = this.getView().byId("DTPdesde").getValue();
-                filtroFechaHst = this.getView().byId("DTPhasta").getValue();
-                filtroImporteDsd = this.getView().byId("f_impdesde").getValue();
-                filtroImporteHst = this.getView().byId("f_imphasta").getValue();
+                //Numped = this.getView().byId("f_numsolic").getValue().trim();
+                filtroFechaDsd = this.getView().byId("DTPdesde").getValue().trim();
+                filtroFechaHst = this.getView().byId("DTPhasta").getValue().trim();
+                filtroImporteDsd = this.getView().byId("f_impdesde").getValue().trim();
+                filtroImporteHst = this.getView().byId("f_imphasta").getValue().trim();
                 //filtroEstado
                 // Si no está informado el input, reseteamos los valores del cliente
-                if(!this.getView().byId("f_client").getValue()){
+                if(!this.getView().byId("f_client").getValue().trim()){
                     filtroClienteCod = "";
                     filtroClienteTxt = "";
                 }else if (!filtroClienteTxt) { // Si el usuario no ha seleccionado un cliente desde el diálogo, buscamos el código en el input
-                    filtroClienteCod = this.getView().byId("f_client").getValue();
+                    filtroClienteCod = this.getView().byId("f_client").getValue().trim();
                 }
-                filtroCeco = this.getView().byId("f_cecos").getValue();
-                filtroOrden = this.getView().byId("f_ordenes").getValue();
-                filtroOficionaVentas = this.getView().byId("f_oficinas").getValue();
-                filtroMaterial = this.getView().byId("f_material").getValue();
-                filtroResponsable = this.getView().byId("f_approv").getValue();
+                filtroCeco = this.getView().byId("f_cecos").getValue().trim();
+                filtroOrden = this.getView().byId("f_ordenes").getValue().trim();
+                filtroOficionaVentas = this.getView().byId("f_oficinas").getValue().trim();
+                filtroMaterial = this.getView().byId("f_material").getValue().trim();
+                filtroResponsable = this.getView().byId("f_approv").getValue().trim();
                 filtroLineaServicio = this.getView().byId("f_line").getSelectedKey();
                 filtroClasePed = arrayFiltroClasePed;
 
@@ -491,6 +491,9 @@ sap.ui.define([
             },
 
             _getDialogClienteMonitor: function (sInputValue) {
+                this.oComponent.setModel(new JSONModel(), "FiltrosCli");
+                this.oComponent.setModel(new JSONModel(), "listadoClientes"); 
+
                 var oView = this.getView();
 
                 if (!this.pDialogCliente) {
@@ -514,9 +517,9 @@ sap.ui.define([
             },
 
             onBusqClientesMonitor: function () {
-                var Stcd1 = this.getView().byId("f_nameAcrMoni").getValue();
-                var Kunnr = this.getView().byId("f_lifnrAcrMoni").getValue();
-                var Name1 = this.getView().byId("f_nifAcrMoni").getValue();
+                var Stcd1 = this.getView().byId("f_nameAcrMoni").getValue().trim();
+                var Kunnr = this.getView().byId("f_lifnrAcrMoni").getValue().trim();
+                var Name1 = this.getView().byId("f_nifAcrMoni").getValue().trim();
 
                 var aFilterIds = [],
                     aFilterValues = [];
@@ -583,6 +586,9 @@ sap.ui.define([
             },
 
             _getDialogCecosMonitor: function (sInputValue) {
+                this.oComponent.setModel(new JSONModel(), "FiltrosCeco");
+                this.oComponent.setModel(new JSONModel(), "listadoCecos"); 
+
                 var oView = this.getView();
 
                 if (!this.pDialogCecos) {
@@ -606,9 +612,9 @@ sap.ui.define([
             },
 
             onBusqCecosMonitor: function () {
-                var Kostl = this.getView().byId("f_codCecoMoni").getValue();
-                var Ltext = this.getView().byId("f_nomCecoMoni").getValue();
-                var Bukrs = this.getView().byId("f_cecoSocMoni").getValue();
+                var Kostl = this.getView().byId("f_codCecoMoni").getValue().trim();
+                var Ltext = this.getView().byId("f_nomCecoMoni").getValue().trim();
+                var Bukrs = this.getView().byId("f_cecoSocMoni").getValue().trim();
 
                 var aFilterIds = [],
                     aFilterValues = [];
@@ -665,6 +671,9 @@ sap.ui.define([
             },
 
             _getDialogOrdenesMonitor: function (sInputValue) {
+                this.oComponent.setModel(new JSONModel(), "FiltrosOrd");
+                this.oComponent.setModel(new JSONModel(), "listadoOrdenes"); 
+
                 var oView = this.getView();
 
                 if (!this.pDialogOrdenes) {
@@ -689,9 +698,9 @@ sap.ui.define([
 
             onBusqOrdenesMonitor: function () {
                 var Ceco = filtroCeco;
-                var Aufnr = this.getView().byId("f_codOrdMoni").getValue();
-                var Ktext = this.getView().byId("f_nomOrdMoni").getValue();
-                var Bukrs = this.getView().byId("f_ordbukrsMoni").getValue();
+                var Aufnr = this.getView().byId("f_codOrdMoni").getValue().trim();
+                var Ktext = this.getView().byId("f_nomOrdMoni").getValue().trim();
+                var Bukrs = this.getView().byId("f_ordbukrsMoni").getValue().trim();
 
                 var aFilterIds = [],
                     aFilterValues = [];
@@ -749,6 +758,9 @@ sap.ui.define([
             },
 
             _getDialogOficinasMonitor: function (sInputValue) {
+                this.oComponent.setModel(new JSONModel(), "FiltrosOficina");
+                this.oComponent.setModel(new JSONModel(), "listadoOficinas"); 
+
                 var oView = this.getView();
 
                 if (!this.pDialogOficinas) {
@@ -772,9 +784,9 @@ sap.ui.define([
             },
 
             onBusqOficinaMonitor: function () {
-                var Vkorg = this.getView().byId("f_VkorgOfiMoni").getValue();
-                var Vtweg = this.getView().byId("f_VtwegOfiMoni").getValue();
-                var Spart = this.getView().byId("f_SpartOfiMoni").getValue();
+                var Vkorg = this.getView().byId("f_VkorgOfiMoni").getValue().trim();
+                var Vtweg = this.getView().byId("f_VtwegOfiMoni").getValue().trim();
+                var Spart = this.getView().byId("f_SpartOfiMoni").getValue().trim();
 
                 var aFilterIds = [],
                     aFilterValues = [];
@@ -831,6 +843,9 @@ sap.ui.define([
             },
 
             _getDialogMaterialMonitor: function (sInputValue) {
+                this.oComponent.setModel(new JSONModel(), "FiltrosMat");
+                this.oComponent.setModel(new JSONModel(), "listadoMateriales");
+
                 var oView = this.getView();
 
                 if (!this.pDialogMaterial) {
@@ -854,9 +869,9 @@ sap.ui.define([
             },
 
             onBusqMaterialesMonitor: function () {
-                var Matnr = this.getView().byId("f_codMatMoni").getValue();
-                var Maktx = this.getView().byId("f_nomMatMoni").getValue();
-                var Matkl = this.getView().byId("f_grArtMoni").getValue();
+                var Matnr = this.getView().byId("f_codMatMoni").getValue().trim();
+                var Maktx = this.getView().byId("f_nomMatMoni").getValue().trim();
+                var Matkl = this.getView().byId("f_grArtMoni").getValue().trim();
 
                 var aFilterIds = [],
                     aFilterValues = [];
@@ -1961,37 +1976,37 @@ sap.ui.define([
                 var idzona = this.getView().byId("idzona");
                 var idCTipoPed = this.getView().byId("idCTipoPed");
 
-                if (idArea.getValue()) {
+                if (idArea.getValueState() != "Error" && idArea.getValue().trim()) {
                     idArea.setValueState("None");
                 } else {
                     idArea.setValueState("Error");
                 }
 
-                if (idCCliente.getValue()) {
+                if (idCCliente.getValue().trim()) {
                     idCCliente.setValueState("None");
                 } else {
                     idCCliente.setValueState("Error");
                 }
 
-                if (idCanal.getValue()) {
+                if (idCanal.getValueState() != "Error" && idCanal.getValue().trim()) {
                     idCanal.setValueState("None");
                 } else {
                     idCanal.setValueState("Error");
                 }
 
-                if (idSector.getValue()) {
+                if (idSector.getValueState() != "Error" && idSector.getValue().trim()) {
                     idSector.setValueState("None");
                 } else {
                     idSector.setValueState("Error");
                 }
 
-                if (idzona.getValue()) {
+                if (idzona.getValueState() != "Error" && idzona.getValue().trim()) {
                     idzona.setValueState("None");
                 } else {
                     idzona.setValueState("Error");
                 }
 
-                if (idCTipoPed.getValue()) {
+                if (idCTipoPed.getValue().trim()) {
                     idCTipoPed.setValueState("None");
                 } else {
                     idCTipoPed.setValueState("Error");
@@ -1999,12 +2014,12 @@ sap.ui.define([
 
                 var validation = false;
                 //VALIDACIÓN SI CONTIENE UN VALOR Y SI EL ESTADO DEL COMPONENTE NO ES ERROR 
-                if (idArea.getValue() && idArea.getValueState() != "Error" &&
-                    idCCliente.getValue() && idCCliente.getValueState() != "Error" &&
-                    idCanal.getValue() && idCanal.getValueState() != "Error" &&
-                    idSector.getValue() && idSector.getValueState() != "Error" &&
-                    idzona.getValue() && idzona.getValueState() != "Error" &&
-                    idCTipoPed.getValue() && idCTipoPed.getValueState() != "Error") {
+                if (idArea.getValueState()      != "Error" &&
+                    idCCliente.getValueState()  != "Error" &&
+                    idCanal.getValueState()     != "Error" &&
+                    idSector.getValueState()    != "Error" &&
+                    idzona.getValueState()      != "Error" &&
+                    idCTipoPed.getValueState()  != "Error") {
 
                     validation = true;
                 }
@@ -2078,7 +2093,7 @@ sap.ui.define([
                 this.resetearInputsDialogoAlta("Sociedad");
 
                 var inputSociedad = this.getView().byId("idArea");
-                var sociedad = inputSociedad.getValue().trim();
+                var sociedad = inputSociedad.getValue();
 
                 var sociedades = new Set(this.oComponent.getModel("AreaVentas").getData().map(item => item.Vtext));
 
@@ -2138,8 +2153,10 @@ sap.ui.define([
                     oView = this.getView();
 
                 if (vkbur) {
+                    this.oComponent.setModel(new JSONModel(), "listadoClientesAlta");
+                    this.oComponent.setModel(new JSONModel(), "FiltrosCli");
                     this.oComponent.getModel("FiltrosCli").setProperty("/Bukrs", vkbur);
-                    this.oComponent.getModel("FiltrosCli").setProperty("/Kunnr", sInputValue);
+                    //this.oComponent.getModel("FiltrosCli").setProperty("/Kunnr", sInputValue);
 
                     if (!this.pDialogClienteAlta) {
                         this.pDialogClienteAlta = Fragment.load({
@@ -2164,9 +2181,9 @@ sap.ui.define([
             },
 
             onBusqClientes: function () {
-                var Kunnr = this.getView().byId("f_lifnrAcr") ? this.getView().byId("f_lifnrAcr").getValue() : "";
-                var Name1 = this.getView().byId("f_nifAcr") ? this.getView().byId("f_nifAcr").getValue() : "";
-                var Stcd1 = this.getView().byId("f_nameAcr") ? this.getView().byId("f_nameAcr").getValue() : "";
+                var Kunnr = this.getView().byId("f_lifnrAcr") ? this.getView().byId("f_lifnrAcr").getValue().trim() : "";
+                var Name1 = this.getView().byId("f_nifAcr") ? this.getView().byId("f_nifAcr").getValue().trim() : "";
+                var Stcd1 = this.getView().byId("f_nameAcr") ? this.getView().byId("f_nameAcr").getValue().trim() : "";
                 var Bukrs = vkbur;
 
                 var aFilterIds = [],
@@ -2214,6 +2231,7 @@ sap.ui.define([
                     this.onReqCli();
                 } else {
                     this.getView().byId("idCCliente").setValueState("Error");
+                    this.getView().byId("descrProv").setValue(null);
                     this.resetearInputsDialogoAlta("Cliente");
                 }
                 this.oComponent.getModel("ModoApp").setProperty("/ccont", validation);
@@ -2411,7 +2429,7 @@ sap.ui.define([
                 this.resetearInputsDialogoAlta("Contrato");
 
                 var inputContrato = this.getView().byId("idcontract");
-                var contrato = inputContrato.getValue().trim();
+                var contrato = inputContrato.getValue();
 
                 var contratos = new Set(this.oComponent.getModel("ContratoCliente").getData().map(item => item.Ktext));
 
@@ -2476,7 +2494,10 @@ sap.ui.define([
             buildCanales: function (values) {
                 var oModelListCanalVentas = new JSONModel();
                 if (values[0].results) {
-                    oModelListCanalVentas.setData(values[0].results);
+                    // No mostramos el canal 50 en el desplegable
+                    let canales = values[0].results.filter(canal => canal.Vtweg !== '50');
+                    oModelListCanalVentas.setData(canales);
+                    //oModelListCanalVentas.setData(values[0].results);
                 }
                 this.oComponent.setModel(oModelListCanalVentas, "CanalVentas");
             },
@@ -2485,7 +2506,7 @@ sap.ui.define([
                 this.resetearInputsDialogoAlta("Canal");
 
                 var inputCanal = this.getView().byId("idCanal");
-                var canal = inputCanal.getValue().trim();
+                var canal = inputCanal.getValue();
 
                 var canales = new Set(this.oComponent.getModel("CanalVentas").getData().map(item => item.Vtweg));
 
@@ -2534,7 +2555,7 @@ sap.ui.define([
                 this.resetearInputsDialogoAlta("Sector");
 
                 var inputSector = this.getView().byId("idSector");
-                var sector = inputSector.getValue().trim();
+                var sector = inputSector.getValue();
 
                 var sectores = new Set(this.oComponent.getModel("SectorVentas").getData().map(item => item.Spart));
 
@@ -2569,7 +2590,7 @@ sap.ui.define([
 
             onChangeZona: function () {
                 var inputZona = this.getView().byId("idzona");
-                var zona = inputZona.getSelectedKey().trim();
+                var zona = inputZona.getSelectedKey();
 
                 var zonas = new Set(this.oComponent.getModel("ZonaVentas").getData().map(item => item.Bzirk));
 
