@@ -384,7 +384,17 @@ sap.ui.define([
 
       // -------------------------------------- FUNCIONES ORDENES --------------------------------------
       onBusqOrdenes: function (Aufnr, Ktext, Ceco) {
-        var Bukrs = this.oComponent.getModel("ModoApp").getProperty("/Vkbur");
+        var Bukrs;
+        if (tipoInputOrden === 'OrdenIngresoCabecera' || tipoInputOrden === 'OrdenIngresoPosicion') {
+          Bukrs = this.oComponent.getModel("ModoApp").getProperty("/Vkbur"); // Sociedad del pedido
+        }else{
+          Bukrs = this.oComponent.getModel("ModoApp").getProperty("/Vbund"); // Sociedad asociada al cliente
+          if (!Bukrs) {
+            this.oComponent.setModel(new JSONModel(), "listadoOrdenes");
+            return;
+          }
+        }
+
         var aFilterIds = [],
             aFilterValues = [];
 
