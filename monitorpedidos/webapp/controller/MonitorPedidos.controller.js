@@ -2384,7 +2384,7 @@ sap.ui.define([
                     this.oComponent.getModel("ModoApp").setProperty("/Land1", values[0].results[0].Land1);
                     this.oComponent.getModel("ModoApp").setProperty("/Zwels", values[0].results[0].Zwels);
                     this.oComponent.getModel("ModoApp").setProperty("/Vbund", values[0].results[0].Vbund); // Soc.asociada al cliente
-                    this.oComponent.getModel("ModoApp").setProperty("/Zterm", values[0].results[0].Zterm);
+                    this.oComponent.getModel("ModoApp").setProperty("/ZtermT", values[0].results[0].ZtermT);
                     this.oComponent.getModel("ModoApp").refresh(true);
 
                     // Establecer el nombre cuando no se ha utilizado la búsqueda del Alta de pedidos
@@ -2396,8 +2396,8 @@ sap.ui.define([
                     }
 
                     // Si es una creación, establecemos la condición de pago de cabecera de la condición de pago del cliente
-                    if (values[0].results[0].Zterm && this.oComponent.getModel("DisplayPEP") && !this.oComponent.getModel("DisplayPEP").getData().Zterm) {
-                        this.oComponent.getModel("DisplayPEP").setProperty("/Zterm", values[0].results[0].Zterm)
+                    if (values[0].results[0].ZtermT && this.oComponent.getModel("DisplayPEP") && !this.oComponent.getModel("DisplayPEP").getData().ZtermT) {
+                        this.oComponent.getModel("DisplayPEP").setProperty("/ZtermT", values[0].results[0].ZtermT)
                     }
                 }
             },
@@ -2645,16 +2645,18 @@ sap.ui.define([
             },
 
             onCopyOrder: function (oEvent) {
+                var soli = this.getSelectedPed(oEvent);
+
                 this.modoapp = "M";
                 var config = {
                     mode: this.modoapp,
+                    FakskTxt: soli.ESTADO,
                     copy: true
                 };
                 var oModConfig = new JSONModel();
                 oModConfig.setData(config);
                 this.oComponent.setModel(oModConfig, "ModoApp");
 
-                var soli = this.getSelectedPed(oEvent);
                 var numsol = soli.IDSOLICITUD;
                 sap.ui.core.BusyIndicator.show();
                 this.onSolicitarPedido(numsol, false);
@@ -2674,29 +2676,34 @@ sap.ui.define([
 
             // -------------------------------------- FUNCIONES ABRIR / MODIFICAR PEDIDO --------------------------------------
             onOpenOrder: function (oEvent) {
+                var soli = this.getSelectedPed(oEvent);
+
                 this.modoapp = "D";
                 var config = {
-                    mode: this.modoapp
+                    mode: this.modoapp,
+                    FakskTxt: soli.ESTADO
                 };
                 var oModConfig = new JSONModel();
                 oModConfig.setData(config);
                 this.oComponent.setModel(oModConfig, "ModoApp");
 
-                var soli = this.getSelectedPed(oEvent);
                 var numsol = soli.IDSOLICITUD;
                 this.onSolicitarPedido(numsol, false);
             },
 
             onEditOrder: function (oEvent) {
+                var soli = this.getSelectedPed(oEvent);
+                
                 this.modoapp = "M";
                 var config = {
-                    mode: this.modoapp
+                    mode: this.modoapp,
+                    FakskTxt: soli.ESTADO
                 };
                 var oModConfig = new JSONModel();
+
                 oModConfig.setData(config);
                 this.oComponent.setModel(oModConfig, "ModoApp");
 
-                var soli = this.getSelectedPed(oEvent);
                 var numsol = soli.IDSOLICITUD;
                 this.onSolicitarPedido(numsol, false);
             },
@@ -2934,7 +2941,7 @@ sap.ui.define([
                                     var title = that.oI18nModel.getProperty("detSolPCon") + " " + ('0000000000' + that.oComponent.getModel("DisplayPEP").getData().Vbeln).slice(-10);
                                     that.oComponent.getModel("DisplayPEP").setProperty("/Title", title);
                                     that.oComponent.getModel("DisplayPEP").setProperty("/Faksk", "ZR");
-
+                                    that.oComponent.getModel("ModoApp").setProperty("/FakskTxt", "En Redacción");
                                 } else { // Si es visualización 'D' o modificación 'M'
                                     that.oComponent.setModel(new JSONModel([]), "DisplayPosPed");
                                     oModelSolicitud_Ped.setData(SolicitudPed_A);
@@ -2945,6 +2952,7 @@ sap.ui.define([
                                         var title = that.oI18nModel.getProperty("detSolCopia") + " " + ('0000000000' + that.oComponent.getModel("DisplayPEP").getData().Vbeln).slice(-10);
                                         that.oComponent.getModel("DisplayPEP").setProperty("/Title", title);
                                         that.oComponent.getModel("DisplayPEP").setProperty("/Faksk", "ZR");
+                                        that.oComponent.getModel("ModoApp").setProperty("/FakskTxt", "En Redacción");
                                     } else {
                                         var title = that.oI18nModel.getProperty("detSolP") + " " + ('0000000000' + that.oComponent.getModel("DisplayPEP").getData().Vbeln).slice(-10);
                                         that.oComponent.getModel("DisplayPEP").setProperty("/Title", title);
@@ -3075,6 +3083,7 @@ sap.ui.define([
                         this.oComponent.getModel("DisplayPEP").setProperty("/Title", title);
                         this.oComponent.getModel("DisplayPEP").setProperty("/contrato", "");
                         this.oComponent.getModel("DisplayPEP").setProperty("/Faksk", "ZR");
+                        this.oComponent.getModel("ModoApp").setProperty("/FakskTxt", "En Redacción");
                         this.oComponent.getModel("DisplayPEP").refresh(true);
 
                         this.DatosCliente(codcli, vkbur, "", Cvcan, Cvsector); // Aquí se recupera la condición de pago

@@ -158,8 +158,8 @@
                     id="f_condpagocli"
                     enabled="false"
                     editable="false"
-                    width="120px"
-                    value="{ModoApp>/Zterm}"
+                    width="255px"
+                    value="{ModoApp>/ZtermT}"
                 >
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />

@@ -105,7 +105,7 @@
                     <core:ListItem key="{listadoMotivo>Augru}" text="{listadoMotivo>Bezei}" additionalText="{listadoMotivo>Bezei}" />
                 </m:ComboBox>
                 <m:Label text="{i18n>BloqueoFactura}" />
-                <m:Input id="f_blockfact" editable="{= ${ModoApp>/mode}  === 'C' ?  false : true ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" width="300px" value="{DisplayPEP>/Faksk}">
+                <m:Input id="f_blockfact" editable="{= ${ModoApp>/mode}  === 'C' ?  false : true ||  ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" width="300px" value="{ModoApp>/FakskTxt}">
                     <m:layoutData>
                         <l:GridData span="XL1 L2 M2 S4" />
                     </m:layoutData>
@@ -118,7 +118,7 @@
                     id="f_campocondicion"
                     editable="false"
                     width="300px"
-                    value="{DisplayPEP>/Zterm}"
+                    value="{DisplayPEP>/ZtermT}"
                     liveChange=".onLiveChangeRequired"/> 
                 <m:Label text="{i18n>NIA}" required="{= ${ModoApp>/mode}  === 'C' ?  true : false ||   ${ModoApp>/mode} === 'M' ? false : true ||  ${ModoApp>/mode} === 'D' ? false : true }" />
                 <!--<m:ComboBox id="f_camponia" editable="{= ${ModoApp>/mode}  === 'C' ?  true : false }" width="200px" items="{ path: 'listadoNIA>/', sorter: { path: 'Kunnr' } }" selectedKey="{DisplayPEP>/Zznia}">
