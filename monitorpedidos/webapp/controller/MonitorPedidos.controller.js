@@ -23,15 +23,11 @@ sap.ui.define([
         // Ordenación monitor
         var SortOrder = CoreLibrary.SortOrder;
 
-        // Variables no utilizadas ???
-        //var sumTotal, nomSoc, Posped, Centges, Centuni, Centpro, Codadm, Plataforma, sAprob, socPed, condPago, vedit, checkMisPed, checkTodos;
-        // var EdmType = exportLibrary.EdmType;
-
         // Variables utilizadas para los botones
         var btnEditar, accionLiberar, btnRescatar, accionRescatar;
+        
         // Variables utilizadas en los filtros
         var filtroUsuario, filtroFechaDsd, filtroFechaHst, filtroImporteDsd, filtroImporteHst, filtroEstado, filtroClienteCod, filtroClienteTxt, filtroCeco, filtroOrden, filtroOficionaVentas, filtroLineaServicio, filtroMaterial, filtroClasePed, filtroResponsable, nomceco, nomord, nommat;
-        //var Usuario, Numped, Fechad, Fechah, Imported, Importeh, sStatus, Cliente, codceco, codord, LineaServicio, codmat, ClasePed, responsable;
         var usuario;
         var arrayFiltroClasePed = [];
 
@@ -87,7 +83,6 @@ sap.ui.define([
                  */
                 var oModClientes = new JSONModel();
                 oModel = this.getOwnerComponent().getModel();
-                //this.oModel = this.
                 oModel = this._createViewModel();
 
                 this.oComponent.setModel(oModClientes, "AltaClientes");
@@ -98,17 +93,11 @@ sap.ui.define([
                  * FRAMUMO - FIN 04.03.24 - Modelo JSON para Alta Clientes
                  */
 
-                //var oModCab = new JSONModel();
-                //this.oComponent.setModel(oModCab, "PedidoCab");
                 btnEditar = false, accionLiberar = false, accionRescatar = false;
-                //this.oComponent.getModel("PedidoCab").setProperty("/editPos", btnEditar);
-                //this.oComponent.getModel("PedidoCab").refresh(true);
-
+                
                 // Inicializar valores mostrados en los filtros
                 this.dameTiposped();
                 this.dameLineas();
-                //this.DameOrganizaciones();
-                //this.TiposPedidoAlta();
                 this.motivosRechazo();
 
                 // De primeras mostrará las solicitudes de Mi usuario
@@ -353,22 +342,6 @@ sap.ui.define([
 
             },
 
-            /*DameOrganizaciones: function () {
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/OrganizacionesSet", ""),
-                ]).then(this.buildSociedades.bind(this), this.errorFatal.bind(this));
-            },
-
-            buildSociedades: function (values) {
-                if (values[0].results) {
-                    var oModelOgranizacion = new JSONModel();
-                    oModelOgranizacion.setData(values[0].results);
-                    oModelOgranizacion.setSizeLimit(300);
-                    this.oComponent.setModel(oModelOgranizacion, "Organizaciones");
-                }
-
-            },*/
-
             motivosRechazo: function () {
                 Promise.all([
                     this.readDataEntity(this.mainService, "/TiposRechazoSet", ""),
@@ -406,30 +379,6 @@ sap.ui.define([
             },
 
             AreasVenta: function () {
-                /*var mode = this.oComponent.getModel("ModoApp").getData();
-
-                mode.cvent = true;
-                this.oComponent.getModel("ModoApp").refresh(true);*/
-                //this.oComponent.getModel("ModoApp").setProperty("/cvent", true);
-                //this.oComponent.getModel("ModoApp").setProperty("/cclient", true);
-                //this.oComponent.getModel("ModoApp").refresh(true);
-
-                //Calculamos los centos asociados a la sociedad
-                //var bukrs = this.oComponent.getModel("PedidoCab").getData().Bukrs;
-                //socPed = this.getView().byId("idCSociedad").getSelectedKey();
-                //nomSoc = this.getView().byId("idCSociedad")._getSelectedItemText();
-                //this.getView().byId("idArea").setValue(nomSoc);
-                //vkbur = this.getView().byId("idCSociedad").getSelectedKey();
-                //var user = ''  
-
-                /*var aFilterIds,
-                    aFilterValues,
-                    aFilters;
-
-                aFilterIds = ["Vkorg"];
-                aFilterValues = [socPed];
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);*/
-
                 Promise.all([this.readDataEntity(this.mainService, "/AreaVentasSet", "")]).then(
                     this.buildListAreaVentas.bind(this), this.errorFatal.bind(this));
             },
@@ -1282,34 +1231,7 @@ sap.ui.define([
                         DatosAprobaciones.push(obj);
                     }
 
-                    /*const oI18nModel = this.oComponent.getModel("i18n");
-                    var oTable = this.getView().byId("a_idTablePEPs");
-                    var t_indices = oTable.getBinding().aIndices;
-
-                    var aContexts = oTable.getSelectedIndices();
-                    var items = aContexts.map(function (c) {
-                        //return c.getObject();
-                        return this.oComponent.getModel("listadoSolicitudes").getProperty("/" + t_indices[c]);
-                    }.bind(this));
-
-
-                    var results_array = items;
-                    var DatosAprobaciones = [];
-                    var obj = {};
-                    var accion = "A";*/
-
-
                     var that = this;
-
-                    /*for (var i = 0; i < results_array.length; i++) {
-
-                        obj = {
-                            Accion: accion,
-                            Solicitud: results_array[i].IDSOLICITUD
-                        };
-                        DatosAprobaciones.push(obj);
-                        obj = {};
-                    }*/
 
                     var msg = this.oI18nModel.getProperty("SolAprob");
                     var msgLog = "";
@@ -1387,23 +1309,6 @@ sap.ui.define([
                     var soliciRechazar = this.oComponent.getModel("listadoSolicitudes").getData();
                     var soliciRechazar_Aux = JSON.parse(JSON.stringify(soliciRechazar)); // Copy data model without references
 
-
-                    /*const oI18nModel = this.oComponent.getModel("i18n");
-                
-                    var t_indices = oTable.getBinding().aIndices;
-                    var aContexts = oTable.getSelectedIndices();
-                    var items = aContexts.map(function (c) {
-                        //return c.getObject();
-                        return this.oComponent.getModel("listadoSolicitudes").getProperty("/" + t_indices[c]);
-                    }.bind(this));
-
-                    var results_array = items;
-                    var Datosrechazo = [];
-                    var obj = {};
-                    var accion = "R";*/
-
-
-
                     var that = this;
 
                     var msg = this.oI18nModel.getProperty("SolRechz");
@@ -1476,19 +1381,6 @@ sap.ui.define([
                                     DatosRechazo.push(obj);
                                 }
 
-                                /*for (var i = 0; i < results_array.length; i++) {
-
-                                    obj = {
-                                        Accion: accion,
-                                        Motivo: selectedKey,
-                                        Texto: oTextArea,
-                                        Solicitud: results_array[i].IDSOLICITUD
-                                    };
-                                    Datosrechazo.push(obj);
-                                    obj = {};
-                                }*/
-
-
                                 var json1 = {
                                     Accion: accion,
                                     RechazarSet: DatosRechazo,
@@ -1497,20 +1389,13 @@ sap.ui.define([
                                 that.mainService.create("/RechazarSet", json1, {
                                     success: function (result) {
                                         if (result.RechazarSet.results[0].Solicitud) {
-                                            //sap.ui.core.BusyIndicator.hide();
                                             if (result.RechazarSet.results.length > 1) {
                                                 for (var i = 0; i < result.RespRechazoSet.results.length; i++) {
                                                     msgRechz += result.RespRechazoSet.results[i].TextoLog + "\r\n";
                                                 }
                                                 sap.m.MessageToast.show(msgRechz);
-                                                //that.oConfirmDialog.destroyContent();
-                                                //oComboBox.setSelectedKey(null);
-                                                //oTextArea.setValue('');
-                                                //that.byId("ApprovDial").close();
                                             } else {
                                                 MessageBox.show(result.RespRechazoSet.results[0].TextoLog);
-                                                //that.oConfirmDialog.destroyContent();
-                                                //that.byId("ApprovDial").close();
                                             }
                                             oTable.clearSelection();
                                             that.byId("ApprovDial").close();
@@ -1552,9 +1437,6 @@ sap.ui.define([
             },
 
             oncancelaprobaciones: function () {
-                /*this.pDialogAprobaciones.then(function (oDialogAprobaciones) {
-                    oDialogAprobaciones.close();
-                });*/
                 this.byId("ApprovDial").close();
             },
 
@@ -1621,7 +1503,6 @@ sap.ui.define([
                         DatosLiberaciones.push(obj);
                     }
 
-                    //const oI18nModel = this.oComponent.getModel("i18n");
                     var msg = this.oI18nModel.getProperty("SolLiber");
                     var msgLog = "";
                     var that = this;
@@ -1744,7 +1625,6 @@ sap.ui.define([
                         DatosRescate.push(obj);
                     }
 
-                    //const oI18nModel = this.oComponent.getModel("i18n");
                     var msg = this.oI18nModel.getProperty("SolResca");
                     var msgLog = "";
                     var that = this;
@@ -2050,26 +1930,11 @@ sap.ui.define([
                     cvcan: false,
                     cvsector: false,
                     czona: false
-
-                    /*
-                    // Habilitar Ordenes cuando se selecciona el CECO
-                    cordenes: false,
-                    
-                    // Título
-                    Title: this.oI18nModel.getProperty("visPed"),
-
-                    // Limpiar variables
-                    ItmNumber: 10,
-                    Nomcont: "",
-                    Numcont: "",
-                    */
                 }
 
                 var oModConfig = new JSONModel();
                 oModConfig.setData(config);
                 this.oComponent.setModel(oModConfig, "ModoApp");
-                //this.oComponent.setModel(new JSONModel([]), "PedidoCab");
-                //this.oComponent.setModel(new JSONModel([]), "PedidoPos");
 
                 this.resetearInputsDialogoAlta("All");
                 this._getDialogAltaPed();
@@ -2131,34 +1996,6 @@ sap.ui.define([
             },
 
             // FUNCIONES DEL DIÁLOGO DE BÚSQUEDA DE CLIENTES EN EL ALTA
-            // ***borrar la función***
-            /*onValHelpReqCliente: function (oEvent) {
-                var sInputValue = oEvent.getSource().getValue(),
-                    oView = this.getView();
-
-                if (vkbur) {
-                    this.oComponent.setModel(new JSONModel(), "acrList");
-                    this.oComponent.getModel("FiltrosCli").setProperty("/Bukrs", vkbur);
-                    this.oComponent.getModel("FiltrosCli").setProperty("/Kunnr", sInputValue);
-
-                    if (!this._pValueHelpDialog) {
-                        this._pValueHelpDialog = Fragment.load({
-                            id: oView.getId(),
-                            name: "monitorpedidos.fragments.BusqClientes",
-                            controller: this
-                        }).then(function (oDialog) {
-                            oView.addDependent(oDialog);
-                            return oDialog;
-                        });
-                    }
-                    this._pValueHelpDialog.then(function (oDialog) {
-                        oDialog.open(sInputValue);
-                    });
-                } else {
-                    MessageBox.error(this.oI18nModel.getProperty("noCli"));
-                }
-            },*/
-
             onValueHelpRequestClienteAlta: function (oEvent) {
                 var sInputValue = oEvent.getSource().getValue(),
                     oView = this.getView();
@@ -2261,28 +2098,8 @@ sap.ui.define([
 
             onReqCli: function () {
                 sap.ui.core.BusyIndicator.show();
-
-                /* **
-                var aFilters = [],
-                    aFilterIds = [],
-                    aFilterValues = [];
-
-                aFilterIds.push("Kunnr");
-                aFilterValues.push(codcli);
-
-                aFilterIds.push("Bukrs");
-                aFilterValues.push(vkbur);
-
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                revisar si tiene sentido**
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/DameClientesSet", aFilters),
-                ]).then(this.buildCliente.bind(this), this.errorFatal.bind(this));*/
-                // en su lugar, usamos:
                 this.DatosCliente(codcli, vkbur, "", "", "");
 
-                //this.getView().byId("f_client").setValue(nomcli);
                 this.getView().byId("idCCliente").setValueState("None");
                 this.getView().byId("idCCliente").setValue(codcli);
                 this.getView().byId("descrProv").setValue(nomcli);
@@ -2294,7 +2111,6 @@ sap.ui.define([
                 // Habilitar input de canal
                 this.oComponent.getModel("ModoApp").setProperty("/cvcan", true);
                 this.CanalVentas();
-                //this.ObtenerZonas();
 
                 sap.ui.core.BusyIndicator.hide();
                 this.oComponent.getModel("ModoApp").refresh(true);
@@ -2302,41 +2118,6 @@ sap.ui.define([
                     this.byId("cliDial").close();
                 }
             },
-
-            /*buildCliente: function (values) {
-
-                var error = false;
-
-                if (values[0].results) {
-                    //nomcli
-                    if (values[0].results.length == 0) {
-                        MessageBox.error(this.oI18nModel.getProperty("noCli"));
-                        error = true;
-                    } else if (values[0].results.length > 1) {
-                        //univCli
-                        MessageBox.warning(this.oI18nModel.getProperty("univCli"));
-                        this.oComponent.getModel("PedidoCab").setProperty("/Name1", "");
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-                    } else if (values[0].results.length == 1) {
-                        this.oComponent.getModel("PedidoCab").setProperty("/Name1", values[0].results[0].Name1);
-                        this.oComponent.getModel("PedidoCab").setProperty("/Kunnr", values[0].results[0].Kunnr);
-                        codcli = values[0].results[0].Kunnr;
-                        nomcli = values[0].results[0].Name1;
-                        this.oComponent.getModel("PedidoCab").refresh(true);
-
-                        //this.oComponent.getModel("ModoApp").setProperty("/ccont", true);
-                        //this.oComponent.getModel("ModoApp").refresh(true);
-                        this.DatosCliente(codcli, vkbur);
-                        //this.motivopedido(TipoPed, vkbur);-->Cambiaremos el punto donde se llama al mot.
-
-                    }
-                }
-
-                sap.ui.core.BusyIndicator.hide();
-
-                this.DameContratosCliente();
-
-            },*/
 
             DatosCliente: function (codcli, vkbur, Vbeln, Vtweg, Spart) {
                 var aFilters = [],
@@ -2372,9 +2153,6 @@ sap.ui.define([
                     var oModelDatosCliente = new JSONModel();
                     oModelDatosCliente.setData(values[0].results);
                     this.oComponent.getModel("ModoApp").setProperty("/Kunnr", values[0].results[0].Kunnr);
-                    //this.oComponent.getModel("ModoApp").setProperty("/Codcli", values[0].results[0].Kunnr);
-                    //this.oComponent.getModel("ModoApp").setProperty("/Codcli", values[0].results[0].Kunnr);
-                    //this.oComponent.getModel("ModoApp").setProperty("/Nombre", values[0].results[0].Nombre);
                     this.oComponent.getModel("ModoApp").setProperty("/Nomcli", values[0].results[0].Nombre);
                     this.oComponent.getModel("ModoApp").setProperty("/Stcd1", values[0].results[0].Stcd1);
                     this.oComponent.getModel("ModoApp").setProperty("/Stras", values[0].results[0].Stras);
@@ -2390,9 +2168,6 @@ sap.ui.define([
                     // Establecer el nombre cuando no se ha utilizado la búsqueda del Alta de pedidos
                     if (this.modoapp === "C" && !nomcli) {
                         nomcli = values[0].results[0].Nombre;
-                        // if (this.getView().byId("idCCliente") && !this.getView().byId("idCCliente").getValue()) {
-                        //     this.getView().byId("idCCliente").setValue(nomcli);
-                        // }
                     }
 
                     // Si es una creación, establecemos la condición de pago de cabecera de la condición de pago del cliente
@@ -2414,11 +2189,6 @@ sap.ui.define([
                 aFilterIds.push("Kunnr");
                 aFilterValues.push(codcli);
 
-                //En SAP no se utiliza
-                // aFilterIds.push("Auart");
-                // aFilterValues.push(TipoPed);
-
-
                 aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
 
                 Promise.all([
@@ -2433,7 +2203,6 @@ sap.ui.define([
                 }
                 this.oComponent.setModel(oModelContratos, "ContratoCliente");
                 this.oComponent.getModel("ContratoCliente").refresh(true);
-                //this.DatosCliente(codcli, vkbur);
             },
 
             onChangeContrato: function () {
@@ -2466,11 +2235,6 @@ sap.ui.define([
                         }
                     }
 
-                    //this.condicionPago(codcli, vkbur, Cvcan, Cvsector);
-                    //this.CanalVentas();
-                    //this.SectorVentas();
-                    //this.ObtenerZonas();
-                    //this.OficinaVenta(vkbur, Cvcan, Cvsector);
                     this.TiposPedidoAlta(TipoPed);
 
                     this.getView().byId("idCanal").setValue(Cvcan);
@@ -2720,59 +2484,6 @@ sap.ui.define([
 
             },
 
-            /*getSelectedContrato: function (oEvent) {
-                var oModCont = this.oComponent.getModel("ContratoCliente").getData();
-                const sOperationPath = oEvent.getSource().getBindingContext("ContratoCliente").getPath();
-                const sOperation = sOperationPath.split("/").slice(-1).pop();
-                var sum = oModCont[sOperation];
-
-                return sum;
-            },*/
-
-            /*getPedido: function (pedido) {
-
-                var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-                oRouter.navTo("RouteAltaPedidos");
-                sap.ui.core.BusyIndicator.hide();
-
-                /* var aFilterIds,
-                     aFilterValues,
-                     aFilters,
-                     aFilters2;
- 
-                 sap.ui.core.BusyIndicator.show();
- 
-                 // Filtros Datos Pedido
-                 aFilterIds = ["Ebeln"];
-                 aFilterValues = [pedido];
-                 aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
- 
-                 // Filtros CHAT pedido
-                 aFilterIds = ["Docu"];
-                 aFilterValues = [pedido];
-                 aFilters2 = Util.createSearchFilterObject(aFilterIds, aFilterValues);
- 
-                 var expand = [
-                     "EstrategiaSet",
-                     "HistorialModificacionSet",
-                     "PedidoPosSet",
-                     "AdjuntoSHPSet",
-                     "AdjuntoSet"
-                 ];
- 
-                 Promise.all([
-                     this.readDataExpEntity(this.mainService, "/PedidoCabSet", aFilters, expand),
-                     // this.readDataEntity( this.mainService , "/SociedadSet" ),
-                     // this.readDataEntity( this.mainService , "/ClasePedSet" ),
-                     this.readDataEntity(this.mainService, "/ImpuestoSet"),
-                     this.readDataEntity(this.mainService, "/TipoCompraSet"),
-                     this.readDataEntity(this.mainService, "/GrupoArticuloSet"),
-                     this.readDataEntity(this.mainService, "/ChatSet", aFilters2),
-                     this.readDataEntity(this.mainService, "/ExtensionAdjuntoSet"),
-                 ]).then(this.buildPedModel.bind(this), this.errorFatal.bind(this));*/
-
-            //},
-
             // ---------------------- FUNCIONES SOLICITAR PEDIDO: ABRIR / MODIFICAR / CREAR PEDIDO CON CONTRATO ----------------------
             onSolicitarPedido: function (numsol, refContrato) {
                 var that = this;
@@ -2799,14 +2510,8 @@ sap.ui.define([
 
                                 var last_ItmNumber = 0;
                                 for (var i = 0; i < SolicitudPed_A.results.length; i++) {
-                                    //var sreturn = "";
-                                    //sreturn = SolicitudPed_A.results[i].Netwr;
-                                    //SolicitudPed_A.results[i].Netwr = sreturn;
-                                    //SolicitudPed_A.results[i].Ykostl = SolicitudPed_A.results[i].Yykostkl;
-                                    //SolicitudPed_A.results[i].Yaufnr = SolicitudPed_A.results[i].Yyaufnr;
-
+                                    
                                     SolicitudPed_A.results[i].Posnr = parseInt(SolicitudPed_A.results[i].Posnr);
-                                    //SolicitudPed_A.results[i].Zzprsdt = Util.formatDate(SolicitudPed_A.results[i].Zzprsdt);
                                     last_ItmNumber = SolicitudPed_A.results[i].Posnr;
 
                                     if (that.modoapp === "C") { // Si es creación por contrato 'C'
@@ -2848,56 +2553,17 @@ sap.ui.define([
                                     that.onSolicitarPedido(data.results[0].contrato, true);
                                 }
 
-                                // if (data.results[0].Erdat) {
-                                //     data.results[0].Erdat = Util.formatDate(data.results[0].Erdat);
-                                // }
-
                                 oModelDisplay.setData(data.results[0]);
                                 that.oComponent.setModel(oModelDisplay, "DisplayPEP");
                                 that.oComponent.getModel("DisplayPEP").setProperty("/Last_ItmNumber", last_ItmNumber);
 
                                 if (data.results[0].SolicitudAdjunto_A.results.length > 0 && !that.oComponent.getModel("ModoApp").getData().copy) {
-                                    /*
+                                    
                                     var oModAdj = new JSONModel();
                                     var adjs = [],
                                         adj;
                                     data.results[0].SolicitudAdjunto_A.results.forEach(function (el) {
-                                        var url;
-                                        url = "";
-                                        adj = {
-                                            Filename: el.Filename,
-                                            Descripcion: el.Descripcion,
-                                            URL: url
-                                        };
-                                        adjs.push(adj);
-                                    });
-
-                                    oModAdj.setData(adjs);
-                                    that.oComponent.setModel(new JSONModel(), "datosAdj");
-                                    that.oComponent.setModel(oModAdj, "Adjuntos");
-                                    */
-
-                                    var oModAdj = new JSONModel();
-                                    var adjs = [],
-                                        adj;
-                                    data.results[0].SolicitudAdjunto_A.results.forEach(function (el) {
-                                        //var url;
-                                        //url = "";
-                                        /*data.results[0].AdjuntoSHPSet.results.forEach(function (elshp) {
-                                            if (el.Descripcion == elshp.Descriptivo && el.Documento == elshp.Adjunto) {
-                                                url = elshp.Url;
-                                            }
-                                        });*/
-                                        /*if (el.Mimetype === "XLS") {
-                                            el.Icon = "sap-icon://excel-attachment";
-                                        }else if (el.Mimetype === "PDF") {
-                                            el.Icon = "sap-icon://pdf-reader";
-                                        }else if (el.Mimetype === "TXT") {
-                                            el.Icon = "sap-icon://attachment-text-file";
-                                        }else{
-                                            el.Icon = "sap-icon://attachment-text-file";
-                                        }*/
-
+                                        
                                         adj = {
                                             //Color: el.color,
                                             Icono: sap.ui.core.IconPool.getIconForMimeType(el.Url),
@@ -2906,14 +2572,6 @@ sap.ui.define([
                                             Descripcion: el.Descripcion,
                                             Numdoc: el.Numdoc,
                                             Url: el.Url
-                                            // Foltp: el.InstidB.slice(0,3),
-                                            // Folyr: el.InstidB.slice(3,5),
-                                            // Folno: el.InstidB.slice(5,17),
-                                            // Objtp: el.InstidB.slice(17,20),
-                                            // Objyr: el.InstidB.slice(20,22),
-                                            // Objno: el.InstidB.slice(22,34),
-                                            //Content: el.Content,
-                                            //URL: url
                                         };
                                         adjs.push(adj);
                                     });
@@ -2960,7 +2618,6 @@ sap.ui.define([
                                 }
 
                                 that.DatosAux(data.results[0].Vbeln);
-                                //that.condicionPago(data.results[0].Kunnr, data.results[0].Vkorg, data.results[0].Vtweg, data.results[0].Spart);
                                 that.DatosCliente(data.results[0].Kunnr, data.results[0].Vkorg, data.results[0].Vbeln, data.results[0].Vtweg, data.results[0].Spart);
                                 that.OficinaVenta(data.results[0].Vkorg, data.results[0].Vtweg, data.results[0].Spart);
                                 that.motivopedido(data.results[0].Auart, data.results[0].Vkorg);
@@ -2986,9 +2643,6 @@ sap.ui.define([
                                 that.oComponent.getModel("ModoApp").setProperty("/CvSector", that.oComponent.getModel("DisplayPEP").getProperty("/Spart"));
                                 // Bztxt y Bzirk se rellenan en la función DatosAux
                                 that.oComponent.getModel("ModoApp").setProperty("/Clasepedido", that.oComponent.getModel("DisplayPEP").getProperty("/Auart"));
-
-                                //that.oComponent.getModel("ModoApp").setProperty("/Ykostl", that.oComponent.getModel("DisplayPEP").getProperty("/Yykostkl"));
-                                //that.oComponent.getModel("ModoApp").setProperty("/Yaufnr", that.oComponent.getModel("DisplayPEP").getProperty("/Yyaufnr"));
                                 that.oComponent.getModel("ModoApp").refresh(true);
                             }
                             if (response) {
@@ -3074,10 +2728,6 @@ sap.ui.define([
                         this.oComponent.setModel(new JSONModel(), "datosAdj");
                         this.oComponent.setModel(new JSONModel(), "HistorialSol");
 
-                        //this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", '0');
-                        //this.oComponent.getModel("PedidoCab").setProperty("/Moneda", 'EUR');
-                        //this.oComponent.getModel("PedidoCab").refresh(true);
-
                         var title = this.oI18nModel.getProperty("detSolP");
                         this.oComponent.setModel(new JSONModel(), "DisplayPEP")
                         this.oComponent.getModel("DisplayPEP").setProperty("/Title", title);
@@ -3087,7 +2737,6 @@ sap.ui.define([
                         this.oComponent.getModel("DisplayPEP").refresh(true);
 
                         this.DatosCliente(codcli, vkbur, "", Cvcan, Cvsector); // Aquí se recupera la condición de pago
-                        //this.condicionPago(codcli, vkbur, Cvcan, Cvsector);
                         this.OficinaVenta(vkbur, Cvcan, Cvsector);
                         this.motivopedido(TipoPed, vkbur);
 
@@ -3095,11 +2744,7 @@ sap.ui.define([
                         this.CamposDIR(codcli, vkbur, "");
                         this.DameMonedas();
 
-                        /**
-                         * Cuando ya navegamos al alta debe de borrar todos los campos de opciones 
-                         * para que cuando se entre de nuevo aparezcan vacios para crear una nueva peticion
-                         */
-                        //this.resetearInputsDialogoAlta("All");
+                        // Navegación a la vista AltaPedidos
                         var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
                         oRouter.navTo("RouteAltaPedidos");
                     }
@@ -3201,55 +2846,12 @@ sap.ui.define([
 
             buildDatosAux: function (values) {
                 if (values[0].results) {
-                    //this.oComponent.getModel("ModoApp").setProperty("/NomSoc", values[0].results[0].Vtext);
                     // Guardar los datos de la línea de servicio
                     this.oComponent.getModel("ModoApp").setProperty("/Bztxt", values[0].results[0].Bztxt);
                     this.oComponent.getModel("ModoApp").setProperty("/Bzirk", values[0].results[0].Bzirk);
                     this.oComponent.getModel("ModoApp").refresh(true);
                 }
             },
-
-            // FUNCIONES PARA OBTENER LA CONDICIÓN DE PAGO
-            /*condicionPago: function (codcli, vkbur, Cvcan, Cvsector) {
-                var aFilters = [],
-                    aFilterIds = [],
-                    aFilterValues = [];
-
-                aFilterIds.push("Kunnr");
-                aFilterValues.push(codcli);
-
-                aFilterIds.push("Vkorg");
-                aFilterValues.push(vkbur);
-
-                aFilterIds.push("Vtweg");
-                aFilterValues.push(Cvcan);
-
-                aFilterIds.push("Spart");
-                aFilterValues.push(Cvsector);
-
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
-
-                Promise.all([
-                    this.readDataEntity(this.mainService, "/CondicionPagoSet", aFilters),
-                ]).then(this.buildCondiciones.bind(this), this.errorFatal.bind(this));
-
-            },
-
-            buildCondiciones: function (values) {
-                if (values[0].results) {
-                    if (!values[0].results[0].Zterm) {
-                        MessageBox.warning(this.oI18nModel.getProperty("ErrCond"));
-                    } else {
-                        this.oComponent.getModel("ModoApp").setProperty("/Zterm", values[0].results[0].Zterm);
-                        this.oComponent.getModel("ModoApp").refresh(true);
-                        /*var oModelCondicion = new JSONModel();
-                        oModelCondicion.setData(values[0].results);
-                        condPago = values[0].results[0].Zterm;
-                        this.oComponent.setModel(oModelCondicion, "CondicionPago");*/
-                        //this.oComponent.getModel("ContratoCliente").refresh(true);
-                /*    }
-                }
-            },*/
 
             // FUNCIONES PARA OBTENER LA OFICINA DE VENTA
             OficinaVenta: function (vkbur, Cvcan, Cvsector) {
@@ -3373,18 +2975,7 @@ sap.ui.define([
 
             // FUNCIONES PARA OBTENER LAS MONEDAS
             DameMonedas: function () {
-                /*var aFilters = [],
-                    aFilterIds = [],
-                    aFilterValues = [];
-
                 
-                aFilterIds.push("Kunnr");
-                aFilterValues.push(codcli);
-                aFilterIds.push("Bukrs");
-                aFilterValues.push(vkbur);
-
-                aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);*/
-
                 Promise.all([
                     this.readDataEntity(this.mainService, "/DameMonedasSet", ""),
                 ]).then(this.buildMonedas.bind(this), this.errorFatal.bind(this));
@@ -3458,20 +3049,48 @@ sap.ui.define([
                 window.open(sRuta, '_blank');
             },
 
+            // -------------------------------------- LÓGICA MENU ITEMS --------------------------------------
+            onGetKeyFromItemMenu: function (oEvent) {
+                var selectedKey = oEvent.getSource().getProperty("key");
+
+                switch (selectedKey) {
+
+                    case "PlantillaCargaPedidos":
+                        this.onDownloadExcelTemplate();
+                        break;
+
+                    case "CargaPedidos":
+                        this.onGoToZpv();
+                        break;
+
+                    case "CrearCliente":
+                        this.onNavToCrearCliente(oEvent);
+                        break;
+
+                    case "MonitorContratos":
+                        this.onNavToMonitorContrato();
+                        break;
+
+                };
+            },
+
+            // DESCARGAR PLANTILLA CARGA PEDIDOS
+            onDownloadExcelTemplate: function() {
+                // Ruta de la plantilla Excel
+                var csvContent = "SERVICIO;CIF.SOCIEDAD EMISORA;CLIENTE;PED.ABIERTO;POS.PED.ABIERTO;F.Pedido;Material;Ceco  Gasto;OT Gasto;CUENTA gasto;Ceco  Ingreso;OT Ingreso;CANTIDAD;PRECIO;POR;Nº CERTIFICACION INTERNA;Posicion;Posicion Imputación;DENOMINACION ;TEXTO POSICION;REFERENCIA CLIENTE;Nº PEDIDOCLIENTE;Motivo de pedido ;Motivo de rechazo ;Clase de documento de ventas;BUSCAR CONTRATO SIN CECO/OT Contrapartida;Texto Cabecera pedido;;Texto Denominación Contrato";
+                
+                var blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+                
+                // Enlace temporal para descargar el archivo
+                var link = document.createElement("a");
+                var url = URL.createObjectURL(blob);
+                link.href = url;
+                link.download = "Plantilla_carga.csv"; // Establecer nombre del fichero descargado
+                link.click();
+            },
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+            // CARGA DE PEDIDOS
             onGoToZpv: function () {
                 //var numFact = this.getView().byId("f_numfac").getValue();
                 var oCrossAppNavigator = sap.ushell.Container.getService("CrossApplicationNavigation");
@@ -3489,37 +3108,17 @@ sap.ui.define([
                 });
             },
 
-            //LÓGICA PARA LOS DIFERENTES MENU ITEMS QUE SE CREEN
-
-            onGetKeyFromItemMenu: function (oEvent) {
-                var selectedKey = oEvent.getSource().getProperty("key");
-
-                switch (selectedKey) {
-
-                    case "CrearCliente":
-                        this.onNavToCrearCliente(oEvent);
-                        break;
-
-                    case "CargaPedidos":
-                        this.onGoToZpv();
-                        break;
-
-                    case "MonitorContratos":
-                        this.onNavToMonitorContrato();
-                        break;
-
-                };
-
-                /* #### ALTA DE CLIENTES ##### */
-                //METODOS PARA LA ALTA DE CLIENTES
-
+            // MONITOR DE CONTRATOS
+            onNavToMonitorContrato: function(){
+                this.getOwnerComponent().getRouter().navTo("RouteMonitorContratos");
             },
+
+            /* #### ALTA DE CLIENTES ##### */
+            //METODOS PARA LA ALTA DE CLIENTES
             onNavToCrearCliente: function (oEvent) {
                 this._getDialogAltaCliente(oEvent);
 
             },
-
-
 
             _getDialogAltaCliente: function (sInputValue) {
                 var oView = this.getView();
@@ -3542,11 +3141,8 @@ sap.ui.define([
             },
 
             CloseClientDialog: function () {
-
                 this.byId("OptionDialogCliente").close();
             },
-
-
 
             /**
              * FRAMUMO - INI 04.03.24 - Modificamos la función de envio Mail 
@@ -3973,17 +3569,6 @@ sap.ui.define([
                 } else {
                     inputEmailCliente.setValueState("Error");
                 }
-            },
-
-
-        // -------------------------------------- FUNCIONES PARA EL MONITOR DE CONTRATOS --------------------------------------
-
-            /** Navegar al Monitor de contratos */
-            onNavToMonitorContrato: function(){
-                var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-                //oRouter.navTo("MonitorContratos");
-                this.getOwnerComponent().getRouter().navTo("RouteMonitorContratos");
-
             }
 
         });

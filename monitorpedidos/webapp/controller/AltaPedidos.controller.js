@@ -22,13 +22,12 @@ sap.ui.define([
     "use strict";
     
     // Variables inputs
-    var tipoInputCeco, tipoInputOrden, tipoInputLibroMayor;
-    var listadoValidarMateriales; // listadoValidarCeco, listadoValidarLibroMayor;
+    var tipoInputCeco, tipoInputOrden;//, tipoInputLibroMayor;
+    var listadoValidarMateriales;
 
-    var itmNumber_incio;
+    // Variables globales para el formateo de los campos 'FECHA DOC. VENTA' e 'IMPORTE'
+    //var fechaDocVentaFormat;
 
-     // Variables globales para el formateo de los campos 'FECHA DOC. VENTA' e 'IMPORTE'
-     var fechaDocVentaFormat;
      /*
      1 -> DD.MM.AAAA
      2 -> MM/DD/AAAA
@@ -57,10 +56,7 @@ sap.ui.define([
         this.mainService = this.getOwnerComponent().getModel("mainService");
         this.oComponent = this.getOwnerComponent();
         this.oI18nModel = this.oComponent.getModel("i18n");
-        // var oModAdj = new JSONModel();
-        // var oModAdjSHP = new JSONModel();
-        // var modeApp = this.oComponent.getModel("ModoApp").getData().mode;
-
+        
          /* Lógica que llama al metodo handleRouteMatched para que se realice la actualización del importe */
          this._oRouter = sap.ui.core.UIComponent.getRouterFor(this);
          this._oRouter.attachRouteMatched(this.handleRouteMatched, this);
@@ -92,26 +88,6 @@ sap.ui.define([
 
       // -------------------------------------- FUNCIÓN BOTÓN CANCELAR --------------------------------------
       onCancelar: function () {
-        /*this.getView().byId("textAreaCabFact").setValue(null);
-        this.getView().byId("textAreaCabInfRech").setValue(null);
-        this.getView().byId("textAreaCabAcl").setValue(null);
-        this.getView().byId("f_refped").setValue(null);
-        this.getView().byId("f_denoped").setValue(null);
-        this.getView().byId("f_campomotivo").setSelectedKey(null);
-        this.getView().byId("f_campocondicion").setSelectedKey(null);
-        this.getView().byId("f_camponia").setSelectedKey(null);
-        this.getView().byId("f_campoplat").setSelectedKey(null);
-        this.getView().byId("f_campogest").setSelectedKey(null);
-        this.getView().byId("f_campoundTram").setSelectedKey(null);
-        this.getView().byId("f_campoofcont").setSelectedKey(null);
-        this.getView().byId("f_campoAdm").setSelectedKey(null);
-        this.getView().byId("idOficinaV").setSelectedKey(null);
-        this.getView().byId("f_cecosCab").setValue(null);
-        this.getView().byId("f_ordenesCab").setValue(null);
-        this.getView().byId("f_ordenesCab").setValue(null);*/
-        //this.oComponent.getModel("PedidoCab").setProperty("/ImpPedido", null);
-        //this.oComponent.getModel("PedidoCab").setProperty("/Moneda", null);
-
         var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
         oRouter.navTo("RouteMonitorPedidos");
       },
@@ -140,7 +116,6 @@ sap.ui.define([
       // -------------------------------------- FUNCIONES FORMATEO DE CAMPOS --------------------------------------
       // FUNCION PARA FORMATEAR NUMERO IMPORTE
       onFormatImporte: function (Netpr) {
-        //var expression = /[.,]/;
         if (Netpr) {
           Netpr = Number(Netpr).toFixed(2);
         }
@@ -279,13 +254,6 @@ sap.ui.define([
         }        
         this.oComponent.setModel(oModelCecos, "listadoCecos");
         this.oComponent.getModel("listadoCecos").refresh(true);
-        /* **Eliminar - finalmente los cecos y OT se validan en SAP**
-        if (listadoValidarCeco) {
-          this.oComponent.setModel(oModelCecos, "listadoValidarCeco");
-          this.oComponent.getModel("listadoValidarCeco").refresh(true);
-          listadoValidarCeco = false;
-        }
-        */
         sap.ui.core.BusyIndicator.hide();
       },
 
@@ -782,18 +750,6 @@ sap.ui.define([
       
       onPressMaterialAlta: function (oEvent) {
         var mat = this.getSelectMat(oEvent, "listadoMaterialesAlta");
-        /*
-        codmat = mat.Matnr;
-        nommat = mat.Maktx;
-        unimedmat=mat.Meins;
-        this.getView().byId("f_material").setValue(codmat);
-        this.getView().byId("f_nommat").setValue(nommat);
-        this.getView().byId("f_unitpos").setValue(unimedmat);
-
-        this.oComponent.getModel("posPedFrag").setProperty("/Matnr", codmat);
-        this.oComponent.getModel("posPedFrag").refresh(true);
-        */
-
         var nommat = mat.Maktx;
         var codmat = mat.Matnr;        
         var unimedmat = mat.Meins;
@@ -929,15 +885,6 @@ sap.ui.define([
           var posiciones_Aux = JSON.parse(JSON.stringify(posiciones)); // Copy data model without references
           var posicion = posiciones_Aux[index];
 
-          /*
-          if (items[0].BillDate) {
-            fechaPos = items[0].PriceDate
-          } else {
-            fechaPos = items[0].Erdat;
-            var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({ pattern: "YYYY-MM-dd" });
-            fechaPos = dateFormat.format(fechaPos);
-          }*/
-
           var configPos = {
             mode: "M",
             type: "P",
@@ -973,9 +920,6 @@ sap.ui.define([
           var posiciones = this.oComponent.getModel("PedidoPos").getData();
           var posiciones_Aux = JSON.parse(JSON.stringify(posiciones)); // Copy data model without references
           var posicion = posiciones_Aux[index];
-          
-          //Obtenemos la fecha de la linea seleccionada
-          //fechaPos = items[0].Erdat;
 
           var configPos = {
             mode: "M",
@@ -2122,9 +2066,6 @@ sap.ui.define([
         }      
       },
 
-      
-      
-
       /*ABRIR GESTOR DE ARCHIVOS*/
       handleUploadPress: function (oEvent) {
         this.act_adj = null;
@@ -2196,15 +2137,9 @@ sap.ui.define([
             //that.getView().byId("fileUploader").setValue("");
         };
         reader.readAsBinaryString(fileDetails);
-
-    },
-
-
-
-      
+      },
 
       /* Botón para la funcionalidad de meterlo en la tabla de los adjuntos*/
-
       onAttFile: function () {
         /*var adjuntos = this.oComponent.getModel("Adjuntos").getData();
         var oMdesc = this.oComponent.getModel("datosAdj").getData();
@@ -2452,11 +2387,6 @@ sap.ui.define([
         var sum = oModAdj[sOperation];
 
         return sum;
-      }
-
-      /**
-       * FRAMUMO - 08.03.24 - Fin Visualizar Adjunto en la Modif
-       */
-      
+      }      
     });
   });

@@ -7,6 +7,7 @@
             <MenuButton icon="sap-icon://menu" tooltip="Más opciones">
                 <menu>
                     <Menu>
+                        <MenuItem text="{i18n>cargaPlantilla}" icon="sap-icon://excel-attachment" id="menuItemPlantillaCargaPedidos" press="onGetKeyFromItemMenu" key="PlantillaCargaPedidos" />
                         <MenuItem text="{i18n>carga}" icon="sap-icon://arrow-top" id="menuItemCargaPedidos" press="onGetKeyFromItemMenu" key="CargaPedidos" />
                         <MenuItem text="{i18n>CrearCliente}" icon="sap-icon://person-placeholder" id="menuItemCrearCliente" press="onGetKeyFromItemMenu" key="CrearCliente" />
                         <MenuItem text="{i18n>MonitorContratos}" icon="sap-icon://customer-order-entry" id="menuItemMonitorContratos" press="onGetKeyFromItemMenu" key="MonitorContratos" />
