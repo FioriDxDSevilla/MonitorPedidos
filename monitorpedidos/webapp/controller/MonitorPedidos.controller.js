@@ -2619,7 +2619,7 @@ sap.ui.define([
 
                                 that.DatosAux(data.results[0].Vbeln);
                                 that.DatosCliente(data.results[0].Kunnr, data.results[0].Vkorg, data.results[0].Vbeln, data.results[0].Vtweg, data.results[0].Spart);
-                                that.OficinaVenta(data.results[0].Vkorg, data.results[0].Vtweg, data.results[0].Spart);
+                                that.OficinaVenta(data.results[0].Vkorg, data.results[0].Vtweg, data.results[0].Spart, that.modoapp);
                                 that.motivopedido(data.results[0].Auart, data.results[0].Vkorg);
 
                                 that.NIApedido(data.results[0].Kunnr, data.results[0].Vkorg);
@@ -2737,7 +2737,7 @@ sap.ui.define([
                         this.oComponent.getModel("DisplayPEP").refresh(true);
 
                         this.DatosCliente(codcli, vkbur, "", Cvcan, Cvsector); // Aquí se recupera la condición de pago
-                        this.OficinaVenta(vkbur, Cvcan, Cvsector);
+                        this.OficinaVenta(vkbur, Cvcan, Cvsector, "C");
                         this.motivopedido(TipoPed, vkbur);
 
                         this.NIApedido(codcli, vkbur);
@@ -2854,7 +2854,7 @@ sap.ui.define([
             },
 
             // FUNCIONES PARA OBTENER LA OFICINA DE VENTA
-            OficinaVenta: function (vkbur, Cvcan, Cvsector) {
+            OficinaVenta: function (vkbur, Cvcan, Cvsector, Accion) {
                 var aFilters = [],
                     aFilterIds = [],
                     aFilterValues = [];
@@ -2867,6 +2867,9 @@ sap.ui.define([
 
                 aFilterIds.push("Spart");
                 aFilterValues.push(Cvsector);
+
+                aFilterIds.push("Accion");
+                aFilterValues.push(Accion);
 
                 aFilters = Util.createSearchFilterObject(aFilterIds, aFilterValues);
 
